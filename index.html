@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3C 選購顧問 — 捷啟智慧科技</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0F;
+    --surface: #12121A;
+    --card: #1A1A26;
+    --card2: #22223A;
+    --border: #2A2A40;
+    --accent: #4F8EF7;
+    --accent2: #7C5CFC;
+    --green: #00E5A0;
+    --orange: #FF8C42;
+    --red: #FF4D6D;
+    --text: #F0F0FF;
+    --text2: #8888AA;
+    --text3: #555570;
+    --white: #FFFFFF;
+    --gold: #FFD700;
+  }
+  .light-mode {
+    --bg: #F5F5FA;
+    --surface: #FFFFFF;
+    --card: #EEEEF8;
+    --card2: #E0E0F0;
+    --border: #C8C8E0;
+    --text: #111122;
+    --text2: #555577;
+    --text3: #9999BB;
+    --white: #111122;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+  }
+  /* ─── Topbar ─── */
+  #topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 10px; }
+  .dot-badge { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; }
+  .topbar-title { font-size: 17px; font-weight: 700; color: var(--text); }
+  .topbar-sub {
+    background: var(--card2); border-radius: 20px;
+    padding: 3px 12px; font-size: 11px; color: var(--accent);
+  }
+  .topbar-right { display: flex; align-items: center; gap: 8px; }
+  .nav-btn {
+    padding: 6px 12px; border-radius: 8px;
+    background: none; border: none; cursor: pointer;
+    color: var(--text2); font-size: 13px; font-family: inherit;
+    transition: background 0.2s;
+  }
+  .nav-btn:hover { background: var(--card2); }
+  .theme-btn {
+    background: var(--card2); border-radius: 20px;
+    padding: 5px 12px; font-size: 13px;
+    border: none; cursor: pointer; color: var(--text2);
+    font-family: inherit;
+  }
+  /* ─── Stepper ─── */
+  #stepper {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 16px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .step-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .step-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--white);
+    cursor: pointer; transition: all 0.2s;
+    background: var(--border);
+  }
+  .step-dot.done { background: var(--green); }
+  .step-dot.active { background: var(--accent); }
+  .step-label { font-size: 10px; color: var(--text3); white-space: nowrap; }
+  .step-label.active { color: var(--text); }
+  .step-label.done { color: var(--text2); }
+  .step-line {
+    width: 40px; height: 2px; background: var(--border); margin: 0 2px;
+    margin-bottom: 16px; transition: background 0.3s;
+  }
+  .step-line.done { background: var(--accent); }
+  /* ─── Hero ─── */
+  .hero {
+    padding: 40px 24px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    text-align: center;
+  }
+  .hero-emoji { font-size: 52px; }
+  .hero-title { font-size: 26px; font-weight: 900; color: #fff; }
+  .hero-sub { font-size: 13px; color: rgba(255,255,255,0.7); }
+  /* ─── Grid ─── */
+  .option-grid {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    justify-content: center; padding: 0 24px 24px;
+  }
+  .option-card {
+    width: 175px; min-height: 155px;
+    background: var(--card);
+    border: 1px solid var(--border); border-radius: 16px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 6px; padding: 16px 12px;
+    cursor: pointer; transition: all 0.18s;
+    text-align: center;
+  }
+  .option-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .option-card.selected {
+    background: var(--card2);
+    border: 2px solid var(--accent);
+  }
+  .option-emoji { font-size: 38px; }
+  .option-main { font-size: 15px; font-weight: 700; color: var(--text); }
+  .option-card.selected .option-main { color: var(--accent); }
+  .option-sub { font-size: 11px; color: var(--text3); }
+  .option-card.selected .option-sub { color: var(--text2); }
+  /* ─── App checkbox grid ─── */
+  .app-categories { padding: 0 24px 24px; display: flex; flex-direction: column; gap: 16px; }
+  .app-cat-title {
+    font-size: 13px; font-weight: 700; color: var(--text2);
+    padding: 8px 0 4px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .app-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .app-chip {
+    padding: 7px 14px; border-radius: 20px;
+    background: var(--card); border: 1px solid var(--border);
+    font-size: 12px; color: var(--text2); cursor: pointer;
+    transition: all 0.15s; user-select: none;
+  }
+  .app-chip:hover { border-color: var(--accent2); }
+  .app-chip.checked {
+    background: var(--accent2); border-color: var(--accent2);
+    color: #fff; font-weight: 700;
+  }
+  /* ─── Budget tips ─── */
+  .budget-tips {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px; margin: 0 24px 16px;
+  }
+  .budget-tips-title { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 8px; }
+  .budget-tip-row { display: flex; gap: 8px; padding: 3px 0; font-size: 12px; }
+  .budget-tip-label { color: var(--accent); font-weight: 600; min-width: 180px; }
+  .budget-tip-desc { color: var(--text3); }
+  /* ─── Warning box ─── */
+  .warn-box {
+    background: #2A1800; border-radius: 12px; padding: 12px 14px;
+    border: 1px solid var(--green); color: var(--green);
+    font-size: 12px; margin: 0 24px 12px;
+  }
+  .budget-warn {
+    background: #2A0A00; border-color: var(--orange); color: var(--orange);
+  }
+  /* ─── Prefs ─── */
+  .pref-section { padding: 0 24px 20px; }
+  .pref-section-title {
+    font-size: 14px; font-weight: 700; color: var(--text2);
+    padding: 12px 0 8px;
+  }
+  .pref-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pref-chip {
+    padding: 7px 14px; border-radius: 20px;
+    background: var(--card); border: 1px solid var(--border);
+    font-size: 12px; color: var(--text2); cursor: pointer;
+    transition: all 0.15s;
+  }
+  .pref-chip:hover { border-color: var(--accent); }
+  .pref-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+  /* ─── Buttons ─── */
+  .btn-primary {
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 12px;
+    padding: 13px 32px; font-size: 15px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.18s;
+  }
+  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .btn-center { display: flex; justify-content: center; padding: 16px 24px; }
+  /* ─── Product card ─── */
+  .product-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 18px; margin-bottom: 14px;
+    transition: border-color 0.2s;
+  }
+  .product-card.top-pick { border-color: var(--gold); }
+  .product-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+  .product-brand { font-size: 11px; font-weight: 700; color: var(--accent); }
+  .product-name { font-size: 18px; font-weight: 700; color: var(--text); margin: 4px 0; }
+  .product-spec { font-size: 11px; color: var(--text3); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+  .product-right { text-align: right; }
+  .price-label {
+    display: inline-block; padding: 3px 10px; border-radius: 6px;
+    font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 4px;
+  }
+  .price-val { font-size: 22px; font-weight: 900; color: var(--white); }
+  .battery-weight { font-size: 11px; color: var(--text3); margin-top: 4px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .badge {
+    padding: 3px 10px; border-radius: 8px;
+    font-size: 11px; font-weight: 700;
+    background: var(--accent2); color: #fff;
+  }
+  .badge.secondary { background: var(--card2); color: var(--text2); }
+  .badge.tag { background: #2A2010; color: var(--gold); }
+  .badge.editor { background: #2A2010; color: var(--gold); }
+  /* ─── Pros/cons ─── */
+  .pros-cons { display: flex; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
+  .pros-box, .cons-box {
+    flex: 1; min-width: 160px;
+    border-radius: 10px; padding: 10px; font-size: 12px;
+  }
+  .pros-box { background: #0F1F18; }
+  .cons-box { background: #1F160A; }
+  .pros-title { color: var(--green); font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+  .cons-title { color: var(--orange); font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+  .pros-text { color: var(--text2); }
+  .cons-text { color: var(--text2); }
+  /* ─── Score bars ─── */
+  .score-section {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px; margin: 10px 0;
+  }
+  .score-section-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .score-row { margin-bottom: 8px; }
+  .score-header { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
+  .score-label { color: var(--text2); }
+  .score-val { font-weight: 700; }
+  .score-bar { height: 5px; border-radius: 3px; background: var(--surface); overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+  /* ─── Freshness ─── */
+  .freshness-bar {
+    display: flex; align-items: center; gap: 8px;
+    border-radius: 10px; padding: 10px 14px;
+    font-size: 12px; font-weight: 700; margin: 8px 0;
+    border: 1px solid;
+  }
+  /* ─── Compat ─── */
+  .compat-box {
+    background: var(--surface); border-radius: 12px;
+    padding: 14px; margin: 10px 0; border: 2px solid;
+  }
+  .compat-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .compat-row { display: flex; align-items: center; gap: 10px; }
+  .compat-score { font-size: 22px; font-weight: 900; }
+  .compat-text { font-size: 11px; }
+  .compat-bar { height: 8px; border-radius: 4px; background: var(--surface); margin-top: 8px; overflow: hidden; }
+  /* ─── Shop links ─── */
+  .shop-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .shop-btn {
+    padding: 7px 14px; border-radius: 12px;
+    font-size: 11px; font-weight: 700;
+    text-decoration: none; display: inline-block;
+    transition: filter 0.2s;
+  }
+  .shop-btn:hover { filter: brightness(1.15); }
+  /* ─── Action buttons ─── */
+  .action-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; align-items: center; }
+  .action-link { font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .compare-btn { font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  /* ─── Compare bar ─── */
+  .compare-bar {
+    background: var(--accent2); border-radius: 10px; padding: 10px 16px;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    margin: 0 24px 8px; flex-wrap: wrap;
+  }
+  .compare-bar-text { font-size: 12px; font-weight: 700; color: #fff; flex: 1; }
+  .compare-go-btn {
+    background: var(--green); color: #000; font-size: 12px; font-weight: 700;
+    border: none; border-radius: 8px; padding: 6px 14px; cursor: pointer; font-family: inherit;
+  }
+  /* ─── Desktop card ─── */
+  .desktop-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 18px; margin-bottom: 14px;
+  }
+  .desktop-parts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .desktop-part {
+    background: var(--surface); border-radius: 8px; padding: 8px 12px;
+    min-width: 160px;
+  }
+  .part-label { font-size: 11px; color: var(--text3); }
+  .part-val { font-size: 12px; color: var(--text); font-weight: 500; }
+  /* ─── Tab bar ─── */
+  .tab-bar {
+    display: flex; align-items: center; gap: 4px;
+    padding: 12px 24px 8px;
+  }
+  .tab-btn {
+    padding: 9px 18px; border-radius: 8px;
+    background: transparent; border: none; cursor: pointer;
+    font-size: 13px; color: var(--text2); font-family: inherit;
+    transition: all 0.18s;
+  }
+  .tab-btn.active { background: var(--accent); color: #fff; font-weight: 700; }
+  /* ─── Results section ─── */
+  .results-list { padding: 0 24px; display: none; }
+  .results-list.active { display: block; }
+  /* ─── Answer chips ─── */
+  .ans-row {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--text3);
+  }
+  .ans-chip {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 11px; color: var(--accent); cursor: pointer;
+    display: flex; align-items: center; gap: 3px;
+  }
+  .ans-chip:hover { border-color: var(--accent); }
+  /* ─── Modal ─── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 999;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--card); border-radius: 18px;
+    padding: 24px; max-width: 460px; width: 90%;
+    max-height: 85vh; overflow-y: auto;
+  }
+  .modal-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+  .modal-body { font-size: 13px; color: var(--text2); line-height: 1.7; }
+  .modal-actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 10px; }
+  .modal-btn {
+    padding: 8px 20px; border-radius: 10px; border: none;
+    cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 700;
+  }
+  .modal-btn.primary { background: var(--accent); color: #fff; }
+  .modal-btn.success { background: var(--green); color: #000; }
+  .modal-btn.danger { background: none; color: var(--red); }
+  /* ─── Disclaimer modal content ─── */
+  .disclaimer-section {
+    background: var(--card2); border-radius: 10px; padding: 12px; margin-bottom: 10px;
+  }
+  .disclaimer-section-title { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+  .disclaimer-section-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
+  /* ─── Share section ─── */
+  .share-section {
+    border-top: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .share-title { font-size: 12px; color: var(--text2); }
+  .share-buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .share-btn {
+    padding: 9px 20px; border-radius: 10px; border: none;
+    font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit;
+    position: relative; overflow: hidden; transition: filter 0.2s;
+  }
+  .share-btn:hover { filter: brightness(1.1); }
+  .share-note { font-size: 9px; color: var(--text3); }
+  /* ─── Footer ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 18px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-brand { font-size: 13px; font-weight: 700; color: var(--text); }
+  .footer-sub { font-size: 11px; color: var(--text3); }
+  .footer-link {
+    background: var(--card2); border-radius: 8px; padding: 6px 12px;
+    font-size: 11px; color: var(--accent); font-weight: 700;
+    text-decoration: none;
+  }
+  .footer-copy { width: 100%; font-size: 10px; color: var(--text3); text-align: center; }
+  /* ─── Compare dialog ─── */
+  .compare-col { flex: 1; text-align: center; }
+  .compare-row { display: flex; align-items: center; gap: 4px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .compare-mid { font-size: 11px; color: var(--text3); min-width: 80px; text-align: center; }
+  .compare-val { flex: 1; font-size: 12px; text-align: center; }
+  .compare-win { font-weight: 700; }
+  /* ─── Pref box ─── */
+  .pref-box {
+    background: var(--surface); border-radius: 10px;
+    padding: 12px; margin: 8px 0;
+  }
+  .pref-box-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .pref-match { font-size: 11px; color: var(--green); }
+  .pref-miss { font-size: 11px; color: var(--text3); }
+  /* ─── Expert dialog ─── */
+  .expert-product-name {
+    background: var(--card2); border-radius: 8px; padding: 6px 12px;
+    font-size: 14px; color: var(--accent); font-weight: 700; margin-bottom: 8px;
+    display: inline-block;
+  }
+  /* ─── Trap dialog ─── */
+  .trap-q { background: var(--card2); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+  .trap-q-num { font-size: 13px; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
+  .trap-q-text { font-size: 12px; color: var(--text2); }
+  /* ─── Watermark ─── */
+  .watermark {
+    position: fixed; right: 12px; bottom: 12px;
+    font-size: 11px; color: var(--text); opacity: 0.18;
+    pointer-events: none; z-index: 50;
+  }
+  /* ─── Responsive ─── */
+  @media (max-width: 600px) {
+    #topbar { padding: 10px 12px; }
+    .topbar-sub { display: none; }
+    .hero { padding: 24px 12px; }
+    .hero-emoji { font-size: 36px; }
+    .hero-title { font-size: 20px; }
+    .option-grid { padding: 0 12px 16px; gap: 10px; }
+    .option-card { width: calc(50% - 5px); min-height: 115px; }
+    .option-emoji { font-size: 26px; }
+    .option-main { font-size: 13px; }
+    .app-categories, .pref-section, .btn-center, .tab-bar { padding-left: 12px; padding-right: 12px; }
+    .results-list { padding: 0 12px; }
+    .ans-row { padding: 8px 12px; }
+    .budget-tips { margin: 0 12px 12px; }
+    .warn-box { margin: 0 12px 10px; }
+    .compare-bar { margin: 0 12px 8px; }
+    .share-section { padding: 12px; }
+    footer { padding: 14px 12px; }
+    .tab-btn { padding: 8px 12px; font-size: 12px; }
+    .product-name { font-size: 15px; }
+    .price-val { font-size: 18px; }
+    .step-line { width: 24px; }
+    .budget-tip-row { flex-direction: column; gap: 2px; }
+  }
+  /* ─── Animations ─── */
+  .page-enter { animation: fadeSlideUp 0.3s ease forwards; }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div id="topbar">
+  <div class="topbar-left">
+    <div class="dot-badge"></div>
+    <span class="topbar-title">3C 選購顧問</span>
+    <span class="topbar-sub">2026 最新 · 免費 · 防騙</span>
+  </div>
+  <div class="topbar-right">
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 深色</button>
+    <button class="nav-btn" id="backBtn" onclick="goBack()" style="display:none">← 上一步</button>
+    <button class="nav-btn" id="homeBtn" onclick="goTo(0)" style="display:none">🏠 回首頁</button>
+  </div>
+</div>
+
+<!-- Stepper -->
+<div id="stepper"></div>
+
+<!-- Main content -->
+<div id="mainContent"></div>
+
+<!-- Watermark -->
+<div class="watermark">© 捷啟智慧科技</div>
+
+<!-- Generic Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalBox">
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ──────────────────────────────────────────────────
+const STEP_OPTS = {
+  device: [
+    {emoji:"💻", main:"筆電",    sub:"帶著走的好夥伴",    val:"computer"},
+    {emoji:"📱", main:"手機",    sub:"口袋裡的宇宙",      val:"phone"},
+    {emoji:"📟", main:"平板",    sub:"螢幕再大一點",      val:"tablet"},
+    {emoji:"🖥️", main:"桌機自組", sub:"效能怪獸・自由升級",val:"desktop"},
+  ],
+  user: [
+    {emoji:"👧", main:"小朋友",   sub:"學習娛樂兼顧",   val:"child"},
+    {emoji:"🎓", main:"學生",     sub:"報告上課必備",   val:"student"},
+    {emoji:"💼", main:"上班族",   sub:"視訊文書開會",   val:"work"},
+    {emoji:"🎨", main:"創作者",   sub:"剪輯修圖設計",   val:"create"},
+    {emoji:"🎮", main:"遊戲玩家", sub:"電競3A不卡頓",   val:"game"},
+    {emoji:"👴", main:"長輩",     sub:"大字好操作",     val:"senior"},
+    {emoji:"🙋", main:"一般使用", sub:"什麼都用一點",   val:"general"},
+  ],
+  budget: [
+    {emoji:"🥉", main:"入門精省", sub:"日常文書、追劇、小學生作業",         val:"budget"},
+    {emoji:"🥈", main:"主流全能", sub:"上班族必備、流暢辦公、輕量剪輯",     val:"mid"},
+    {emoji:"🥇", main:"頂級效能", sub:"專業電競、4K剪輯、設計師首選",       val:"high"},
+    {emoji:"💎", main:"不差這點錢",sub:"旗艦規格、頂配無妥協",              val:"pro"},
+  ],
+};
+
+const APP_CATS_COMPUTER = {
+  "📄 文書辦公": {
+    desc:"Word / Excel / PPT / Line",
+    items: {
+      "📄 文書辦公 / Office":  {min_budget:12000, spec_tag:"文書"},
+      "💻 程式開發 / IDE":     {min_budget:28000, spec_tag:"開發工具"},
+    }
+  },
+  "🎮 遊戲": {
+    desc:"英雄聯盟 / 絕地求生 / 黑神話",
+    items: {
+      "🎮 英雄聯盟 / 輕量遊戲": {min_budget:18000, spec_tag:"入門電競"},
+      "🔥 絕地求生 / 3A大作":   {min_budget:35000, spec_tag:"高階電競"},
+    }
+  },
+  "🎬 影音創作": {
+    desc:"剪輯 / Photoshop / 直播",
+    items: {
+      "🎬 4K影片剪輯":       {min_budget:42000, spec_tag:"專業創作"},
+      "🎨 Photoshop / 設計": {min_budget:25000, spec_tag:"進階文書"},
+      "📹 直播 / OBS":       {min_budget:30000, spec_tag:"直播串流"},
+    }
+  },
+  "🧠 AI / 專業": {
+    desc:"機器學習 / 大模型訓練",
+    items: {
+      "🧠 AI / 機器學習": {min_budget:50000, spec_tag:"AI運算"},
+    }
+  },
+};
+const APP_CATS_PHONE = {
+  "📱 社群娛樂": {
+    desc:"IG / TikTok / Netflix / Spotify",
+    items: {
+      "📱 社群（IG / TikTok / 抖音）":    {min_budget:10000},
+      "📺 影音串流（Netflix/YouTube）":    {min_budget:8000},
+      "🎵 音樂串流（Spotify/KKBOX）":      {min_budget:8000},
+    }
+  },
+  "🎮 手遊": {
+    desc:"傳說對決 / 原神 / 重度遊戲",
+    items: {
+      "🎮 傳說對決 / 輕度手遊": {min_budget:12000},
+      "⚡ 原神 / 重度手遊":     {min_budget:20000},
+    }
+  },
+  "📸 拍照創作": {
+    desc:"拍照 / 修圖 / 短影音剪輯",
+    items: {
+      "📸 拍照 / 修圖（Snapseed）":       {min_budget:15000},
+      "🤳 短影音創作（剪映/CapCut）":      {min_budget:18000},
+    }
+  },
+  "🛠️ 日常工具": {
+    desc:"LINE / 導航 / 行動支付",
+    items: {
+      "💬 LINE / 通訊軟體":         {min_budget:8000},
+      "🗺️ 導航 / Google Maps":      {min_budget:8000},
+      "💳 行動支付（街口/悠遊付）": {min_budget:8000},
+    }
+  },
+};
+
+const PRODUCTS = {
+  laptop: [
+    {brand:"ASUS",   name:"Vivobook S15 OLED 2026",    price:"NT$32,900", cpu:"Intel Core Ultra 7 258V",  ram:"32GB LPDDR5X", ssd:"1TB PCIe 4.0",  battery:"約14hr",  weight:"1.6kg",  pros:"OLED螢幕色彩極艷，AI效能晶片，輕薄長效",     cons:"維修較少門市",            tag:"💡 CP值之王"},
+    {brand:"Lenovo", name:"ThinkPad X1 Carbon Gen 13",  price:"NT$52,900", cpu:"Intel Core Ultra 7 265U",  ram:"32GB LPDDR5",  ssd:"1TB PCIe 4.0",  battery:"約15hr",  weight:"1.12kg", pros:"超輕1.12kg，軍規認證，鍵盤業界最佳",          cons:"售價偏高",                tag:"🏢 商務首選"},
+    {brand:"Apple",  name:"MacBook Air M4 13吋",        price:"NT$39,900", cpu:"Apple M4（10核心）",       ram:"16GB",         ssd:"512GB",         battery:"約18hr",  weight:"1.24kg", pros:"靜音無風扇，電池超耐，macOS生態完整",         cons:"擴充埠少，不支援Windows遊戲", tag:"🍎 蘋果首選"},
+    {brand:"Acer",   name:"Swift X 14 AI 2026",         price:"NT$36,900", cpu:"AMD Ryzen AI 9 HX 370",    ram:"32GB LPDDR5X", ssd:"1TB NVMe",      battery:"約12hr",  weight:"1.5kg",  pros:"AMD AI晶片，獨顯RTX 4060，CP值超高",          cons:"散熱略吵",                tag:"✈️ AI效能王"},
+    {brand:"Dell",   name:"XPS 13 Plus 2026",           price:"NT$49,900", cpu:"Intel Core Ultra 7 268V",  ram:"32GB LPDDR5X", ssd:"1TB PCIe 4.0",  battery:"約14hr",  weight:"1.23kg", pros:"工藝極致，13.4吋OLED觸控，超輕薄設計",       cons:"擴充埠極少，售價偏高",     tag:"✨ 設計極品"},
+    {brand:"Dell",   name:"Inspiron 15 2026",           price:"NT$28,900", cpu:"Intel Core i7-13620H",     ram:"16GB DDR5",    ssd:"512GB NVMe",    battery:"約10hr",  weight:"1.8kg",  pros:"螢幕大，鍵盤舒適，商務辦公首選",             cons:"重量稍重",                tag:"💼 商務實用"},
+    {brand:"Samsung",name:"Galaxy Book4 Pro 360",       price:"NT$45,900", cpu:"Intel Core Ultra 7 155H",  ram:"16GB LPDDR5X", ssd:"512GB NVMe",    battery:"約15hr",  weight:"1.56kg", pros:"AMOLED觸控螢幕，可翻轉設計，S Pen隨附",      cons:"售價較高",                tag:"🌟 三星旗艦"},
+    {brand:"Samsung",name:"Galaxy Book4 360",           price:"NT$32,900", cpu:"Intel Core Ultra 5 125H",  ram:"16GB LPDDR5X", ssd:"512GB NVMe",    battery:"約13hr",  weight:"1.51kg", pros:"AMOLED螢幕色彩艷，可翻轉，Samsung生態整合",  cons:"遊戲性能普通",            tag:"🔄 翻轉輕薄"},
+  ],
+  phone: [
+    {brand:"Apple",   name:"iPhone 17 Pro",     price:"NT$39,900", cpu:"A19 Pro",               ram:"12GB", ssd:"256GB", battery:"約兩天",   weight:"195g", pros:"攝影系統升級，鈦金屬邊框，AI功能強",    cons:"價格偏高",         tag:"🍎 旗艦首選"},
+    {brand:"Apple",   name:"iPhone 17",         price:"NT$29,900", cpu:"A19",                   ram:"8GB",  ssd:"128GB", battery:"一天半",   weight:"170g", pros:"全新薄型設計，前鏡頭升級，流暢穩定",    cons:"無Pro級攝影功能",  tag:"💡 均衡之選"},
+    {brand:"Samsung", name:"Galaxy S25 Ultra",  price:"NT$45,900", cpu:"Snapdragon 8 Elite",    ram:"12GB", ssd:"256GB", battery:"約兩天",   weight:"218g", pros:"S Pen內建，AI功能豐富，7倍望遠",       cons:"偏重偏大",         tag:"⚡ Android旗艦"},
+    {brand:"Samsung", name:"Galaxy S25",        price:"NT$27,900", cpu:"Snapdragon 8 Elite",    ram:"12GB", ssd:"256GB", battery:"一天以上", weight:"162g", pros:"輕薄旗艦晶片，Google AI整合，充電快", cons:"相機不如Ultra",    tag:"🎯 Android均衡"},
+    {brand:"ASUS",    name:"ROG Phone 9 Pro",   price:"NT$39,900", cpu:"Snapdragon 8 Elite",    ram:"16GB", ssd:"512GB", battery:"約兩天",   weight:"227g", pros:"電競神機，最強散熱，165Hz螢幕超順",    cons:"偏重，非日常使用設計",tag:"🎮 電競手機王"},
+    {brand:"ASUS",    name:"Zenfone 11 Ultra",  price:"NT$29,900", cpu:"Snapdragon 8 Gen 3",    ram:"12GB", ssd:"256GB", battery:"一天半",   weight:"224g", pros:"旗艦晶片，Gimbal防抖攝影，螢幕色彩佳", cons:"機身較大",         tag:"📸 攝影全能"},
+    {brand:"Sony",    name:"Xperia 1 VI",       price:"NT$36,900", cpu:"Snapdragon 8 Gen 3",    ram:"12GB", ssd:"256GB", battery:"約兩天",   weight:"192g", pros:"4K OLED螢幕，專業相機控制，Sony音響", cons:"售價偏高，台灣通路少",tag:"🎬 影音旗艦"},
+    {brand:"Google",  name:"Pixel 9 Pro",       price:"NT$34,900", cpu:"Google Tensor G4",      ram:"16GB", ssd:"256GB", battery:"約兩天",   weight:"199g", pros:"Google AI功能最強，拍照業界頂尖，7年更新保證", cons:"台灣無實體門市", tag:"🤖 AI拍照王"},
+    {brand:"Google",  name:"Pixel 9",           price:"NT$22,900", cpu:"Google Tensor G4",      ram:"12GB", ssd:"128GB", battery:"一天以上", weight:"198g", pros:"純淨Android體驗，AI功能完整，CP值高",  cons:"台灣無實體門市",   tag:"🔍 純淨Android"},
+    {brand:"Xiaomi",  name:"小米 15 Ultra",     price:"NT$32,900", cpu:"Snapdragon 8 Elite",    ram:"16GB", ssd:"512GB", battery:"約兩天",   weight:"226g", pros:"徠卡四鏡頭，規格超級堆料，充電120W超快", cons:"MIUI廣告偏多，台灣保固需確認", tag:"⚡ 規格怪獸"},
+    {brand:"Xiaomi",  name:"Redmi Note 14 Pro", price:"NT$10,900", cpu:"Snapdragon 7s Gen 3",   ram:"8GB",  ssd:"256GB", battery:"約兩天",   weight:"190g", pros:"CP值極高，2億像素鏡頭，大電池超耐用", cons:"更新週期較短，系統廣告", tag:"💰 超值首選"},
+    {brand:"OPPO",    name:"OPPO Find X8 Pro",  price:"NT$34,900", cpu:"Snapdragon 8 Elite",    ram:"12GB", ssd:"256GB", battery:"約兩天",   weight:"218g", pros:"哈蘇人像調色，100W超級閃充，設計感極佳", cons:"海外保固需確認", tag:"🎨 設計旗艦"},
+    {brand:"OPPO",    name:"OPPO Reno 13",      price:"NT$16,900", cpu:"MediaTek Dimensity 8350",ram:"12GB", ssd:"256GB", battery:"一天半",   weight:"176g", pros:"輕薄時尚，AI功能實用，閃充45W",        cons:"效能屬中階",       tag:"✨ 輕薄時尚"},
+    {brand:"vivo",    name:"vivo X200 Pro",     price:"NT$36,900", cpu:"Snapdragon 8 Elite",    ram:"16GB", ssd:"512GB", battery:"約兩天",   weight:"229g", pros:"蔡司望遠鏡頭業界頂尖，200W超快充，螢幕色彩絕美", cons:"台灣通路較少", tag:"📷 望遠之王"},
+    {brand:"vivo",    name:"vivo V40",          price:"NT$17,900", cpu:"Snapdragon 7 Gen 3",    ram:"12GB", ssd:"256GB", battery:"一天半",   weight:"190g", pros:"蔡司人像效果出色，80W閃充，設計輕薄",  cons:"效能屬中階",       tag:"🖼️ 人像首選"},
+    {brand:"Huawei",  name:"Huawei Pura 70 Pro",price:"NT$29,900", cpu:"Kirin 9010",            ram:"12GB", ssd:"512GB", battery:"約兩天",   weight:"220g", pros:"徠卡相機技術頂尖，衛星通話，自研晶片", cons:"⚠️ 無 Google 服務（無 Play 商店/Gmail/Maps）", tag:"📡 華為旗艦"},
+  ],
+  tablet: [
+    {brand:"Apple",    name:"iPad Air M3 13吋",   price:"NT$26,900", cpu:"Apple M3",                ram:"8GB",  ssd:"128GB", battery:"約10hr", weight:"617g",  pros:"M3晶片跑最新AI應用，螢幕大色準高",          cons:"配件另購價高",        tag:"✏️ 創作首選"},
+    {brand:"Apple",    name:"iPad mini A17 Pro",  price:"NT$16,900", cpu:"Apple A17 Pro",           ram:"8GB",  ssd:"128GB", battery:"約10hr", weight:"293g",  pros:"超輕巧，A17 Pro晶片，Apple Intelligence",    cons:"螢幕較小",            tag:"📦 隨身首選"},
+    {brand:"Samsung",  name:"Galaxy Tab S10 FE",  price:"NT$14,900", cpu:"Exynos 1580",             ram:"8GB",  ssd:"256GB", battery:"約12hr", weight:"524g",  pros:"大螢幕10.9吋，價格親民，DeX桌面模式",       cons:"效能不如旗艦",        tag:"💰 平價首選"},
+    {brand:"Samsung",  name:"Galaxy Tab S10+",    price:"NT$31,900", cpu:"Snapdragon 8 Gen 3",      ram:"12GB", ssd:"256GB", battery:"約13hr", weight:"581g",  pros:"AMOLED色彩絕美，S Pen隨附，Samsung DeX",    cons:"售價偏高",            tag:"🎬 影音首選"},
+    {brand:"Xiaomi",   name:"Xiaomi Pad 7",       price:"NT$10,900", cpu:"Snapdragon 7+ Gen 3",     ram:"8GB",  ssd:"256GB", battery:"約12hr", weight:"500g",  pros:"3K螢幕色彩亮眼，規格超殺，CP值業界第一",   cons:"系統廣告偏多，保固需確認", tag:"💰 CP值之王"},
+    {brand:"Xiaomi",   name:"Redmi Pad SE 8.7",   price:"NT$5,900",  cpu:"Snapdragon 680",          ram:"4GB",  ssd:"128GB", battery:"約10hr", weight:"372g",  pros:"價格超親民，輕巧隨身，適合學生追劇",       cons:"效能偏低，不適合重度遊戲", tag:"📚 學生入門"},
+    {brand:"OPPO",     name:"OPPO Pad 3 Pro",     price:"NT$19,900", cpu:"Snapdragon 8 Gen 3",      ram:"12GB", ssd:"256GB", battery:"約12hr", weight:"584g",  pros:"旗艦晶片平板CP值高，螢幕色彩準，輕辦公流暢", cons:"台灣通路較少",        tag:"🎯 均衡旗艦"},
+    {brand:"Lenovo",   name:"Tab P12 Pro",        price:"NT$18,900", cpu:"Snapdragon 870",          ram:"8GB",  ssd:"256GB", battery:"約12hr", weight:"565g",  pros:"12.6吋超大AMOLED螢幕，商務首選，鍵盤配件完整", cons:"晶片非最新世代",    tag:"🏢 商務大螢幕"},
+    {brand:"Lenovo",   name:"Tab M11",            price:"NT$7,900",  cpu:"MediaTek Helio G88",      ram:"4GB",  ssd:"128GB", battery:"約10hr", weight:"465g",  pros:"價格親民，適合長輩與小朋友，操作簡單",     cons:"效能屬入門",          tag:"👨‍👩‍👧 家用入門"},
+    {brand:"Google",   name:"Pixel Tablet",       price:"NT$19,900", cpu:"Google Tensor G2",        ram:"8GB",  ssd:"128GB", battery:"約12hr", weight:"493g",  pros:"原生Android最乾淨，充電底座可當智慧顯示器，AI功能完整", cons:"台灣無實體門市", tag:"🤖 AI智慧平板"},
+    {brand:"Microsoft",name:"Surface Pro 11",     price:"NT$52,900", cpu:"Snapdragon X Elite",      ram:"16GB", ssd:"512GB", battery:"約14hr", weight:"879g",  pros:"完整Windows 11，可跑所有PC軟體，鍵盤蓋變筆電", cons:"需另購鍵盤蓋，售價偏高", tag:"💼 平板變筆電"},
+    {brand:"Microsoft",name:"Surface Go 4",       price:"NT$24,900", cpu:"Intel N200",              ram:"8GB",  ssd:"128GB", battery:"約10hr", weight:"521g",  pros:"輕巧Windows平板，辦公室文書首選，觸控筆支援", cons:"效能屬入門，重度多工會卡", tag:"📋 輕辦公首選"},
+  ],
+  desktop: [
+    {name:"入門文書機", total_price:"NT$16,000", tag:"📝 文書首選", cpu:"Intel Core i3-14100",    motherboard:"B760M WIFI",   ram:"DDR5 16GB",           ssd:"512GB NVMe Gen4", gpu:"內顯 UHD 730",  psu:"450W 80+ Bronze"},
+    {name:"中階全能機", total_price:"NT$32,000", tag:"⚡ 全能推薦", cpu:"AMD Ryzen 7 9700X",      motherboard:"B850M-A WIFI", ram:"DDR5 32GB 6000MHz",   ssd:"1TB NVMe Gen4",   gpu:"RTX 5060",      psu:"750W 80+ Gold"},
+    {name:"電競高階機", total_price:"NT$55,000", tag:"🎮 電競首選", cpu:"AMD Ryzen 9 9900X",      motherboard:"X870E HERO",   ram:"DDR5 64GB 6400MHz",   ssd:"2TB NVMe Gen5",   gpu:"RTX 5070 Ti",   psu:"850W 80+ Platinum"},
+  ],
+};
+
+const BRAND_TAGS = {
+  "apple":{"brand":"Apple","origin":"美國品牌"},
+  "asus":{"brand":"ASUS","origin":"台灣品牌"},
+  "acer":{"brand":"Acer","origin":"台灣品牌"},
+  "lenovo":{"brand":"Lenovo","origin":"中國品牌"},
+  "msi":{"brand":"MSI","origin":"台灣品牌"},
+  "hp":{"brand":"HP","origin":"美國品牌"},
+  "samsung":{"brand":"Samsung","origin":"韓國品牌"},
+  "dell":{"brand":"Dell","origin":"美國品牌"},
+  "sony":{"brand":"Sony","origin":"日本品牌"},
+  "google":{"brand":"Google","origin":"美國品牌"},
+  "xiaomi":{"brand":"Xiaomi","origin":"中國品牌"},
+  "oppo":{"brand":"OPPO","origin":"中國品牌"},
+  "vivo":{"brand":"vivo","origin":"中國品牌"},
+  "huawei":{"brand":"Huawei","origin":"中國品牌"},
+  "microsoft":{"brand":"Microsoft","origin":"美國品牌"},
+};
+
+const ADVANCED_PREFS = {
+  brand: [
+    {emoji:"🍎",label:"Apple"},{emoji:"💻",label:"ASUS"},{emoji:"✈️",label:"Acer"},
+    {emoji:"🏢",label:"Lenovo"},{emoji:"🔥",label:"MSI"},{emoji:"🌟",label:"Samsung"},
+    {emoji:"🖥️",label:"Dell"},{emoji:"📷",label:"Sony"},{emoji:"🔍",label:"Google"},
+    {emoji:"⚡",label:"Xiaomi"},{emoji:"🎨",label:"OPPO"},{emoji:"📡",label:"vivo"},
+    {emoji:"🏴",label:"Huawei"},{emoji:"🪟",label:"Microsoft"},
+  ],
+  color: [
+    {emoji:"⬜",label:"極簡白"},{emoji:"🔘",label:"太空灰"},
+    {emoji:"⭐",label:"香檳金"},{emoji:"⬛",label:"專業黑"},
+  ],
+  origin: [
+    {emoji:"🇹🇼",label:"台灣品牌"},{emoji:"🇺🇸",label:"美國品牌"},
+    {emoji:"🇰🇷",label:"韓國品牌"},{emoji:"🇯🇵",label:"日本品牌"},
+    {emoji:"🇨🇳",label:"中國品牌"},
+  ],
+};
+
+// ─── STATE ──────────────────────────────────────────────────
+let currentStep = 0;
+let answers = {};
+let selectedApps = [];
+let userPrefs = {brand:[], color:[], origin:[]};
+let compareList = [];
+let isDark = true;
+
+const STEPS = ["選裝置","選情境","選軟體","選預算","個人偏好","推薦結果"];
+const APP_URL = "https://deluxe-tartufo-a53775.netlify.app/";
+
+// ─── HELPERS ────────────────────────────────────────────────
+function priceNum(priceStr) {
+  const m = (priceStr||"").replace(/,/g,"").match(/\d+/);
+  return m ? parseInt(m[0]) : 0;
+}
+function priceTag(priceStr) {
+  const p = priceNum(priceStr);
+  if (p < 20000) return {label:"🟢 入門價格", color:"var(--green)", bg:"#0A2018"};
+  if (p < 35000) return {label:"🔵 中階行情", color:"var(--accent)", bg:"#0A1830"};
+  if (p < 60000) return {label:"🟡 高階定價", color:"var(--orange)", bg:"#1E1800"};
+  return {label:"🔴 旗艦售價", color:"var(--red)", bg:"#200808"};
+}
+function getPerfScores(p) {
+  const spec = ((p.cpu||"")+" "+(p.gpu||"")+" "+(p.ram||"")+" "+(p.ssd||"")).toLowerCase();
+  let office=0.75, game=0.30, edit=0.30;
+  if (/ultra 7|ultra 9|m4|m3|ryzen 9|i9/.test(spec)) {office=1.0;edit=0.90;game=Math.max(game,0.60);}
+  else if (/ultra 5|m2|ryzen 7|i7|r7/.test(spec)) {office=0.92;edit=0.75;game=Math.max(game,0.50);}
+  else if (/ryzen 5|i5|r5|a17|a18|a19|snapdragon 8 elite/.test(spec)) {office=0.85;edit=0.55;game=Math.max(game,0.40);}
+  else if (/i3|ryzen 3|exynos/.test(spec)) {office=0.70;edit=0.35;game=Math.max(game,0.25);}
+  if (/rtx 5070 ti|rtx 5080|rtx 5090/.test(spec)) {game=1.0;edit=1.0;}
+  else if (/rtx 5070|rtx 4090|rtx 4080/.test(spec)) {game=0.95;edit=0.95;}
+  else if (/rtx 5060|rtx 4070/.test(spec)) {game=0.85;edit=0.80;}
+  else if (/rtx 4060|rtx 3070/.test(spec)) {game=0.75;edit=0.70;}
+  else if (/rtx|gtx/.test(spec)) {game=0.65;edit=0.60;}
+  if (/64gb/.test(spec)) {edit=Math.min(edit+0.10,1.0);office=Math.min(office+0.05,1.0);}
+  else if (/32gb/.test(spec)) {edit=Math.min(edit+0.05,1.0);office=Math.min(office+0.03,1.0);}
+  return {office:Math.round(office*100)/100, game:Math.round(game*100)/100, edit:Math.round(edit*100)/100};
+}
+function getFreshness(p) {
+  const spec = ((p.cpu||"")+" "+(p.gpu||"")).toLowerCase();
+  if (/ultra 7|ultra 9|m4|m3|rtx 5|ryzen 9 9|a19|snapdragon 8 elite/.test(spec))
+    return {emoji:"🟢", label:"當季新品，五年不落伍", color:"var(--green)", bg:"#0A2018", borderColor:"#00E5A066"};
+  if (/ultra 5|m2|rtx 4|ryzen 7 9|ryzen 5 7|i7-13|i5-13|a18|a17|snapdragon 8 gen 3/.test(spec))
+    return {emoji:"🟡", label:"主流世代，三年夠用", color:"#FFD700", bg:"#1E1800", borderColor:"#FFD70066"};
+  return {emoji:"🔴", label:"規格偏舊，價格夠低再考慮", color:"var(--red)", bg:"#200808", borderColor:"#FF4D6D66"};
+}
+function getCompatScore(p, apps) {
+  if (!apps.length) return {score:1.0, color:"var(--green)", text:"沒有特定需求，這台完全夠用！"};
+  const scores = getPerfScores(p);
+  const hasHeavyGame = apps.some(a => /3A|絕地/.test(a));
+  const has4K = apps.some(a => /4K/.test(a));
+  const hasAI = apps.some(a => /AI|機器學習/.test(a));
+  let score = 1.0;
+  if (hasHeavyGame) score = Math.min(score, scores.game);
+  if (has4K) score = Math.min(score, scores.edit);
+  if (hasAI) score = Math.min(score, scores.edit * 0.9);
+  if (score >= 0.80) return {score, color:"var(--green)", text:"完全勝任！買這台不用擔心跑不動 ✅"};
+  if (score >= 0.55) return {score, color:"var(--orange)", text:"大部分沒問題，少數重度任務需降低設定 ⚠️"};
+  return {score, color:"var(--red)", text:"規格不足，跑起來可能會很痛苦 ❌"};
+}
+function getAppCategories() {
+  return answers.device === "phone" ? APP_CATS_PHONE : APP_CATS_COMPUTER;
+}
+function getRequiredBudget() {
+  if (!selectedApps.length) return 0;
+  const cats = getAppCategories();
+  let allItems = {};
+  Object.values(cats).forEach(c => Object.assign(allItems, c.items));
+  return Math.max(...selectedApps.map(a => allItems[a]?.min_budget||0));
+}
+function getBudgetWarning() {
+  const budgetMap = {budget:15000, mid:30000, high:50000, pro:99999};
+  const budVal = budgetMap[answers.budget] || 0;
+  const req = getRequiredBudget();
+  if (!req || req <= budVal) return null;
+  const cats = getAppCategories();
+  let allItems = {};
+  Object.values(cats).forEach(c => Object.assign(allItems, c.items));
+  const heavy = selectedApps.filter(a => allItems[a]?.min_budget > budVal);
+  const names = heavy.join("、");
+  const suggested = req <= 42000 ? "NT$35,000" : "NT$45,000 以上";
+  return `💡 建議：${names} 需要較強的規格，目前預算可能不夠力，建議提升至 ${suggested}，或考慮中古旗艦機。`;
+}
+function filterProducts() {
+  const d = answers.device || "computer";
+  const b = answers.budget || "mid";
+  const budgetMap = {budget:15000, mid:30000, high:50000, pro:99999};
+  const budVal = budgetMap[b];
+  const key = {computer:"laptop", phone:"phone", tablet:"tablet"}[d] || "laptop";
+  let list = [...(PRODUCTS[key]||[])];
+  list = list.filter(p => priceNum(p.price) <= budVal * 1.25);
+  return list;
+}
+function shopLinks(brand, name) {
+  const q = encodeURIComponent(`${brand} ${name}`);
+  return [
+    {label:"PChome", url:`https://ecshweb.pchome.com.tw/search/v3.3/?q=${q}`, color:"#4F8EF7", bg:"#1A2540"},
+    {label:"momo",   url:`https://www.momoshop.com.tw/search/searchShop.jsp?keyword=${q}`, color:"#FF4D6D", bg:"#2A1520"},
+    {label:"Yahoo",  url:`https://tw.buy.yahoo.com/search/product?p=${q}`, color:"#FFB300", bg:"#2A2010"},
+    {label:"蝦皮",   url:`https://shopee.tw/search?keyword=${q}`, color:"#FF8C42", bg:"#2A1A10"},
+  ];
+}
+function matchPrefs(p) {
+  const bk = (p.brand||"").toLowerCase();
+  const tags = BRAND_TAGS[bk] || {};
+  const matched=[], missed=[];
+  if (userPrefs.brand.length) {
+    if (userPrefs.brand.includes(tags.brand)) matched.push(`✅ 品牌符合（${tags.brand}）`);
+    else missed.push(`⚠️ 品牌不在偏好內（${tags.brand||"未知"}）`);
+  }
+  if (userPrefs.origin.length) {
+    if (userPrefs.origin.includes(tags.origin)) matched.push(`✅ 產地符合（${tags.origin}）`);
+    else missed.push(`⚠️ 非偏好產地（${tags.origin||"未知"}）`);
+  }
+  return {matched, missed};
+}
+function specPromises(p) {
+  const cpu = (p.cpu||"").toLowerCase();
+  const r1 = /rtx 40|rtx40|rtx 30/.test(cpu) ? "🎮 3A大作順跑" :
+             /rtx|gtx/.test(cpu) ? "🎮 遊戲繪圖OK" : "📺 文書影音首選";
+  const r2 = /i7|i9|r7|r9|m4/.test(cpu) ? "⚡ 多工剪輯不卡" : "📝 基礎辦公學習";
+  return [r1, r2];
+}
+function getExpertComment(p) {
+  const scores = getPerfScores(p);
+  const {office:o, game:g, edit:e} = scores;
+  const name = p.name;
+  const brand = (p.brand||"").toLowerCase();
+  const lines = [];
+  if (selectedApps.length) {
+    lines.push("📋 針對你選的軟體：");
+    selectedApps.forEach(app => {
+      let verdict = "";
+      if (/3A|絕地/.test(app)) verdict = g>=0.80 ? "✅ 跑得動，高畫質沒問題" : g>=0.55 ? "⚠️ 勉強跑得動，建議調中畫質" : "❌ 規格不足，會卡頓";
+      else if (/英雄聯盟|輕量遊戲/.test(app)) verdict = g>=0.55 ? "✅ 完全沒問題，超流暢" : "⚠️ 可以跑，但特效要關低";
+      else if (/4K/.test(app)) verdict = e>=0.80 ? "✅ 4K剪輯流暢" : e>=0.55 ? "⚠️ 1080p沒問題，4K會有些卡" : "❌ 不建議跑4K剪輯";
+      else if (/Photoshop|設計/.test(app)) verdict = e>=0.70 ? "✅ 修圖設計完全順暢" : "⚠️ 基本修圖可以，大型PSD檔會慢";
+      else if (/AI|機器學習/.test(app)) verdict = e>=0.85 ? "✅ 本地AI推論沒問題" : "❌ 訓練模型需要更強的GPU";
+      else verdict = o>=0.80 ? "✅ 完全夠用" : "⚠️ 基本操作可以";
+      lines.push(`  • ${app}：${verdict}`);
+    });
+    lines.push("");
+  }
+  lines.push(o>=0.90 ? "🖥️ 多工文書：同時開幾十個分頁、跑多個程式完全沒問題。" : "🖥️ 多工文書：基本夠用，大量多工可能偶爾會頓一下。");
+  lines.push("");
+  lines.push("💡 這台的特別提醒：");
+  if (/apple|macbook/.test(brand+name.toLowerCase())) {
+    lines.push("  • macOS 不支援 Windows 遊戲，需用 GeForce Now 等串流平台");
+    lines.push("  • 擴充埠少，建議搭配 USB-C Hub 使用");
+  } else if (/thinkpad/.test(name.toLowerCase())) {
+    lines.push("  • 鍵盤是筆電界最佳，長時間打字首選");
+    lines.push("  • 記憶體通常可自行升級，未來擴充彈性大");
+  } else if (/asus/.test(brand)) {
+    lines.push("  • 台灣自有品牌，全台維修據點多，送修方便");
+  } else if (/dell/.test(brand)) {
+    lines.push("  • XPS 系列工藝頂尖，但擴充埠極少，強烈建議搭配 USB-C Hub");
+  } else if (/google/.test(brand)) {
+    lines.push("  • 台灣無官方實體門市，售後需透過線上或授權通路處理");
+    lines.push("  • 享有 7 年 Android 更新保證");
+  } else if (/huawei/.test(brand)) {
+    lines.push("  ⚠️ 重要提醒：Huawei 手機無法使用 Google 服務");
+    lines.push("  • 沒有 Google Play 商店，無法安裝 Gmail、Google Maps、YouTube 等");
+  }
+  const useCase = g>=0.8 ? "遊戲電競" : e>=0.75 ? "創作生產" : "日常辦公";
+  const priceV = priceNum(p.price);
+  const cp = priceV < 35000 ? "很高" : "合理";
+  lines.push(`\n💬 總結：${name} 最適合${useCase}族群，CP值${cp}。`);
+  return lines.join("\n");
+}
+
+// ─── NAVIGATION ─────────────────────────────────────────────
+function goTo(step) {
+  currentStep = step;
+  renderStepper();
+  renderPage();
+  document.getElementById("backBtn").style.display = step > 0 ? "" : "none";
+  document.getElementById("homeBtn").style.display = step > 0 ? "" : "none";
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+function goBack() {
+  if (currentStep > 0) goTo(currentStep - 1);
+}
+
+// ─── STEPPER ────────────────────────────────────────────────
+function renderStepper() {
+  const el = document.getElementById("stepper");
+  let html = "";
+  STEPS.forEach((label, i) => {
+    const done = i < currentStep;
+    const active = i === currentStep;
+    const cls = done ? "done" : active ? "active" : "";
+    const txt = done ? "✓" : i < 5 ? i+1 : "★";
+    html += `<div class="step-item">
+      <div class="step-dot ${cls}" onclick="${i<=currentStep?`goTo(${i})`:'void 0'}" style="cursor:${i<=currentStep?'pointer':'default'}">${txt}</div>
+      <div class="step-label ${cls}">${label}</div>
+    </div>`;
+    if (i < STEPS.length-1) html += `<div class="step-line ${i<currentStep?'done':''}"></div>`;
+  });
+  el.innerHTML = html;
+}
+
+// ─── PAGES ──────────────────────────────────────────────────
+function renderPage() {
+  const pages = [pageS1, pageS2, pageS2b, pageS3, pagePrefs, pageResult];
+  document.getElementById("mainContent").innerHTML = `<div class="page-enter">${pages[currentStep]()}</div>`;
+  attachPageHandlers();
+}
+
+function heroHtml(emoji, title, sub, g1="#1A3A8F", g2="#2D1B69") {
+  return `<div class="hero" style="background: linear-gradient(135deg, ${g1}, ${g2})">
+    <div class="hero-emoji">${emoji}</div>
+    <div class="hero-title">${title}</div>
+    <div class="hero-sub">${sub}</div>
+  </div>`;
+}
+
+function gridHtml(opts, key, nextStep) {
+  return `<div class="option-grid" data-key="${key}" data-next="${nextStep}">
+    ${opts.map(o => `<div class="option-card ${answers[key]===o.val?'selected':''}" data-val="${o.val}">
+      <div class="option-emoji">${o.emoji}</div>
+      <div class="option-main">${o.main}</div>
+      <div class="option-sub">${o.sub}</div>
+    </div>`).join("")}
+  </div>`;
+}
+
+function pageS1() {
+  return heroHtml("🛒","想買什麼？","點一下自動進入下一步","#1A3A8F","#2D1B69")
+    + gridHtml(STEP_OPTS.device, "device", 1)
+    + shareHtml() + footerHtml();
+}
+function pageS2() {
+  return heroHtml("👤","使用情境最像哪個？","不確定就選「一般使用」","#2D1B69","#1A3A8F")
+    + gridHtml(STEP_OPTS.user, "user", 2)
+    + footerHtml();
+}
+function pageS2b() {
+  const cats = getAppCategories();
+  let html = heroHtml("📦","你需要跑哪些軟體？","可多選，幫你精算最低需求","#0F2A50","#1A2260");
+  html += `<div class="app-categories">`;
+  Object.entries(cats).forEach(([catName, cat]) => {
+    html += `<div>
+      <div class="app-cat-title">${catName} <span style="font-size:11px;color:var(--text3);font-weight:400">— ${cat.desc}</span></div>
+      <div class="app-items">`;
+    Object.keys(cat.items).forEach(itemName => {
+      const chk = selectedApps.includes(itemName) ? "checked" : "";
+      html += `<div class="app-chip ${chk}" data-app="${itemName}">${itemName}</div>`;
+    });
+    html += `</div></div>`;
+  });
+  html += `</div>`;
+  if (selectedApps.length) {
+    const req = getRequiredBudget();
+    if (req) html += `<div class="warn-box">✅ 建議最低預算：NT$${req.toLocaleString()}</div>`;
+  }
+  html += `<div class="btn-center"><button class="btn-primary" onclick="goTo(3)">下一步：選預算 →</button></div>`;
+  html += footerHtml();
+  return html;
+}
+function pageS3() {
+  const warn = getBudgetWarning();
+  const req = getRequiredBudget();
+  let html = heroHtml("💰","大概想花多少錢？","選最接近的，之後可調整","#0F3460","#0A2240");
+  if (selectedApps.length && req) {
+    html += `<div class="warn-box">📋 已選 ${selectedApps.length} 項軟體，建議最低預算：NT$${req.toLocaleString()}</div>`;
+  }
+  if (warn) html += `<div class="warn-box budget-warn">${warn}</div>`;
+  html += `<div class="budget-tips">
+    <div class="budget-tips-title">預算怎麼選？</div>
+    ${[["💰 NT$5,000–15,000","用2–3年，家用/長輩文書"],["👍 NT$15,000–30,000","用4–5年，學生上班族甜蜜點"],["⭐ NT$30,000–50,000","用5–6年，遊戲多工推薦"],["🏆 NT$50,000 以上","頂規用7年，創作/重度遊戲"]].map(([l,d]) => `<div class="budget-tip-row"><span class="budget-tip-label">${l}</span><span class="budget-tip-desc">${d}</span></div>`).join("")}
+  </div>`;
+  html += gridHtml(STEP_OPTS.budget, "budget", 4);
+  return html;
+}
+function pagePrefs() {
+  let html = heroHtml("🎯","個人偏好（選填）","讓推薦更精準","#1A2D1A","#0D1A2D");
+  html += `<div class="pref-section">`;
+  [["brand","偏好品牌"],["color","外觀顏色"],["origin","產地偏好"]].forEach(([key, title]) => {
+    html += `<div class="pref-section-title">${title}</div><div class="pref-chips" data-pref="${key}">`;
+    ADVANCED_PREFS[key].forEach(({emoji,label}) => {
+      const act = userPrefs[key].includes(label) ? "active" : "";
+      html += `<div class="pref-chip ${act}" data-label="${label}">${emoji} ${label}</div>`;
+    });
+    html += `</div>`;
+  });
+  html += `</div>`;
+  html += `<div class="btn-center"><button class="btn-primary" onclick="goTo(5)">查看推薦結果 ★</button></div>`;
+  return html;
+}
+
+function pageResult() {
+  const d = answers.device || "computer";
+  const DL = {computer:"💻 筆電", phone:"📱 手機", tablet:"📟 平板", desktop:"🖥️ 桌機"};
+  const UL = {child:"👧 小朋友",student:"🎓 學生",work:"💼 上班族",create:"🎨 創作者",game:"🎮 遊戲玩家",senior:"👴 長輩",general:"🙋 一般"};
+  const BL = {budget:"💰 省錢",mid:"👍 中等",high:"⭐ 品質優",pro:"🏆 頂規"};
+  let html = `<div class="ans-row">你的選擇：
+    <div class="ans-chip" onclick="goTo(0)">${DL[d]||d} ✎</div>
+    <div class="ans-chip" onclick="goTo(1)">${UL[answers.user||"general"]||"一般"} ✎</div>
+    ${selectedApps.length?`<div class="ans-chip" onclick="goTo(2)">📋 軟體需求 ✎</div>`:""}
+    <div class="ans-chip" onclick="goTo(3)">${BL[answers.budget||"mid"]||"中等"} ✎</div>
+  </div>`;
+  html += `<div style="background:#2A1800;border-radius:8px;padding:8px 14px;margin:8px 24px 0;font-size:11px;color:var(--orange)">⚠ 規格價格僅供參考，購買前請至門市確認</div>`;
+
+  if (d === "computer") {
+    const products = filterProducts();
+    const builds = PRODUCTS.desktop;
+    // Compare bar placeholder
+    html += `<div id="compareBar"></div>`;
+    // Tabs
+    html += `<div class="tab-bar">
+      <button class="tab-btn active" id="tabLaptop" onclick="switchTab('laptop')">💻 品牌筆電 (${products.length}台)</button>
+      <button class="tab-btn" id="tabDesktop" onclick="switchTab('desktop')">🖥️ 自組桌機 (${builds.length}套)</button>
+      <span style="flex:1"></span>
+      <span style="font-size:12px;color:var(--text3)">筆電可攜 · 桌機效能更強</span>
+    </div>`;
+    html += `<div class="results-list active" id="listLaptop" style="padding:0 24px">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">💻 ${products.length} 款筆電，第一款為編輯首選</div>
+      ${products.map((p,i) => productCardHtml(p, i===0)).join("")}
+    </div>`;
+    html += `<div class="results-list" id="listDesktop" style="padding:0 24px">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">🖥️ 自組桌機方案</div>
+      ${builds.map(b => desktopCardHtml(b)).join("")}
+    </div>`;
+  } else if (d === "desktop") {
+    html += `<div style="padding:0 24px;margin-top:12px">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">🖥️ 自組桌機方案</div>
+      ${PRODUCTS.desktop.map(b => desktopCardHtml(b)).join("")}
+    </div>`;
+  } else {
+    const products = filterProducts();
+    html += `<div style="padding:0 24px;margin-top:12px">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">${DL[d]} 推薦 ${products.length} 款</div>
+      ${products.map((p,i) => productCardHtml(p, i===0)).join("")}
+    </div>`;
+  }
+  html += shareHtml();
+  html += footerHtml();
+  return html;
+}
+
+function productCardHtml(p, isTop=false) {
+  const pt = priceTag(p.price);
+  const scores = getPerfScores(p);
+  const fresh = getFreshness(p);
+  const compat = getCompatScore(p, selectedApps);
+  const pf = matchPrefs(p);
+  const promises = specPromises(p);
+  const links = shopLinks(p.brand, p.name);
+  const inCmp = compareList.some(x => x.name===p.name);
+  const pn = encodeURIComponent(p.name);
+  return `<div class="product-card ${isTop?"top-pick":""}" id="card-${pn}">
+    ${isTop?`<div style="margin-bottom:8px"><span class="badge editor">✦ 編輯首選</span></div>`:""}
+    <div class="product-header">
+      <div>
+        <div class="product-brand">${p.brand}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="badges">${promises.map((b,i) => `<span class="badge ${i>0?"secondary":""}">${b}</span>`).join("")}<span class="badge tag">${p.tag}</span></div>
+        <div class="product-spec">⚡ ${p.cpu}　💾 ${p.ram}　💿 ${p.ssd}</div>
+      </div>
+      <div class="product-right">
+        <div><span class="price-label" style="background:${pt.bg};color:${pt.color}">${pt.label}</span></div>
+        <div class="price-val">${p.price}</div>
+        <div class="battery-weight">🔋 ${p.battery}　⚖️ ${p.weight}</div>
+      </div>
+    </div>
+    <div class="freshness-bar" style="background:${fresh.bg};color:${fresh.color};border-color:${fresh.borderColor}">
+      <span>${fresh.emoji}</span><span>${fresh.label}</span>
+    </div>
+    <div class="pros-cons">
+      <div class="pros-box"><div class="pros-title">✅ 優點</div><div class="pros-text">${p.pros}</div></div>
+      <div class="cons-box"><div class="cons-title">⚠️ 注意</div><div class="cons-text">${p.cons}</div></div>
+    </div>
+    <div class="score-section">
+      <div class="score-section-title">📊 性能體感指標（小白專用）</div>
+      ${scoreBarHtml("🖥️ 文書辦公 / 多工", scores.office, "var(--accent)")}
+      ${scoreBarHtml("🎮 遊戲體驗 / 3D",   scores.game,   "var(--orange)")}
+      ${scoreBarHtml("🎬 剪輯 / 專業生產",  scores.edit,   "var(--accent2)")}
+    </div>
+    ${selectedApps.length ? `<div class="compat-box" style="border-color:${compat.color}">
+      <div class="compat-title">🛡️ 對你的需求承載力</div>
+      <div class="compat-row">
+        <div class="compat-score" style="color:${compat.color}">${Math.round(compat.score*100)}%</div>
+        <div style="flex:1"></div>
+        <div class="compat-text" style="color:${compat.color}">${compat.text}</div>
+      </div>
+      <div class="compat-bar"><div style="width:${Math.round(compat.score*100)}%;height:100%;background:${compat.color};border-radius:4px"></div></div>
+    </div>`:""}
+    ${(pf.matched.length||pf.missed.length) ? `<div class="pref-box" style="border:1px solid ${pf.matched.length?"var(--green)44":"var(--border)"}">
+      <div class="pref-box-title">🎯 偏好符合度</div>
+      ${pf.matched.map(m=>`<div class="pref-match">${m}</div>`).join("")}
+      ${pf.missed.map(m=>`<div class="pref-miss">${m}</div>`).join("")}
+    </div>`:""}
+    <div class="shop-links">
+      ${links.map(l=>`<a href="${l.url}" target="_blank" class="shop-btn" style="background:${l.bg};color:${l.color}">${l.label}</a>`).join("")}
+    </div>
+    <div class="action-row">
+      <div class="action-link" style="color:var(--green)" onclick="showExpert(${pn})">？ 這規格適合我嗎？</div>
+      <div class="action-link" style="color:var(--orange)" onclick="showTrap()">🛡️ 店員殺手問答集</div>
+      <div class="compare-btn" style="color:${inCmp?"var(--green)":"var(--accent)"}" onclick="toggleCompare(${pn})" id="cmpbtn-${pn}">
+        ${inCmp?"✅ 已加入比較":"⚡ 加入PK比較"}
+      </div>
+    </div>
+  </div>`;
+}
+
+function scoreBarHtml(label, val, color) {
+  return `<div class="score-row">
+    <div class="score-header">
+      <span class="score-label">${label}</span>
+      <span class="score-val" style="color:${color}">${Math.round(val*100)}%</span>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:${Math.round(val*100)}%;background:${color}"></div></div>
+  </div>`;
+}
+
+function desktopCardHtml(b) {
+  const parts = [
+    ["CPU", b.cpu], ["主機板", b.motherboard], ["記憶體", b.ram],
+    ["SSD", b.ssd], ["顯示卡", b.gpu], ["電源", b.psu],
+  ];
+  return `<div class="desktop-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-size:18px;font-weight:700;color:var(--text)">${b.name}</div>
+        <span class="badge tag">${b.tag}</span>
+      </div>
+      <div style="font-size:20px;font-weight:900;color:var(--green)">${b.total_price}</div>
+    </div>
+    <div class="desktop-parts">
+      ${parts.map(([l,v])=>`<div class="desktop-part"><div class="part-label">${l}</div><div class="part-val">${v}</div></div>`).join("")}
+    </div>
+  </div>`;
+}
+
+function shareHtml() {
+  return `<div class="share-section">
+    <div class="share-title">🔗 分享給朋友一起選購</div>
+    <div class="share-buttons">
+      <button class="share-btn" style="background:linear-gradient(180deg,#11DD6B,#06C755,#049040);color:#fff" onclick="doShare('LINE')">LINE</button>
+      <button class="share-btn" style="background:linear-gradient(180deg,#4A9EFF,#1877F2,#1055BE);color:#fff" onclick="doShare('Facebook')">Facebook</button>
+      <button class="share-btn" style="background:linear-gradient(180deg,#C056D4,#E1306C,#F77737);color:#fff" onclick="doShare('Instagram')">Instagram</button>
+      <button class="share-btn" style="background:linear-gradient(180deg,#3A3A3A,#181818,#000);color:#fff" onclick="doShare('Threads')">Threads</button>
+    </div>
+    <div class="share-note">※ IG 點擊後自動複製文字，請貼入貼文。</div>
+  </div>`;
+}
+function footerHtml() {
+  return `<footer>
+    <div><div class="footer-brand">3C 選購顧問</div><div class="footer-sub">由 捷啟智慧科技 開發</div></div>
+    <a class="footer-link" href="${APP_URL}" target="_blank">前往網站 →</a>
+    <div class="footer-copy">© 2026 捷啟智慧科技  All Rights Reserved.  本工具資訊僅供參考，售價以各通路為準。</div>
+  </footer>`;
+}
+
+// ─── HANDLERS ───────────────────────────────────────────────
+function attachPageHandlers() {
+  // Option grid
+  document.querySelectorAll(".option-grid").forEach(grid => {
+    const key = grid.dataset.key;
+    const next = parseInt(grid.dataset.next);
+    grid.querySelectorAll(".option-card").forEach(card => {
+      card.onclick = () => {
+        answers[key] = card.dataset.val;
+        goTo(next);
+      };
+    });
+  });
+  // App chips
+  document.querySelectorAll(".app-chip").forEach(chip => {
+    chip.onclick = () => {
+      const app = chip.dataset.app;
+      if (selectedApps.includes(app)) {
+        selectedApps = selectedApps.filter(a => a!==app);
+        chip.classList.remove("checked");
+      } else {
+        selectedApps.push(app);
+        chip.classList.add("checked");
+      }
+      renderPage(); // re-render to update budget hint
+    };
+  });
+  // Pref chips
+  document.querySelectorAll(".pref-chips").forEach(row => {
+    const key = row.dataset.pref;
+    row.querySelectorAll(".pref-chip").forEach(chip => {
+      chip.onclick = () => {
+        const label = chip.dataset.label;
+        if (userPrefs[key].includes(label)) {
+          userPrefs[key] = userPrefs[key].filter(l=>l!==label);
+          chip.classList.remove("active");
+        } else {
+          userPrefs[key].push(label);
+          chip.classList.add("active");
+        }
+      };
+    });
+  });
+  // Refresh compare bar
+  if (currentStep === 5) updateCompareBar();
+}
+
+// ─── TAB SWITCH ─────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById("listLaptop").className = "results-list" + (tab==="laptop"?" active":"");
+  document.getElementById("listDesktop").className = "results-list" + (tab==="desktop"?" active":"");
+  document.getElementById("tabLaptop").className = "tab-btn" + (tab==="laptop"?" active":"");
+  document.getElementById("tabDesktop").className = "tab-btn" + (tab==="desktop"?" active":"");
+}
+
+// ─── COMPARE ────────────────────────────────────────────────
+function findProduct(encodedName) {
+  const name = decodeURIComponent(encodedName);
+  const all = [...PRODUCTS.laptop, ...PRODUCTS.phone, ...PRODUCTS.tablet];
+  return all.find(p => p.name === name);
+}
+function toggleCompare(encodedName) {
+  const p = findProduct(encodedName);
+  if (!p) return;
+  const idx = compareList.findIndex(x=>x.name===p.name);
+  if (idx>=0) {
+    compareList.splice(idx,1);
+  } else {
+    if (compareList.length>=2) compareList.shift();
+    compareList.push(p);
+  }
+  // Update button text
+  const btn = document.getElementById(`cmpbtn-${encodedName}`);
+  if (btn) {
+    const inCmp = compareList.some(x=>x.name===p.name);
+    btn.innerHTML = inCmp ? "✅ 已加入比較" : "⚡ 加入PK比較";
+    btn.style.color = inCmp ? "var(--green)" : "var(--accent)";
+  }
+  updateCompareBar();
+}
+function updateCompareBar() {
+  const bar = document.getElementById("compareBar");
+  if (!bar) return;
+  if (compareList.length===2) {
+    bar.innerHTML = `<div class="compare-bar">
+      <div class="compare-bar-text">⚡ PK：${compareList[0].name}  VS  ${compareList[1].name}</div>
+      <button class="compare-go-btn" onclick="showCompare()">開始比較 →</button>
+    </div>`;
+  } else if (compareList.length===1) {
+    bar.innerHTML = `<div style="background:var(--card2);border-radius:10px;padding:10px 16px;margin:0 24px 8px;font-size:12px;color:var(--accent)">
+      已選 ${compareList[0].name}，再選一台開始PK比較
+    </div>`;
+  } else {
+    bar.innerHTML = "";
+  }
+}
+function showCompare() {
+  if (compareList.length<2) return;
+  const [a,b] = compareList;
+  const sa = getPerfScores(a), sb = getPerfScores(b);
+  const pa = priceNum(a.price), pb = priceNum(b.price);
+  function cmpRow(label, aVal, bVal, biggerIsBetter=true) {
+    const aWin = biggerIsBetter ? aVal>bVal : aVal<bVal;
+    const bWin = biggerIsBetter ? bVal>aVal : bVal<aVal;
+    return `<div class="compare-row">
+      <div class="compare-val ${aWin?"compare-win":""}" style="color:${aWin?"var(--green)":"var(--text2)"}">${typeof aVal==="number"?Math.round(aVal*100)+"%":aVal}</div>
+      <div class="compare-mid">${label}</div>
+      <div class="compare-val ${bWin?"compare-win":""}" style="color:${bWin?"var(--green)":"var(--text2)"}">${typeof bVal==="number"?Math.round(bVal*100)+"%":bVal}</div>
+    </div>`;
+  }
+  const summary = (pa<pb ? "左邊較便宜" : pb<pa ? "右邊較便宜" : "售價相當") + "，" +
+    ((sa.game+sa.edit)>(sb.game+sb.edit) ? "左邊效能更強" : "右邊效能更強");
+  const body = `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px">
+    <div class="compare-col">
+      <div style="font-size:11px;color:var(--accent);font-weight:700">${a.brand}</div>
+      <div style="font-size:12px;font-weight:700;color:var(--text)">${a.name}</div>
+      <div style="font-size:14px;font-weight:700;color:var(--white)">${a.price}</div>
+    </div>
+    <div style="font-size:14px;font-weight:700;color:var(--text3);padding-top:16px">VS</div>
+    <div class="compare-col">
+      <div style="font-size:11px;color:var(--accent);font-weight:700">${b.brand}</div>
+      <div style="font-size:12px;font-weight:700;color:var(--text)">${b.name}</div>
+      <div style="font-size:14px;font-weight:700;color:var(--white)">${b.price}</div>
+    </div>
+  </div>
+  ${cmpRow("文書辦公", sa.office, sb.office)}
+  ${cmpRow("遊戲效能", sa.game, sb.game)}
+  ${cmpRow("剪輯創作", sa.edit, sb.edit)}
+  ${cmpRow("售價比較", pa, pb, false)}
+  <div class="compare-row">
+    <div class="compare-val">${a.battery||"—"}</div>
+    <div class="compare-mid">電池續航</div>
+    <div class="compare-val">${b.battery||"—"}</div>
+  </div>
+  <div class="compare-row">
+    <div class="compare-val">${a.weight||"—"}</div>
+    <div class="compare-mid">重量</div>
+    <div class="compare-val">${b.weight||"—"}</div>
+  </div>
+  <div style="margin-top:10px;font-size:11px;color:var(--orange)">💡 ${summary}</div>`;
+  showModal("⚡ PK 比較", body, [
+    {text:"清除比較", cls:"modal-btn danger", onclick:"compareList=[];closeModal();updateCompareBar();"},
+    {text:"關閉", cls:"modal-btn primary", onclick:"closeModal()"},
+  ]);
+}
+
+// ─── EXPERT / TRAP DIALOGS ─────────────────────────────────
+function showExpert(encodedName) {
+  const p = findProduct(encodedName);
+  if (!p) return;
+  const comment = getExpertComment(p);
+  const body = `<div><span class="expert-product-name">${p.name}</span></div>
+    <pre style="font-family:inherit;font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap;margin-top:8px">${comment}</pre>`;
+  showModal("💬 選購建議", body, [{text:"了解了！", cls:"modal-btn primary", onclick:"closeModal()"}]);
+}
+function showTrap() {
+  const qs = [
+    ["螢幕色域", "螢幕是 100% sRGB 嗎？還是低色域的？（低色域看起來顏色很黯淡）"],
+    ["記憶體升級", "記憶體是焊死的嗎？未來可以自己升級嗎？"],
+    ["保固方案", "實體店現在買有額外延長保固嗎？送到府維修還是要自己送修？"],
+  ];
+  const body = `<div style="font-size:12px;color:var(--text3);margin-bottom:10px">去店面看時，直接問店員這三個問題：</div>
+    ${qs.map(([q,d],i)=>`<div class="trap-q"><div class="trap-q-num">Q${i+1}. ${q}</div><div class="trap-q-text">${d}</div></div>`).join("")}`;
+  showModal("🛡️ 選購注意事項", body, [{text:"我準備好了 💪", cls:"modal-btn success", onclick:"closeModal()"}]);
+}
+
+// ─── SHARE ──────────────────────────────────────────────────
+function doShare(platform) {
+  const text = "免費 3C 選購顧問，幫你找到最適合的裝置！捷啟智慧科技出品。";
+  const enc = encodeURIComponent(text+"\n"+APP_URL);
+  const encUrl = encodeURIComponent(APP_URL);
+  const urls = {
+    LINE: `https://social-plugins.line.me/lineit/share?url=${encUrl}&text=${encodeURIComponent(text)}`,
+    Facebook: `https://www.facebook.com/sharer/sharer.php?u=${encUrl}`,
+    Instagram: null,
+    Threads: `https://www.threads.net/intent/post?text=${enc}`,
+  };
+  if (platform === "Instagram") {
+    navigator.clipboard.writeText(text+"\n"+APP_URL).catch(()=>{});
+    alert("📋 已複製！請開啟 Instagram 貼上分享文字。");
+    return;
+  }
+  window.open(urls[platform], "_blank");
+}
+
+// ─── MODAL ──────────────────────────────────────────────────
+function showModal(title, body, actions) {
+  document.getElementById("modalTitle").innerHTML = title;
+  document.getElementById("modalBody").innerHTML = body;
+  document.getElementById("modalActions").innerHTML = actions.map(a =>
+    `<button class="${a.cls}" onclick="${a.onclick}">${a.text}</button>`
+  ).join("");
+  document.getElementById("modalOverlay").classList.add("open");
+}
+function closeModal(event) {
+  if (event && event.target !== document.getElementById("modalOverlay")) return;
+  document.getElementById("modalOverlay").classList.remove("open");
+}
+function closeModal() {
+  document.getElementById("modalOverlay").classList.remove("open");
+}
+
+// ─── THEME ──────────────────────────────────────────────────
+function toggleTheme() {
+  isDark = !isDark;
+  document.body.classList.toggle("light-mode", !isDark);
+  document.getElementById("themeBtn").textContent = isDark ? "🌙 深色" : "☀️ 淺色";
+}
+
+// ─── DISCLAIMER ─────────────────────────────────────────────
+function showDisclaimer() {
+  const body = `
+    <div class="disclaimer-section">
+      <div class="disclaimer-section-title" style="color:var(--accent)">版權所有</div>
+      <div class="disclaimer-section-text">本應用程式「3C 選購顧問」由 捷啟智慧科技 開發與維護，所有內容、設計、程式碼及資料之著作權均歸 捷啟智慧科技 所有，未經授權不得複製、轉載或作商業用途。</div>
+    </div>
+    <div class="disclaimer-section">
+      <div class="disclaimer-section-title" style="color:var(--orange)">資訊僅供參考</div>
+      <div class="disclaimer-section-text">本應用程式所提供之產品規格、售價、推薦建議等資訊，均以公開資料整理而成，僅供使用者購買參考之用。實際規格、價格及供貨狀況以各販售通路公告為準。</div>
+    </div>
+    <div class="disclaimer-section">
+      <div class="disclaimer-section-title" style="color:var(--green)">無商業合作關係</div>
+      <div class="disclaimer-section-text">本應用程式與所有列出之品牌廠商、購物平台均無任何商業贊助或合作關係，所有推薦均基於公開資料與中立評估，不涉及廣告或業配。</div>
+    </div>
+    <div style="text-align:center;font-size:11px;color:var(--text3);margin-top:12px">© 2026 捷啟智慧科技  All Rights Reserved.</div>`;
+  showModal("📋 免責聲明", body, [{text:"我已閱讀並了解  ✓", cls:"modal-btn primary", onclick:"closeModal()"}]);
+}
+
+// ─── INIT ───────────────────────────────────────────────────
+renderStepper();
+renderPage();
+setTimeout(showDisclaimer, 300);
+</script>
+</body>
+</html>
