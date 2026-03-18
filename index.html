@@ -703,7 +703,7 @@ const _PCHOME_QUERIES = {
   phone:  ["iPhone","Samsung Galaxy S","Google Pixel","ASUS 手機","小米手機"],
   tablet: ["iPad","Samsung Galaxy Tab","Microsoft Surface","小米平板"],
 };
-const _LS_KEY = "3c_products_db";
+const _LS_KEY = "3c_products_db_v3";
 
 // ─── PRICE HISTORY ──────────────────────────────────────────
 const _PH_KEY = "3c_price_history";
@@ -948,8 +948,8 @@ function renderPriceChart(productName, days) {
   const avgP=Math.round(prices.reduce((a,b)=>a+b,0)/prices.length/100)*100;
   const trendEl=container.querySelector(".ph-trend");
   if(trendEl){trendEl.className=`ph-trend ${trendCls}`;trendEl.textContent=trendAmt;}
-  container.querySelector(".sparkline-wrap").innerHTML=_buildChart(filtered,400,56,false)+
-    `<div style="text-align:right;font-size:9px;color:var(--text3);margin-top:1px">🔍 點擊放大</div>`;
+  const sw=container.querySelector(".sparkline-wrap");
+  sw.innerHTML=`<div style="font-size:10px;color:var(--accent);font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:3px">🔍 <span>點擊放大走勢圖</span></div>`+_buildChart(filtered,400,56,false);
   const statsEl=container.querySelector(".ph-stats");
   if(statsEl) statsEl.innerHTML=`<span>最低 <b style="color:var(--green)">NT$${minP.toLocaleString()}</b></span>
     <span>最高 <b style="color:var(--red)">NT$${maxP.toLocaleString()}</b></span>
@@ -998,10 +998,14 @@ function priceHistoryHtml(productName, currentPrice) {
                    background:${active?"var(--accent)":"var(--card2)"};color:${active?"#fff":"var(--text3)"}">${l}</button>`;}).join("")}
         </div>
       </div>
-      <div class="sparkline-wrap" style="width:200px;flex:none;cursor:pointer"
-           onclick='showPriceModal(${pnJs},${defaultDays})' title="點擊放大查看完整走勢">
+      <div class="sparkline-wrap" style="width:200px;flex:none;cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:6px 8px;transition:border-color 0.2s,background 0.2s"
+           onmouseenter="this.style.borderColor='var(--accent)';this.style.background='var(--card2)'"
+           onmouseleave="this.style.borderColor='var(--border)';this.style.background=''"
+           onclick='showPriceModal(${pnJs},${defaultDays})'>
+        <div style="font-size:10px;color:var(--accent);font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:3px">
+          🔍 <span>點擊放大走勢圖</span>
+        </div>
         ${_buildChart(filtered,400,56,false)}
-        <div style="text-align:right;font-size:9px;color:var(--text3);margin-top:1px">🔍 點擊放大</div>
       </div>
     </div>
   </div>`;
