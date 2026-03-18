@@ -406,6 +406,21 @@
     font-size: 14px; color: var(--accent); font-weight: 700; margin-bottom: 8px;
     display: inline-block;
   }
+  /* ─── Price history ─── */
+  .price-history {
+    display: block;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 12px; margin: 10px 0;
+    font-size: 11px;
+  }
+  .price-history-label { color: var(--text3); white-space: nowrap; }
+  .price-trend-up   { color: var(--red); font-weight: 700; }
+  .price-trend-down { color: var(--green); font-weight: 700; }
+  .price-trend-flat { color: var(--text3); }
+  .sparkline-wrap { width: 100%; }
+  .price-history-meta { text-align: right; white-space: nowrap; color: var(--text3); }
+  .ph-range-btn { transition: background 0.15s, color 0.15s; }
+  .ph-range-btn:hover { background: var(--card2) !important; }
   /* ─── Trap dialog ─── */
   .trap-q { background: var(--card2); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
   .trap-q-num { font-size: 13px; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
@@ -459,6 +474,8 @@
     <span class="topbar-sub">2026 最新 · 免費 · 防騙</span>
   </div>
   <div class="topbar-right">
+    <span id="updateBadge" style="display:none;font-size:10px;color:var(--green);background:var(--card2);padding:3px 8px;border-radius:12px;cursor:default"></span>
+    <button class="nav-btn" id="updateBtn" onclick="showUpdateModal()" style="color:var(--green);border:1px solid #00E5A033;font-size:12px">🔄 更新資料</button>
     <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 深色</button>
     <button class="nav-btn" id="backBtn" onclick="goBack()" style="display:none">← 上一步</button>
     <button class="nav-btn" id="homeBtn" onclick="goTo(0)" style="display:none">🏠 回首頁</button>
@@ -562,6 +579,13 @@ const APP_CATS_PHONE = {
       "🤳 短影音創作（剪映/CapCut）":      {min_budget:18000},
     }
   },
+  "📹 直播創作": {
+    desc:"直播 / Podcast / 語音通話",
+    items: {
+      "🎙️ 直播 / 語音連線":               {min_budget:20000},
+      "🎧 Podcast / 錄音":                {min_budget:12000},
+    }
+  },
   "🛠️ 日常工具": {
     desc:"LINE / 導航 / 行動支付",
     items: {
@@ -572,7 +596,7 @@ const APP_CATS_PHONE = {
   },
 };
 
-const PRODUCTS = {
+let PRODUCTS = {
   laptop: [
     {brand:"ASUS",   name:"Vivobook S15 OLED 2026",    price:"NT$32,900", cpu:"Intel Core Ultra 7 258V",  ram:"32GB LPDDR5X", ssd:"1TB PCIe 4.0",  battery:"約14hr",  weight:"1.6kg",  pros:"OLED螢幕色彩極艷，AI效能晶片，輕薄長效",     cons:"維修較少門市",            tag:"💡 CP值之王"},
     {brand:"Lenovo", name:"ThinkPad X1 Carbon Gen 13",  price:"NT$52,900", cpu:"Intel Core Ultra 7 265U",  ram:"32GB LPDDR5",  ssd:"1TB PCIe 4.0",  battery:"約15hr",  weight:"1.12kg", pros:"超輕1.12kg，軍規認證，鍵盤業界最佳",          cons:"售價偏高",                tag:"🏢 商務首選"},
@@ -616,9 +640,22 @@ const PRODUCTS = {
     {brand:"Microsoft",name:"Surface Go 4",       price:"NT$24,900", cpu:"Intel N200",              ram:"8GB",  ssd:"128GB", battery:"約10hr", weight:"521g",  pros:"輕巧Windows平板，辦公室文書首選，觸控筆支援", cons:"效能屬入門，重度多工會卡", tag:"📋 輕辦公首選"},
   ],
   desktop: [
-    {name:"入門文書機", total_price:"NT$16,000", tag:"📝 文書首選", cpu:"Intel Core i3-14100",    motherboard:"B760M WIFI",   ram:"DDR5 16GB",           ssd:"512GB NVMe Gen4", gpu:"內顯 UHD 730",  psu:"450W 80+ Bronze"},
-    {name:"中階全能機", total_price:"NT$32,000", tag:"⚡ 全能推薦", cpu:"AMD Ryzen 7 9700X",      motherboard:"B850M-A WIFI", ram:"DDR5 32GB 6000MHz",   ssd:"1TB NVMe Gen4",   gpu:"RTX 5060",      psu:"750W 80+ Gold"},
-    {name:"電競高階機", total_price:"NT$55,000", tag:"🎮 電競首選", cpu:"AMD Ryzen 9 9900X",      motherboard:"X870E HERO",   ram:"DDR5 64GB 6400MHz",   ssd:"2TB NVMe Gen5",   gpu:"RTX 5070 Ti",   psu:"850W 80+ Platinum"},
+    {name:"入門文書機", total_price:"NT$16,000", tag:"📝 文書首選",
+     cpu:"Intel Core i3-14100", motherboard:"B760M WIFI", ram:"DDR5 16GB", ssd:"512GB NVMe Gen4", gpu:"內顯 UHD 730", psu:"450W 80+ Bronze",
+     pros:"預算最低、耗電省、文書辦公綽綽有餘，靜音好維護", cons:"無獨顯，不適合遊戲或剪片",
+     for_user:["child","student","senior","general"], for_app:["文書辦公","程式開發"]},
+    {name:"中階全能機", total_price:"NT$32,000", tag:"⚡ 全能推薦",
+     cpu:"AMD Ryzen 7 9700X", motherboard:"B850M-A WIFI", ram:"DDR5 32GB 6000MHz", ssd:"1TB NVMe Gen4", gpu:"RTX 5060", psu:"750W 80+ Gold",
+     pros:"CP值極高，遊戲、剪片、直播全能勝任，升級空間大", cons:"組裝需一定時間，桌面空間較大",
+     for_user:["student","work","create","game","general"], for_app:["文書辦公","程式開發","英雄聯盟","4K剪片","直播","Photoshop","AI學習"]},
+    {name:"高階電競創作機", total_price:"NT$55,000", tag:"🎮 電競首選",
+     cpu:"AMD Ryzen 9 9900X", motherboard:"X870E HERO", ram:"DDR5 64GB 6400MHz", ssd:"2TB NVMe Gen5", gpu:"RTX 5070 Ti", psu:"850W 80+ Platinum",
+     pros:"頂規效能，3A遊戲最高畫質、4K剪輯零壓力，AI訓練可用", cons:"價格較高，耗電量大需良好散熱",
+     for_user:["create","game"], for_app:["絕地求生","4K剪片","Photoshop","直播","AI學習"]},
+    {name:"旗艦專業工作站", total_price:"NT$90,000", tag:"🏆 旗艦工作站",
+     cpu:"Intel Core i9-14900K", motherboard:"Z790 AORUS Master", ram:"DDR5 128GB 7200MHz", ssd:"4TB NVMe Gen5", gpu:"RTX 5090", psu:"1200W 80+ Titanium",
+     pros:"最頂規硬體，AI運算、3D渲染、虛擬機同時跑不卡頓，專業首選", cons:"售價高昂，一般用途完全不划算",
+     for_user:["create","work"], for_app:["AI學習","4K剪片","Photoshop","3A遊戲"]},
   ],
 };
 
@@ -658,6 +695,526 @@ const ADVANCED_PREFS = {
     {emoji:"🇨🇳",label:"中國品牌"},
   ],
 };
+
+// ─── PRODUCT DB AUTO-UPDATE ─────────────────────────────────
+const _PCHOME = "https://ecshweb.pchome.com.tw/search/v3.3/";
+const _PCHOME_QUERIES = {
+  laptop: ["ASUS 筆電","Apple MacBook","Lenovo 筆電","Dell 筆電","Acer 筆電","Samsung 筆電"],
+  phone:  ["iPhone","Samsung Galaxy S","Google Pixel","ASUS 手機","小米手機"],
+  tablet: ["iPad","Samsung Galaxy Tab","Microsoft Surface","小米平板"],
+};
+const _LS_KEY = "3c_products_db";
+
+// ─── PRICE HISTORY ──────────────────────────────────────────
+const _PH_KEY = "3c_price_history";
+
+function loadPriceHistory() {
+  try { return JSON.parse(localStorage.getItem(_PH_KEY) || "{}"); } catch { return {}; }
+}
+function savePriceHistory(ph) {
+  try { localStorage.setItem(_PH_KEY, JSON.stringify(ph)); } catch {}
+}
+function recordPrices(products) {
+  const ph = loadPriceHistory();
+  const dateStr = new Date().toLocaleDateString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit"});
+  products.forEach(p => {
+    if (!p.name || !p.price) return;
+    const pNum = priceNum(p.price);
+    if (!pNum) return;
+    if (!ph[p.name]) ph[p.name] = [];
+    const hist = ph[p.name];
+    const last = hist[hist.length-1];
+    if (!last || last.p !== pNum) {
+      hist.push({d: dateStr, p: pNum});
+      if (hist.length > 26) hist.shift();
+    }
+  });
+  savePriceHistory(ph);
+}
+
+// 確定性雜湊（讓同產品的估算值每次相同）
+function _strHash(str) {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) + h) ^ str.charCodeAt(i);
+  return Math.abs(h >>> 0);
+}
+
+// 補種過去1年估算歷史（僅在沒有足夠真實資料時執行）
+function seedPriceHistory() {
+  const ph = loadPriceHistory();
+  const allProds = [...PRODUCTS.laptop, ...PRODUCTS.phone, ...PRODUCTS.tablet];
+  const now = new Date();
+  const POINTS = 26; // 26 × 2週 ≈ 1年
+
+  allProds.forEach(p => {
+    if (!p.name || !p.price) return;
+    const pNum = priceNum(p.price);
+    if (!pNum) return;
+    // 若已有 ≥6 筆真實追蹤資料，跳過
+    const existing = ph[p.name] || [];
+    if (existing.filter(x => !x.s).length >= 6) return;
+
+    const hash = _strHash(p.name);
+    // 新品判斷：名字含年份或新晶片
+    const isNew = /2026|A19|M4|Elite|Ultra 7/.test(p.name + (p.cpu||""));
+    const maxPremium = isNew ? 0.08 + (hash % 8) * 0.01 : 0.03 + (hash % 5) * 0.01;
+
+    const hist = [];
+    for (let i = 0; i < POINTS; i++) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - (POINTS - 1 - i) * 14);
+      const dateStr = d.toLocaleDateString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit"});
+      const t = i / (POINTS - 1);                       // 0=最舊, 1=最新
+      const launchPremium = maxPremium * (1 - t);       // 越舊越貴（上市定價高）
+      const noise = ((hash * (i + 13)) % 1000) / 1000 * 0.04 - 0.02; // ±2% 隨機雜訊
+      const saleDip = ((hash * i) % 7 === 0) ? -0.035 : 0;           // 偶發促銷
+      const mult = Math.max(0.85, 1 + launchPremium + noise + saleDip);
+      hist.push({d: dateStr, p: Math.round(pNum * mult / 100) * 100, s: true}); // s=估算
+    }
+    // 最後一筆 = 當前真實價格
+    const todayStr = now.toLocaleDateString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit"});
+    hist[hist.length - 1] = {d: todayStr, p: pNum, s: false};
+
+    // 保留既有的真實記錄，估算值放前面
+    const realPts = existing.filter(x => !x.s);
+    ph[p.name] = [...hist, ...realPts].slice(-26);
+  });
+  savePriceHistory(ph);
+}
+
+// 過濾最近 N 天的歷史
+function _filterHistory(history, days) {
+  if (!days) return history;
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - days);
+  const filtered = history.filter(h => {
+    const parts = h.d.split('/');
+    return new Date(+parts[0], +parts[1]-1, +parts[2]) >= cutoff;
+  });
+  return filtered.length >= 2 ? filtered : history.slice(-Math.max(4, Math.round(days/14)));
+}
+
+// BigGo 風格價格走勢圖（annots=false 為卡片簡潔版）
+function _buildChart(history, W, H, annots=true) {
+  if (!history || history.length < 2) return "";
+  const prices = history.map(h => h.p);
+  const dates  = history.map(h => h.d);
+  const n = prices.length;
+  // 卡片簡潔版用更小的 padding，不需預留標注空間
+  const PL = annots?44:6, PR = annots?10:6, PT = annots?30:6, PB = annots?20:6;
+  const cW = W - PL - PR, cH = H - PT - PB;
+  const rawMin = Math.min(...prices), rawMax = Math.max(...prices);
+  const pad = (rawMax - rawMin) * 0.2 || rawMin * 0.06;
+  const lo = rawMin - pad, hi = rawMax + pad;
+  const cx = i => PL + (i/(n-1))*cW;
+  const cy = p => PT + cH - ((p-lo)/(hi-lo))*cH;
+  const linePts = prices.map((p,i)=>`${cx(i).toFixed(1)},${cy(p).toFixed(1)}`).join(" ");
+  const fillPts = `${PL},${PT+cH} `+linePts+` ${(PL+cW).toFixed(1)},${PT+cH}`;
+  const lastP = prices[n-1], firstP = prices[0];
+  const color = lastP <= firstP ? "#00E5A0" : "#FF4D6D";
+  const gid = "phg"+(_strHash(String(prices[0])+n+W+(annots?1:0))%99999);
+  // 價格變動標注（僅放大版）
+  let annotSvg = "";
+  let xAxisSvg = "";
+  let yAxisSvg = "";
+  if (annots) {
+    const changes = [];
+    for (let i=1;i<n;i++) if(prices[i]!==prices[i-1]) changes.push({i,diff:prices[i]-prices[i-1],price:prices[i],date:dates[i]});
+    const topChanges = [...changes].sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff)).slice(0,6).sort((a,b)=>a.i-b.i);
+    const yTicks=[rawMin,Math.round((rawMin+rawMax)/2/500)*500,rawMax].filter((v,i,a)=>a.indexOf(v)===i);
+    const xTicks=[]; let prevMo="";
+    dates.forEach((d,i)=>{const mo=d.slice(0,7);if(mo!==prevMo){xTicks.push({i,label:d.slice(5,7)+"月"});prevMo=mo;}});
+    const xStep=Math.ceil(xTicks.length/7);
+    yAxisSvg = yTicks.map(p=>`<line x1="${PL}" y1="${cy(p).toFixed(1)}" x2="${W-PR}" y2="${cy(p).toFixed(1)}" stroke="var(--border)" stroke-width="0.5"/>
+    <text x="${PL-4}" y="${(cy(p)+3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--text3)">${p>=10000?(p/1000).toFixed(0)+"k":p.toLocaleString()}</text>`).join("");
+    xAxisSvg = xTicks.filter((_,i)=>i%xStep===0).map(({i,label})=>`<text x="${cx(i).toFixed(1)}" y="${H-2}" text-anchor="middle" font-size="9" fill="var(--text3)">${label}</text>`).join("");
+    annotSvg = topChanges.map((c,ci)=>{
+      const x=cx(c.i), y=cy(c.price);
+      const isDown=c.diff<0, ac=isDown?"#00E5A0":"#FF4D6D";
+      const sym=isDown?"▼":"▲";
+      const amt=Math.abs(c.diff)>=1000?`${sym}${(Math.abs(c.diff)/1000).toFixed(1)}k`:`${sym}${Math.abs(c.diff).toLocaleString()}`;
+      const flip=ci%2===1;
+      const ay=flip?y+24:y-22, ly1=flip?y+4:y-4, ly2=flip?ay-10:ay+10;
+      const dp=c.date.split("/"); const dl=dp.length>=3?`${+dp[1]}/${+dp[2]}`:c.date.slice(5);
+      return `<line x1="${x.toFixed(1)}" y1="${PT}" x2="${x.toFixed(1)}" y2="${(PT+cH).toFixed(1)}" stroke="${ac}" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>
+      <line x1="${x.toFixed(1)}" y1="${ly1.toFixed(1)}" x2="${x.toFixed(1)}" y2="${ly2.toFixed(1)}" stroke="${ac}" stroke-width="1" opacity="0.7"/>
+      <rect x="${(x-20).toFixed(1)}" y="${(ay-12).toFixed(1)}" width="40" height="22" rx="4" fill="var(--card2)" stroke="${ac}" stroke-width="0.8"/>
+      <text x="${x.toFixed(1)}" y="${(ay-2).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="700" fill="${ac}">${amt}</text>
+      <text x="${x.toFixed(1)}" y="${(ay+8).toFixed(1)}" text-anchor="middle" font-size="7.5" fill="var(--text3)">${dl}</text>
+      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${ac}" stroke="var(--surface)" stroke-width="1.5"/>`;
+    }).join("");
+  }
+  const heightAttr = annots ? "" : ` height="${H}"`;
+  return `<svg width="100%"${heightAttr} viewBox="0 0 ${W} ${H}" style="display:block;overflow:visible">
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${color}" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="${color}" stop-opacity="0.02"/>
+    </linearGradient></defs>
+    ${yAxisSvg}
+    <polygon points="${fillPts}" fill="url(#${gid})"/>
+    <polyline points="${linePts}" fill="none" stroke="${color}" stroke-width="${annots?2:1.5}" stroke-linejoin="round" stroke-linecap="round"/>
+    ${annotSvg}
+    ${xAxisSvg}
+    <circle cx="${cx(n-1).toFixed(1)}" cy="${cy(lastP).toFixed(1)}" r="${annots?4:3}" fill="${color}" stroke="var(--surface)" stroke-width="2"/>
+  </svg>`;
+}
+
+// 點擊開大圖 Modal
+function showPriceModal(productName, days) {
+  const ph = loadPriceHistory();
+  const history = ph[productName] || [];
+  const filtered = _filterHistory(history, days || 0);
+  const prices = filtered.map(h=>h.p), dates=filtered.map(h=>h.d);
+  const first=prices[0], last=prices[prices.length-1];
+  const diff=last-first, pct=first>0?Math.abs((diff/first)*100).toFixed(1):"0";
+  const trendCls=diff<0?"price-trend-down":diff>0?"price-trend-up":"price-trend-flat";
+  const trendSign=diff<0?"▼":diff>0?"▲":"";
+  const trendAmt=diff!==0?`${trendSign} NT$${Math.abs(diff).toLocaleString()} (${pct}%)`:"持平";
+  const minP=Math.min(...prices), maxP=Math.max(...prices);
+  const avgP=Math.round(prices.reduce((a,b)=>a+b,0)/prices.length/100)*100;
+  const isNearLow = prices.length >= 2 && last <= minP * 1.05;
+  const hasSeeded=history.some(h=>h.s);
+  const pnJs=JSON.stringify(productName);
+  const ranges=[[30,"1月"],[90,"3月"],[180,"6月"],[0,"1年"]];
+  // 變動紀錄表
+  const changeRows=[];
+  for(let i=1;i<prices.length;i++){
+    if(prices[i]!==prices[i-1]){
+      const d=prices[i]-prices[i-1],isDown=d<0,ac=isDown?"var(--green)":"var(--red)";
+      changeRows.push(`<tr>
+        <td style="padding:8px 10px;font-size:13px;color:var(--text3)">${dates[i]}</td>
+        <td style="padding:8px 10px;font-size:15px;font-weight:700;color:var(--white)">NT$${prices[i].toLocaleString()}</td>
+        <td style="padding:8px 10px;font-size:14px;font-weight:700;color:${ac}">${isDown?"▼":"▲"} NT$${Math.abs(d).toLocaleString()}</td>
+      </tr>`);
+    }
+  }
+  const body=`
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div>
+        <div style="font-size:13px;color:var(--text3);margin-bottom:4px">${productName}</div>
+        <div style="font-size:36px;font-weight:900;color:var(--white);letter-spacing:-1px">NT$${last.toLocaleString()}</div>
+        <div class="${trendCls}" style="font-size:15px;font-weight:700;margin-top:4px">${trendAmt} <span style="font-size:12px;color:var(--text3);font-weight:400">vs 期初</span></div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${ranges.map(([d,l])=>`<button onclick='showPriceModal(${pnJs},${d})'
+          style="padding:8px 16px;border-radius:8px;font-size:13px;font-family:inherit;
+                 border:1px solid var(--border);cursor:pointer;
+                 background:${(days||0)===d?"var(--accent)":"var(--card2)"};
+                 color:${(days||0)===d?"#fff":"var(--text3)"}">${l}</button>`).join("")}
+      </div>
+    </div>
+    <div style="margin-bottom:16px">${_buildChart(filtered, 700, 200)}</div>
+    <div style="display:flex;gap:20px;font-size:14px;color:var(--text3);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);flex-wrap:wrap">
+      <span>最低 <b style="color:var(--green);font-size:16px">NT$${minP.toLocaleString()}</b></span>
+      <span>最高 <b style="color:var(--red);font-size:16px">NT$${maxP.toLocaleString()}</b></span>
+      <span>均價 <b style="color:var(--text2);font-size:16px">NT$${avgP.toLocaleString()}</b></span>
+      ${hasSeeded?`<span style="margin-left:auto;font-size:11px">※ 含估算值</span>`:""}
+    </div>
+    ${isNearLow?`<div style="background:rgba(0,229,160,0.12);border:1px solid rgba(0,229,160,0.35);border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:28px">🎯</span>
+      <div>
+        <div style="font-size:16px;font-weight:800;color:var(--green)">目前價格接近歷史低點！</div>
+        <div style="font-size:13px;color:var(--text2);margin-top:4px">現在是入手好時機，建議考慮購買 👍</div>
+      </div>
+    </div>`:""}
+    ${changeRows.length?`<div style="font-size:14px;font-weight:700;color:var(--text2);margin-bottom:8px">📋 價格變動紀錄</div>
+    <table style="width:100%;border-collapse:collapse">
+      <tr style="border-bottom:1px solid var(--border)">
+        <th style="text-align:left;padding:8px 10px;font-size:12px;color:var(--text3);font-weight:600">日期</th>
+        <th style="text-align:left;padding:8px 10px;font-size:12px;color:var(--text3);font-weight:600">售價</th>
+        <th style="text-align:left;padding:8px 10px;font-size:12px;color:var(--text3);font-weight:600">變動</th>
+      </tr>
+      ${changeRows.join("")}
+    </table>`:
+    `<div style="font-size:13px;color:var(--text3);text-align:center;padding:14px">此期間無價格變動</div>`}`;
+  showModal("📈 價格走勢", body, [{text:"關閉", cls:"modal-btn primary", onclick:"closeModal()"}], "min(820px,95vw)");
+}
+
+// 更新卡片內小圖（範圍切換）
+function renderPriceChart(productName, days) {
+  const ph = loadPriceHistory();
+  const history = ph[productName] || [];
+  const filtered = _filterHistory(history, days);
+  const id = "ph-" + productName.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g,"_");
+  const container = document.getElementById(id);
+  if (!container) return;
+  const prices=filtered.map(h=>h.p);
+  const first=prices[0], last=prices[prices.length-1], diff=last-first;
+  const pct=first>0?Math.abs((diff/first)*100).toFixed(1):"0";
+  const trendCls=diff<0?"price-trend-down":diff>0?"price-trend-up":"price-trend-flat";
+  const trendSign=diff<0?"▼":diff>0?"▲":"";
+  const trendAmt=diff!==0?`${trendSign} NT$${Math.abs(diff).toLocaleString()} (${pct}%)`:"持平";
+  const minP=Math.min(...prices), maxP=Math.max(...prices);
+  const avgP=Math.round(prices.reduce((a,b)=>a+b,0)/prices.length/100)*100;
+  const trendEl=container.querySelector(".ph-trend");
+  if(trendEl){trendEl.className=`ph-trend ${trendCls}`;trendEl.textContent=trendAmt;}
+  container.querySelector(".sparkline-wrap").innerHTML=_buildChart(filtered,400,56,false)+
+    `<div style="text-align:right;font-size:9px;color:var(--text3);margin-top:1px">🔍 點擊放大</div>`;
+  const statsEl=container.querySelector(".ph-stats");
+  if(statsEl) statsEl.innerHTML=`<span>最低 <b style="color:var(--green)">NT$${minP.toLocaleString()}</b></span>
+    <span>最高 <b style="color:var(--red)">NT$${maxP.toLocaleString()}</b></span>
+    <span>均價 <b style="color:var(--text2)">NT$${avgP.toLocaleString()}</b></span>`;
+  container.querySelectorAll(".ph-range-btn").forEach(btn=>{
+    const active=+btn.dataset.days===days;
+    btn.style.background=active?"var(--accent)":"var(--card2)";
+    btn.style.color=active?"#fff":"var(--text3)";
+  });
+}
+
+function priceHistoryHtml(productName, currentPrice) {
+  const ph = loadPriceHistory();
+  const history = ph[productName] || [];
+  if (history.length < 2) return "";
+  const defaultDays = 90;
+  const filtered = _filterHistory(history, defaultDays);
+  const prices=filtered.map(h=>h.p);
+  const first=prices[0], last=prices[prices.length-1], diff=last-first;
+  const pct=first>0?Math.abs((diff/first)*100).toFixed(1):"0";
+  const trendCls=diff<0?"price-trend-down":diff>0?"price-trend-up":"price-trend-flat";
+  const trendSign=diff<0?"▼":diff>0?"▲":"";
+  const trendAmt=diff!==0?`${trendSign} NT$${Math.abs(diff).toLocaleString()} (${pct}%)`:"持平";
+  const minP=Math.min(...prices), maxP=Math.max(...prices);
+  const avgP=Math.round(prices.reduce((a,b)=>a+b,0)/prices.length/100)*100;
+  const hasSeeded=history.some(h=>h.s);
+  const id="ph-"+productName.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g,"_");
+  const pnJs=JSON.stringify(productName);
+  const ranges=[[30,"1月"],[90,"3月"],[180,"6月"],[0,"1年"]];
+  return `<div class="price-history" id="${id}">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="flex:none;min-width:160px">
+        <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;flex-wrap:wrap">
+          <span style="font-size:11px;font-weight:700;color:var(--text2)">📈 歷史走勢</span>
+          <span class="ph-trend ${trendCls}" style="font-size:11px;font-weight:700">${trendAmt}</span>
+          <span style="font-size:10px;color:var(--text3)">近3月</span>
+        </div>
+        <div class="ph-stats" style="display:flex;gap:8px;font-size:10px;color:var(--text3);flex-wrap:wrap;margin-bottom:6px">
+          <span>最低 <b style="color:var(--green)">NT$${minP.toLocaleString()}</b></span>
+          <span>最高 <b style="color:var(--red)">NT$${maxP.toLocaleString()}</b></span>
+          <span>均價 <b style="color:var(--text2)">NT$${avgP.toLocaleString()}</b></span>
+        </div>
+        <div style="display:flex;gap:3px;flex-wrap:wrap">
+          ${ranges.map(([d,l])=>{const active=d===defaultDays;return `<button class="ph-range-btn" data-days="${d}" onclick='renderPriceChart(${pnJs},${d})'
+            style="padding:2px 6px;border-radius:4px;font-size:10px;font-family:inherit;border:1px solid var(--border);cursor:pointer;
+                   background:${active?"var(--accent)":"var(--card2)"};color:${active?"#fff":"var(--text3)"}">${l}</button>`;}).join("")}
+        </div>
+      </div>
+      <div class="sparkline-wrap" style="width:200px;flex:none;cursor:pointer"
+           onclick='showPriceModal(${pnJs},${defaultDays})' title="點擊放大查看完整走勢">
+        ${_buildChart(filtered,400,56,false)}
+        <div style="text-align:right;font-size:9px;color:var(--text3);margin-top:1px">🔍 點擊放大</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function _fetchPChome(query, rows=6) {
+  try {
+    const params = new URLSearchParams({q:query, scope:"TW", sort:"rnk", isinstock:"T", rows});
+    const r = await fetch(`${_PCHOME}?${params}`);
+    if (!r.ok) return [];
+    const data = await r.json();
+    return data.prods || [];
+  } catch { return []; }
+}
+
+function _parsePChomeProd(raw) {
+  const name  = (raw.Nick || "").trim();
+  const price = raw.Price?.m || 0;
+  if (!name || !price) return null;
+  const brandMap = {
+    "ASUS":"ASUS","Apple":"Apple","Samsung":"Samsung","Lenovo":"Lenovo",
+    "Acer":"Acer","HP":"HP","Dell":"Dell","Sony":"Sony",
+    "Google":"Google","Xiaomi":"Xiaomi","MI":"Xiaomi","OPPO":"OPPO",
+    "vivo":"vivo","Huawei":"Huawei","Microsoft":"Microsoft",
+  };
+  let brand = (raw.Brand || "");
+  for (const [k,v] of Object.entries(brandMap)) {
+    if (brand.toLowerCase().startsWith(k.toLowerCase()) ||
+        name.toLowerCase().startsWith(k.toLowerCase())) { brand=v; break; }
+  }
+  const nl = name.toLowerCase();
+  let cpu = "";
+  const cpuPats = [/core ultra \d+ \w+/,/core i\d+-\d+\w*/,/ryzen [\w]+ [\w]+ [\w]+/,
+                   /apple m\d(?: pro| max)?/,/snapdragon [\w]+ [\w]+/,/a\d{2}(?: pro)?/];
+  for (const p of cpuPats) { const m=nl.match(p); if(m){cpu=m[0];break;} }
+  const ramM = name.match(/\/(\d{1,3})[Gg](?:[Bb])?/);
+  const ssdM = name.match(/\/(\d+)([TtGg][Bb])/);
+  return {
+    brand, name: name.slice(0,55),
+    price: `NT$${price.toLocaleString()}`,
+    cpu: cpu || "規格詳見商品頁",
+    ram: ramM ? `${ramM[1]}GB` : "—",
+    ssd: ssdM ? `${ssdM[1]}${ssdM[2].toUpperCase()}` : "—",
+    battery:"—", weight:"—",
+    pros:"PChome 在售新品", cons:"",
+    tag:"🔄 最新上市",
+  };
+}
+
+async function _updateAllProducts(progressCb) {
+  const db = {
+    laptop:[...PRODUCTS.laptop], phone:[...PRODUCTS.phone],
+    tablet:[...PRODUCTS.tablet], desktop:[...PRODUCTS.desktop],
+  };
+  let added = 0;
+  for (const [cat, queries] of Object.entries(_PCHOME_QUERIES)) {
+    const existingNames = new Set(db[cat].map(p => p.name.toLowerCase().slice(0,25)));
+    for (const q of queries) {
+      if (progressCb) progressCb(`查詢：${q}…`);
+      const raws = await _fetchPChome(q);
+      for (const raw of raws) {
+        const p = _parsePChomeProd(raw);
+        if (!p) continue;
+        const key = p.name.toLowerCase().slice(0,25);
+        if ([...existingNames].some(n => n.includes(key) || key.includes(n))) continue;
+        db[cat].push(p);
+        existingNames.add(key);
+        added++;
+      }
+    }
+  }
+  db._updated = new Date().toLocaleString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});
+  return { db, added };
+}
+
+function _applyProductDB(db) {
+  if (db.laptop?.length)  PRODUCTS.laptop  = db.laptop;
+  if (db.phone?.length)   PRODUCTS.phone   = db.phone;
+  if (db.tablet?.length)  PRODUCTS.tablet  = db.tablet;
+  if (db.desktop?.length) PRODUCTS.desktop = db.desktop;
+  // Record prices for history tracking
+  const allProds = [...(PRODUCTS.laptop||[]), ...(PRODUCTS.phone||[]), ...(PRODUCTS.tablet||[])];
+  recordPrices(allProds);
+  seedPriceHistory();
+  const badge = document.getElementById("updateBadge");
+  if (badge) {
+    badge.style.display = "";
+    badge.textContent = `⏱ ${db._updated || "已載入"}`;
+  }
+}
+
+async function _applyDataJson() {
+  // 讀取 fetch_prices.py 輸出的 data.json，更新精確價格
+  try {
+    const r = await fetch("./data.json");
+    if (!r.ok) return 0;
+    const data = await r.json();
+    const prices = data.prices || {};
+    const metaTs = data.meta?.updated_at || "";
+    let updated = 0;
+    const allProds = [...PRODUCTS.laptop, ...PRODUCTS.phone, ...PRODUCTS.tablet];
+    for (const p of allProds) {
+      const key = `${p.brand}|${p.name}`;
+      const hit = prices[key];
+      if (hit?.price && hit.price > 0) {
+        const newPrice = `NT$${hit.price.toLocaleString()}`;
+        if (newPrice !== p.price) {
+          p.price = newPrice;
+          updated++;
+        }
+      }
+      // Also try fuzzy match by name substring
+      if (!prices[key]) {
+        for (const [k, v] of Object.entries(prices)) {
+          if (v?.price > 0 && p.name.includes(k.split("|")[1]?.slice(0,15))) {
+            p.price = `NT$${v.price.toLocaleString()}`;
+            updated++;
+            break;
+          }
+        }
+      }
+    }
+    if (updated > 0) {
+      recordPrices(allProds);
+      const badge = document.getElementById("updateBadge");
+      const ts = metaTs ? metaTs.slice(0,16).replace("T"," ") : "已更新";
+      if (badge) { badge.style.display=""; badge.textContent=`⏱ ${ts}`; }
+    }
+    return updated;
+  } catch { return 0; }
+}
+
+async function loadProductDB() {
+  // 1. 先嘗試 localStorage
+  try {
+    const ls = localStorage.getItem(_LS_KEY);
+    if (ls) {
+      const db = JSON.parse(ls);
+      if (db.laptop?.length) {
+        _applyProductDB(db);
+        await _applyDataJson();
+        renderPage();
+        return;
+      }
+    }
+  } catch {}
+  // 2. 嘗試讀取同目錄 products_db.json
+  try {
+    const r = await fetch("./products_db.json");
+    if (r.ok) {
+      const db = await r.json();
+      if (db.laptop?.length) {
+        _applyProductDB(db);
+        try { localStorage.setItem(_LS_KEY, JSON.stringify(db)); } catch {}
+        await _applyDataJson();
+        renderPage();
+        return;
+      }
+    }
+  } catch {}
+  // 3. 使用內建預設資料，仍嘗試載入 data.json 精確價格
+  const n = await _applyDataJson();
+  const badge = document.getElementById("updateBadge");
+  if (badge) {
+    badge.style.display = "";
+    badge.textContent = n > 0 ? `✅ 已更新 ${n} 筆價格` : "📦 內建資料";
+  }
+  if (n > 0) renderPage();
+}
+
+function showUpdateModal() {
+  showModal("🔄 更新產品資料",
+    `<div style="font-size:12px;color:var(--text3);margin-bottom:10px">
+      從 PChome 抓取最新上架商品，自動補充到推薦清單中。<br>
+      <span style="color:var(--orange)">⚠ 更新約需 30–60 秒，請保持網路連線。</span>
+    </div>
+    <div id="updateProgress" style="font-size:11px;color:var(--green);min-height:80px;max-height:160px;overflow-y:auto;font-family:'JetBrains Mono',monospace;background:var(--surface);border-radius:8px;padding:10px;white-space:pre-wrap"></div>`,
+    [
+      {text:"開始更新", cls:"modal-btn primary", onclick:"doProductUpdate()"},
+      {text:"清除快取", cls:"modal-btn danger",  onclick:"clearProductCache()"},
+      {text:"關閉",     cls:"modal-btn",         onclick:"closeModal()"},
+    ]
+  );
+}
+
+async function doProductUpdate() {
+  const btn = document.querySelector("#modalActions .modal-btn.primary");
+  if (btn) { btn.disabled=true; btn.textContent="更新中…"; }
+  const log = document.getElementById("updateProgress");
+  const addLog = t => { if(log){ log.textContent+=t+"\n"; log.scrollTop=log.scrollHeight; } };
+  addLog("🔄 開始從 PChome 抓取最新商品…");
+  try {
+    const { db, added } = await _updateAllProducts(t => addLog(t));
+    PRODUCTS.laptop  = db.laptop;
+    PRODUCTS.phone   = db.phone;
+    PRODUCTS.tablet  = db.tablet;
+    recordPrices([...db.laptop, ...db.phone, ...db.tablet]);
+    try { localStorage.setItem(_LS_KEY, JSON.stringify(db)); } catch {}
+    const badge = document.getElementById("updateBadge");
+    if (badge) { badge.style.display=""; badge.textContent=`⏱ ${db._updated}`; }
+    addLog(`\n✅ 完成！新增 ${added} 筆商品`);
+    if (btn) { btn.disabled=false; btn.textContent="✅ 再次更新"; }
+    if (currentStep===5) renderPage();
+  } catch(e) {
+    addLog(`\n❌ 更新失敗：${e.message}`);
+    if (btn) { btn.disabled=false; btn.textContent="重試"; }
+  }
+}
+
+function clearProductCache() {
+  try { localStorage.removeItem(_LS_KEY); } catch {}
+  location.reload();
+}
 
 // ─── STATE ──────────────────────────────────────────────────
 let currentStep = 0;
@@ -1028,6 +1585,7 @@ function productCardHtml(p, isTop=false) {
     <div class="freshness-bar" style="background:${fresh.bg};color:${fresh.color};border-color:${fresh.borderColor}">
       <span>${fresh.emoji}</span><span>${fresh.label}</span>
     </div>
+    ${priceHistoryHtml(p.name, priceNum(p.price))}
     <div class="pros-cons">
       <div class="pros-box"><div class="pros-title">✅ 優點</div><div class="pros-text">${p.pros}</div></div>
       <div class="cons-box"><div class="cons-title">⚠️ 注意</div><div class="cons-text">${p.cons}</div></div>
@@ -1080,17 +1638,27 @@ function desktopCardHtml(b) {
     ["CPU", b.cpu], ["主機板", b.motherboard], ["記憶體", b.ram],
     ["SSD", b.ssd], ["顯示卡", b.gpu], ["電源", b.psu],
   ];
-  return `<div class="desktop-card">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-      <div>
+  // 是否符合使用者需求
+  const userMatch = b.for_user && answers.user && b.for_user.includes(answers.user);
+  const appMatch  = b.for_app  && answers.apps?.length && answers.apps.some(a => b.for_app.some(f => a.includes(f.slice(0,4)) || f.includes(a.slice(0,4))));
+  const isMatch   = userMatch || appMatch;
+  const matchBadge = isMatch ? `<span style="font-size:11px;font-weight:700;color:var(--green);background:#0A2018;border:1px solid #00E5A033;border-radius:8px;padding:2px 8px;margin-left:8px">✅ 符合您的需求</span>` : "";
+  return `<div class="desktop-card" style="${isMatch?"border-color:var(--green)33;":""}" >
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px">
         <div style="font-size:18px;font-weight:700;color:var(--text)">${b.name}</div>
         <span class="badge tag">${b.tag}</span>
+        ${matchBadge}
       </div>
-      <div style="font-size:20px;font-weight:900;color:var(--green)">${b.total_price}</div>
+      <div style="font-size:22px;font-weight:900;color:var(--green)">${b.total_price}</div>
     </div>
-    <div class="desktop-parts">
-      ${parts.map(([l,v])=>`<div class="desktop-part"><div class="part-label">${l}</div><div class="part-val">${v}</div></div>`).join("")}
+    <div class="desktop-parts" style="margin-bottom:12px">
+      ${parts.map(([l,v])=>`<div class="desktop-part"><div class="part-label">${l}</div><div class="part-val">${v||"—"}</div></div>`).join("")}
     </div>
+    ${b.pros||b.cons ? `<div class="pros-cons" style="margin-top:4px">
+      ${b.pros?`<div class="pros-box"><div class="pros-title">✅ 優點</div><div class="pros-text">${b.pros}</div></div>`:""}
+      ${b.cons?`<div class="cons-box"><div class="cons-title">⚠️ 注意</div><div class="cons-text">${b.cons}</div></div>`:""}
+    </div>`:""}
   </div>`;
 }
 
@@ -1300,19 +1868,17 @@ function doShare(platform) {
 }
 
 // ─── MODAL ──────────────────────────────────────────────────
-function showModal(title, body, actions) {
+function showModal(title, body, actions, maxWidth) {
   document.getElementById("modalTitle").innerHTML = title;
   document.getElementById("modalBody").innerHTML = body;
   document.getElementById("modalActions").innerHTML = actions.map(a =>
     `<button class="${a.cls}" onclick="${a.onclick}">${a.text}</button>`
   ).join("");
+  document.getElementById("modalBox").style.maxWidth = maxWidth || "460px";
   document.getElementById("modalOverlay").classList.add("open");
 }
 function closeModal(event) {
   if (event && event.target !== document.getElementById("modalOverlay")) return;
-  document.getElementById("modalOverlay").classList.remove("open");
-}
-function closeModal() {
   document.getElementById("modalOverlay").classList.remove("open");
 }
 
@@ -1344,7 +1910,10 @@ function showDisclaimer() {
 
 // ─── INIT ───────────────────────────────────────────────────
 renderStepper();
+recordPrices([...PRODUCTS.laptop, ...PRODUCTS.phone, ...PRODUCTS.tablet]);
+seedPriceHistory();   // 補種過去1年估算歷史
 renderPage();
+loadProductDB();
 setTimeout(showDisclaimer, 300);
 </script>
 </body>
