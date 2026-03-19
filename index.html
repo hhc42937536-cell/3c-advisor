@@ -19,7 +19,9 @@
     --red: #FF4D6D;
     --text: #F0F0FF;
     --text2: #8888AA;
-    --text3: #555570;
+    --text3: #7777AA;
+    --pros-bg: #0F1F18;
+    --cons-bg: #1F160A;
     --white: #FFFFFF;
     --gold: #FFD700;
   }
@@ -31,7 +33,9 @@
     --border: #C8C8E0;
     --text: #111122;
     --text2: #555577;
-    --text3: #9999BB;
+    --text3: #6666AA;
+    --pros-bg: #E8F5EF;
+    --cons-bg: #FFF3E8;
     --white: #111122;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -227,12 +231,12 @@
     flex: 1; min-width: 160px;
     border-radius: 10px; padding: 10px; font-size: 12px;
   }
-  .pros-box { background: #0F1F18; }
-  .cons-box { background: #1F160A; }
+  .pros-box { background: var(--pros-bg); }
+  .cons-box { background: var(--cons-bg); }
   .pros-title { color: var(--green); font-weight: 700; font-size: 12px; margin-bottom: 4px; }
   .cons-title { color: var(--orange); font-weight: 700; font-size: 12px; margin-bottom: 4px; }
-  .pros-text { color: var(--text2); }
-  .cons-text { color: var(--text2); }
+  .pros-text { color: var(--text); }
+  .cons-text { color: var(--text); }
   /* ─── Score bars ─── */
   .score-section {
     background: var(--surface); border: 1px solid var(--border);
