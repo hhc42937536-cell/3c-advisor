@@ -554,33 +554,97 @@
   }
   /* ─── Responsive ─── */
   @media (max-width: 600px) {
-    #topbar { padding: 10px 14px; }
+    /* ─ Topbar: 兩行式，上面標題，下面按鈕 ─ */
+    #topbar {
+      padding: 8px 12px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .topbar-left { flex: 1; min-width: 0; }
+    .topbar-icon { font-size: 22px; }
+    .topbar-title { font-size: 16px; }
     .topbar-sub { display: none; }
-    .hero { padding: 28px 16px 24px; }
-    .hero-emoji { font-size: 40px; }
-    .hero-title { font-size: 22px; }
-    .option-grid { padding: 12px 14px 18px; gap: 10px; }
-    .option-card { width: calc(50% - 5px); min-height: 120px; }
-    .option-emoji { font-size: 30px; }
-    .option-main { font-size: 15px; }
-    .scenario-grid { padding: 0 14px 18px; gap: 10px; }
-    .scenario-card { width: calc(50% - 5px); min-height: 100px; }
-    .app-categories, .pref-section, .btn-center, .tab-bar { padding-left: 14px; padding-right: 14px; }
-    .results-list { padding: 0 14px; }
-    .ans-row { padding: 10px 14px; }
-    .budget-tips { margin: 0 14px 12px; }
-    .warn-box { margin: 0 14px 10px; }
-    .compare-bar { margin: 0 14px 8px; }
-    .guide-section { margin: 12px 14px; }
-    .share-section { padding: 14px; }
-    footer { padding: 16px 14px; }
-    .tab-btn { padding: 8px 14px; font-size: 13px; }
-    .product-name { font-size: 17px; }
+    .topbar-right {
+      display: flex; gap: 4px; flex-wrap: nowrap;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .nav-btn, .theme-btn {
+      padding: 6px 10px; font-size: 12px;
+      min-height: 34px; white-space: nowrap; flex-shrink: 0;
+    }
+    /* ─ Stepper: 在手機上縮小，可橫滑 ─ */
+    #stepper {
+      padding: 10px 8px;
+      justify-content: flex-start;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    #stepper::-webkit-scrollbar { display: none; }
+    .step-dot { width: 28px; height: 28px; font-size: 11px; }
+    .step-label { font-size: 9px; }
+    .step-line { width: 14px; }
+    /* ─ Hero ─ */
+    .hero { padding: 24px 16px 20px; border-radius: 0 0 20px 20px; }
+    .hero-emoji { font-size: 36px; }
+    .hero-title { font-size: 20px; }
+    .hero-sub { font-size: 13px; }
+    /* ─ Grid cards ─ */
+    .option-grid { padding: 12px 12px 16px; gap: 8px; }
+    .option-card { width: calc(50% - 4px); min-height: 110px; padding: 14px 10px; }
+    .option-emoji { font-size: 28px; }
+    .option-main { font-size: 14px; }
+    .option-sub { font-size: 11px; }
+    /* ─ Scenario ─ */
+    .scenario-grid { padding: 0 12px 16px; gap: 8px; }
+    .scenario-card { width: calc(50% - 4px); min-height: 90px; padding: 12px 8px; }
+    .scenario-emoji { font-size: 28px; }
+    .scenario-main { font-size: 13px; }
+    .scenario-sub { font-size: 10px; }
+    /* ─ Content sections ─ */
+    .app-categories, .pref-section, .btn-center, .tab-bar { padding-left: 12px; padding-right: 12px; }
+    .results-list { padding: 0 12px; }
+    .ans-row { padding: 8px 12px; font-size: 12px; }
+    .budget-tips { margin: 0 12px 10px; padding: 12px; }
+    .budget-tips-title { font-size: 14px; }
+    .budget-tip-row { flex-direction: column; gap: 2px; font-size: 13px; }
+    .warn-box { margin: 0 12px 8px; font-size: 13px; }
+    .compare-bar { margin: 0 12px 8px; }
+    .guide-section { margin: 10px 12px; padding: 16px; }
+    .guide-title { font-size: 16px; }
+    .share-section { padding: 12px; }
+    footer { padding: 14px 12px; }
+    .footer-brand { font-size: 13px; }
+    /* ─ Tabs ─ */
+    .tab-bar { gap: 4px; }
+    .tab-btn { padding: 8px 12px; font-size: 13px; min-height: 38px; }
+    /* ─ Product cards ─ */
+    .product-card { padding: 14px; border-radius: 16px; }
+    .product-name { font-size: 16px; }
+    .product-header { flex-direction: column; gap: 8px; }
+    .product-right { text-align: left; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .price-val { font-size: 20px; }
-    .step-line { width: 20px; }
-    .budget-tip-row { flex-direction: column; gap: 2px; }
-    .quick-pick-btn { font-size: 16px; padding: 14px 24px; }
-    .modal { padding: 20px; width: 95%; }
+    .battery-weight { font-size: 12px; }
+    .plain-spec { padding: 10px 12px; }
+    .plain-spec-row { font-size: 13px; }
+    .plain-spec-row span { font-size: 16px; }
+    .pros-cons { flex-direction: column; gap: 8px; }
+    .score-section { padding: 12px; }
+    .action-row { gap: 6px; }
+    .action-link, .compare-btn { font-size: 12px; padding: 6px 10px; min-height: 36px; }
+    .shop-links { gap: 6px; }
+    .shop-btn { padding: 8px 12px; font-size: 12px; min-height: 38px; }
+    /* ─ Quick pick ─ */
+    .quick-pick-btn { font-size: 15px; padding: 14px 20px; min-height: 48px; }
+    /* ─ Modal ─ */
+    .modal { padding: 18px; width: 95%; border-radius: 18px; }
+    .modal-title { font-size: 16px; }
+    .modal-body { font-size: 14px; }
+    .modal-btn { padding: 8px 18px; font-size: 14px; min-height: 40px; }
+    /* ─ Price history ─ */
+    .price-history { padding: 10px; }
+    .price-history > div { flex-direction: column !important; }
+    .sparkline-wrap { width: 100% !important; }
   }
   /* ─── Animations ─── */
   .page-enter { animation: fadeSlideUp 0.35s ease forwards; }
@@ -1508,6 +1572,10 @@ function goTo(step) {
   currentStep=step; renderStepper(); renderPage();
   document.getElementById("backBtn").style.display=step>0?"":"none";
   document.getElementById("homeBtn").style.display=step>0?"":"none";
+  // 手機上減少按鈕：非首頁時隱藏更新按鈕
+  document.getElementById("updateBtn").style.display=step>0?"none":"";
+  const badge=document.getElementById("updateBadge");
+  if(badge) badge.style.display=step>0?"none":badge.textContent?"":"none";
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function goBack() { if(currentStep>0) goTo(currentStep-1); }
