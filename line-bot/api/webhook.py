@@ -208,6 +208,7 @@ def spec_to_plain_line(p: dict) -> str:
 
 def build_product_flex(p: dict, rank: int) -> dict:
     """建立單個產品的 Flex Message bubble"""
+    import urllib.parse
     price = p.get("price", "")
     brand = p.get("brand", "")
     name = p.get("name", "")[:30]
@@ -215,10 +216,10 @@ def build_product_flex(p: dict, rank: int) -> dict:
     pros = p.get("pros", "")[:40]
     cons = p.get("cons", "")[:30]
     spec_line = spec_to_plain_line(p)
-    url = p.get("url", "")
 
-    # 比價連結
-    search_q = urllib.request.pathname2url(f"{brand} {name}")
+    # 比價與搜尋連結
+    search_q = urllib.parse.quote(f"{brand} {name}")
+    biggo_url = f"https://biggo.com.tw/search/{search_q}"
     pchome_url = f"https://ecshweb.pchome.com.tw/search/v3.3/?q={search_q}"
 
     medal = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"][rank] if rank < 5 else ""
@@ -248,11 +249,11 @@ def build_product_flex(p: dict, rank: int) -> dict:
             "contents": [
                 {
                     "type": "button", "style": "primary", "color": "#FF8C42",
-                    "action": {"type": "uri", "label": "🛒 去比價", "uri": url or pchome_url},
+                    "action": {"type": "uri", "label": "💰 BigGo 跨平台比價", "uri": biggo_url},
                 },
                 {
                     "type": "button", "style": "secondary",
-                    "action": {"type": "uri", "label": "🔍 PChome 搜尋", "uri": pchome_url},
+                    "action": {"type": "uri", "label": "🛒 PChome 直接購買", "uri": pchome_url},
                 },
             ]
         }
