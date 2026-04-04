@@ -116,12 +116,15 @@ def parse_budget(text: str) -> int:
         if val >= 3000:
             return val
     # 模糊描述
-    if any(w in text for w in ["便宜", "省錢", "預算少", "入門"]):
+    if any(w in text for w in ["便宜", "省錢", "預算少", "入門", "便宜點"]):
         return 15000
     if any(w in text for w in ["中等", "一般", "普通"]):
         return 30000
     if any(w in text for w in ["好一點", "品質好", "不差錢"]):
         return 60000
+    # 不限預算 → 回傳超大值，篩選時等同全部顯示
+    if any(w in text for w in ["不限預算", "不限", "隨便", "都可以", "沒差", "高階", "最好", "旗艦", "5萬以上", "無限"]):
+        return 999999
     return 0  # 未指定預算
 
 
@@ -149,7 +152,7 @@ def filter_products(products: list, budget: int, uses: list) -> list:
     results = []
     for p in products:
         price = int(re.sub(r"[^0-9]", "", p.get("price", "0")))
-        if budget > 0 and price > budget * 1.2:
+        if 0 < budget < 999999 and price > budget * 1.2:
             continue
         if price < 3000:
             continue
@@ -279,11 +282,17 @@ def build_recommendation_message(device: str, budget: int, uses: list) -> list:
     filtered = filter_products(products, budget, uses)
 
     if not filtered:
-        return [{"type": "text", "text": f"在預算 NT${budget:,} 內沒有找到適合的產品 😅\n\n建議：\n1. 提高一點預算\n2. 到網站版看更多選擇 👇\nhttps://hhc42937536-cell.github.io/3c-advisor/"}]
+        budget_hint = "不限預算" if budget >= 999999 else f"NT${budget:,}"
+        return [{"type": "text", "text": f"在{budget_hint}條件下沒有找到適合的產品 😅\n\n請到網站版看更多選擇 👇\nhttps://hhc42937536-cell.github.io/3c-advisor/"}]
 
     # 組合 Flex carousel
     device_name = {"phone": "手機", "laptop": "筆電", "tablet": "平板"}.get(device, "產品")
-    budget_text = f"（預算 NT${budget:,} 以內）" if budget > 0 else ""
+    if budget >= 999999:
+        budget_text = "（不限預算）"
+    elif budget > 0:
+        budget_text = f"（預算 NT${budget:,} 以內）"
+    else:
+        budget_text = ""
     use_text = f"（{', '.join(uses)}）" if uses else ""
 
     bubbles = [build_product_flex(p, i) for i, p in enumerate(filtered)]
