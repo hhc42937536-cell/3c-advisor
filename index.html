@@ -3,419 +3,484 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3C 選購顧問 — 捷啟智慧科技</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>3C 選購小幫手 — 捷啟智慧科技</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0A0A0F;
-    --surface: #12121A;
-    --card: #1A1A26;
-    --card2: #22223A;
-    --border: #2A2A40;
-    --accent: #4F8EF7;
-    --accent2: #7C5CFC;
-    --green: #00E5A0;
-    --orange: #FF8C42;
-    --red: #FF4D6D;
-    --text: #F0F0FF;
-    --text2: #C0C8E8;
-    --text3: #A0AACC;
-    --pros-bg: #0F1F18;
-    --cons-bg: #1F160A;
-    --white: #FFFFFF;
-    --gold: #FFD700;
-  }
-  .light-mode {
-    --bg: #F5F5FA;
+    --bg: #FFF8F0;
     --surface: #FFFFFF;
-    --card: #EEEEF8;
-    --card2: #E0E0F0;
-    --border: #C8C8E0;
-    --text: #111122;
-    --text2: #1E1E55;
-    --text3: #3333AA;
-    --pros-bg: #E8F5EF;
-    --cons-bg: #FFF3E8;
-    --white: #111122;
+    --card: #FFFFFF;
+    --card2: #FFF0E0;
+    --border: #F0DCC8;
+    --accent: #FF8C42;
+    --accent2: #5B9BD5;
+    --green: #4CAF50;
+    --orange: #FF9800;
+    --red: #E53935;
+    --text: #3E2723;
+    --text2: #5D4037;
+    --text3: #8D6E63;
+    --pros-bg: #E8F5E9;
+    --cons-bg: #FFF3E0;
+    --white: #3E2723;
+    --gold: #FF8F00;
+    --shadow: 0 2px 12px rgba(62,39,35,0.08);
+    --shadow-hover: 0 4px 20px rgba(255,140,66,0.18);
+    --hero-g1: #FF8C42;
+    --hero-g2: #FFB74D;
+    --hero-text: #FFFFFF;
+  }
+  .dark-mode {
+    --bg: #2D2420;
+    --surface: #3D3530;
+    --card: #4A3F38;
+    --card2: #5A4D44;
+    --border: #6D5D52;
+    --text: #FFF0E0;
+    --text2: #E8D5C4;
+    --text3: #BFA48E;
+    --white: #FFF0E0;
+    --pros-bg: #2A3D2A;
+    --cons-bg: #3D2A1A;
+    --shadow: 0 2px 12px rgba(0,0,0,0.25);
+    --shadow-hover: 0 4px 20px rgba(255,140,66,0.25);
+    --hero-g1: #8B4513;
+    --hero-g2: #A0522D;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Noto Sans TC', sans-serif;
+    font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     transition: background 0.3s, color 0.3s;
+    font-size: 16px;
+    line-height: 1.6;
   }
   /* ─── Topbar ─── */
   #topbar {
     position: sticky; top: 0; z-index: 100;
     background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 24px;
+    box-shadow: var(--shadow);
+    padding: 14px 20px;
     display: flex; align-items: center; justify-content: space-between;
     gap: 12px;
   }
   .topbar-left { display: flex; align-items: center; gap: 10px; }
-  .dot-badge { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; }
-  .topbar-title { font-size: 17px; font-weight: 700; color: var(--text); }
+  .topbar-icon { font-size: 28px; }
+  .topbar-title { font-size: 19px; font-weight: 900; color: var(--accent); }
   .topbar-sub {
     background: var(--card2); border-radius: 20px;
-    padding: 3px 12px; font-size: 11px; color: var(--accent);
+    padding: 4px 14px; font-size: 12px; color: var(--text2); font-weight: 500;
   }
   .topbar-right { display: flex; align-items: center; gap: 8px; }
   .nav-btn {
-    padding: 6px 12px; border-radius: 8px;
-    background: none; border: none; cursor: pointer;
-    color: var(--text2); font-size: 13px; font-family: inherit;
-    transition: background 0.2s;
+    padding: 8px 14px; border-radius: 12px;
+    background: var(--card2); border: none; cursor: pointer;
+    color: var(--text2); font-size: 14px; font-family: inherit;
+    font-weight: 500; transition: all 0.2s; min-height: 40px;
   }
-  .nav-btn:hover { background: var(--card2); }
+  .nav-btn:hover { background: var(--accent); color: #fff; }
   .theme-btn {
     background: var(--card2); border-radius: 20px;
-    padding: 5px 12px; font-size: 13px;
+    padding: 8px 16px; font-size: 14px;
     border: none; cursor: pointer; color: var(--text2);
-    font-family: inherit;
+    font-family: inherit; font-weight: 500; min-height: 40px;
+    transition: all 0.2s;
   }
+  .theme-btn:hover { background: var(--accent); color: #fff; }
   /* ─── Stepper ─── */
   #stepper {
     background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 16px;
+    box-shadow: 0 1px 4px rgba(62,39,35,0.05);
+    padding: 16px;
     display: flex; align-items: center; justify-content: center;
-    gap: 0;
-    overflow-x: auto;
+    gap: 0; overflow-x: auto;
   }
   .step-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .step-dot {
-    width: 28px; height: 28px; border-radius: 50%;
+    width: 36px; height: 36px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700; color: var(--white);
+    font-size: 14px; font-weight: 700; color: #fff;
     cursor: pointer; transition: all 0.2s;
     background: var(--border);
   }
   .step-dot.done { background: var(--green); }
-  .step-dot.active { background: var(--accent); }
-  .step-label { font-size: 10px; color: var(--text3); white-space: nowrap; }
-  .step-label.active { color: var(--text); }
-  .step-label.done { color: var(--text2); }
+  .step-dot.active { background: var(--accent); box-shadow: 0 2px 8px rgba(255,140,66,0.4); }
+  .step-label { font-size: 11px; color: var(--text3); white-space: nowrap; font-weight: 500; }
+  .step-label.active { color: var(--accent); font-weight: 700; }
+  .step-label.done { color: var(--green); }
   .step-line {
-    width: 40px; height: 2px; background: var(--border); margin: 0 2px;
-    margin-bottom: 16px; transition: background 0.3s;
+    width: 32px; height: 3px; background: var(--border); margin: 0 2px;
+    margin-bottom: 16px; transition: background 0.3s; border-radius: 2px;
   }
-  .step-line.done { background: var(--accent); }
+  .step-line.done { background: var(--green); }
   /* ─── Hero ─── */
   .hero {
-    padding: 40px 24px;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 40px 24px 32px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
     text-align: center;
+    border-radius: 0 0 32px 32px;
   }
-  .hero-emoji { font-size: 52px; }
-  .hero-title { font-size: 26px; font-weight: 900; color: #fff; }
-  .hero-sub { font-size: 13px; color: rgba(255,255,255,0.7); }
+  .hero-emoji { font-size: 56px; }
+  .hero-title { font-size: 26px; font-weight: 900; color: var(--hero-text); }
+  .hero-sub { font-size: 15px; color: rgba(255,255,255,0.85); font-weight: 500; }
   /* ─── Grid ─── */
   .option-grid {
     display: flex; flex-wrap: wrap; gap: 14px;
-    justify-content: center; padding: 0 24px 24px;
+    justify-content: center; padding: 16px 20px 24px;
   }
   .option-card {
-    width: 175px; min-height: 155px;
+    width: 170px; min-height: 150px;
     background: var(--card);
-    border: 1px solid var(--border); border-radius: 16px;
+    box-shadow: var(--shadow);
+    border: 2px solid transparent; border-radius: 20px;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 6px; padding: 16px 12px;
-    cursor: pointer; transition: all 0.18s;
+    gap: 8px; padding: 18px 14px;
+    cursor: pointer; transition: all 0.2s;
     text-align: center;
   }
-  .option-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .option-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-3px); }
   .option-card.selected {
     background: var(--card2);
     border: 2px solid var(--accent);
+    box-shadow: var(--shadow-hover);
   }
-  .option-emoji { font-size: 38px; }
-  .option-main { font-size: 15px; font-weight: 700; color: var(--text); }
+  .option-emoji { font-size: 42px; }
+  .option-main { font-size: 17px; font-weight: 700; color: var(--text); }
   .option-card.selected .option-main { color: var(--accent); }
-  .option-sub { font-size: 11px; color: var(--text3); }
+  .option-sub { font-size: 13px; color: var(--text3); font-weight: 500; }
   .option-card.selected .option-sub { color: var(--text2); }
   /* ─── App checkbox grid ─── */
-  .app-categories { padding: 0 24px 24px; display: flex; flex-direction: column; gap: 16px; }
+  .app-categories { padding: 0 20px 24px; display: flex; flex-direction: column; gap: 16px; }
   .app-cat-title {
-    font-size: 13px; font-weight: 700; color: var(--text2);
+    font-size: 15px; font-weight: 700; color: var(--text2);
     padding: 8px 0 4px;
     display: flex; align-items: center; gap: 6px;
   }
-  .app-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .app-items { display: flex; flex-wrap: wrap; gap: 10px; }
   .app-chip {
-    padding: 7px 14px; border-radius: 20px;
-    background: var(--card); border: 1px solid var(--border);
-    font-size: 12px; color: var(--text2); cursor: pointer;
-    transition: all 0.15s; user-select: none;
+    padding: 10px 18px; border-radius: 24px;
+    background: var(--card); box-shadow: var(--shadow);
+    border: 2px solid transparent;
+    font-size: 14px; color: var(--text2); cursor: pointer;
+    transition: all 0.15s; user-select: none; font-weight: 500;
+    min-height: 44px; display: flex; align-items: center;
   }
-  .app-chip:hover { border-color: var(--accent2); }
+  .app-chip:hover { border-color: var(--accent); }
   .app-chip.checked {
-    background: var(--accent2); border-color: var(--accent2);
+    background: var(--accent); border-color: var(--accent);
     color: #fff; font-weight: 700;
   }
+  /* ─── Life scenario chips (new) ─── */
+  .scenario-grid {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    justify-content: center; padding: 0 20px 24px;
+  }
+  .scenario-card {
+    width: 160px; min-height: 120px;
+    background: var(--card); box-shadow: var(--shadow);
+    border: 2px solid transparent; border-radius: 20px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 6px; padding: 16px 12px;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .scenario-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .scenario-card.selected { border-color: var(--accent); background: var(--card2); }
+  .scenario-emoji { font-size: 36px; }
+  .scenario-main { font-size: 15px; font-weight: 700; color: var(--text); }
+  .scenario-card.selected .scenario-main { color: var(--accent); }
+  .scenario-sub { font-size: 12px; color: var(--text3); }
   /* ─── Budget tips ─── */
   .budget-tips {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px; margin: 0 24px 16px;
+    background: var(--card); box-shadow: var(--shadow);
+    border-radius: 16px; padding: 16px; margin: 0 20px 16px;
   }
-  .budget-tips-title { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 8px; }
-  .budget-tip-row { display: flex; gap: 8px; padding: 3px 0; font-size: 12px; }
-  .budget-tip-label { color: var(--accent); font-weight: 600; min-width: 180px; }
+  .budget-tips-title { font-size: 15px; font-weight: 700; color: var(--text2); margin-bottom: 10px; }
+  .budget-tip-row { display: flex; gap: 10px; padding: 6px 0; font-size: 14px; }
+  .budget-tip-label { color: var(--accent); font-weight: 700; min-width: 190px; }
   .budget-tip-desc { color: var(--text3); }
   /* ─── Warning box ─── */
   .warn-box {
-    background: #2A1800; border-radius: 12px; padding: 12px 14px;
-    border: 1px solid var(--green); color: var(--green);
-    font-size: 12px; margin: 0 24px 12px;
+    background: var(--pros-bg); border-radius: 16px; padding: 14px 16px;
+    color: var(--green); font-size: 14px; margin: 0 20px 12px;
+    font-weight: 500; box-shadow: var(--shadow);
   }
-  .budget-warn {
-    background: #2A0A00; border-color: var(--orange); color: var(--orange);
-  }
+  .budget-warn { background: var(--cons-bg); color: var(--orange); }
   /* ─── Prefs ─── */
-  .pref-section { padding: 0 24px 20px; }
+  .pref-section { padding: 0 20px 20px; }
   .pref-section-title {
-    font-size: 14px; font-weight: 700; color: var(--text2);
-    padding: 12px 0 8px;
+    font-size: 16px; font-weight: 700; color: var(--text2);
+    padding: 14px 0 10px;
   }
-  .pref-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pref-chips { display: flex; flex-wrap: wrap; gap: 10px; }
   .pref-chip {
-    padding: 7px 14px; border-radius: 20px;
-    background: var(--card); border: 1px solid var(--border);
-    font-size: 12px; color: var(--text2); cursor: pointer;
-    transition: all 0.15s;
+    padding: 10px 18px; border-radius: 24px;
+    background: var(--card); box-shadow: var(--shadow);
+    border: 2px solid transparent;
+    font-size: 14px; color: var(--text2); cursor: pointer;
+    transition: all 0.15s; font-weight: 500;
+    min-height: 44px; display: flex; align-items: center;
   }
   .pref-chip:hover { border-color: var(--accent); }
   .pref-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
   /* ─── Buttons ─── */
   .btn-primary {
     background: var(--accent); color: #fff;
-    border: none; border-radius: 12px;
-    padding: 13px 32px; font-size: 15px; font-weight: 700;
+    border: none; border-radius: 16px;
+    padding: 16px 36px; font-size: 17px; font-weight: 700;
     cursor: pointer; font-family: inherit;
-    transition: all 0.18s;
+    transition: all 0.18s; min-height: 52px;
+    box-shadow: 0 4px 12px rgba(255,140,66,0.3);
   }
-  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
-  .btn-center { display: flex; justify-content: center; padding: 16px 24px; }
+  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+  .btn-secondary {
+    background: var(--card2); color: var(--accent);
+    border: 2px solid var(--accent); border-radius: 16px;
+    padding: 14px 28px; font-size: 16px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.18s; min-height: 48px;
+  }
+  .btn-secondary:hover { background: var(--accent); color: #fff; }
+  .btn-center { display: flex; justify-content: center; padding: 16px 20px; gap: 12px; flex-wrap: wrap; }
+  /* ─── Quick pick button ─── */
+  .quick-pick-btn {
+    background: linear-gradient(135deg, var(--accent2), #7B68EE);
+    color: #fff; border: none; border-radius: 20px;
+    padding: 18px 32px; font-size: 18px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    box-shadow: 0 4px 16px rgba(91,155,213,0.35);
+    transition: all 0.2s; min-height: 56px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .quick-pick-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
   /* ─── Product card ─── */
   .product-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 18px; margin-bottom: 14px;
-    transition: border-color 0.2s;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    border: 2px solid transparent;
+    border-radius: 20px; padding: 20px; margin-bottom: 16px;
+    transition: all 0.2s;
   }
-  .product-card.top-pick { border-color: var(--gold); }
+  .product-card.top-pick { border-color: var(--gold); box-shadow: 0 4px 20px rgba(255,143,0,0.2); }
+  .product-card.ai-pick { border-color: var(--accent2); box-shadow: 0 4px 20px rgba(91,155,213,0.2); }
   .product-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
-  .product-brand { font-size: 11px; font-weight: 700; color: var(--accent); }
-  .product-name { font-size: 18px; font-weight: 700; color: var(--text); margin: 4px 0; }
-  .product-spec { font-size: 11px; color: var(--text3); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+  .product-brand { font-size: 13px; font-weight: 700; color: var(--accent); }
+  .product-name { font-size: 20px; font-weight: 900; color: var(--text); margin: 4px 0; }
+  .product-spec { font-size: 13px; color: var(--text3); margin-top: 6px; }
   .product-right { text-align: right; }
   .price-label {
-    display: inline-block; padding: 3px 10px; border-radius: 6px;
-    font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 4px;
+    display: inline-block; padding: 4px 12px; border-radius: 10px;
+    font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 6px;
   }
-  .price-val { font-size: 22px; font-weight: 900; color: var(--white); }
-  .battery-weight { font-size: 11px; color: var(--text3); margin-top: 4px; }
-  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .price-val { font-size: 24px; font-weight: 900; color: var(--white); }
+  .battery-weight { font-size: 13px; color: var(--text3); margin-top: 6px; }
+  /* ─── Plain spec (new) ─── */
+  .plain-spec {
+    background: var(--card2); border-radius: 14px; padding: 14px 16px;
+    margin: 12px 0; display: flex; flex-direction: column; gap: 6px;
+  }
+  .plain-spec-title { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  .plain-spec-row { font-size: 14px; color: var(--text2); display: flex; align-items: center; gap: 6px; }
+  .plain-spec-row span { font-size: 18px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
   .badge {
-    padding: 3px 10px; border-radius: 8px;
-    font-size: 11px; font-weight: 700;
-    background: var(--accent2); color: #fff;
+    padding: 5px 12px; border-radius: 10px;
+    font-size: 13px; font-weight: 700;
+    background: var(--accent); color: #fff;
   }
   .badge.secondary { background: var(--card2); color: var(--text2); }
-  .badge.tag { background: #2A2010; color: var(--gold); }
-  .badge.editor { background: #2A2010; color: var(--gold); }
+  .badge.tag { background: #FFF3E0; color: var(--gold); }
+  .badge.editor { background: #FFF3E0; color: var(--gold); }
   /* ─── Pros/cons ─── */
-  .pros-cons { display: flex; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
+  .pros-cons { display: flex; gap: 10px; margin: 12px 0; flex-wrap: wrap; }
   .pros-box, .cons-box {
     flex: 1; min-width: 160px;
-    border-radius: 10px; padding: 10px; font-size: 12px;
+    border-radius: 14px; padding: 12px; font-size: 14px;
   }
   .pros-box { background: var(--pros-bg); }
   .cons-box { background: var(--cons-bg); }
-  .pros-title { color: var(--green); font-weight: 700; font-size: 12px; margin-bottom: 4px; }
-  .cons-title { color: var(--orange); font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+  .pros-title { color: var(--green); font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .cons-title { color: var(--orange); font-weight: 700; font-size: 14px; margin-bottom: 4px; }
   .pros-text { color: var(--text); }
   .cons-text { color: var(--text); }
   /* ─── Score bars ─── */
   .score-section {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px; margin: 10px 0;
+    background: var(--surface); box-shadow: var(--shadow);
+    border-radius: 14px; padding: 16px; margin: 12px 0;
   }
-  .score-section-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
-  .score-row { margin-bottom: 8px; }
-  .score-header { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
-  .score-label { color: var(--text2); }
+  .score-section-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .score-row { margin-bottom: 10px; }
+  .score-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+  .score-label { color: var(--text2); font-weight: 500; }
   .score-val { font-weight: 700; }
-  .score-bar { height: 5px; border-radius: 3px; background: var(--surface); overflow: hidden; }
-  .score-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+  .score-bar { height: 8px; border-radius: 4px; background: var(--card2); overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
   /* ─── Freshness ─── */
   .freshness-bar {
     display: flex; align-items: center; gap: 8px;
-    border-radius: 10px; padding: 10px 14px;
-    font-size: 12px; font-weight: 700; margin: 8px 0;
-    border: 1px solid;
+    border-radius: 14px; padding: 12px 16px;
+    font-size: 14px; font-weight: 700; margin: 10px 0;
+    border: 2px solid;
   }
   /* ─── Compat ─── */
   .compat-box {
-    background: var(--surface); border-radius: 12px;
-    padding: 14px; margin: 10px 0; border: 2px solid;
+    background: var(--surface); border-radius: 14px;
+    padding: 16px; margin: 10px 0; border: 2px solid;
+    box-shadow: var(--shadow);
   }
-  .compat-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .compat-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
   .compat-row { display: flex; align-items: center; gap: 10px; }
-  .compat-score { font-size: 22px; font-weight: 900; }
-  .compat-text { font-size: 11px; }
-  .compat-bar { height: 8px; border-radius: 4px; background: var(--surface); margin-top: 8px; overflow: hidden; }
+  .compat-score { font-size: 24px; font-weight: 900; }
+  .compat-text { font-size: 13px; }
+  .compat-bar { height: 10px; border-radius: 5px; background: var(--card2); margin-top: 8px; overflow: hidden; }
   /* ─── Shop links ─── */
-  .shop-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .shop-links { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
   .shop-btn {
-    padding: 7px 14px; border-radius: 12px;
-    font-size: 11px; font-weight: 700;
-    text-decoration: none; display: inline-block;
-    transition: filter 0.2s;
+    padding: 10px 18px; border-radius: 14px;
+    font-size: 14px; font-weight: 700;
+    text-decoration: none; display: inline-flex; align-items: center;
+    transition: all 0.2s; min-height: 44px; color: #fff;
   }
-  .shop-btn:hover { filter: brightness(1.15); }
+  .shop-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
   /* ─── Action buttons ─── */
-  .action-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; align-items: center; }
-  .action-link { font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-  .compare-btn { font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .action-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
+  .action-link {
+    font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 5px;
+    padding: 8px 14px; border-radius: 12px; background: var(--card2);
+    font-weight: 600; transition: all 0.2s; min-height: 40px;
+  }
+  .action-link:hover { background: var(--accent); color: #fff; }
+  .compare-btn {
+    font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 5px;
+    padding: 8px 14px; border-radius: 12px; background: var(--card2);
+    font-weight: 600; transition: all 0.2s; min-height: 40px;
+  }
+  .compare-btn:hover { background: var(--accent2); color: #fff; }
   /* ─── Compare bar ─── */
   .compare-bar {
-    background: var(--accent2); border-radius: 10px; padding: 10px 16px;
+    background: var(--accent2); border-radius: 16px; padding: 14px 18px;
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    margin: 0 24px 8px; flex-wrap: wrap;
+    margin: 0 20px 8px; flex-wrap: wrap;
   }
-  .compare-bar-text { font-size: 12px; font-weight: 700; color: #fff; flex: 1; }
+  .compare-bar-text { font-size: 14px; font-weight: 700; color: #fff; flex: 1; }
   .compare-go-btn {
-    background: var(--green); color: #000; font-size: 12px; font-weight: 700;
-    border: none; border-radius: 8px; padding: 6px 14px; cursor: pointer; font-family: inherit;
+    background: var(--green); color: #fff; font-size: 14px; font-weight: 700;
+    border: none; border-radius: 12px; padding: 10px 18px; cursor: pointer;
+    font-family: inherit; min-height: 44px;
   }
   /* ─── Desktop card ─── */
   .desktop-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 18px; margin-bottom: 14px;
+    background: var(--card); box-shadow: var(--shadow);
+    border-radius: 20px; padding: 20px; margin-bottom: 16px;
   }
-  .desktop-parts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .desktop-parts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
   .desktop-part {
-    background: var(--surface); border-radius: 8px; padding: 8px 12px;
+    background: var(--card2); border-radius: 12px; padding: 10px 14px;
     min-width: 160px;
   }
-  .part-label { font-size: 11px; color: var(--text3); }
-  .part-val { font-size: 12px; color: var(--text); font-weight: 500; }
+  .part-label { font-size: 12px; color: var(--text3); font-weight: 500; }
+  .part-val { font-size: 14px; color: var(--text); font-weight: 600; }
   /* ─── Tab bar ─── */
   .tab-bar {
-    display: flex; align-items: center; gap: 4px;
-    padding: 12px 24px 8px;
+    display: flex; align-items: center; gap: 6px;
+    padding: 14px 20px 8px;
   }
   .tab-btn {
-    padding: 9px 18px; border-radius: 8px;
-    background: transparent; border: none; cursor: pointer;
-    font-size: 13px; color: var(--text2); font-family: inherit;
-    transition: all 0.18s;
+    padding: 10px 20px; border-radius: 14px;
+    background: var(--card2); border: none; cursor: pointer;
+    font-size: 14px; color: var(--text2); font-family: inherit;
+    font-weight: 600; transition: all 0.18s; min-height: 44px;
   }
   .tab-btn.active { background: var(--accent); color: #fff; font-weight: 700; }
   /* ─── Results section ─── */
-  .results-list { padding: 0 24px; display: none; }
+  .results-list { padding: 0 20px; display: none; }
   .results-list.active { display: block; }
   /* ─── Answer chips ─── */
   .ans-row {
     background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 24px;
+    box-shadow: 0 1px 4px rgba(62,39,35,0.05);
+    padding: 12px 20px;
     display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
-    font-size: 12px; color: var(--text3);
+    font-size: 14px; color: var(--text3);
   }
   .ans-chip {
-    background: var(--card2); border: 1px solid var(--border);
-    border-radius: 20px; padding: 4px 12px;
-    font-size: 11px; color: var(--accent); cursor: pointer;
-    display: flex; align-items: center; gap: 3px;
+    background: var(--card2);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 13px; color: var(--accent); cursor: pointer;
+    display: flex; align-items: center; gap: 4px;
+    font-weight: 600; transition: all 0.15s;
   }
-  .ans-chip:hover { border-color: var(--accent); }
+  .ans-chip:hover { background: var(--accent); color: #fff; }
   /* ─── Modal ─── */
   .modal-overlay {
     display: none; position: fixed; inset: 0; z-index: 999;
-    background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+    background: rgba(62,39,35,0.5); backdrop-filter: blur(4px);
     align-items: center; justify-content: center;
   }
   .modal-overlay.open { display: flex; }
   .modal {
-    background: var(--card); border-radius: 18px;
-    padding: 24px; max-width: 460px; width: 90%;
+    background: var(--card); border-radius: 24px;
+    padding: 28px; max-width: 480px; width: 92%;
     max-height: 85vh; overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(62,39,35,0.2);
   }
-  .modal-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
-  .modal-body { font-size: 13px; color: var(--text2); line-height: 1.7; }
-  .modal-actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 10px; }
+  .modal-title { font-size: 18px; font-weight: 900; color: var(--text); margin-bottom: 16px; }
+  .modal-body { font-size: 15px; color: var(--text2); line-height: 1.7; }
+  .modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }
   .modal-btn {
-    padding: 8px 20px; border-radius: 10px; border: none;
-    cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 700;
+    padding: 10px 24px; border-radius: 14px; border: none;
+    cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 700;
+    min-height: 44px; transition: all 0.2s;
   }
   .modal-btn.primary { background: var(--accent); color: #fff; }
-  .modal-btn.success { background: var(--green); color: #000; }
+  .modal-btn.success { background: var(--green); color: #fff; }
   .modal-btn.danger { background: none; color: var(--red); }
-  /* ─── Disclaimer modal content ─── */
-  .disclaimer-section {
-    background: var(--card2); border-radius: 10px; padding: 12px; margin-bottom: 10px;
+  /* ─── Purchase guide (new) ─── */
+  .guide-section {
+    background: var(--card); box-shadow: var(--shadow);
+    border-radius: 20px; padding: 20px; margin: 16px 20px;
   }
-  .disclaimer-section-title { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
-  .disclaimer-section-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
-  /* ─── Share section ─── */
-  .share-section {
-    border-top: 1px solid var(--border);
-    padding: 14px 24px;
-    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  .guide-title { font-size: 18px; font-weight: 900; color: var(--accent); margin-bottom: 12px; }
+  .guide-subtitle { font-size: 15px; font-weight: 700; color: var(--text); margin: 14px 0 8px; }
+  .guide-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0; font-size: 14px; color: var(--text2);
   }
-  .share-title { font-size: 12px; color: var(--text2); }
-  .share-buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-  .share-btn {
-    padding: 9px 20px; border-radius: 10px; border: none;
-    font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit;
-    position: relative; overflow: hidden; transition: filter 0.2s;
+  .guide-item-icon { font-size: 20px; flex-shrink: 0; }
+  .guide-item-text { flex: 1; }
+  .guide-item-text b { color: var(--text); }
+  /* ─── Trap dialog ─── */
+  .trap-q { background: var(--card2); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
+  .trap-q-num { font-size: 14px; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
+  .trap-q-text { font-size: 14px; color: var(--text2); line-height: 1.6; }
+  .trap-answer { font-size: 13px; color: var(--green); font-weight: 600; margin-top: 4px; }
+  /* ─── Quick pick modal ─── */
+  .quick-input {
+    width: 100%; padding: 14px 18px; border-radius: 14px;
+    border: 2px solid var(--border); background: var(--surface);
+    font-size: 16px; font-family: inherit; color: var(--text);
+    outline: none; transition: border-color 0.2s;
   }
-  .share-btn:hover { filter: brightness(1.1); }
-  .share-note { font-size: 9px; color: var(--text3); }
-  /* ─── Footer ─── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 18px 24px;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 12px;
+  .quick-input:focus { border-color: var(--accent); }
+  .quick-slider {
+    width: 100%; height: 8px; border-radius: 4px;
+    -webkit-appearance: none; appearance: none;
+    background: var(--card2); outline: none;
+    margin: 10px 0;
   }
-  .footer-brand { font-size: 13px; font-weight: 700; color: var(--text); }
-  .footer-sub { font-size: 11px; color: var(--text3); }
-  .footer-link {
-    background: var(--card2); border-radius: 8px; padding: 6px 12px;
-    font-size: 11px; color: var(--accent); font-weight: 700;
-    text-decoration: none;
-  }
-  .footer-copy { width: 100%; font-size: 10px; color: var(--text3); text-align: center; }
-  /* ─── Compare dialog ─── */
-  .compare-col { flex: 1; text-align: center; }
-  .compare-row { display: flex; align-items: center; gap: 4px; padding: 6px 0; border-bottom: 1px solid var(--border); }
-  .compare-mid { font-size: 11px; color: var(--text3); min-width: 80px; text-align: center; }
-  .compare-val { flex: 1; font-size: 12px; text-align: center; }
-  .compare-win { font-weight: 700; }
-  /* ─── Pref box ─── */
-  .pref-box {
-    background: var(--surface); border-radius: 10px;
-    padding: 12px; margin: 8px 0;
-  }
-  .pref-box-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-  .pref-match { font-size: 11px; color: var(--green); }
-  .pref-miss { font-size: 11px; color: var(--text3); }
-  /* ─── Expert dialog ─── */
-  .expert-product-name {
-    background: var(--card2); border-radius: 8px; padding: 6px 12px;
-    font-size: 14px; color: var(--accent); font-weight: 700; margin-bottom: 8px;
-    display: inline-block;
+  .quick-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); cursor: pointer;
+    box-shadow: 0 2px 6px rgba(255,140,66,0.4);
   }
   /* ─── Price history ─── */
   .price-history {
     display: block;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 10px 12px; margin: 10px 0;
-    font-size: 11px;
+    background: var(--surface); box-shadow: var(--shadow);
+    border-radius: 14px; padding: 12px 14px; margin: 10px 0;
+    font-size: 13px;
   }
   .price-history-label { color: var(--text3); white-space: nowrap; }
   .price-trend-up   { color: var(--red); font-weight: 700; }
@@ -423,47 +488,104 @@
   .price-trend-flat { color: var(--text3); }
   .sparkline-wrap { width: 100%; }
   .price-history-meta { text-align: right; white-space: nowrap; color: var(--text3); }
-  .ph-range-btn { transition: background 0.15s, color 0.15s; }
+  .ph-range-btn { transition: background 0.15s, color 0.15s; border-radius: 6px !important; }
   .ph-range-btn:hover { background: var(--card2) !important; }
-  /* ─── Trap dialog ─── */
-  .trap-q { background: var(--card2); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
-  .trap-q-num { font-size: 13px; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
-  .trap-q-text { font-size: 12px; color: var(--text2); }
+  /* ─── Share section ─── */
+  .share-section {
+    border-top: 2px solid var(--border);
+    padding: 16px 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+  }
+  .share-title { font-size: 14px; color: var(--text2); font-weight: 600; }
+  .share-buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .share-btn {
+    padding: 10px 22px; border-radius: 14px; border: none;
+    font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+    transition: all 0.2s; min-height: 44px; color: #fff;
+  }
+  .share-btn:hover { filter: brightness(1.1); }
+  .share-note { font-size: 11px; color: var(--text3); }
+  /* ─── Footer ─── */
+  footer {
+    border-top: 2px solid var(--border);
+    padding: 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-brand { font-size: 15px; font-weight: 700; color: var(--text); }
+  .footer-sub { font-size: 12px; color: var(--text3); }
+  .footer-link {
+    background: var(--accent); border-radius: 12px; padding: 8px 16px;
+    font-size: 13px; color: #fff; font-weight: 700;
+    text-decoration: none; min-height: 40px; display: flex; align-items: center;
+  }
+  .footer-copy { width: 100%; font-size: 11px; color: var(--text3); text-align: center; }
+  /* ─── Compare dialog ─── */
+  .compare-col { flex: 1; text-align: center; }
+  .compare-row { display: flex; align-items: center; gap: 4px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .compare-mid { font-size: 13px; color: var(--text3); min-width: 80px; text-align: center; }
+  .compare-val { flex: 1; font-size: 14px; text-align: center; }
+  .compare-win { font-weight: 700; }
+  /* ─── Pref box ─── */
+  .pref-box {
+    background: var(--surface); border-radius: 14px;
+    padding: 14px; margin: 8px 0; box-shadow: var(--shadow);
+  }
+  .pref-box-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .pref-match { font-size: 13px; color: var(--green); font-weight: 600; }
+  .pref-miss { font-size: 13px; color: var(--text3); }
+  /* ─── Expert dialog ─── */
+  .expert-product-name {
+    background: var(--card2); border-radius: 12px; padding: 8px 14px;
+    font-size: 16px; color: var(--accent); font-weight: 700; margin-bottom: 8px;
+    display: inline-block;
+  }
+  /* ─── Disclaimer ─── */
+  .disclaimer-section {
+    background: var(--card2); border-radius: 14px; padding: 14px; margin-bottom: 10px;
+  }
+  .disclaimer-section-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .disclaimer-section-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
   /* ─── Watermark ─── */
   .watermark {
     position: fixed; right: 12px; bottom: 12px;
-    font-size: 11px; color: var(--text); opacity: 0.18;
+    font-size: 11px; color: var(--text); opacity: 0.15;
     pointer-events: none; z-index: 50;
   }
   /* ─── Responsive ─── */
   @media (max-width: 600px) {
-    #topbar { padding: 10px 12px; }
+    #topbar { padding: 10px 14px; }
     .topbar-sub { display: none; }
-    .hero { padding: 24px 12px; }
-    .hero-emoji { font-size: 36px; }
-    .hero-title { font-size: 20px; }
-    .option-grid { padding: 0 12px 16px; gap: 10px; }
-    .option-card { width: calc(50% - 5px); min-height: 115px; }
-    .option-emoji { font-size: 26px; }
-    .option-main { font-size: 13px; }
-    .app-categories, .pref-section, .btn-center, .tab-bar { padding-left: 12px; padding-right: 12px; }
-    .results-list { padding: 0 12px; }
-    .ans-row { padding: 8px 12px; }
-    .budget-tips { margin: 0 12px 12px; }
-    .warn-box { margin: 0 12px 10px; }
-    .compare-bar { margin: 0 12px 8px; }
-    .share-section { padding: 12px; }
-    footer { padding: 14px 12px; }
-    .tab-btn { padding: 8px 12px; font-size: 12px; }
-    .product-name { font-size: 15px; }
-    .price-val { font-size: 18px; }
-    .step-line { width: 24px; }
+    .hero { padding: 28px 16px 24px; }
+    .hero-emoji { font-size: 40px; }
+    .hero-title { font-size: 22px; }
+    .option-grid { padding: 12px 14px 18px; gap: 10px; }
+    .option-card { width: calc(50% - 5px); min-height: 120px; }
+    .option-emoji { font-size: 30px; }
+    .option-main { font-size: 15px; }
+    .scenario-grid { padding: 0 14px 18px; gap: 10px; }
+    .scenario-card { width: calc(50% - 5px); min-height: 100px; }
+    .app-categories, .pref-section, .btn-center, .tab-bar { padding-left: 14px; padding-right: 14px; }
+    .results-list { padding: 0 14px; }
+    .ans-row { padding: 10px 14px; }
+    .budget-tips { margin: 0 14px 12px; }
+    .warn-box { margin: 0 14px 10px; }
+    .compare-bar { margin: 0 14px 8px; }
+    .guide-section { margin: 12px 14px; }
+    .share-section { padding: 14px; }
+    footer { padding: 16px 14px; }
+    .tab-btn { padding: 8px 14px; font-size: 13px; }
+    .product-name { font-size: 17px; }
+    .price-val { font-size: 20px; }
+    .step-line { width: 20px; }
     .budget-tip-row { flex-direction: column; gap: 2px; }
+    .quick-pick-btn { font-size: 16px; padding: 14px 24px; }
+    .modal { padding: 20px; width: 95%; }
   }
   /* ─── Animations ─── */
-  .page-enter { animation: fadeSlideUp 0.3s ease forwards; }
+  .page-enter { animation: fadeSlideUp 0.35s ease forwards; }
   @keyframes fadeSlideUp {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
   }
 </style>
@@ -473,13 +595,13 @@
 <!-- Topbar -->
 <div id="topbar">
   <div class="topbar-left">
-    <div class="dot-badge"></div>
-    <span class="topbar-title">3C 選購顧問</span>
+    <span class="topbar-icon">🛍️</span>
+    <span class="topbar-title">3C 選購小幫手</span>
     <span class="topbar-sub">2026 最新 · 免費 · 防騙</span>
   </div>
   <div class="topbar-right">
-    <span id="updateBadge" style="display:none;font-size:10px;color:var(--green);background:var(--card2);padding:3px 8px;border-radius:12px;cursor:default"></span>
-    <button class="nav-btn" id="updateBtn" onclick="showUpdateModal()" style="color:var(--green);border:1px solid #00E5A033;font-size:12px">🔄 更新資料</button>
+    <span id="updateBadge" style="display:none;font-size:11px;color:var(--green);background:var(--card2);padding:4px 10px;border-radius:12px;cursor:default"></span>
+    <button class="nav-btn" id="updateBtn" onclick="showUpdateModal()" style="color:var(--green)">🔄 更新</button>
     <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 深色</button>
     <button class="nav-btn" id="backBtn" onclick="goBack()" style="display:none">← 上一步</button>
     <button class="nav-btn" id="homeBtn" onclick="goTo(0)" style="display:none">🏠 回首頁</button>
@@ -508,25 +630,85 @@
 // ─── DATA ──────────────────────────────────────────────────
 const STEP_OPTS = {
   device: [
-    {emoji:"💻", main:"筆電",    sub:"帶著走的好夥伴",    val:"computer"},
-    {emoji:"📱", main:"手機",    sub:"口袋裡的宇宙",      val:"phone"},
-    {emoji:"📟", main:"平板",    sub:"螢幕再大一點",      val:"tablet"},
-    {emoji:"🖥️", main:"桌機自組", sub:"效能怪獸・自由升級",val:"desktop"},
+    {emoji:"💻", main:"筆記型電腦", sub:"可以帶出門用的電腦", val:"computer"},
+    {emoji:"📱", main:"手機",       sub:"隨身攜帶，打電話上網", val:"phone"},
+    {emoji:"📟", main:"平板電腦",   sub:"螢幕比手機大，適合追劇", val:"tablet"},
+    {emoji:"🖥️", main:"桌上型電腦", sub:"放在家裡，螢幕大效能強", val:"desktop"},
   ],
   user: [
-    {emoji:"👧", main:"小朋友",   sub:"學習娛樂兼顧",   val:"child"},
-    {emoji:"🎓", main:"學生",     sub:"報告上課必備",   val:"student"},
-    {emoji:"💼", main:"上班族",   sub:"視訊文書開會",   val:"work"},
-    {emoji:"🎨", main:"創作者",   sub:"剪輯修圖設計",   val:"create"},
-    {emoji:"🎮", main:"遊戲玩家", sub:"電競3A不卡頓",   val:"game"},
-    {emoji:"👴", main:"長輩",     sub:"大字好操作",     val:"senior"},
-    {emoji:"🙋", main:"一般使用", sub:"什麼都用一點",   val:"general"},
+    {emoji:"👧", main:"給小朋友用", sub:"學習、看影片、簡單遊戲", val:"child"},
+    {emoji:"🎓", main:"給學生用",   sub:"寫報告、上課、查資料",   val:"student"},
+    {emoji:"💼", main:"上班工作用", sub:"視訊開會、文書處理",     val:"work"},
+    {emoji:"🎨", main:"創作設計用", sub:"修圖、剪影片、畫畫",    val:"create"},
+    {emoji:"🎮", main:"打電動用",   sub:"玩遊戲要順暢不卡",      val:"game"},
+    {emoji:"👴", main:"給長輩用",   sub:"簡單好操作、字要大",    val:"senior"},
+    {emoji:"🙋", main:"日常生活用", sub:"什麼都用一點點",        val:"general"},
   ],
   budget: [
-    {emoji:"🥉", main:"入門精省", sub:"日常文書、追劇、小學生作業",         val:"budget"},
-    {emoji:"🥈", main:"主流全能", sub:"上班族必備、流暢辦公、輕量剪輯",     val:"mid"},
-    {emoji:"🥇", main:"頂級效能", sub:"專業電競、4K剪輯、設計師首選",       val:"high"},
-    {emoji:"💎", main:"不差這點錢",sub:"旗艦規格、頂配無妥協",              val:"pro"},
+    {emoji:"💰", main:"省錢就好",   sub:"5千~1萬5，基本功能夠用", val:"budget"},
+    {emoji:"👍", main:"夠用就好",   sub:"1萬5~3萬，用個4-5年",   val:"mid"},
+    {emoji:"⭐", main:"要用得好",   sub:"3萬~5萬，效能好又耐用",  val:"high"},
+    {emoji:"🏆", main:"買最好的",   sub:"5萬以上，頂級享受",      val:"pro"},
+  ],
+};
+
+// ─── LIFE SCENARIOS (NEW) ──────────────────────────────────
+const LIFE_SCENARIOS = {
+  phone: [
+    {emoji:"📹", main:"跟家人視訊通話", sub:"LINE 或 FaceTime 視訊", val:"video_call",
+     apps:["💬 LINE / 通訊軟體"]},
+    {emoji:"📺", main:"追劇看 YouTube", sub:"Netflix、愛奇藝、YouTube", val:"streaming",
+     apps:["📺 影音串流（Netflix/YouTube）"]},
+    {emoji:"💬", main:"LINE 聊天傳照片", sub:"傳訊息、傳照片給朋友", val:"line",
+     apps:["💬 LINE / 通訊軟體"]},
+    {emoji:"📷", main:"拍照記錄生活", sub:"旅遊、聚餐拍照", val:"photo",
+     apps:["📸 拍照 / 修圖（Snapseed）"]},
+    {emoji:"📰", main:"看新聞查資料", sub:"瀏覽網頁、查天氣查路線", val:"browse",
+     apps:["🗺️ 導航 / Google Maps"]},
+    {emoji:"🛒", main:"網路購物付款", sub:"蝦皮、momo、行動支付", val:"shop",
+     apps:["💳 行動支付（街口/悠遊付）"]},
+    {emoji:"🎮", main:"玩手機遊戲", sub:"小遊戲或比較吃效能的手遊", val:"mobile_game",
+     apps:["🎮 傳說對決 / 輕度手遊"]},
+    {emoji:"🎵", main:"聽音樂", sub:"Spotify、KKBOX、YouTube Music", val:"music",
+     apps:["🎵 音樂串流（Spotify/KKBOX）"]},
+  ],
+  computer: [
+    {emoji:"📹", main:"視訊開會通話", sub:"LINE、Zoom、Google Meet", val:"video_call",
+     apps:["📄 文書辦公 / Office"]},
+    {emoji:"📄", main:"打字寫文件", sub:"Word、Excel、做報告", val:"office",
+     apps:["📄 文書辦公 / Office"]},
+    {emoji:"📺", main:"追劇看影片", sub:"Netflix、YouTube、動畫", val:"streaming",
+     apps:["📄 文書辦公 / Office"]},
+    {emoji:"🎮", main:"玩電腦遊戲", sub:"英雄聯盟、Steam 遊戲", val:"pc_game",
+     apps:["🎮 英雄聯盟 / 輕量遊戲"]},
+    {emoji:"🔥", main:"玩3A大作遊戲", sub:"黑神話、艾爾登法環等", val:"aaa_game",
+     apps:["🔥 絕地求生 / 3A大作"]},
+    {emoji:"🎬", main:"剪輯影片", sub:"YouTube 影片、家庭紀錄", val:"video_edit",
+     apps:["🎬 4K影片剪輯"]},
+    {emoji:"🎨", main:"修圖設計", sub:"Photoshop、海報設計", val:"design",
+     apps:["🎨 Photoshop / 設計"]},
+    {emoji:"💻", main:"寫程式開發", sub:"工程師、資訊系學生", val:"coding",
+     apps:["💻 程式開發 / IDE"]},
+  ],
+  tablet: [
+    {emoji:"📺", main:"追劇看影片", sub:"大螢幕看 Netflix、YouTube", val:"streaming",
+     apps:[]},
+    {emoji:"📖", main:"看書看漫畫", sub:"電子書、漫畫 App", val:"reading",
+     apps:[]},
+    {emoji:"✏️", main:"畫畫寫筆記", sub:"手寫筆記、數位繪畫", val:"drawing",
+     apps:[]},
+    {emoji:"👶", main:"給小孩學習", sub:"上網課、教育 App", val:"kids_edu",
+     apps:[]},
+    {emoji:"📹", main:"視訊通話", sub:"大螢幕跟家人聊天", val:"video_call",
+     apps:[]},
+    {emoji:"🎮", main:"玩遊戲", sub:"手遊大螢幕更過癮", val:"tablet_game",
+     apps:[]},
+  ],
+  desktop: [
+    {emoji:"📄", main:"文書辦公", sub:"Word、Excel、上網", val:"office", apps:[]},
+    {emoji:"🎮", main:"打電動", sub:"3A 大作、Steam 遊戲", val:"gaming", apps:[]},
+    {emoji:"🎬", main:"剪輯創作", sub:"影片剪輯、3D 建模", val:"create", apps:[]},
+    {emoji:"🧠", main:"AI/專業工作", sub:"機器學習、大型運算", val:"ai_work", apps:[]},
   ],
 };
 
@@ -700,6 +882,188 @@ const ADVANCED_PREFS = {
   ],
 };
 
+// ─── PLAIN SPEC TRANSLATION (NEW) ─────────────────────────
+function specToPlain(p) {
+  const lines = [];
+  // CPU
+  const cpu = (p.cpu||"").toLowerCase();
+  if (/ultra 7|ultra 9|m4|a19 pro|ryzen 9|i9|snapdragon 8 elite/.test(cpu))
+    lines.push({icon:"⚡", text:"超強處理器 — 做什麼都不會卡，非常快"});
+  else if (/ultra 5|m3|m2|a19|a18|a17|ryzen 7|i7|snapdragon 8 gen/.test(cpu))
+    lines.push({icon:"⚡", text:"很快的處理器 — 同時開很多程式也不會卡"});
+  else if (/ryzen 5|i5|snapdragon 7/.test(cpu))
+    lines.push({icon:"⚡", text:"夠用的處理器 — 日常使用很流暢"});
+  else if (/i3|n200|helio|snapdragon 6|exynos/.test(cpu))
+    lines.push({icon:"⚡", text:"基本處理器 — 上網、LINE、追劇沒問題"});
+  else
+    lines.push({icon:"⚡", text:"處理器 — 負責電腦運算的大腦"});
+
+  // RAM
+  const ramNum = parseInt((p.ram||"").replace(/[^0-9]/g,"")) || 0;
+  if (ramNum >= 32)
+    lines.push({icon:"🧠", text:"超大記憶體 — 同時開幾十個東西都不會慢"});
+  else if (ramNum >= 16)
+    lines.push({icon:"🧠", text:"大記憶體 — 多工作業很流暢"});
+  else if (ramNum >= 8)
+    lines.push({icon:"🧠", text:"夠用的記憶體 — 一般使用沒問題"});
+  else if (ramNum >= 4)
+    lines.push({icon:"🧠", text:"基本記憶體 — 適合簡單使用"});
+
+  // SSD
+  const ssdText = (p.ssd||"").toLowerCase();
+  const ssdNum = parseInt(ssdText.replace(/[^0-9]/g,"")) || 0;
+  if (/tb/.test(ssdText) || ssdNum >= 1000)
+    lines.push({icon:"📦", text:"超大儲存空間 — 可以存約 20 萬張照片"});
+  else if (ssdNum >= 512)
+    lines.push({icon:"📦", text:"大儲存空間 — 可以存約 10 萬張照片"});
+  else if (ssdNum >= 256)
+    lines.push({icon:"📦", text:"夠用的儲存 — 可以存約 5 萬張照片"});
+  else if (ssdNum >= 128)
+    lines.push({icon:"📦", text:"基本儲存 — 裝常用 App 和一些照片"});
+
+  // Battery
+  const bat = (p.battery||"").toLowerCase();
+  if (/18|兩天|二天/.test(bat))
+    lines.push({icon:"🔋", text:"電池超耐用 — 充一次可以用快兩天"});
+  else if (/1[4-7]|一天半/.test(bat))
+    lines.push({icon:"🔋", text:"電池很耐用 — 出門一整天不用帶充電器"});
+  else if (/1[0-3]|一天/.test(bat))
+    lines.push({icon:"🔋", text:"電池夠用 — 正常使用撐一天沒問題"});
+
+  // Weight
+  const wt = parseFloat((p.weight||"").replace(/[^0-9.]/g,"")) || 0;
+  if (wt > 0 && wt < 200) { // grams for phone
+    if (wt <= 170) lines.push({icon:"⚖️", text:"很輕巧 — 放口袋不會覺得重"});
+    else if (wt <= 200) lines.push({icon:"⚖️", text:"正常重量 — 跟一般手機差不多"});
+    else lines.push({icon:"⚖️", text:"稍微重一點 — 功能比較強大"});
+  } else if (wt > 0) { // kg for laptop
+    if (wt <= 1.3) lines.push({icon:"⚖️", text:"超輕！跟一瓶礦泉水差不多重"});
+    else if (wt <= 1.6) lines.push({icon:"⚖️", text:"還算輕 — 背包裡不太有感覺"});
+    else lines.push({icon:"⚖️", text:"有點重量 — 但螢幕比較大"});
+  }
+
+  return lines;
+}
+
+// ─── QUICK PICK KEYWORD MATCHING (NEW) ────────────────────
+const QUICK_KEYWORDS = {
+  phone: {
+    "line|聊天|傳訊息|通訊": {user:"senior", budget:"budget"},
+    "視訊|facetime|通話|打電話": {user:"general", budget:"mid"},
+    "追劇|netflix|youtube|影片": {user:"general", budget:"mid"},
+    "拍照|相機|攝影": {user:"general", budget:"mid"},
+    "遊戲|電競|打game": {user:"game", budget:"high"},
+    "長輩|爸媽|阿公|阿嬤|爺爺|奶奶|媽媽|爸爸": {user:"senior", budget:"budget"},
+    "小孩|兒子|女兒|學生": {user:"student", budget:"mid"},
+    "工作|辦公|上班": {user:"work", budget:"mid"},
+  },
+  computer: {
+    "文書|word|excel|報告|辦公": {user:"work", budget:"mid"},
+    "遊戲|電競|steam|lol": {user:"game", budget:"high"},
+    "剪輯|影片|premiere|創作": {user:"create", budget:"high"},
+    "程式|coding|開發|工程師": {user:"work", budget:"high"},
+    "長輩|爸媽|簡單|上網": {user:"senior", budget:"budget"},
+    "學生|作業|報告|上課": {user:"student", budget:"mid"},
+  },
+  tablet: {
+    "追劇|影片|youtube|netflix": {user:"general", budget:"mid"},
+    "畫畫|筆記|繪畫": {user:"create", budget:"high"},
+    "小孩|兒童|學習|網課": {user:"child", budget:"budget"},
+    "長輩|爸媽|簡單": {user:"senior", budget:"budget"},
+  },
+};
+
+function quickPickMatch(text, budget) {
+  text = text.toLowerCase();
+  // Detect device type
+  let device = "phone";
+  if (/筆電|電腦|laptop|notebook/.test(text)) device = "computer";
+  else if (/平板|ipad|tab/.test(text)) device = "tablet";
+  else if (/桌機|桌電|desktop/.test(text)) device = "desktop";
+
+  let matchedUser = "general", matchedBudget = "mid";
+
+  // Determine budget from slider value
+  if (budget <= 15000) matchedBudget = "budget";
+  else if (budget <= 30000) matchedBudget = "mid";
+  else if (budget <= 50000) matchedBudget = "high";
+  else matchedBudget = "pro";
+
+  // Match keywords
+  const kwMap = QUICK_KEYWORDS[device] || QUICK_KEYWORDS.phone;
+  for (const [pattern, result] of Object.entries(kwMap)) {
+    if (new RegExp(pattern).test(text)) {
+      matchedUser = result.user;
+      break;
+    }
+  }
+
+  return {device, user: matchedUser, budget: matchedBudget};
+}
+
+// ─── SETUP GUIDE DATA (NEW) ───────────────────────────────
+const SETUP_GUIDES = {
+  iphone: {
+    title: "iPhone 開箱設定教學",
+    steps: [
+      {icon:"1️⃣", text:"按住側邊按鈕開機，看到蘋果標誌就對了"},
+      {icon:"2️⃣", text:"選擇「繁體中文」和「台灣」"},
+      {icon:"3️⃣", text:"連接家裡的 WiFi（選網路名稱，輸入密碼）"},
+      {icon:"4️⃣", text:"登入 Apple ID（就是你的蘋果帳號，沒有的話可以免費註冊）"},
+      {icon:"5️⃣", text:"設定密碼或 Face ID（臉部辨識解鎖）"},
+      {icon:"6️⃣", text:"開始用！先到 App Store 下載 LINE"},
+    ]
+  },
+  android: {
+    title: "Android 手機開箱設定教學",
+    steps: [
+      {icon:"1️⃣", text:"長按電源鍵開機"},
+      {icon:"2️⃣", text:"選擇「繁體中文」和「台灣」"},
+      {icon:"3️⃣", text:"連接家裡的 WiFi"},
+      {icon:"4️⃣", text:"登入 Google 帳號（就是 Gmail 信箱）"},
+      {icon:"5️⃣", text:"如果有舊手機，可以靠近它自動傳資料"},
+      {icon:"6️⃣", text:"設定螢幕鎖定（密碼或指紋）"},
+      {icon:"7️⃣", text:"到 Play 商店下載 LINE、YouTube 等常用 App"},
+    ]
+  },
+  laptop: {
+    title: "筆電開箱設定教學",
+    steps: [
+      {icon:"1️⃣", text:"打開螢幕，按電源鍵開機"},
+      {icon:"2️⃣", text:"選擇語言「繁體中文」和地區「台灣」"},
+      {icon:"3️⃣", text:"連接家裡的 WiFi"},
+      {icon:"4️⃣", text:"設定使用者名稱和密碼"},
+      {icon:"5️⃣", text:"等系統設定完成（約5-10分鐘）"},
+      {icon:"6️⃣", text:"打開瀏覽器，下載 Chrome 和 LINE 桌面版"},
+      {icon:"7️⃣", text:"到 Windows Update 檢查更新（讓電腦保持最新最安全）"},
+    ]
+  },
+  mac: {
+    title: "MacBook 開箱設定教學",
+    steps: [
+      {icon:"1️⃣", text:"打開螢幕會自動開機"},
+      {icon:"2️⃣", text:"選擇語言「繁體中文」和地區「台灣」"},
+      {icon:"3️⃣", text:"連接家裡的 WiFi"},
+      {icon:"4️⃣", text:"登入 Apple ID（跟 iPhone 同一個帳號就好）"},
+      {icon:"5️⃣", text:"設定 Touch ID（指紋辨識）"},
+      {icon:"6️⃣", text:"到 App Store 下載 LINE"},
+      {icon:"7️⃣", text:"在 Safari 瀏覽器可以直接上網"},
+    ]
+  },
+};
+
+function getSetupGuideKey(p) {
+  const brand = (p.brand||"").toLowerCase();
+  const name = (p.name||"").toLowerCase();
+  if (brand === "apple") {
+    if (/iphone|ipad/.test(name)) return "iphone";
+    if (/macbook|mac/.test(name)) return "mac";
+    return "iphone";
+  }
+  if (/laptop|筆電|book|thinkpad|vivobook|swift|xps|inspiron/.test(name)) return "laptop";
+  return "android";
+}
+
 // ─── PRODUCT DB AUTO-UPDATE ─────────────────────────────────
 const _PCHOME = "https://ecshweb.pchome.com.tw/search/v3.3/";
 const _PCHOME_QUERIES = {
@@ -711,13 +1075,8 @@ const _LS_KEY = "3c_products_db_v3";
 
 // ─── PRICE HISTORY ──────────────────────────────────────────
 const _PH_KEY = "3c_price_history";
-
-function loadPriceHistory() {
-  try { return JSON.parse(localStorage.getItem(_PH_KEY) || "{}"); } catch { return {}; }
-}
-function savePriceHistory(ph) {
-  try { localStorage.setItem(_PH_KEY, JSON.stringify(ph)); } catch {}
-}
+function loadPriceHistory() { try { return JSON.parse(localStorage.getItem(_PH_KEY) || "{}"); } catch { return {}; } }
+function savePriceHistory(ph) { try { localStorage.setItem(_PH_KEY, JSON.stringify(ph)); } catch {} }
 function recordPrices(products) {
   const ph = loadPriceHistory();
   const dateStr = new Date().toLocaleDateString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit"});
@@ -728,147 +1087,105 @@ function recordPrices(products) {
     if (!ph[p.name]) ph[p.name] = [];
     const hist = ph[p.name];
     const last = hist[hist.length-1];
-    if (!last || last.p !== pNum) {
-      hist.push({d: dateStr, p: pNum});
-      if (hist.length > 26) hist.shift();
-    }
+    if (!last || last.p !== pNum) { hist.push({d: dateStr, p: pNum}); if (hist.length > 26) hist.shift(); }
   });
   savePriceHistory(ph);
 }
-
-// 確定性雜湊（讓同產品的估算值每次相同）
-function _strHash(str) {
-  let h = 5381;
-  for (let i = 0; i < str.length; i++) h = ((h << 5) + h) ^ str.charCodeAt(i);
-  return Math.abs(h >>> 0);
-}
-
-// 補種過去1年估算歷史（僅在沒有足夠真實資料時執行）
+function _strHash(str) { let h=5381; for(let i=0;i<str.length;i++) h=((h<<5)+h)^str.charCodeAt(i); return Math.abs(h>>>0); }
 function seedPriceHistory() {
   const ph = loadPriceHistory();
   const allProds = [...PRODUCTS.laptop, ...PRODUCTS.phone, ...PRODUCTS.tablet];
-  const now = new Date();
-  const POINTS = 26; // 26 × 2週 ≈ 1年
-
+  const now = new Date(); const POINTS = 26;
   allProds.forEach(p => {
     if (!p.name || !p.price) return;
-    const pNum = priceNum(p.price);
-    if (!pNum) return;
-    // 若已有 ≥6 筆真實追蹤資料，跳過
+    const pNum = priceNum(p.price); if (!pNum) return;
     const existing = ph[p.name] || [];
     if (existing.filter(x => !x.s).length >= 6) return;
-
     const hash = _strHash(p.name);
-    // 新品判斷：名字含年份或新晶片
     const isNew = /2026|A19|M4|Elite|Ultra 7/.test(p.name + (p.cpu||""));
     const maxPremium = isNew ? 0.08 + (hash % 8) * 0.01 : 0.03 + (hash % 5) * 0.01;
-
     const hist = [];
     for (let i = 0; i < POINTS; i++) {
-      const d = new Date(now);
-      d.setDate(d.getDate() - (POINTS - 1 - i) * 14);
+      const d = new Date(now); d.setDate(d.getDate() - (POINTS - 1 - i) * 14);
       const dateStr = d.toLocaleDateString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit"});
-      const t = i / (POINTS - 1);                       // 0=最舊, 1=最新
-      const launchPremium = maxPremium * (1 - t);       // 越舊越貴（上市定價高）
-      const noise = ((hash * (i + 13)) % 1000) / 1000 * 0.04 - 0.02; // ±2% 隨機雜訊
-      const saleDip = ((hash * i) % 7 === 0) ? -0.035 : 0;           // 偶發促銷
+      const t = i / (POINTS - 1);
+      const launchPremium = maxPremium * (1 - t);
+      const noise = ((hash * (i + 13)) % 1000) / 1000 * 0.04 - 0.02;
+      const saleDip = ((hash * i) % 7 === 0) ? -0.035 : 0;
       const mult = Math.max(0.85, 1 + launchPremium + noise + saleDip);
-      hist.push({d: dateStr, p: Math.round(pNum * mult / 100) * 100, s: true}); // s=估算
+      hist.push({d: dateStr, p: Math.round(pNum * mult / 100) * 100, s: true});
     }
-    // 最後一筆 = 當前真實價格
     const todayStr = now.toLocaleDateString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit"});
     hist[hist.length - 1] = {d: todayStr, p: pNum, s: false};
-
-    // 保留既有的真實記錄，估算值放前面
     const realPts = existing.filter(x => !x.s);
     ph[p.name] = [...hist, ...realPts].slice(-26);
   });
   savePriceHistory(ph);
 }
-
-// 過濾最近 N 天的歷史
 function _filterHistory(history, days) {
   if (!days) return history;
-  const cutoff = new Date();
-  cutoff.setDate(cutoff.getDate() - days);
-  const filtered = history.filter(h => {
-    const parts = h.d.split('/');
-    return new Date(+parts[0], +parts[1]-1, +parts[2]) >= cutoff;
-  });
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - days);
+  const filtered = history.filter(h => { const parts=h.d.split('/'); return new Date(+parts[0],+parts[1]-1,+parts[2]) >= cutoff; });
   return filtered.length >= 2 ? filtered : history.slice(-Math.max(4, Math.round(days/14)));
 }
-
-// BigGo 風格價格走勢圖（annots=false 為卡片簡潔版）
 function _buildChart(history, W, H, annots=true) {
   if (!history || history.length < 2) return "";
-  const prices = history.map(h => h.p);
-  const dates  = history.map(h => h.d);
-  const n = prices.length;
-  // 卡片簡潔版用更小的 padding，不需預留標注空間
-  const PL = annots?44:6, PR = annots?10:6, PT = annots?30:6, PB = annots?20:6;
-  const cW = W - PL - PR, cH = H - PT - PB;
-  const rawMin = Math.min(...prices), rawMax = Math.max(...prices);
-  const pad = (rawMax - rawMin) * 0.2 || rawMin * 0.06;
-  const lo = rawMin - pad, hi = rawMax + pad;
-  const cx = i => PL + (i/(n-1))*cW;
-  const cy = p => PT + cH - ((p-lo)/(hi-lo))*cH;
-  const linePts = prices.map((p,i)=>`${cx(i).toFixed(1)},${cy(p).toFixed(1)}`).join(" ");
-  const fillPts = `${PL},${PT+cH} `+linePts+` ${(PL+cW).toFixed(1)},${PT+cH}`;
-  const lastP = prices[n-1], firstP = prices[0];
-  const color = lastP <= firstP ? "#00E5A0" : "#FF4D6D";
-  const gid = "phg"+(_strHash(String(prices[0])+n+W+(annots?1:0))%99999);
-  // 價格變動標注（僅放大版）
-  let annotSvg = "";
-  let xAxisSvg = "";
-  let yAxisSvg = "";
+  const prices=history.map(h=>h.p), dates=history.map(h=>h.d), n=prices.length;
+  const PL=annots?44:6, PR=annots?10:6, PT=annots?30:6, PB=annots?20:6;
+  const cW=W-PL-PR, cH=H-PT-PB;
+  const rawMin=Math.min(...prices), rawMax=Math.max(...prices);
+  const pad=(rawMax-rawMin)*0.2||rawMin*0.06;
+  const lo=rawMin-pad, hi=rawMax+pad;
+  const cx=i=>PL+(i/(n-1))*cW, cy=p=>PT+cH-((p-lo)/(hi-lo))*cH;
+  const linePts=prices.map((p,i)=>`${cx(i).toFixed(1)},${cy(p).toFixed(1)}`).join(" ");
+  const fillPts=`${PL},${PT+cH} `+linePts+` ${(PL+cW).toFixed(1)},${PT+cH}`;
+  const lastP=prices[n-1], firstP=prices[0];
+  const color=lastP<=firstP?"#4CAF50":"#E53935";
+  const gid="phg"+(_strHash(String(prices[0])+n+W+(annots?1:0))%99999);
+  let annotSvg="", xAxisSvg="", yAxisSvg="";
   if (annots) {
-    const changes = [];
-    for (let i=1;i<n;i++) if(prices[i]!==prices[i-1]) changes.push({i,diff:prices[i]-prices[i-1],price:prices[i],date:dates[i]});
-    const topChanges = [...changes].sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff)).slice(0,6).sort((a,b)=>a.i-b.i);
+    const changes=[];
+    for(let i=1;i<n;i++) if(prices[i]!==prices[i-1]) changes.push({i,diff:prices[i]-prices[i-1],price:prices[i],date:dates[i]});
+    const topChanges=[...changes].sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff)).slice(0,6).sort((a,b)=>a.i-b.i);
     const yTicks=[rawMin,Math.round((rawMin+rawMax)/2/500)*500,rawMax].filter((v,i,a)=>a.indexOf(v)===i);
     const xTicks=[]; let prevMo="";
     dates.forEach((d,i)=>{const mo=d.slice(0,7);if(mo!==prevMo){xTicks.push({i,label:d.slice(5,7)+"月"});prevMo=mo;}});
     const xStep=Math.ceil(xTicks.length/7);
-    yAxisSvg = yTicks.map(p=>`<line x1="${PL}" y1="${cy(p).toFixed(1)}" x2="${W-PR}" y2="${cy(p).toFixed(1)}" stroke="var(--border)" stroke-width="0.5"/>
+    yAxisSvg=yTicks.map(p=>`<line x1="${PL}" y1="${cy(p).toFixed(1)}" x2="${W-PR}" y2="${cy(p).toFixed(1)}" stroke="var(--border)" stroke-width="0.5"/>
     <text x="${PL-4}" y="${(cy(p)+3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--text3)">${p>=10000?(p/1000).toFixed(0)+"k":p.toLocaleString()}</text>`).join("");
-    xAxisSvg = xTicks.filter((_,i)=>i%xStep===0).map(({i,label})=>`<text x="${cx(i).toFixed(1)}" y="${H-2}" text-anchor="middle" font-size="9" fill="var(--text3)">${label}</text>`).join("");
-    annotSvg = topChanges.map((c,ci)=>{
-      const x=cx(c.i), y=cy(c.price);
-      const isDown=c.diff<0, ac=isDown?"#00E5A0":"#FF4D6D";
+    xAxisSvg=xTicks.filter((_,i)=>i%xStep===0).map(({i,label})=>`<text x="${cx(i).toFixed(1)}" y="${H-2}" text-anchor="middle" font-size="9" fill="var(--text3)">${label}</text>`).join("");
+    annotSvg=topChanges.map((c,ci)=>{
+      const x=cx(c.i),y=cy(c.price);
+      const isDown=c.diff<0, ac=isDown?"#4CAF50":"#E53935";
       const sym=isDown?"▼":"▲";
       const amt=Math.abs(c.diff)>=1000?`${sym}${(Math.abs(c.diff)/1000).toFixed(1)}k`:`${sym}${Math.abs(c.diff).toLocaleString()}`;
       const flip=ci%2===1;
       const ay=flip?y+24:y-22, ly1=flip?y+4:y-4, ly2=flip?ay-10:ay+10;
       const dp=c.date.split("/"); const dl=dp.length>=3?`${+dp[1]}/${+dp[2]}`:c.date.slice(5);
       return `<line x1="${x.toFixed(1)}" y1="${PT}" x2="${x.toFixed(1)}" y2="${(PT+cH).toFixed(1)}" stroke="${ac}" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>
-      <line x1="${x.toFixed(1)}" y1="${ly1.toFixed(1)}" x2="${x.toFixed(1)}" y2="${ly2.toFixed(1)}" stroke="${ac}" stroke-width="1" opacity="0.7"/>
+      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${ac}" stroke="var(--surface)" stroke-width="1.5"/>
       <rect x="${(x-20).toFixed(1)}" y="${(ay-12).toFixed(1)}" width="40" height="22" rx="4" fill="var(--card2)" stroke="${ac}" stroke-width="0.8"/>
       <text x="${x.toFixed(1)}" y="${(ay-2).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="700" fill="${ac}">${amt}</text>
-      <text x="${x.toFixed(1)}" y="${(ay+8).toFixed(1)}" text-anchor="middle" font-size="7.5" fill="var(--text3)">${dl}</text>
-      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${ac}" stroke="var(--surface)" stroke-width="1.5"/>`;
+      <text x="${x.toFixed(1)}" y="${(ay+8).toFixed(1)}" text-anchor="middle" font-size="7.5" fill="var(--text3)">${dl}</text>`;
     }).join("");
   }
-  const heightAttr = annots ? "" : ` height="${H}"`;
-  return `<svg width="100%"${heightAttr} viewBox="0 0 ${W} ${H}" style="display:block;overflow:visible">
+  return `<svg width="100%" viewBox="0 0 ${W} ${H}" style="display:block;overflow:visible">
     <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="${color}" stop-opacity="0.28"/>
+      <stop offset="0%" stop-color="${color}" stop-opacity="0.25"/>
       <stop offset="100%" stop-color="${color}" stop-opacity="0.02"/>
     </linearGradient></defs>
     ${yAxisSvg}
     <polygon points="${fillPts}" fill="url(#${gid})"/>
     <polyline points="${linePts}" fill="none" stroke="${color}" stroke-width="${annots?2:1.5}" stroke-linejoin="round" stroke-linecap="round"/>
-    ${annotSvg}
-    ${xAxisSvg}
+    ${annotSvg}${xAxisSvg}
     <circle cx="${cx(n-1).toFixed(1)}" cy="${cy(lastP).toFixed(1)}" r="${annots?4:3}" fill="${color}" stroke="var(--surface)" stroke-width="2"/>
   </svg>`;
 }
 
-// 點擊開大圖 Modal
 function showPriceModal(productName, days) {
-  const ph = loadPriceHistory();
-  const history = ph[productName] || [];
-  const filtered = _filterHistory(history, days || 0);
-  const prices = filtered.map(h=>h.p), dates=filtered.map(h=>h.d);
+  const ph=loadPriceHistory(); const history=ph[productName]||[];
+  const filtered=_filterHistory(history, days||0);
+  const prices=filtered.map(h=>h.p), dates=filtered.map(h=>h.d);
   const first=prices[0], last=prices[prices.length-1];
   const diff=last-first, pct=first>0?Math.abs((diff/first)*100).toFixed(1):"0";
   const trendCls=diff<0?"price-trend-down":diff>0?"price-trend-up":"price-trend-flat";
@@ -876,72 +1193,45 @@ function showPriceModal(productName, days) {
   const trendAmt=diff!==0?`${trendSign} NT$${Math.abs(diff).toLocaleString()} (${pct}%)`:"持平";
   const minP=Math.min(...prices), maxP=Math.max(...prices);
   const avgP=Math.round(prices.reduce((a,b)=>a+b,0)/prices.length/100)*100;
-  const isNearLow = prices.length >= 2 && last <= minP * 1.05;
-  const hasSeeded=history.some(h=>h.s);
+  const isNearLow=prices.length>=2&&last<=minP*1.05;
   const pnJs=JSON.stringify(productName);
   const ranges=[[30,"1月"],[90,"3月"],[180,"6月"],[0,"1年"]];
-  // 變動紀錄表
-  const changeRows=[];
-  for(let i=1;i<prices.length;i++){
-    if(prices[i]!==prices[i-1]){
-      const d=prices[i]-prices[i-1],isDown=d<0,ac=isDown?"var(--green)":"var(--red)";
-      changeRows.push(`<tr>
-        <td style="padding:8px 10px;font-size:13px;color:var(--text3)">${dates[i]}</td>
-        <td style="padding:8px 10px;font-size:15px;font-weight:700;color:var(--white)">NT$${prices[i].toLocaleString()}</td>
-        <td style="padding:8px 10px;font-size:14px;font-weight:700;color:${ac}">${isDown?"▼":"▲"} NT$${Math.abs(d).toLocaleString()}</td>
-      </tr>`);
-    }
-  }
   const body=`
     <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
       <div>
-        <div style="font-size:13px;color:var(--text3);margin-bottom:4px">${productName}</div>
-        <div style="font-size:36px;font-weight:900;color:var(--white);letter-spacing:-1px">NT$${last.toLocaleString()}</div>
-        <div class="${trendCls}" style="font-size:15px;font-weight:700;margin-top:4px">${trendAmt} <span style="font-size:12px;color:var(--text3);font-weight:400">vs 期初</span></div>
+        <div style="font-size:14px;color:var(--text3);margin-bottom:4px">${productName}</div>
+        <div style="font-size:32px;font-weight:900;color:var(--white)">NT$${last.toLocaleString()}</div>
+        <div class="${trendCls}" style="font-size:15px;font-weight:700;margin-top:4px">${trendAmt}</div>
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         ${ranges.map(([d,l])=>`<button onclick='showPriceModal(${pnJs},${d})'
-          style="padding:8px 16px;border-radius:8px;font-size:13px;font-family:inherit;
-                 border:1px solid var(--border);cursor:pointer;
+          style="padding:8px 16px;border-radius:10px;font-size:14px;font-family:inherit;
+                 border:2px solid var(--border);cursor:pointer;min-height:40px;
                  background:${(days||0)===d?"var(--accent)":"var(--card2)"};
                  color:${(days||0)===d?"#fff":"var(--text3)"}">${l}</button>`).join("")}
       </div>
     </div>
     <div style="margin-bottom:16px">${_buildChart(filtered, 700, 200)}</div>
-    <div style="display:flex;gap:20px;font-size:14px;color:var(--text3);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);flex-wrap:wrap">
+    <div style="display:flex;gap:20px;font-size:14px;color:var(--text3);margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--border);flex-wrap:wrap">
       <span>最低 <b style="color:var(--green);font-size:16px">NT$${minP.toLocaleString()}</b></span>
       <span>最高 <b style="color:var(--red);font-size:16px">NT$${maxP.toLocaleString()}</b></span>
       <span>均價 <b style="color:var(--text2);font-size:16px">NT$${avgP.toLocaleString()}</b></span>
-      ${hasSeeded?`<span style="margin-left:auto;font-size:11px">※ 含估算值</span>`:""}
     </div>
-    ${isNearLow?`<div style="background:rgba(0,229,160,0.12);border:1px solid rgba(0,229,160,0.35);border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+    ${isNearLow?`<div style="background:var(--pros-bg);border:2px solid var(--green);border-radius:14px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
       <span style="font-size:28px">🎯</span>
       <div>
         <div style="font-size:16px;font-weight:800;color:var(--green)">目前價格接近歷史低點！</div>
-        <div style="font-size:13px;color:var(--text2);margin-top:4px">現在是入手好時機，建議考慮購買 👍</div>
+        <div style="font-size:14px;color:var(--text2);margin-top:4px">現在是入手好時機 👍</div>
       </div>
-    </div>`:""}
-    ${changeRows.length?`<div style="font-size:14px;font-weight:700;color:var(--text2);margin-bottom:8px">📋 價格變動紀錄</div>
-    <table style="width:100%;border-collapse:collapse">
-      <tr style="border-bottom:1px solid var(--border)">
-        <th style="text-align:left;padding:8px 10px;font-size:12px;color:var(--text3);font-weight:600">日期</th>
-        <th style="text-align:left;padding:8px 10px;font-size:12px;color:var(--text3);font-weight:600">售價</th>
-        <th style="text-align:left;padding:8px 10px;font-size:12px;color:var(--text3);font-weight:600">變動</th>
-      </tr>
-      ${changeRows.join("")}
-    </table>`:
-    `<div style="font-size:13px;color:var(--text3);text-align:center;padding:14px">此期間無價格變動</div>`}`;
+    </div>`:""}`;
   showModal("📈 價格走勢", body, [{text:"關閉", cls:"modal-btn primary", onclick:"closeModal()"}], "min(820px,95vw)");
 }
 
-// 更新卡片內小圖（範圍切換）
 function renderPriceChart(productName, days) {
-  const ph = loadPriceHistory();
-  const history = ph[productName] || [];
-  const filtered = _filterHistory(history, days);
-  const id = "ph-" + productName.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g,"_");
-  const container = document.getElementById(id);
-  if (!container) return;
+  const ph=loadPriceHistory(); const history=ph[productName]||[];
+  const filtered=_filterHistory(history, days);
+  const id="ph-"+productName.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g,"_");
+  const container=document.getElementById(id); if(!container) return;
   const prices=filtered.map(h=>h.p);
   const first=prices[0], last=prices[prices.length-1], diff=last-first;
   const pct=first>0?Math.abs((diff/first)*100).toFixed(1):"0";
@@ -949,15 +1239,13 @@ function renderPriceChart(productName, days) {
   const trendSign=diff<0?"▼":diff>0?"▲":"";
   const trendAmt=diff!==0?`${trendSign} NT$${Math.abs(diff).toLocaleString()} (${pct}%)`:"持平";
   const minP=Math.min(...prices), maxP=Math.max(...prices);
-  const avgP=Math.round(prices.reduce((a,b)=>a+b,0)/prices.length/100)*100;
   const trendEl=container.querySelector(".ph-trend");
   if(trendEl){trendEl.className=`ph-trend ${trendCls}`;trendEl.textContent=trendAmt;}
   const sw=container.querySelector(".sparkline-wrap");
-  sw.innerHTML=`<div style="font-size:10px;color:var(--accent);font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:3px">🔍 <span>點擊放大走勢圖</span></div>`+_buildChart(filtered,400,56,false);
+  sw.innerHTML=`<div style="font-size:11px;color:var(--accent);font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:3px">🔍 <span>點擊看詳細走勢</span></div>`+_buildChart(filtered,400,56,false);
   const statsEl=container.querySelector(".ph-stats");
   if(statsEl) statsEl.innerHTML=`<span>最低 <b style="color:var(--green)">NT$${minP.toLocaleString()}</b></span>
-    <span>最高 <b style="color:var(--red)">NT$${maxP.toLocaleString()}</b></span>
-    <span>均價 <b style="color:var(--text2)">NT$${avgP.toLocaleString()}</b></span>`;
+    <span>最高 <b style="color:var(--red)">NT$${maxP.toLocaleString()}</b></span>`;
   container.querySelectorAll(".ph-range-btn").forEach(btn=>{
     const active=+btn.dataset.days===days;
     btn.style.background=active?"var(--accent)":"var(--card2)";
@@ -965,12 +1253,11 @@ function renderPriceChart(productName, days) {
   });
 }
 
-function priceHistoryHtml(productName, currentPrice) {
-  const ph = loadPriceHistory();
-  const history = ph[productName] || [];
-  if (history.length < 2) return "";
-  const defaultDays = 90;
-  const filtered = _filterHistory(history, defaultDays);
+function priceHistoryHtml(productName) {
+  const ph=loadPriceHistory(); const history=ph[productName]||[];
+  if (history.length<2) return "";
+  const defaultDays=90;
+  const filtered=_filterHistory(history, defaultDays);
   const prices=filtered.map(h=>h.p);
   const first=prices[0], last=prices[prices.length-1], diff=last-first;
   const pct=first>0?Math.abs((diff/first)*100).toFixed(1):"0";
@@ -978,8 +1265,6 @@ function priceHistoryHtml(productName, currentPrice) {
   const trendSign=diff<0?"▼":diff>0?"▲":"";
   const trendAmt=diff!==0?`${trendSign} NT$${Math.abs(diff).toLocaleString()} (${pct}%)`:"持平";
   const minP=Math.min(...prices), maxP=Math.max(...prices);
-  const avgP=Math.round(prices.reduce((a,b)=>a+b,0)/prices.length/100)*100;
-  const hasSeeded=history.some(h=>h.s);
   const id="ph-"+productName.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g,"_");
   const pnJs=JSON.stringify(productName);
   const ranges=[[30,"1月"],[90,"3月"],[180,"6月"],[0,"1年"]];
@@ -987,463 +1272,280 @@ function priceHistoryHtml(productName, currentPrice) {
     <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
       <div style="flex:none;min-width:160px">
         <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;flex-wrap:wrap">
-          <span style="font-size:11px;font-weight:700;color:var(--text2)">📈 歷史走勢</span>
-          <span class="ph-trend ${trendCls}" style="font-size:11px;font-weight:700">${trendAmt}</span>
-          <span style="font-size:10px;color:var(--text3)">近3月</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text2)">📈 歷史走勢</span>
+          <span class="ph-trend ${trendCls}" style="font-size:12px;font-weight:700">${trendAmt}</span>
         </div>
-        <div class="ph-stats" style="display:flex;gap:8px;font-size:10px;color:var(--text3);flex-wrap:wrap;margin-bottom:6px">
+        <div class="ph-stats" style="display:flex;gap:8px;font-size:11px;color:var(--text3);flex-wrap:wrap;margin-bottom:6px">
           <span>最低 <b style="color:var(--green)">NT$${minP.toLocaleString()}</b></span>
           <span>最高 <b style="color:var(--red)">NT$${maxP.toLocaleString()}</b></span>
-          <span>均價 <b style="color:var(--text2)">NT$${avgP.toLocaleString()}</b></span>
         </div>
-        <div style="display:flex;gap:3px;flex-wrap:wrap">
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
           ${ranges.map(([d,l])=>{const active=d===defaultDays;return `<button class="ph-range-btn" data-days="${d}" onclick='renderPriceChart(${pnJs},${d})'
-            style="padding:2px 6px;border-radius:4px;font-size:10px;font-family:inherit;border:1px solid var(--border);cursor:pointer;
+            style="padding:4px 8px;border-radius:6px;font-size:11px;font-family:inherit;border:1px solid var(--border);cursor:pointer;
                    background:${active?"var(--accent)":"var(--card2)"};color:${active?"#fff":"var(--text3)"}">${l}</button>`;}).join("")}
         </div>
       </div>
-      <div class="sparkline-wrap" style="width:200px;flex:none;cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:6px 8px;transition:border-color 0.2s,background 0.2s"
-           onmouseenter="this.style.borderColor='var(--accent)';this.style.background='var(--card2)'"
-           onmouseleave="this.style.borderColor='var(--border)';this.style.background=''"
+      <div class="sparkline-wrap" style="width:200px;flex:none;cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:6px 8px;transition:all 0.2s"
+           onmouseenter="this.style.borderColor='var(--accent)'"
+           onmouseleave="this.style.borderColor='var(--border)'"
            onclick='showPriceModal(${pnJs},${defaultDays})'>
-        <div style="font-size:10px;color:var(--accent);font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:3px">
-          🔍 <span>點擊放大走勢圖</span>
-        </div>
+        <div style="font-size:11px;color:var(--accent);font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:3px">🔍 <span>點擊看詳細走勢</span></div>
         ${_buildChart(filtered,400,56,false)}
       </div>
     </div>
   </div>`;
 }
 
+// ─── PCHOME UPDATE ──────────────────────────────────────────
 async function _fetchPChome(query, rows=6) {
-  try {
-    const params = new URLSearchParams({q:query, scope:"TW", sort:"rnk", isinstock:"T", rows});
-    const r = await fetch(`${_PCHOME}?${params}`);
-    if (!r.ok) return [];
-    const data = await r.json();
-    return data.prods || [];
-  } catch { return []; }
+  try { const params=new URLSearchParams({q:query,scope:"TW",sort:"rnk",isinstock:"T",rows}); const r=await fetch(`${_PCHOME}?${params}`); if(!r.ok) return[]; const data=await r.json(); return data.prods||[]; } catch{return[];}
 }
-
 function _parsePChomeProd(raw) {
-  const name  = (raw.Nick || "").trim();
-  const price = raw.Price?.m || 0;
-  if (!name || !price) return null;
-  const brandMap = {
-    "ASUS":"ASUS","Apple":"Apple","Samsung":"Samsung","Lenovo":"Lenovo",
-    "Acer":"Acer","HP":"HP","Dell":"Dell","Sony":"Sony",
-    "Google":"Google","Xiaomi":"Xiaomi","MI":"Xiaomi","OPPO":"OPPO",
-    "vivo":"vivo","Huawei":"Huawei","Microsoft":"Microsoft",
-  };
-  let brand = (raw.Brand || "");
-  for (const [k,v] of Object.entries(brandMap)) {
-    if (brand.toLowerCase().startsWith(k.toLowerCase()) ||
-        name.toLowerCase().startsWith(k.toLowerCase())) { brand=v; break; }
-  }
-  const nl = name.toLowerCase();
-  let cpu = "";
-  const cpuPats = [/core ultra \d+ \w+/,/core i\d+-\d+\w*/,/ryzen [\w]+ [\w]+ [\w]+/,
-                   /apple m\d(?: pro| max)?/,/snapdragon [\w]+ [\w]+/,/a\d{2}(?: pro)?/];
-  for (const p of cpuPats) { const m=nl.match(p); if(m){cpu=m[0];break;} }
-  const ramM = name.match(/\/(\d{1,3})[Gg](?:[Bb])?/);
-  const ssdM = name.match(/\/(\d+)([TtGg][Bb])/);
-  return {
-    brand, name: name.slice(0,55),
-    price: `NT$${price.toLocaleString()}`,
-    cpu: cpu || "規格詳見商品頁",
-    ram: ramM ? `${ramM[1]}GB` : "—",
-    ssd: ssdM ? `${ssdM[1]}${ssdM[2].toUpperCase()}` : "—",
-    battery:"—", weight:"—",
-    pros:"PChome 在售新品", cons:"",
-    tag:"🔄 最新上市",
-  };
+  const name=(raw.Nick||"").trim(); const price=raw.Price?.m||0; if(!name||!price) return null;
+  const brandMap={"ASUS":"ASUS","Apple":"Apple","Samsung":"Samsung","Lenovo":"Lenovo","Acer":"Acer","HP":"HP","Dell":"Dell","Sony":"Sony","Google":"Google","Xiaomi":"Xiaomi","MI":"Xiaomi","OPPO":"OPPO","vivo":"vivo","Huawei":"Huawei","Microsoft":"Microsoft"};
+  let brand=(raw.Brand||"");
+  for(const[k,v] of Object.entries(brandMap)){if(brand.toLowerCase().startsWith(k.toLowerCase())||name.toLowerCase().startsWith(k.toLowerCase())){brand=v;break;}}
+  return {brand, name:name.slice(0,55), price:`NT$${price.toLocaleString()}`, cpu:"規格詳見商品頁", ram:"—", ssd:"—", battery:"—", weight:"—", pros:"PChome 在售新品", cons:"", tag:"🔄 最新上市"};
 }
-
 async function _updateAllProducts(progressCb) {
-  const db = {
-    laptop:[...PRODUCTS.laptop], phone:[...PRODUCTS.phone],
-    tablet:[...PRODUCTS.tablet], desktop:[...PRODUCTS.desktop],
-  };
-  let added = 0;
-  for (const [cat, queries] of Object.entries(_PCHOME_QUERIES)) {
-    const existingNames = new Set(db[cat].map(p => p.name.toLowerCase().slice(0,25)));
-    for (const q of queries) {
-      if (progressCb) progressCb(`查詢：${q}…`);
-      const raws = await _fetchPChome(q);
-      for (const raw of raws) {
-        const p = _parsePChomeProd(raw);
-        if (!p) continue;
-        const key = p.name.toLowerCase().slice(0,25);
-        if ([...existingNames].some(n => n.includes(key) || key.includes(n))) continue;
-        db[cat].push(p);
-        existingNames.add(key);
-        added++;
-      }
+  const db={laptop:[...PRODUCTS.laptop],phone:[...PRODUCTS.phone],tablet:[...PRODUCTS.tablet],desktop:[...PRODUCTS.desktop]};
+  let added=0;
+  for(const[cat,queries] of Object.entries(_PCHOME_QUERIES)){
+    const existingNames=new Set(db[cat].map(p=>p.name.toLowerCase().slice(0,25)));
+    for(const q of queries){
+      if(progressCb) progressCb(`查詢：${q}…`);
+      const raws=await _fetchPChome(q);
+      for(const raw of raws){const p=_parsePChomeProd(raw);if(!p)continue;const key=p.name.toLowerCase().slice(0,25);if([...existingNames].some(n=>n.includes(key)||key.includes(n)))continue;db[cat].push(p);existingNames.add(key);added++;}
     }
   }
-  db._updated = new Date().toLocaleString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});
-  return { db, added };
+  db._updated=new Date().toLocaleString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});
+  return{db,added};
 }
-
 function _applyProductDB(db) {
-  if (db.laptop?.length)  PRODUCTS.laptop  = db.laptop;
-  if (db.phone?.length)   PRODUCTS.phone   = db.phone;
-  if (db.tablet?.length)  PRODUCTS.tablet  = db.tablet;
-  if (db.desktop?.length) PRODUCTS.desktop = db.desktop;
-  // Record prices for history tracking
-  const allProds = [...(PRODUCTS.laptop||[]), ...(PRODUCTS.phone||[]), ...(PRODUCTS.tablet||[])];
-  recordPrices(allProds);
-  seedPriceHistory();
-  const badge = document.getElementById("updateBadge");
-  if (badge) {
-    badge.style.display = "";
-    badge.textContent = `⏱ ${db._updated || "已載入"}`;
-  }
+  if(db.laptop?.length) PRODUCTS.laptop=db.laptop;
+  if(db.phone?.length) PRODUCTS.phone=db.phone;
+  if(db.tablet?.length) PRODUCTS.tablet=db.tablet;
+  if(db.desktop?.length) PRODUCTS.desktop=db.desktop;
+  const allProds=[...(PRODUCTS.laptop||[]),...(PRODUCTS.phone||[]),...(PRODUCTS.tablet||[])];
+  recordPrices(allProds); seedPriceHistory();
+  const badge=document.getElementById("updateBadge");
+  if(badge){badge.style.display="";badge.textContent=`⏱ ${db._updated||"已載入"}`;}
 }
-
 async function _applyDataJson() {
-  // 讀取 fetch_prices.py 輸出的 data.json，更新精確價格
-  try {
-    const r = await fetch("./data.json");
-    if (!r.ok) return 0;
-    const data = await r.json();
-    const prices = data.prices || {};
-    const metaTs = data.meta?.updated_at || "";
-    let updated = 0;
-    const allProds = [...PRODUCTS.laptop, ...PRODUCTS.phone, ...PRODUCTS.tablet];
-    for (const p of allProds) {
-      const key = `${p.brand}|${p.name}`;
-      const hit = prices[key];
-      if (hit?.price && hit.price > 0) {
-        const newPrice = `NT$${hit.price.toLocaleString()}`;
-        if (newPrice !== p.price) {
-          p.price = newPrice;
-          updated++;
-        }
-      }
-      // Also try fuzzy match by name substring
-      if (!prices[key]) {
-        for (const [k, v] of Object.entries(prices)) {
-          if (v?.price > 0 && p.name.includes(k.split("|")[1]?.slice(0,15))) {
-            p.price = `NT$${v.price.toLocaleString()}`;
-            updated++;
-            break;
-          }
-        }
-      }
-    }
-    if (updated > 0) {
-      recordPrices(allProds);
-      const badge = document.getElementById("updateBadge");
-      const ts = metaTs ? metaTs.slice(0,16).replace("T"," ") : "已更新";
-      if (badge) { badge.style.display=""; badge.textContent=`⏱ ${ts}`; }
-    }
-    return updated;
-  } catch { return 0; }
+  try{const r=await fetch("./data.json");if(!r.ok) return 0;const data=await r.json();const prices=data.prices||{};let updated=0;
+  const allProds=[...PRODUCTS.laptop,...PRODUCTS.phone,...PRODUCTS.tablet];
+  for(const p of allProds){const key=`${p.brand}|${p.name}`;const hit=prices[key];
+    if(hit?.price&&hit.price>0){const newPrice=`NT$${hit.price.toLocaleString()}`;if(newPrice!==p.price){p.price=newPrice;updated++;}}
+    if(!prices[key]){for(const[k,v] of Object.entries(prices)){if(v?.price>0&&p.name.includes(k.split("|")[1]?.slice(0,15))){p.price=`NT$${v.price.toLocaleString()}`;updated++;break;}}}}
+  if(updated>0) recordPrices(allProds); return updated;}catch{return 0;}
 }
-
 async function loadProductDB() {
-  // 1. 先嘗試 localStorage
-  try {
-    const ls = localStorage.getItem(_LS_KEY);
-    if (ls) {
-      const db = JSON.parse(ls);
-      if (db.laptop?.length) {
-        _applyProductDB(db);
-        await _applyDataJson();
-        renderPage();
-        return;
-      }
-    }
-  } catch {}
-  // 2. 嘗試讀取同目錄 products_db.json
-  try {
-    const r = await fetch("./products_db.json");
-    if (r.ok) {
-      const db = await r.json();
-      if (db.laptop?.length) {
-        _applyProductDB(db);
-        try { localStorage.setItem(_LS_KEY, JSON.stringify(db)); } catch {}
-        await _applyDataJson();
-        renderPage();
-        return;
-      }
-    }
-  } catch {}
-  // 3. 使用內建預設資料，仍嘗試載入 data.json 精確價格
-  const n = await _applyDataJson();
-  const badge = document.getElementById("updateBadge");
-  if (badge) {
-    badge.style.display = "";
-    badge.textContent = n > 0 ? `✅ 已更新 ${n} 筆價格` : "📦 內建資料";
-  }
-  if (n > 0) renderPage();
+  try{const ls=localStorage.getItem(_LS_KEY);if(ls){const db=JSON.parse(ls);if(db.laptop?.length){_applyProductDB(db);await _applyDataJson();renderPage();return;}}}catch{}
+  try{const r=await fetch("./products_db.json");if(r.ok){const db=await r.json();if(db.laptop?.length){_applyProductDB(db);try{localStorage.setItem(_LS_KEY,JSON.stringify(db));}catch{} await _applyDataJson();renderPage();return;}}}catch{}
+  const n=await _applyDataJson();
+  const badge=document.getElementById("updateBadge");
+  if(badge){badge.style.display="";badge.textContent=n>0?`✅ 已更新 ${n} 筆價格`:"📦 內建資料";}
+  if(n>0) renderPage();
 }
-
 function showUpdateModal() {
   showModal("🔄 更新產品資料",
-    `<div style="font-size:12px;color:var(--text3);margin-bottom:10px">
-      從 PChome 抓取最新上架商品，自動補充到推薦清單中。<br>
-      <span style="color:var(--orange)">⚠ 更新約需 30–60 秒，請保持網路連線。</span>
-    </div>
-    <div id="updateProgress" style="font-size:11px;color:var(--green);min-height:80px;max-height:160px;overflow-y:auto;font-family:'JetBrains Mono',monospace;background:var(--surface);border-radius:8px;padding:10px;white-space:pre-wrap"></div>`,
-    [
-      {text:"開始更新", cls:"modal-btn primary", onclick:"doProductUpdate()"},
-      {text:"清除快取", cls:"modal-btn danger",  onclick:"clearProductCache()"},
-      {text:"關閉",     cls:"modal-btn",         onclick:"closeModal()"},
-    ]
+    `<div style="font-size:14px;color:var(--text3);margin-bottom:12px">從 PChome 抓取最新商品，約需 30-60 秒。</div>
+    <div id="updateProgress" style="font-size:12px;color:var(--green);min-height:80px;max-height:160px;overflow-y:auto;background:var(--surface);border-radius:12px;padding:12px;white-space:pre-wrap"></div>`,
+    [{text:"開始更新",cls:"modal-btn primary",onclick:"doProductUpdate()"},{text:"清除快取",cls:"modal-btn danger",onclick:"clearProductCache()"},{text:"關閉",cls:"modal-btn",onclick:"closeModal()"}]
   );
 }
-
 async function doProductUpdate() {
-  const btn = document.querySelector("#modalActions .modal-btn.primary");
-  if (btn) { btn.disabled=true; btn.textContent="更新中…"; }
-  const log = document.getElementById("updateProgress");
-  const addLog = t => { if(log){ log.textContent+=t+"\n"; log.scrollTop=log.scrollHeight; } };
-  addLog("🔄 開始從 PChome 抓取最新商品…");
-  try {
-    const { db, added } = await _updateAllProducts(t => addLog(t));
-    PRODUCTS.laptop  = db.laptop;
-    PRODUCTS.phone   = db.phone;
-    PRODUCTS.tablet  = db.tablet;
-    recordPrices([...db.laptop, ...db.phone, ...db.tablet]);
-    try { localStorage.setItem(_LS_KEY, JSON.stringify(db)); } catch {}
-    const badge = document.getElementById("updateBadge");
-    if (badge) { badge.style.display=""; badge.textContent=`⏱ ${db._updated}`; }
+  const btn=document.querySelector("#modalActions .modal-btn.primary");
+  if(btn){btn.disabled=true;btn.textContent="更新中…";}
+  const log=document.getElementById("updateProgress");
+  const addLog=t=>{if(log){log.textContent+=t+"\n";log.scrollTop=log.scrollHeight;}};
+  addLog("🔄 開始抓取最新商品…");
+  try{const{db,added}=await _updateAllProducts(t=>addLog(t));
+    PRODUCTS.laptop=db.laptop;PRODUCTS.phone=db.phone;PRODUCTS.tablet=db.tablet;
+    recordPrices([...db.laptop,...db.phone,...db.tablet]);
+    try{localStorage.setItem(_LS_KEY,JSON.stringify(db));}catch{}
+    const badge=document.getElementById("updateBadge");if(badge){badge.style.display="";badge.textContent=`⏱ ${db._updated}`;}
     addLog(`\n✅ 完成！新增 ${added} 筆商品`);
-    if (btn) { btn.disabled=false; btn.textContent="✅ 再次更新"; }
-    if (currentStep===5) renderPage();
-  } catch(e) {
-    addLog(`\n❌ 更新失敗：${e.message}`);
-    if (btn) { btn.disabled=false; btn.textContent="重試"; }
-  }
+    if(btn){btn.disabled=false;btn.textContent="✅ 再次更新";}
+    if(currentStep===7) renderPage();
+  }catch(e){addLog(`\n❌ 更新失敗：${e.message}`);if(btn){btn.disabled=false;btn.textContent="重試";}}
 }
-
-function clearProductCache() {
-  try { localStorage.removeItem(_LS_KEY); } catch {}
-  location.reload();
-}
+function clearProductCache(){try{localStorage.removeItem(_LS_KEY);}catch{} location.reload();}
 
 // ─── STATE ──────────────────────────────────────────────────
 let currentStep = 0;
 let answers = {};
 let selectedApps = [];
+let selectedScenarios = [];
 let userPrefs = {brand:[], color:[], origin:[]};
 let compareList = [];
-let isDark = true;
+let isDark = false;
+let isQuickPick = false;
 
-const STEPS = ["選裝置","選情境","選軟體","選預算","個人偏好","推薦結果"];
-const APP_URL = "https://deluxe-tartufo-a53775.netlify.app/";
+const STEPS = ["選裝置","誰要用","生活用途","軟體需求","選預算","個人偏好","推薦結果"];
+const APP_URL = "";
 
 // ─── HELPERS ────────────────────────────────────────────────
-function priceNum(priceStr) {
-  const m = (priceStr||"").replace(/,/g,"").match(/\d+/);
-  return m ? parseInt(m[0]) : 0;
-}
+function priceNum(priceStr) { const m=(priceStr||"").replace(/,/g,"").match(/\d+/); return m?parseInt(m[0]):0; }
 function priceTag(priceStr) {
-  const p = priceNum(priceStr);
-  if (p < 20000) return {label:"🟢 入門價格", color:"var(--green)", bg:"#0A2018"};
-  if (p < 35000) return {label:"🔵 中階行情", color:"var(--accent)", bg:"#0A1830"};
-  if (p < 60000) return {label:"🟡 高階定價", color:"var(--orange)", bg:"#1E1800"};
-  return {label:"🔴 旗艦售價", color:"var(--red)", bg:"#200808"};
+  const p=priceNum(priceStr);
+  if(p<20000) return{label:"💚 平價好入手",color:"var(--green)",bg:"var(--pros-bg)"};
+  if(p<35000) return{label:"💙 中等價位",color:"var(--accent2)",bg:"#E3F2FD"};
+  if(p<60000) return{label:"💛 中高價位",color:"var(--orange)",bg:"var(--cons-bg)"};
+  return{label:"❤️ 高價旗艦",color:"var(--red)",bg:"#FFEBEE"};
 }
 function getPerfScores(p) {
-  const spec = ((p.cpu||"")+" "+(p.gpu||"")+" "+(p.ram||"")+" "+(p.ssd||"")).toLowerCase();
-  let office=0.75, game=0.30, edit=0.30;
-  if (/ultra 7|ultra 9|m4|m3|ryzen 9|i9/.test(spec)) {office=1.0;edit=0.90;game=Math.max(game,0.60);}
-  else if (/ultra 5|m2|ryzen 7|i7|r7/.test(spec)) {office=0.92;edit=0.75;game=Math.max(game,0.50);}
-  else if (/ryzen 5|i5|r5|a17|a18|a19|snapdragon 8 elite/.test(spec)) {office=0.85;edit=0.55;game=Math.max(game,0.40);}
-  else if (/i3|ryzen 3|exynos/.test(spec)) {office=0.70;edit=0.35;game=Math.max(game,0.25);}
-  if (/rtx 5070 ti|rtx 5080|rtx 5090/.test(spec)) {game=1.0;edit=1.0;}
-  else if (/rtx 5070|rtx 4090|rtx 4080/.test(spec)) {game=0.95;edit=0.95;}
-  else if (/rtx 5060|rtx 4070/.test(spec)) {game=0.85;edit=0.80;}
-  else if (/rtx 4060|rtx 3070/.test(spec)) {game=0.75;edit=0.70;}
-  else if (/rtx|gtx/.test(spec)) {game=0.65;edit=0.60;}
-  if (/64gb/.test(spec)) {edit=Math.min(edit+0.10,1.0);office=Math.min(office+0.05,1.0);}
-  else if (/32gb/.test(spec)) {edit=Math.min(edit+0.05,1.0);office=Math.min(office+0.03,1.0);}
-  return {office:Math.round(office*100)/100, game:Math.round(game*100)/100, edit:Math.round(edit*100)/100};
+  const spec=((p.cpu||"")+" "+(p.gpu||"")+" "+(p.ram||"")+" "+(p.ssd||"")).toLowerCase();
+  let office=0.75,game=0.30,edit=0.30;
+  if(/ultra 7|ultra 9|m4|m3|ryzen 9|i9/.test(spec)){office=1.0;edit=0.90;game=Math.max(game,0.60);}
+  else if(/ultra 5|m2|ryzen 7|i7|r7/.test(spec)){office=0.92;edit=0.75;game=Math.max(game,0.50);}
+  else if(/ryzen 5|i5|r5|a17|a18|a19|snapdragon 8 elite/.test(spec)){office=0.85;edit=0.55;game=Math.max(game,0.40);}
+  else if(/i3|ryzen 3|exynos/.test(spec)){office=0.70;edit=0.35;game=Math.max(game,0.25);}
+  if(/rtx 5070 ti|rtx 5080|rtx 5090/.test(spec)){game=1.0;edit=1.0;}
+  else if(/rtx 5070|rtx 4090|rtx 4080/.test(spec)){game=0.95;edit=0.95;}
+  else if(/rtx 5060|rtx 4070/.test(spec)){game=0.85;edit=0.80;}
+  else if(/rtx 4060|rtx 3070/.test(spec)){game=0.75;edit=0.70;}
+  else if(/rtx|gtx/.test(spec)){game=0.65;edit=0.60;}
+  if(/64gb/.test(spec)){edit=Math.min(edit+0.10,1.0);}
+  else if(/32gb/.test(spec)){edit=Math.min(edit+0.05,1.0);}
+  return{office:Math.round(office*100)/100,game:Math.round(game*100)/100,edit:Math.round(edit*100)/100};
 }
 function getFreshness(p) {
-  const spec = ((p.cpu||"")+" "+(p.gpu||"")).toLowerCase();
-  if (/ultra 7|ultra 9|m4|m3|rtx 5|ryzen 9 9|a19|snapdragon 8 elite/.test(spec))
-    return {emoji:"🟢", label:"當季新品，五年不落伍", color:"var(--green)", bg:"#0A2018", borderColor:"#00E5A066"};
-  if (/ultra 5|m2|rtx 4|ryzen 7 9|ryzen 5 7|i7-13|i5-13|a18|a17|snapdragon 8 gen 3/.test(spec))
-    return {emoji:"🟡", label:"主流世代，三年夠用", color:"#FFD700", bg:"#1E1800", borderColor:"#FFD70066"};
-  return {emoji:"🔴", label:"規格偏舊，價格夠低再考慮", color:"var(--red)", bg:"#200808", borderColor:"#FF4D6D66"};
+  const spec=((p.cpu||"")+" "+(p.gpu||"")).toLowerCase();
+  if(/ultra 7|ultra 9|m4|m3|rtx 5|ryzen 9 9|a19|snapdragon 8 elite/.test(spec))
+    return{emoji:"🟢",label:"最新款，可以安心用很久",color:"var(--green)",bg:"var(--pros-bg)",borderColor:"#4CAF5066"};
+  if(/ultra 5|m2|rtx 4|ryzen 7 9|ryzen 5 7|i7-13|i5-13|a18|a17|snapdragon 8 gen 3/.test(spec))
+    return{emoji:"🟡",label:"主流款，用個三年沒問題",color:"#FF8F00",bg:"var(--cons-bg)",borderColor:"#FF8F0066"};
+  return{emoji:"🔴",label:"稍舊的款式，價格要夠便宜才值得",color:"var(--red)",bg:"#FFEBEE",borderColor:"#E5393566"};
 }
 function getCompatScore(p, apps) {
-  if (!apps.length) return {score:1.0, color:"var(--green)", text:"沒有特定需求，這台完全夠用！"};
-  const scores = getPerfScores(p);
-  const hasHeavyGame = apps.some(a => /3A|絕地/.test(a));
-  const has4K = apps.some(a => /4K/.test(a));
-  const hasAI = apps.some(a => /AI|機器學習/.test(a));
-  let score = 1.0;
-  if (hasHeavyGame) score = Math.min(score, scores.game);
-  if (has4K) score = Math.min(score, scores.edit);
-  if (hasAI) score = Math.min(score, scores.edit * 0.9);
-  if (score >= 0.80) return {score, color:"var(--green)", text:"完全勝任！買這台不用擔心跑不動 ✅"};
-  if (score >= 0.55) return {score, color:"var(--orange)", text:"大部分沒問題，少數重度任務需降低設定 ⚠️"};
-  return {score, color:"var(--red)", text:"規格不足，跑起來可能會很痛苦 ❌"};
+  if(!apps.length) return{score:1.0,color:"var(--green)",text:"沒有特定需求，這台完全夠用！👍"};
+  const scores=getPerfScores(p);
+  const hasHeavyGame=apps.some(a=>/3A|絕地/.test(a));
+  const has4K=apps.some(a=>/4K/.test(a));
+  const hasAI=apps.some(a=>/AI|機器學習/.test(a));
+  let score=1.0;
+  if(hasHeavyGame) score=Math.min(score,scores.game);
+  if(has4K) score=Math.min(score,scores.edit);
+  if(hasAI) score=Math.min(score,scores.edit*0.9);
+  if(score>=0.80) return{score,color:"var(--green)",text:"完全夠用！放心買 ✅"};
+  if(score>=0.55) return{score,color:"var(--orange)",text:"大部分沒問題，少數重度使用要注意 ⚠️"};
+  return{score,color:"var(--red)",text:"可能會不夠力，建議選更好的 ❌"};
 }
-function getAppCategories() {
-  return answers.device === "phone" ? APP_CATS_PHONE : APP_CATS_COMPUTER;
-}
+function getAppCategories() { return answers.device==="phone"?APP_CATS_PHONE:APP_CATS_COMPUTER; }
 function getRequiredBudget() {
-  if (!selectedApps.length) return 0;
-  const cats = getAppCategories();
-  let allItems = {};
-  Object.values(cats).forEach(c => Object.assign(allItems, c.items));
-  return Math.max(...selectedApps.map(a => allItems[a]?.min_budget||0));
+  if(!selectedApps.length) return 0;
+  const cats=getAppCategories(); let allItems={};
+  Object.values(cats).forEach(c=>Object.assign(allItems,c.items));
+  return Math.max(...selectedApps.map(a=>allItems[a]?.min_budget||0));
 }
 function getBudgetWarning() {
-  const budgetMap = {budget:15000, mid:30000, high:50000, pro:99999};
-  const budVal = budgetMap[answers.budget] || 0;
-  const req = getRequiredBudget();
-  if (!req || req <= budVal) return null;
-  const cats = getAppCategories();
-  let allItems = {};
-  Object.values(cats).forEach(c => Object.assign(allItems, c.items));
-  const heavy = selectedApps.filter(a => allItems[a]?.min_budget > budVal);
-  const names = heavy.join("、");
-  const suggested = req <= 42000 ? "NT$35,000" : "NT$45,000 以上";
-  return `💡 建議：${names} 需要較強的規格，目前預算可能不夠力，建議提升至 ${suggested}，或考慮中古旗艦機。`;
+  const budgetMap={budget:15000,mid:30000,high:50000,pro:99999};
+  const budVal=budgetMap[answers.budget]||0; const req=getRequiredBudget();
+  if(!req||req<=budVal) return null;
+  const suggested=req<=42000?"NT$35,000":"NT$45,000 以上";
+  return `💡 你選的用途需要比較好的規格，建議預算提升到 ${suggested} 會比較順暢喔！`;
 }
 function filterProducts() {
-  const d = answers.device || "computer";
-  const b = answers.budget || "mid";
-  const budgetMap = {budget:15000, mid:30000, high:50000, pro:99999};
-  const budVal = budgetMap[b];
-  const key = {computer:"laptop", phone:"phone", tablet:"tablet"}[d] || "laptop";
-  let list = [...(PRODUCTS[key]||[])];
-  list = list.filter(p => priceNum(p.price) <= budVal * 1.25);
+  const d=answers.device||"computer"; const b=answers.budget||"mid";
+  const budgetMap={budget:15000,mid:30000,high:50000,pro:99999};
+  const budVal=budgetMap[b];
+  const key={computer:"laptop",phone:"phone",tablet:"tablet"}[d]||"laptop";
+  let list=[...(PRODUCTS[key]||[])];
+  list=list.filter(p=>priceNum(p.price)<=budVal*1.25);
   return list;
 }
 function shopLinks(brand, name) {
-  const q = encodeURIComponent(`${brand} ${name}`);
+  const q=encodeURIComponent(`${brand} ${name}`);
   return [
-    {label:"PChome", url:`https://ecshweb.pchome.com.tw/search/v3.3/?q=${q}`, color:"#4F8EF7", bg:"#1A2540"},
-    {label:"momo",   url:`https://www.momoshop.com.tw/search/searchShop.jsp?keyword=${q}`, color:"#FF4D6D", bg:"#2A1520"},
-    {label:"Yahoo",  url:`https://tw.buy.yahoo.com/search/product?p=${q}`, color:"#FFB300", bg:"#2A2010"},
-    {label:"蝦皮",   url:`https://shopee.tw/search?keyword=${q}`, color:"#FF8C42", bg:"#2A1A10"},
+    {label:"🛒 PChome",url:`https://ecshweb.pchome.com.tw/search/v3.3/?q=${q}`,bg:"#4F8EF7"},
+    {label:"🛍️ momo",url:`https://www.momoshop.com.tw/search/searchShop.jsp?keyword=${q}`,bg:"#E53935"},
+    {label:"📦 Yahoo",url:`https://tw.buy.yahoo.com/search/product?p=${q}`,bg:"#FF8F00"},
+    {label:"🦐 蝦皮",url:`https://shopee.tw/search?keyword=${q}`,bg:"#FF6D00"},
   ];
 }
 function matchPrefs(p) {
-  const bk = (p.brand||"").toLowerCase();
-  const tags = BRAND_TAGS[bk] || {};
-  const matched=[], missed=[];
-  if (userPrefs.brand.length) {
-    if (userPrefs.brand.includes(tags.brand)) matched.push(`✅ 品牌符合（${tags.brand}）`);
-    else missed.push(`⚠️ 品牌不在偏好內（${tags.brand||"未知"}）`);
-  }
-  if (userPrefs.origin.length) {
-    if (userPrefs.origin.includes(tags.origin)) matched.push(`✅ 產地符合（${tags.origin}）`);
-    else missed.push(`⚠️ 非偏好產地（${tags.origin||"未知"}）`);
-  }
-  return {matched, missed};
-}
-function specPromises(p) {
-  const cpu = (p.cpu||"").toLowerCase();
-  const r1 = /rtx 40|rtx40|rtx 30/.test(cpu) ? "🎮 3A大作順跑" :
-             /rtx|gtx/.test(cpu) ? "🎮 遊戲繪圖OK" : "📺 文書影音首選";
-  const r2 = /i7|i9|r7|r9|m4/.test(cpu) ? "⚡ 多工剪輯不卡" : "📝 基礎辦公學習";
-  return [r1, r2];
+  const bk=(p.brand||"").toLowerCase(); const tags=BRAND_TAGS[bk]||{};
+  const matched=[],missed=[];
+  if(userPrefs.brand.length){if(userPrefs.brand.includes(tags.brand)) matched.push(`✅ 品牌符合（${tags.brand}）`);else missed.push(`品牌不在偏好內（${tags.brand||"未知"}）`);}
+  if(userPrefs.origin.length){if(userPrefs.origin.includes(tags.origin)) matched.push(`✅ 產地符合（${tags.origin}）`);else missed.push(`非偏好產地（${tags.origin||"未知"}）`);}
+  return{matched,missed};
 }
 function getExpertComment(p) {
-  const scores = getPerfScores(p);
-  const {office:o, game:g, edit:e} = scores;
-  const name = p.name;
-  const brand = (p.brand||"").toLowerCase();
-  const lines = [];
-  if (selectedApps.length) {
-    lines.push("📋 針對你選的軟體：");
-    selectedApps.forEach(app => {
-      let verdict = "";
-      if (/3A|絕地/.test(app)) verdict = g>=0.80 ? "✅ 跑得動，高畫質沒問題" : g>=0.55 ? "⚠️ 勉強跑得動，建議調中畫質" : "❌ 規格不足，會卡頓";
-      else if (/英雄聯盟|輕量遊戲/.test(app)) verdict = g>=0.55 ? "✅ 完全沒問題，超流暢" : "⚠️ 可以跑，但特效要關低";
-      else if (/4K/.test(app)) verdict = e>=0.80 ? "✅ 4K剪輯流暢" : e>=0.55 ? "⚠️ 1080p沒問題，4K會有些卡" : "❌ 不建議跑4K剪輯";
-      else if (/Photoshop|設計/.test(app)) verdict = e>=0.70 ? "✅ 修圖設計完全順暢" : "⚠️ 基本修圖可以，大型PSD檔會慢";
-      else if (/AI|機器學習/.test(app)) verdict = e>=0.85 ? "✅ 本地AI推論沒問題" : "❌ 訓練模型需要更強的GPU";
-      else verdict = o>=0.80 ? "✅ 完全夠用" : "⚠️ 基本操作可以";
+  const scores=getPerfScores(p); const{office:o,game:g,edit:e}=scores;
+  const name=p.name; const brand=(p.brand||"").toLowerCase();
+  const lines=[];
+  if(selectedApps.length){
+    lines.push("📋 針對你的需求：");
+    selectedApps.forEach(app=>{
+      let verdict="";
+      if(/3A|絕地/.test(app)) verdict=g>=0.80?"✅ 沒問題，跑得很順":"❌ 可能會卡，建議選更好的";
+      else if(/英雄聯盟|輕量遊戲/.test(app)) verdict=g>=0.55?"✅ 完全沒問題":"⚠️ 可以跑但要降低畫質";
+      else if(/4K/.test(app)) verdict=e>=0.80?"✅ 剪 4K 影片很順":"⚠️ 剪一般影片可以，4K 可能會慢";
+      else if(/Photoshop|設計/.test(app)) verdict=e>=0.70?"✅ 修圖設計很順":"⚠️ 基本修圖可以";
+      else if(/AI|機器學習/.test(app)) verdict=e>=0.85?"✅ AI 運算沒問題":"❌ 需要更強的機器";
+      else verdict=o>=0.80?"✅ 完全夠用":"⚠️ 基本操作可以";
       lines.push(`  • ${app}：${verdict}`);
     });
     lines.push("");
   }
-  lines.push(o>=0.90 ? "🖥️ 多工文書：同時開幾十個分頁、跑多個程式完全沒問題。" : "🖥️ 多工文書：基本夠用，大量多工可能偶爾會頓一下。");
-  lines.push("");
-  lines.push("💡 這台的特別提醒：");
-  if (/apple|macbook/.test(brand+name.toLowerCase())) {
-    lines.push("  • macOS 不支援 Windows 遊戲，需用 GeForce Now 等串流平台");
-    lines.push("  • 擴充埠少，建議搭配 USB-C Hub 使用");
-  } else if (/thinkpad/.test(name.toLowerCase())) {
-    lines.push("  • 鍵盤是筆電界最佳，長時間打字首選");
-    lines.push("  • 記憶體通常可自行升級，未來擴充彈性大");
-  } else if (/asus/.test(brand)) {
-    lines.push("  • 台灣自有品牌，全台維修據點多，送修方便");
-  } else if (/dell/.test(brand)) {
-    lines.push("  • XPS 系列工藝頂尖，但擴充埠極少，強烈建議搭配 USB-C Hub");
-  } else if (/google/.test(brand)) {
-    lines.push("  • 台灣無官方實體門市，售後需透過線上或授權通路處理");
-    lines.push("  • 享有 7 年 Android 更新保證");
-  } else if (/huawei/.test(brand)) {
-    lines.push("  ⚠️ 重要提醒：Huawei 手機無法使用 Google 服務");
-    lines.push("  • 沒有 Google Play 商店，無法安裝 Gmail、Google Maps、YouTube 等");
+  lines.push("💡 特別提醒：");
+  if(/apple|macbook/.test(brand+name.toLowerCase())){
+    lines.push("  • 蘋果電腦不能玩 Windows 遊戲");
+    lines.push("  • 插孔比較少，可能需要買轉接頭");
+  } else if(/google/.test(brand)){
+    lines.push("  • 台灣沒有官方店面，維修要寄送");
+    lines.push("  • 但保證更新 7 年，用很久都安全");
+  } else if(/huawei/.test(brand)){
+    lines.push("  ⚠️ 重要：華為手機不能用 Google 商店");
+    lines.push("  • 無法下載 LINE、Gmail、YouTube 等常用 App");
   }
-  const useCase = g>=0.8 ? "遊戲電競" : e>=0.75 ? "創作生產" : "日常辦公";
-  const priceV = priceNum(p.price);
-  const cp = priceV < 35000 ? "很高" : "合理";
-  lines.push(`\n💬 總結：${name} 最適合${useCase}族群，CP值${cp}。`);
   return lines.join("\n");
 }
 
 // ─── NAVIGATION ─────────────────────────────────────────────
 function goTo(step) {
-  currentStep = step;
-  renderStepper();
-  renderPage();
-  document.getElementById("backBtn").style.display = step > 0 ? "" : "none";
-  document.getElementById("homeBtn").style.display = step > 0 ? "" : "none";
-  window.scrollTo({top:0, behavior:"smooth"});
+  currentStep=step; renderStepper(); renderPage();
+  document.getElementById("backBtn").style.display=step>0?"":"none";
+  document.getElementById("homeBtn").style.display=step>0?"":"none";
+  window.scrollTo({top:0,behavior:"smooth"});
 }
-function goBack() {
-  if (currentStep > 0) goTo(currentStep - 1);
-}
+function goBack() { if(currentStep>0) goTo(currentStep-1); }
 
 // ─── STEPPER ────────────────────────────────────────────────
 function renderStepper() {
-  const el = document.getElementById("stepper");
-  let html = "";
-  STEPS.forEach((label, i) => {
-    const done = i < currentStep;
-    const active = i === currentStep;
-    const cls = done ? "done" : active ? "active" : "";
-    const txt = done ? "✓" : i < 5 ? i+1 : "★";
-    html += `<div class="step-item">
+  const el=document.getElementById("stepper"); let html="";
+  STEPS.forEach((label,i)=>{
+    const done=i<currentStep; const active=i===currentStep;
+    const cls=done?"done":active?"active":"";
+    const txt=done?"✓":i<6?i+1:"★";
+    html+=`<div class="step-item">
       <div class="step-dot ${cls}" onclick="${i<=currentStep?`goTo(${i})`:'void 0'}" style="cursor:${i<=currentStep?'pointer':'default'}">${txt}</div>
       <div class="step-label ${cls}">${label}</div>
     </div>`;
-    if (i < STEPS.length-1) html += `<div class="step-line ${i<currentStep?'done':''}"></div>`;
+    if(i<STEPS.length-1) html+=`<div class="step-line ${i<currentStep?'done':''}"></div>`;
   });
-  el.innerHTML = html;
+  el.innerHTML=html;
 }
 
 // ─── PAGES ──────────────────────────────────────────────────
 function renderPage() {
-  const pages = [pageS1, pageS2, pageS2b, pageS3, pagePrefs, pageResult];
-  document.getElementById("mainContent").innerHTML = `<div class="page-enter">${pages[currentStep]()}</div>`;
+  const pages=[pageS1,pageS2,pageScenarios,pageS2b,pageS3,pagePrefs,pageResult];
+  document.getElementById("mainContent").innerHTML=`<div class="page-enter">${pages[currentStep]()}</div>`;
   attachPageHandlers();
 }
 
-function heroHtml(emoji, title, sub, g1="#1A3A8F", g2="#2D1B69") {
-  return `<div class="hero" style="background: linear-gradient(135deg, ${g1}, ${g2})">
+function heroHtml(emoji,title,sub,g1,g2) {
+  g1=g1||"var(--hero-g1)"; g2=g2||"var(--hero-g2)";
+  return `<div class="hero" style="background:linear-gradient(135deg,${g1},${g2})">
     <div class="hero-emoji">${emoji}</div>
     <div class="hero-title">${title}</div>
     <div class="hero-sub">${sub}</div>
   </div>`;
 }
-
-function gridHtml(opts, key, nextStep) {
+function gridHtml(opts,key,nextStep) {
   return `<div class="option-grid" data-key="${key}" data-next="${nextStep}">
-    ${opts.map(o => `<div class="option-card ${answers[key]===o.val?'selected':''}" data-val="${o.val}">
+    ${opts.map(o=>`<div class="option-card ${answers[key]===o.val?'selected':''}" data-val="${o.val}">
       <div class="option-emoji">${o.emoji}</div>
       <div class="option-main">${o.main}</div>
       <div class="option-sub">${o.sub}</div>
@@ -1452,137 +1554,171 @@ function gridHtml(opts, key, nextStep) {
 }
 
 function pageS1() {
-  return heroHtml("🛒","想買什麼？","點一下自動進入下一步","#1A3A8F","#2D1B69")
-    + gridHtml(STEP_OPTS.device, "device", 1)
-    + shareHtml() + footerHtml();
+  let html=heroHtml("🛍️","想買什麼呢？","點一下就好，我們一步一步來","var(--hero-g1)","var(--hero-g2)");
+  html+=gridHtml(STEP_OPTS.device,"device",1);
+  // Quick pick button
+  html+=`<div style="text-align:center;padding:8px 20px 24px">
+    <div style="font-size:14px;color:var(--text3);margin-bottom:12px">── 或者 ──</div>
+    <button class="quick-pick-btn" onclick="showQuickPick()" style="margin:0 auto">
+      🪄 不想選？一鍵幫你配！
+    </button>
+    <div style="font-size:13px;color:var(--text3);margin-top:8px">只要告訴我預算和用途，幫你直接推薦</div>
+  </div>`;
+  html+=shareHtml()+footerHtml();
+  return html;
 }
 function pageS2() {
-  return heroHtml("👤","使用情境最像哪個？","不確定就選「一般使用」","#2D1B69","#1A3A8F")
-    + gridHtml(STEP_OPTS.user, "user", 2)
-    + footerHtml();
+  return heroHtml("👤","主要是誰在用呢？","不確定就選「日常生活用」","#5B9BD5","#7B68EE")
+    +gridHtml(STEP_OPTS.user,"user",2)+footerHtml();
+}
+function pageScenarios() {
+  const d=answers.device||"phone";
+  const scenarios=LIFE_SCENARIOS[d]||LIFE_SCENARIOS.phone;
+  let html=heroHtml("🏠","平常想拿來做什麼？","可以選好幾個，選完按下一步","#FF8C42","#FF6D00");
+  html+=`<div class="scenario-grid">`;
+  scenarios.forEach(s=>{
+    const sel=selectedScenarios.includes(s.val)?"selected":"";
+    html+=`<div class="scenario-card ${sel}" data-scenario="${s.val}">
+      <div class="scenario-emoji">${s.emoji}</div>
+      <div class="scenario-main">${s.main}</div>
+      <div class="scenario-sub">${s.sub}</div>
+    </div>`;
+  });
+  html+=`</div>`;
+  if(selectedScenarios.length){
+    html+=`<div class="warn-box" style="background:var(--card2);color:var(--accent)">✅ 已選 ${selectedScenarios.length} 項用途</div>`;
+  }
+  html+=`<div class="btn-center">
+    <button class="btn-primary" onclick="applyScenarios();goTo(3)">下一步 →</button>
+    <button class="btn-secondary" onclick="goTo(4)" style="font-size:14px">跳過，直接選預算 →</button>
+  </div>`;
+  html+=footerHtml();
+  return html;
+}
+function applyScenarios() {
+  const d=answers.device||"phone";
+  const scenarios=LIFE_SCENARIOS[d]||LIFE_SCENARIOS.phone;
+  selectedApps=[];
+  selectedScenarios.forEach(sv=>{
+    const s=scenarios.find(x=>x.val===sv);
+    if(s&&s.apps) s.apps.forEach(a=>{if(!selectedApps.includes(a)) selectedApps.push(a);});
+  });
 }
 function pageS2b() {
-  const cats = getAppCategories();
-  let html = heroHtml("📦","你需要跑哪些軟體？","可多選，幫你精算最低需求","#0F2A50","#1A2260");
-  html += `<div class="app-categories">`;
-  Object.entries(cats).forEach(([catName, cat]) => {
-    html += `<div>
-      <div class="app-cat-title">${catName} <span style="font-size:11px;color:var(--text3);font-weight:400">— ${cat.desc}</span></div>
+  const cats=getAppCategories();
+  let html=heroHtml("📦","進階：細選需要的軟體","不確定可以跳過，已根據用途自動勾選","#5B9BD5","#3F51B5");
+  html+=`<div class="app-categories">`;
+  Object.entries(cats).forEach(([catName,cat])=>{
+    html+=`<div>
+      <div class="app-cat-title">${catName} <span style="font-size:12px;color:var(--text3);font-weight:400">— ${cat.desc}</span></div>
       <div class="app-items">`;
-    Object.keys(cat.items).forEach(itemName => {
-      const chk = selectedApps.includes(itemName) ? "checked" : "";
-      html += `<div class="app-chip ${chk}" data-app="${itemName}">${itemName}</div>`;
+    Object.keys(cat.items).forEach(itemName=>{
+      const chk=selectedApps.includes(itemName)?"checked":"";
+      html+=`<div class="app-chip ${chk}" data-app="${itemName}">${itemName}</div>`;
     });
-    html += `</div></div>`;
+    html+=`</div></div>`;
   });
-  html += `</div>`;
-  if (selectedApps.length) {
-    const req = getRequiredBudget();
-    if (req) html += `<div class="warn-box">✅ 建議最低預算：NT$${req.toLocaleString()}</div>`;
+  html+=`</div>`;
+  if(selectedApps.length){
+    const req=getRequiredBudget();
+    if(req) html+=`<div class="warn-box">✅ 建議最低預算：NT$${req.toLocaleString()}</div>`;
   }
-  html += `<div class="btn-center"><button class="btn-primary" onclick="goTo(3)">下一步：選預算 →</button></div>`;
-  html += footerHtml();
+  html+=`<div class="btn-center"><button class="btn-primary" onclick="goTo(4)">下一步：選預算 →</button></div>`;
+  html+=footerHtml();
   return html;
 }
 function pageS3() {
-  const warn = getBudgetWarning();
-  const req = getRequiredBudget();
-  let html = heroHtml("💰","大概想花多少錢？","選最接近的，之後可調整","#0F3460","#0A2240");
-  if (selectedApps.length && req) {
-    html += `<div class="warn-box">📋 已選 ${selectedApps.length} 項軟體，建議最低預算：NT$${req.toLocaleString()}</div>`;
+  const warn=getBudgetWarning(); const req=getRequiredBudget();
+  let html=heroHtml("💰","大概想花多少錢？","選最接近的就好","#FF8C42","#E65100");
+  if(selectedApps.length&&req){
+    html+=`<div class="warn-box">📋 根據你的用途，建議最低預算：NT$${req.toLocaleString()}</div>`;
   }
-  if (warn) html += `<div class="warn-box budget-warn">${warn}</div>`;
-  html += `<div class="budget-tips">
-    <div class="budget-tips-title">預算怎麼選？</div>
-    ${[["💰 NT$5,000–15,000","用2–3年，家用/長輩文書"],["👍 NT$15,000–30,000","用4–5年，學生上班族甜蜜點"],["⭐ NT$30,000–50,000","用5–6年，遊戲多工推薦"],["🏆 NT$50,000 以上","頂規用7年，創作/重度遊戲"]].map(([l,d]) => `<div class="budget-tip-row"><span class="budget-tip-label">${l}</span><span class="budget-tip-desc">${d}</span></div>`).join("")}
+  if(warn) html+=`<div class="warn-box budget-warn">${warn}</div>`;
+  html+=`<div class="budget-tips">
+    <div class="budget-tips-title">💡 預算怎麼選？</div>
+    ${[["💰 5千~1萬5","用2-3年，基本款"],["👍 1萬5~3萬","用4-5年，大部分人的好選擇"],["⭐ 3萬~5萬","用5-6年，品質很好"],["🏆 5萬以上","頂級享受，用7年以上"]].map(([l,d])=>`<div class="budget-tip-row"><span class="budget-tip-label">${l}</span><span class="budget-tip-desc">${d}</span></div>`).join("")}
   </div>`;
-  html += gridHtml(STEP_OPTS.budget, "budget", 4);
+  html+=gridHtml(STEP_OPTS.budget,"budget",5);
   return html;
 }
 function pagePrefs() {
-  let html = heroHtml("🎯","個人偏好（選填）","讓推薦更精準","#1A2D1A","#0D1A2D");
-  html += `<div class="pref-section">`;
-  [["brand","偏好品牌"],["color","外觀顏色"],["origin","產地偏好"]].forEach(([key, title]) => {
-    html += `<div class="pref-section-title">${title}</div><div class="pref-chips" data-pref="${key}">`;
-    ADVANCED_PREFS[key].forEach(({emoji,label}) => {
-      const act = userPrefs[key].includes(label) ? "active" : "";
-      html += `<div class="pref-chip ${act}" data-label="${label}">${emoji} ${label}</div>`;
+  let html=heroHtml("🎯","有沒有特別喜歡的？","選填，讓推薦更精準","#4CAF50","#2E7D32");
+  html+=`<div class="pref-section">`;
+  [["brand","偏好品牌"],["color","外觀顏色"],["origin","產地偏好"]].forEach(([key,title])=>{
+    html+=`<div class="pref-section-title">${title}</div><div class="pref-chips" data-pref="${key}">`;
+    ADVANCED_PREFS[key].forEach(({emoji,label})=>{
+      const act=userPrefs[key].includes(label)?"active":"";
+      html+=`<div class="pref-chip ${act}" data-label="${label}">${emoji} ${label}</div>`;
     });
-    html += `</div>`;
+    html+=`</div>`;
   });
-  html += `</div>`;
-  html += `<div class="btn-center"><button class="btn-primary" onclick="goTo(5)">查看推薦結果 ★</button></div>`;
+  html+=`</div>`;
+  html+=`<div class="btn-center"><button class="btn-primary" onclick="goTo(6)">🎉 查看推薦結果</button></div>`;
   return html;
 }
 
 function pageResult() {
-  const d = answers.device || "computer";
-  const DL = {computer:"💻 筆電", phone:"📱 手機", tablet:"📟 平板", desktop:"🖥️ 桌機"};
-  const UL = {child:"👧 小朋友",student:"🎓 學生",work:"💼 上班族",create:"🎨 創作者",game:"🎮 遊戲玩家",senior:"👴 長輩",general:"🙋 一般"};
-  const BL = {budget:"💰 省錢",mid:"👍 中等",high:"⭐ 品質優",pro:"🏆 頂規"};
-  let html = `<div class="ans-row">你的選擇：
+  const d=answers.device||"computer";
+  const DL={computer:"💻 筆電",phone:"📱 手機",tablet:"📟 平板",desktop:"🖥️ 桌機"};
+  const UL={child:"👧 小朋友",student:"🎓 學生",work:"💼 上班族",create:"🎨 創作者",game:"🎮 遊戲玩家",senior:"👴 長輩",general:"🙋 一般"};
+  const BL={budget:"💰 省錢",mid:"👍 夠用",high:"⭐ 品質好",pro:"🏆 頂規"};
+  let html=`<div class="ans-row">你的選擇：
     <div class="ans-chip" onclick="goTo(0)">${DL[d]||d} ✎</div>
     <div class="ans-chip" onclick="goTo(1)">${UL[answers.user||"general"]||"一般"} ✎</div>
-    ${selectedApps.length?`<div class="ans-chip" onclick="goTo(2)">📋 軟體需求 ✎</div>`:""}
-    <div class="ans-chip" onclick="goTo(3)">${BL[answers.budget||"mid"]||"中等"} ✎</div>
+    <div class="ans-chip" onclick="goTo(4)">${BL[answers.budget||"mid"]||"中等"} ✎</div>
   </div>`;
-  html += `<div style="background:#2A1800;border-radius:8px;padding:8px 14px;margin:8px 24px 0;font-size:11px;color:var(--orange)">⚠ 規格價格僅供參考，購買前請至門市確認</div>`;
+  if(isQuickPick){
+    html+=`<div style="background:linear-gradient(135deg,#5B9BD5,#7B68EE);border-radius:14px;padding:12px 18px;margin:8px 20px 0;color:#fff;font-size:14px;font-weight:700">🪄 一鍵推薦結果 — 根據你的需求精選</div>`;
+  }
+  html+=`<div style="background:var(--cons-bg);border-radius:12px;padding:10px 16px;margin:8px 20px 0;font-size:13px;color:var(--orange)">⚠ 價格僅供參考，購買前請到門市確認喔</div>`;
 
-  if (d === "computer") {
-    const products = filterProducts();
-    const builds = PRODUCTS.desktop;
-    // Compare bar placeholder
-    html += `<div id="compareBar"></div>`;
-    // Tabs
-    html += `<div class="tab-bar">
-      <button class="tab-btn active" id="tabLaptop" onclick="switchTab('laptop')">💻 品牌筆電 (${products.length}台)</button>
-      <button class="tab-btn" id="tabDesktop" onclick="switchTab('desktop')">🖥️ 自組桌機 (${builds.length}套)</button>
-      <span style="flex:1"></span>
-      <span style="font-size:12px;color:var(--text3)">筆電可攜 · 桌機效能更強</span>
+  if(d==="computer"){
+    const products=filterProducts(); const builds=PRODUCTS.desktop;
+    html+=`<div id="compareBar"></div>`;
+    html+=`<div class="tab-bar">
+      <button class="tab-btn active" id="tabLaptop" onclick="switchTab('laptop')">💻 筆電 (${products.length}台)</button>
+      <button class="tab-btn" id="tabDesktop" onclick="switchTab('desktop')">🖥️ 桌機 (${builds.length}套)</button>
     </div>`;
-    html += `<div class="results-list active" id="listLaptop" style="padding:0 24px">
-      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">💻 ${products.length} 款筆電，第一款為編輯首選</div>
-      ${products.map((p,i) => productCardHtml(p, i===0)).join("")}
+    html+=`<div class="results-list active" id="listLaptop" style="padding:0 20px">
+      ${products.map((p,i)=>productCardHtml(p,i===0)).join("")}
     </div>`;
-    html += `<div class="results-list" id="listDesktop" style="padding:0 24px">
-      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">🖥️ 自組桌機方案</div>
-      ${builds.map(b => desktopCardHtml(b)).join("")}
+    html+=`<div class="results-list" id="listDesktop" style="padding:0 20px">
+      ${builds.map(b=>desktopCardHtml(b)).join("")}
     </div>`;
-  } else if (d === "desktop") {
-    html += `<div style="padding:0 24px;margin-top:12px">
-      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">🖥️ 自組桌機方案</div>
-      ${PRODUCTS.desktop.map(b => desktopCardHtml(b)).join("")}
+  } else if(d==="desktop"){
+    html+=`<div style="padding:0 20px;margin-top:12px">
+      ${PRODUCTS.desktop.map(b=>desktopCardHtml(b)).join("")}
     </div>`;
   } else {
-    const products = filterProducts();
-    html += `<div style="padding:0 24px;margin-top:12px">
-      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">${DL[d]} 推薦 ${products.length} 款</div>
-      ${products.map((p,i) => productCardHtml(p, i===0)).join("")}
+    const products=filterProducts();
+    html+=`<div style="padding:0 20px;margin-top:12px">
+      ${products.map((p,i)=>productCardHtml(p,i===0)).join("")}
     </div>`;
   }
-  html += shareHtml();
-  html += footerHtml();
+  // Purchase guide section
+  html+=purchaseGuideHtml();
+  html+=shareHtml()+footerHtml();
   return html;
 }
 
 function productCardHtml(p, isTop=false) {
-  const pt = priceTag(p.price);
-  const scores = getPerfScores(p);
-  const fresh = getFreshness(p);
-  const compat = getCompatScore(p, selectedApps);
-  const pf = matchPrefs(p);
-  const promises = specPromises(p);
-  const links = shopLinks(p.brand, p.name);
-  const inCmp = compareList.some(x => x.name===p.name);
-  const pn = encodeURIComponent(p.name);
-  return `<div class="product-card ${isTop?"top-pick":""}" id="card-${pn}">
-    ${isTop?`<div style="margin-bottom:8px"><span class="badge editor">✦ 編輯首選</span></div>`:""}
+  const pt=priceTag(p.price);
+  const scores=getPerfScores(p);
+  const fresh=getFreshness(p);
+  const compat=getCompatScore(p,selectedApps);
+  const pf=matchPrefs(p);
+  const links=shopLinks(p.brand,p.name);
+  const plainLines=specToPlain(p);
+  const inCmp=compareList.some(x=>x.name===p.name);
+  const pn=encodeURIComponent(p.name);
+  const guideKey=getSetupGuideKey(p);
+  return `<div class="product-card ${isTop?'top-pick':''}" id="card-${pn}">
+    ${isTop?`<div style="margin-bottom:8px"><span class="badge editor">⭐ 最推薦這台</span></div>`:""}
     <div class="product-header">
       <div>
         <div class="product-brand">${p.brand}</div>
         <div class="product-name">${p.name}</div>
-        <div class="badges">${promises.map((b,i) => `<span class="badge ${i>0?"secondary":""}">${b}</span>`).join("")}<span class="badge tag">${p.tag}</span></div>
-        <div class="product-spec">⚡ ${p.cpu}　💾 ${p.ram}　💿 ${p.ssd}</div>
+        <div class="badges"><span class="badge tag">${p.tag}</span></div>
       </div>
       <div class="product-right">
         <div><span class="price-label" style="background:${pt.bg};color:${pt.color}">${pt.label}</span></div>
@@ -1590,42 +1726,50 @@ function productCardHtml(p, isTop=false) {
         <div class="battery-weight">🔋 ${p.battery}　⚖️ ${p.weight}</div>
       </div>
     </div>
+    <div class="plain-spec">
+      <div class="plain-spec-title">📖 白話看規格（看這個就夠了！）</div>
+      ${plainLines.map(l=>`<div class="plain-spec-row"><span>${l.icon}</span> ${l.text}</div>`).join("")}
+    </div>
+    <div class="product-spec" style="font-size:12px;color:var(--text3);padding:4px 0">
+      詳細規格：${p.cpu} / ${p.ram} / ${p.ssd}
+    </div>
     <div class="freshness-bar" style="background:${fresh.bg};color:${fresh.color};border-color:${fresh.borderColor}">
       <span>${fresh.emoji}</span><span>${fresh.label}</span>
     </div>
-    ${priceHistoryHtml(p.name, priceNum(p.price))}
+    ${priceHistoryHtml(p.name)}
     <div class="pros-cons">
-      <div class="pros-box"><div class="pros-title">✅ 優點</div><div class="pros-text">${p.pros}</div></div>
-      <div class="cons-box"><div class="cons-title">⚠️ 注意</div><div class="cons-text">${p.cons}</div></div>
+      <div class="pros-box"><div class="pros-title">👍 優點</div><div class="pros-text">${p.pros}</div></div>
+      <div class="cons-box"><div class="cons-title">⚠️ 要注意</div><div class="cons-text">${p.cons}</div></div>
     </div>
     <div class="score-section">
-      <div class="score-section-title">📊 性能體感指標（小白專用）</div>
-      ${scoreBarHtml("🖥️ 文書辦公 / 多工", scores.office, "var(--accent)")}
-      ${scoreBarHtml("🎮 遊戲體驗 / 3D",   scores.game,   "var(--orange)")}
-      ${scoreBarHtml("🎬 剪輯 / 專業生產",  scores.edit,   "var(--accent2)")}
+      <div class="score-section-title">📊 這台能做什麼？</div>
+      ${scoreBarHtml("📄 上網、文書、看影片",scores.office,"var(--accent)")}
+      ${scoreBarHtml("🎮 玩遊戲",scores.game,"var(--orange)")}
+      ${scoreBarHtml("🎬 剪影片、修圖",scores.edit,"var(--accent2)")}
     </div>
-    ${selectedApps.length ? `<div class="compat-box" style="border-color:${compat.color}">
-      <div class="compat-title">🛡️ 對你的需求承載力</div>
+    ${selectedApps.length?`<div class="compat-box" style="border-color:${compat.color}">
+      <div class="compat-title">🛡️ 對你的需求夠不夠力？</div>
       <div class="compat-row">
-        <div class="compat-score" style="color:${compat.color}">${Math.round(compat.score*100)}%</div>
+        <div class="compat-score" style="color:${compat.color}">${Math.round(compat.score*100)}分</div>
         <div style="flex:1"></div>
         <div class="compat-text" style="color:${compat.color}">${compat.text}</div>
       </div>
-      <div class="compat-bar"><div style="width:${Math.round(compat.score*100)}%;height:100%;background:${compat.color};border-radius:4px"></div></div>
+      <div class="compat-bar"><div style="width:${Math.round(compat.score*100)}%;height:100%;background:${compat.color};border-radius:5px"></div></div>
     </div>`:""}
-    ${(pf.matched.length||pf.missed.length) ? `<div class="pref-box" style="border:1px solid ${pf.matched.length?"var(--green)44":"var(--border)"}">
-      <div class="pref-box-title">🎯 偏好符合度</div>
+    ${(pf.matched.length||pf.missed.length)?`<div class="pref-box" style="border:2px solid ${pf.matched.length?"var(--green)44":"var(--border)"}">
+      <div class="pref-box-title">🎯 跟你的偏好符不符合</div>
       ${pf.matched.map(m=>`<div class="pref-match">${m}</div>`).join("")}
       ${pf.missed.map(m=>`<div class="pref-miss">${m}</div>`).join("")}
     </div>`:""}
     <div class="shop-links">
-      ${links.map(l=>`<a href="${l.url}" target="_blank" class="shop-btn" style="background:${l.bg};color:${l.color}">${l.label}</a>`).join("")}
+      ${links.map(l=>`<a href="${l.url}" target="_blank" class="shop-btn" style="background:${l.bg}">${l.label}</a>`).join("")}
     </div>
     <div class="action-row">
-      <div class="action-link" style="color:var(--green)" onclick="showExpert(${pn})">？ 這規格適合我嗎？</div>
-      <div class="action-link" style="color:var(--orange)" onclick="showTrap()">🛡️ 店員殺手問答集</div>
-      <div class="compare-btn" style="color:${inCmp?"var(--green)":"var(--accent)"}" onclick="toggleCompare(${pn})" id="cmpbtn-${pn}">
-        ${inCmp?"✅ 已加入比較":"⚡ 加入PK比較"}
+      <div class="action-link" style="color:var(--green)" onclick="showExpert('${pn}')">🤔 這台適合我嗎？</div>
+      <div class="action-link" style="color:var(--accent2)" onclick="showSetupGuide('${guideKey}')">📱 買回來怎麼設定？</div>
+      <div class="action-link" style="color:var(--orange)" onclick="showTrap()">🛡️ 去店面該問什麼？</div>
+      <div class="compare-btn" style="color:${inCmp?"var(--green)":"var(--accent2)"}" onclick="toggleCompare('${pn}')" id="cmpbtn-${pn}">
+        ${inCmp?"✅ 已加入比較":"⚡ 加入比較"}
       </div>
     </div>
   </div>`;
@@ -1635,294 +1779,290 @@ function scoreBarHtml(label, val, color) {
   return `<div class="score-row">
     <div class="score-header">
       <span class="score-label">${label}</span>
-      <span class="score-val" style="color:${color}">${Math.round(val*100)}%</span>
+      <span class="score-val" style="color:${color}">${Math.round(val*100)}分</span>
     </div>
     <div class="score-bar"><div class="score-fill" style="width:${Math.round(val*100)}%;background:${color}"></div></div>
   </div>`;
 }
 
 function desktopCardHtml(b) {
-  const parts = [
-    ["CPU", b.cpu], ["主機板", b.motherboard], ["記憶體", b.ram],
-    ["SSD", b.ssd], ["顯示卡", b.gpu], ["電源", b.psu],
-  ];
-  // 是否符合使用者需求
-  const userMatch = b.for_user && answers.user && b.for_user.includes(answers.user);
-  const appMatch  = b.for_app  && answers.apps?.length && answers.apps.some(a => b.for_app.some(f => a.includes(f.slice(0,4)) || f.includes(a.slice(0,4))));
-  const isMatch   = userMatch || appMatch;
-  const matchBadge = isMatch ? `<span style="font-size:11px;font-weight:700;color:var(--green);background:#0A2018;border:1px solid #00E5A033;border-radius:8px;padding:2px 8px;margin-left:8px">✅ 符合您的需求</span>` : "";
-  return `<div class="desktop-card" style="${isMatch?"border-color:var(--green)33;":""}" >
+  const parts=[["CPU",b.cpu],["主機板",b.motherboard],["記憶體",b.ram],["SSD",b.ssd],["顯示卡",b.gpu],["電源",b.psu]];
+  const userMatch=b.for_user&&answers.user&&b.for_user.includes(answers.user);
+  const matchBadge=userMatch?`<span style="font-size:12px;font-weight:700;color:var(--green);background:var(--pros-bg);border-radius:10px;padding:3px 10px">✅ 適合你</span>`:"";
+  return `<div class="desktop-card" style="${userMatch?"border:2px solid var(--green);":""}">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px">
-        <div style="font-size:18px;font-weight:700;color:var(--text)">${b.name}</div>
-        <span class="badge tag">${b.tag}</span>
-        ${matchBadge}
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px">
+        <div style="font-size:18px;font-weight:900;color:var(--text)">${b.name}</div>
+        <span class="badge tag">${b.tag}</span>${matchBadge}
       </div>
-      <div style="font-size:22px;font-weight:900;color:var(--green)">${b.total_price}</div>
+      <div style="font-size:24px;font-weight:900;color:var(--green)">${b.total_price}</div>
     </div>
     <div class="desktop-parts" style="margin-bottom:12px">
       ${parts.map(([l,v])=>`<div class="desktop-part"><div class="part-label">${l}</div><div class="part-val">${v||"—"}</div></div>`).join("")}
     </div>
-    ${b.pros||b.cons ? `<div class="pros-cons" style="margin-top:4px">
-      ${b.pros?`<div class="pros-box"><div class="pros-title">✅ 優點</div><div class="pros-text">${b.pros}</div></div>`:""}
-      ${b.cons?`<div class="cons-box"><div class="cons-title">⚠️ 注意</div><div class="cons-text">${b.cons}</div></div>`:""}
+    ${b.pros||b.cons?`<div class="pros-cons" style="margin-top:4px">
+      ${b.pros?`<div class="pros-box"><div class="pros-title">👍 優點</div><div class="pros-text">${b.pros}</div></div>`:""}
+      ${b.cons?`<div class="cons-box"><div class="cons-title">⚠️ 要注意</div><div class="cons-text">${b.cons}</div></div>`:""}
     </div>`:""}
   </div>`;
 }
 
+// ─── PURCHASE GUIDE (NEW) ───────────────────────────────────
+function purchaseGuideHtml() {
+  return `<div class="guide-section">
+    <div class="guide-title">📖 購買完全指南</div>
+    <div class="guide-subtitle">🛒 出門前確認清單</div>
+    <div class="guide-item"><div class="guide-item-icon">✅</div><div class="guide-item-text"><b>確認預算上限</b> — 到店裡容易被推銷超出預算</div></div>
+    <div class="guide-item"><div class="guide-item-icon">✅</div><div class="guide-item-text"><b>截圖這個頁面</b> — 到店裡直接給店員看你想要的型號</div></div>
+    <div class="guide-item"><div class="guide-item-icon">✅</div><div class="guide-item-text"><b>帶舊手機/電腦</b> — 方便現場傳資料或比較大小</div></div>
+    <div class="guide-item"><div class="guide-item-icon">✅</div><div class="guide-item-text"><b>帶身分證</b> — 如果要辦門號或分期付款會需要</div></div>
+
+    <div class="guide-subtitle">🛡️ 店員常見話術 vs 你該怎麼回</div>
+    <div class="guide-item"><div class="guide-item-icon">🗣️</div><div class="guide-item-text"><b>「這台規格比較好」</b><br>→ 問清楚好在哪裡，是不是你用得到的功能</div></div>
+    <div class="guide-item"><div class="guide-item-icon">🗣️</div><div class="guide-item-text"><b>「現在不買就沒貨了」</b><br>→ 不用急！回家想想再決定，好商品不會消失</div></div>
+    <div class="guide-item"><div class="guide-item-icon">🗣️</div><div class="guide-item-text"><b>「加購保護貼/殼 很划算」</b><br>→ 網路上通常更便宜，不用在店裡買</div></div>
+    <div class="guide-item"><div class="guide-item-icon">🗣️</div><div class="guide-item-text"><b>「這台我們賣很便宜」</b><br>→ 用手機查 PChome/momo 比價，有數字才安心</div></div>
+    <div class="guide-item"><div class="guide-item-icon">🗣️</div><div class="guide-item-text"><b>「延長保固很重要」</b><br>→ 信用卡通常自帶延長保固，先確認再決定</div></div>
+
+    <div class="guide-subtitle">❓ 去店面一定要問的三個問題</div>
+    <div class="guide-item"><div class="guide-item-icon">1️⃣</div><div class="guide-item-text"><b>「保固幾年？送修要多久？」</b><br>確認是到府收送還是要自己送去維修點</div></div>
+    <div class="guide-item"><div class="guide-item-icon">2️⃣</div><div class="guide-item-text"><b>「可以現場幫我開機設定嗎？」</b><br>很多店家會免費協助基本設定</div></div>
+    <div class="guide-item"><div class="guide-item-icon">3️⃣</div><div class="guide-item-text"><b>「舊機可以折價換購嗎？」</b><br>部分品牌門市有舊換新優惠</div></div>
+  </div>`;
+}
+
+// ─── QUICK PICK MODAL (NEW) ────────────────────────────────
+function showQuickPick() {
+  const body=`<div style="margin-bottom:16px">
+    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px">💰 你的預算大概多少？</div>
+    <input type="range" class="quick-slider" id="quickBudget" min="5000" max="80000" step="1000" value="20000" oninput="document.getElementById('quickBudgetVal').textContent='NT$'+parseInt(this.value).toLocaleString()">
+    <div style="text-align:center;font-size:20px;font-weight:900;color:var(--accent)" id="quickBudgetVal">NT$20,000</div>
+  </div>
+  <div style="margin-bottom:16px">
+    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px">✏️ 簡單說一下想做什麼</div>
+    <input type="text" class="quick-input" id="quickNeed" placeholder="例如：給媽媽用，主要 LINE 跟追劇" maxlength="100">
+  </div>
+  <div style="font-size:13px;color:var(--text3)">💡 不知道寫什麼？試試：「長輩用」「學生寫報告」「打電動」</div>`;
+  showModal("🪄 一鍵幫你配",body,[
+    {text:"🔍 幫我選！",cls:"modal-btn primary",onclick:"doQuickPick()"},
+    {text:"取消",cls:"modal-btn",onclick:"closeModal()"},
+  ]);
+}
+function doQuickPick() {
+  const budget=parseInt(document.getElementById("quickBudget").value)||20000;
+  const need=document.getElementById("quickNeed").value||"一般使用";
+  const result=quickPickMatch(need,budget);
+  answers.device=result.device;
+  answers.user=result.user;
+  answers.budget=result.budget;
+  selectedApps=[];
+  isQuickPick=true;
+  closeModal();
+  goTo(6);
+}
+
+// ─── SETUP GUIDE MODAL (NEW) ──────────────────────────────
+function showSetupGuide(key) {
+  const guide=SETUP_GUIDES[key]||SETUP_GUIDES.android;
+  const body=`<div style="font-size:14px;color:var(--text2);margin-bottom:12px">買回家照著做，輕鬆搞定！</div>
+    ${guide.steps.map(s=>`<div class="guide-item"><div class="guide-item-icon">${s.icon}</div><div class="guide-item-text">${s.text}</div></div>`).join("")}
+    <div style="margin-top:14px;padding:12px;background:var(--card2);border-radius:12px;font-size:13px;color:var(--text2)">
+      💡 <b>小提醒：</b>設定過程中如果卡住，可以直接打品牌客服電話，他們會一步步教你！
+    </div>`;
+  showModal("📱 "+guide.title,body,[{text:"了解了！",cls:"modal-btn primary",onclick:"closeModal()"}]);
+}
+
+// ─── MODALS / DIALOGS ──────────────────────────────────────
+function showExpert(encodedName) {
+  const p=findProduct(encodedName); if(!p) return;
+  const comment=getExpertComment(p);
+  const body=`<div><span class="expert-product-name">${p.name}</span></div>
+    <pre style="font-family:inherit;font-size:14px;color:var(--text2);line-height:1.7;white-space:pre-wrap;margin-top:8px">${comment}</pre>`;
+  showModal("💬 這台適合你嗎？",body,[{text:"了解了！",cls:"modal-btn primary",onclick:"closeModal()"}]);
+}
+function showTrap() {
+  const qs=[
+    {q:"螢幕好不好？",d:"問店員：「螢幕是 100% sRGB 嗎？」低色域的螢幕看起來顏色很暗淡",a:"聽到 100% sRGB 或 OLED 就是好螢幕 👍"},
+    {q:"記憶體能不能升級？",d:"問店員：「記憶體是焊死的嗎？以後可以加嗎？」",a:"能升級的話以後用久了可以自己加大，省錢 💰"},
+    {q:"保固怎麼修？",d:"問店員：「保固幾年？要自己送修還是到府收送？」",a:"到府收送最方便，自己送修比較麻煩 🔧"},
+    {q:"有沒有贈品？",d:"問店員：「現在買有沒有送什麼？」像保護殼、延長保固等",a:"不要不好意思問，很多店家有隱藏贈品 🎁"},
+    {q:"舊機回收",d:"問店員：「舊手機/電腦可以折抵嗎？」",a:"蘋果、三星門市通常有舊換新方案 ♻️"},
+  ];
+  const body=`<div style="font-size:14px;color:var(--text2);margin-bottom:12px">去店面買之前，記得問這些問題：</div>
+    ${qs.map((q,i)=>`<div class="trap-q">
+      <div class="trap-q-num">Q${i+1}. ${q.q}</div>
+      <div class="trap-q-text">${q.d}</div>
+      <div class="trap-answer">${q.a}</div>
+    </div>`).join("")}`;
+  showModal("🛡️ 去店面必問清單",body,[{text:"我準備好了 💪",cls:"modal-btn success",onclick:"closeModal()"}]);
+}
+
 function shareHtml() {
   return `<div class="share-section">
-    <div class="share-title">🔗 分享給朋友一起選購</div>
+    <div class="share-title">🔗 覺得好用？分享給朋友和家人</div>
     <div class="share-buttons">
-      <button class="share-btn" style="background:linear-gradient(180deg,#11DD6B,#06C755,#049040);color:#fff" onclick="doShare('LINE')">LINE</button>
-      <button class="share-btn" style="background:linear-gradient(180deg,#4A9EFF,#1877F2,#1055BE);color:#fff" onclick="doShare('Facebook')">Facebook</button>
-      <button class="share-btn" style="background:linear-gradient(180deg,#C056D4,#E1306C,#F77737);color:#fff" onclick="doShare('Instagram')">Instagram</button>
-      <button class="share-btn" style="background:linear-gradient(180deg,#3A3A3A,#181818,#000);color:#fff" onclick="doShare('Threads')">Threads</button>
+      <button class="share-btn" style="background:linear-gradient(180deg,#11DD6B,#06C755)" onclick="doShare('LINE')">LINE 分享</button>
+      <button class="share-btn" style="background:linear-gradient(180deg,#4A9EFF,#1877F2)" onclick="doShare('Facebook')">Facebook</button>
     </div>
-    <div class="share-note">※ IG 點擊後自動複製文字，請貼入貼文。</div>
   </div>`;
 }
 function footerHtml() {
   return `<footer>
-    <div><div class="footer-brand">3C 選購顧問</div><div class="footer-sub">由 捷啟智慧科技 開發</div></div>
-    <a class="footer-link" href="${APP_URL}" target="_blank">前往網站 →</a>
+    <div><div class="footer-brand">3C 選購小幫手</div><div class="footer-sub">捷啟智慧科技 用心開發</div></div>
+    ${APP_URL?`<a class="footer-link" href="${APP_URL}" target="_blank">前往網站 →</a>`:""}
     <div class="footer-copy">© 2026 捷啟智慧科技  All Rights Reserved.  本工具資訊僅供參考，售價以各通路為準。</div>
   </footer>`;
 }
 
-// ─── HANDLERS ───────────────────────────────────────────────
-function attachPageHandlers() {
-  // Option grid
-  document.querySelectorAll(".option-grid").forEach(grid => {
-    const key = grid.dataset.key;
-    const next = parseInt(grid.dataset.next);
-    grid.querySelectorAll(".option-card").forEach(card => {
-      card.onclick = () => {
-        answers[key] = card.dataset.val;
-        goTo(next);
-      };
-    });
-  });
-  // App chips
-  document.querySelectorAll(".app-chip").forEach(chip => {
-    chip.onclick = () => {
-      const app = chip.dataset.app;
-      if (selectedApps.includes(app)) {
-        selectedApps = selectedApps.filter(a => a!==app);
-        chip.classList.remove("checked");
-      } else {
-        selectedApps.push(app);
-        chip.classList.add("checked");
-      }
-      renderPage(); // re-render to update budget hint
-    };
-  });
-  // Pref chips
-  document.querySelectorAll(".pref-chips").forEach(row => {
-    const key = row.dataset.pref;
-    row.querySelectorAll(".pref-chip").forEach(chip => {
-      chip.onclick = () => {
-        const label = chip.dataset.label;
-        if (userPrefs[key].includes(label)) {
-          userPrefs[key] = userPrefs[key].filter(l=>l!==label);
-          chip.classList.remove("active");
-        } else {
-          userPrefs[key].push(label);
-          chip.classList.add("active");
-        }
-      };
-    });
-  });
-  // Refresh compare bar
-  if (currentStep === 5) updateCompareBar();
-}
-
-// ─── TAB SWITCH ─────────────────────────────────────────────
+// ─── TAB / COMPARE / SHARE ──────────────────────────────────
 function switchTab(tab) {
-  document.getElementById("listLaptop").className = "results-list" + (tab==="laptop"?" active":"");
-  document.getElementById("listDesktop").className = "results-list" + (tab==="desktop"?" active":"");
-  document.getElementById("tabLaptop").className = "tab-btn" + (tab==="laptop"?" active":"");
-  document.getElementById("tabDesktop").className = "tab-btn" + (tab==="desktop"?" active":"");
+  document.getElementById("listLaptop").className="results-list"+(tab==="laptop"?" active":"");
+  document.getElementById("listDesktop").className="results-list"+(tab==="desktop"?" active":"");
+  document.getElementById("tabLaptop").className="tab-btn"+(tab==="laptop"?" active":"");
+  document.getElementById("tabDesktop").className="tab-btn"+(tab==="desktop"?" active":"");
 }
-
-// ─── COMPARE ────────────────────────────────────────────────
 function findProduct(encodedName) {
-  const name = decodeURIComponent(encodedName);
-  const all = [...PRODUCTS.laptop, ...PRODUCTS.phone, ...PRODUCTS.tablet];
-  return all.find(p => p.name === name);
+  const name=decodeURIComponent(encodedName);
+  return[...PRODUCTS.laptop,...PRODUCTS.phone,...PRODUCTS.tablet].find(p=>p.name===name);
 }
 function toggleCompare(encodedName) {
-  const p = findProduct(encodedName);
-  if (!p) return;
-  const idx = compareList.findIndex(x=>x.name===p.name);
-  if (idx>=0) {
-    compareList.splice(idx,1);
-  } else {
-    if (compareList.length>=2) compareList.shift();
-    compareList.push(p);
-  }
-  // Update button text
-  const btn = document.getElementById(`cmpbtn-${encodedName}`);
-  if (btn) {
-    const inCmp = compareList.some(x=>x.name===p.name);
-    btn.innerHTML = inCmp ? "✅ 已加入比較" : "⚡ 加入PK比較";
-    btn.style.color = inCmp ? "var(--green)" : "var(--accent)";
-  }
+  const p=findProduct(encodedName); if(!p) return;
+  const idx=compareList.findIndex(x=>x.name===p.name);
+  if(idx>=0) compareList.splice(idx,1);
+  else{if(compareList.length>=2) compareList.shift();compareList.push(p);}
+  const btn=document.getElementById(`cmpbtn-${encodedName}`);
+  if(btn){const inCmp=compareList.some(x=>x.name===p.name);btn.innerHTML=inCmp?"✅ 已加入比較":"⚡ 加入比較";btn.style.color=inCmp?"var(--green)":"var(--accent2)";}
   updateCompareBar();
 }
 function updateCompareBar() {
-  const bar = document.getElementById("compareBar");
-  if (!bar) return;
-  if (compareList.length===2) {
-    bar.innerHTML = `<div class="compare-bar">
-      <div class="compare-bar-text">⚡ PK：${compareList[0].name}  VS  ${compareList[1].name}</div>
-      <button class="compare-go-btn" onclick="showCompare()">開始比較 →</button>
-    </div>`;
-  } else if (compareList.length===1) {
-    bar.innerHTML = `<div style="background:var(--card2);border-radius:10px;padding:10px 16px;margin:0 24px 8px;font-size:12px;color:var(--accent)">
-      已選 ${compareList[0].name}，再選一台開始PK比較
-    </div>`;
-  } else {
-    bar.innerHTML = "";
-  }
+  const bar=document.getElementById("compareBar"); if(!bar) return;
+  if(compareList.length===2){
+    bar.innerHTML=`<div class="compare-bar"><div class="compare-bar-text">⚡ ${compareList[0].name} VS ${compareList[1].name}</div><button class="compare-go-btn" onclick="showCompare()">開始比較 →</button></div>`;
+  } else if(compareList.length===1){
+    bar.innerHTML=`<div style="background:var(--card2);border-radius:14px;padding:12px 18px;margin:0 20px 8px;font-size:14px;color:var(--accent)">已選 ${compareList[0].name}，再選一台開始比較</div>`;
+  } else bar.innerHTML="";
 }
 function showCompare() {
-  if (compareList.length<2) return;
-  const [a,b] = compareList;
-  const sa = getPerfScores(a), sb = getPerfScores(b);
-  const pa = priceNum(a.price), pb = priceNum(b.price);
-  function cmpRow(label, aVal, bVal, biggerIsBetter=true) {
-    const aWin = biggerIsBetter ? aVal>bVal : aVal<bVal;
-    const bWin = biggerIsBetter ? bVal>aVal : bVal<aVal;
-    return `<div class="compare-row">
-      <div class="compare-val ${aWin?"compare-win":""}" style="color:${aWin?"var(--green)":"var(--text2)"}">${typeof aVal==="number"?Math.round(aVal*100)+"%":aVal}</div>
+  if(compareList.length<2) return;
+  const[a,b]=compareList;
+  const sa=getPerfScores(a),sb=getPerfScores(b);
+  const pa=priceNum(a.price),pb=priceNum(b.price);
+  function cmpRow(label,aVal,bVal,biggerBetter=true){
+    const aWin=biggerBetter?aVal>bVal:aVal<bVal;
+    const bWin=biggerBetter?bVal>aVal:bVal<aVal;
+    return`<div class="compare-row">
+      <div class="compare-val ${aWin?"compare-win":""}" style="color:${aWin?"var(--green)":"var(--text2)"}">${typeof aVal==="number"?Math.round(aVal*100)+"分":aVal}</div>
       <div class="compare-mid">${label}</div>
-      <div class="compare-val ${bWin?"compare-win":""}" style="color:${bWin?"var(--green)":"var(--text2)"}">${typeof bVal==="number"?Math.round(bVal*100)+"%":bVal}</div>
+      <div class="compare-val ${bWin?"compare-win":""}" style="color:${bWin?"var(--green)":"var(--text2)"}">${typeof bVal==="number"?Math.round(bVal*100)+"分":bVal}</div>
     </div>`;
   }
-  const summary = (pa<pb ? "左邊較便宜" : pb<pa ? "右邊較便宜" : "售價相當") + "，" +
-    ((sa.game+sa.edit)>(sb.game+sb.edit) ? "左邊效能更強" : "右邊效能更強");
-  const body = `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px">
-    <div class="compare-col">
-      <div style="font-size:11px;color:var(--accent);font-weight:700">${a.brand}</div>
-      <div style="font-size:12px;font-weight:700;color:var(--text)">${a.name}</div>
-      <div style="font-size:14px;font-weight:700;color:var(--white)">${a.price}</div>
-    </div>
-    <div style="font-size:14px;font-weight:700;color:var(--text3);padding-top:16px">VS</div>
-    <div class="compare-col">
-      <div style="font-size:11px;color:var(--accent);font-weight:700">${b.brand}</div>
-      <div style="font-size:12px;font-weight:700;color:var(--text)">${b.name}</div>
-      <div style="font-size:14px;font-weight:700;color:var(--white)">${b.price}</div>
-    </div>
+  const body=`<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px">
+    <div class="compare-col"><div style="font-size:12px;color:var(--accent);font-weight:700">${a.brand}</div><div style="font-size:13px;font-weight:700;color:var(--text)">${a.name}</div><div style="font-size:16px;font-weight:900;color:var(--white)">${a.price}</div></div>
+    <div style="font-size:16px;font-weight:900;color:var(--text3);padding-top:16px">VS</div>
+    <div class="compare-col"><div style="font-size:12px;color:var(--accent);font-weight:700">${b.brand}</div><div style="font-size:13px;font-weight:700;color:var(--text)">${b.name}</div><div style="font-size:16px;font-weight:900;color:var(--white)">${b.price}</div></div>
   </div>
-  ${cmpRow("文書辦公", sa.office, sb.office)}
-  ${cmpRow("遊戲效能", sa.game, sb.game)}
-  ${cmpRow("剪輯創作", sa.edit, sb.edit)}
-  ${cmpRow("售價比較", pa, pb, false)}
-  <div class="compare-row">
-    <div class="compare-val">${a.battery||"—"}</div>
-    <div class="compare-mid">電池續航</div>
-    <div class="compare-val">${b.battery||"—"}</div>
-  </div>
-  <div class="compare-row">
-    <div class="compare-val">${a.weight||"—"}</div>
-    <div class="compare-mid">重量</div>
-    <div class="compare-val">${b.weight||"—"}</div>
-  </div>
-  <div style="margin-top:10px;font-size:11px;color:var(--orange)">💡 ${summary}</div>`;
-  showModal("⚡ PK 比較", body, [
-    {text:"清除比較", cls:"modal-btn danger", onclick:"compareList=[];closeModal();updateCompareBar();"},
-    {text:"關閉", cls:"modal-btn primary", onclick:"closeModal()"},
+  ${cmpRow("文書上網",sa.office,sb.office)}
+  ${cmpRow("玩遊戲",sa.game,sb.game)}
+  ${cmpRow("剪片修圖",sa.edit,sb.edit)}
+  ${cmpRow("價格",pa,pb,false)}
+  <div class="compare-row"><div class="compare-val">${a.battery||"—"}</div><div class="compare-mid">電池</div><div class="compare-val">${b.battery||"—"}</div></div>
+  <div class="compare-row"><div class="compare-val">${a.weight||"—"}</div><div class="compare-mid">重量</div><div class="compare-val">${b.weight||"—"}</div></div>`;
+  showModal("⚡ PK 比較",body,[
+    {text:"清除比較",cls:"modal-btn danger",onclick:"compareList=[];closeModal();updateCompareBar();"},
+    {text:"關閉",cls:"modal-btn primary",onclick:"closeModal()"},
   ]);
 }
-
-// ─── EXPERT / TRAP DIALOGS ─────────────────────────────────
-function showExpert(encodedName) {
-  const p = findProduct(encodedName);
-  if (!p) return;
-  const comment = getExpertComment(p);
-  const body = `<div><span class="expert-product-name">${p.name}</span></div>
-    <pre style="font-family:inherit;font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap;margin-top:8px">${comment}</pre>`;
-  showModal("💬 選購建議", body, [{text:"了解了！", cls:"modal-btn primary", onclick:"closeModal()"}]);
-}
-function showTrap() {
-  const qs = [
-    ["螢幕色域", "螢幕是 100% sRGB 嗎？還是低色域的？（低色域看起來顏色很黯淡）"],
-    ["記憶體升級", "記憶體是焊死的嗎？未來可以自己升級嗎？"],
-    ["保固方案", "實體店現在買有額外延長保固嗎？送到府維修還是要自己送修？"],
-  ];
-  const body = `<div style="font-size:12px;color:var(--text3);margin-bottom:10px">去店面看時，直接問店員這三個問題：</div>
-    ${qs.map(([q,d],i)=>`<div class="trap-q"><div class="trap-q-num">Q${i+1}. ${q}</div><div class="trap-q-text">${d}</div></div>`).join("")}`;
-  showModal("🛡️ 選購注意事項", body, [{text:"我準備好了 💪", cls:"modal-btn success", onclick:"closeModal()"}]);
-}
-
-// ─── SHARE ──────────────────────────────────────────────────
 function doShare(platform) {
-  const text = "免費 3C 選購顧問，幫你找到最適合的裝置！捷啟智慧科技出品。";
-  const enc = encodeURIComponent(text+"\n"+APP_URL);
-  const encUrl = encodeURIComponent(APP_URL);
-  const urls = {
-    LINE: `https://social-plugins.line.me/lineit/share?url=${encUrl}&text=${encodeURIComponent(text)}`,
-    Facebook: `https://www.facebook.com/sharer/sharer.php?u=${encUrl}`,
-    Instagram: null,
-    Threads: `https://www.threads.net/intent/post?text=${enc}`,
-  };
-  if (platform === "Instagram") {
-    navigator.clipboard.writeText(text+"\n"+APP_URL).catch(()=>{});
-    alert("📋 已複製！請開啟 Instagram 貼上分享文字。");
-    return;
-  }
-  window.open(urls[platform], "_blank");
+  const text="免費 3C 選購小幫手，幫長輩和家人輕鬆挑 3C！";
+  if(!APP_URL){navigator.clipboard.writeText(text).catch(()=>{});alert("📋 已複製推薦文字！");return;}
+  const enc=encodeURIComponent(text+"\n"+APP_URL);
+  const encUrl=encodeURIComponent(APP_URL);
+  if(platform==="LINE") window.open(`https://social-plugins.line.me/lineit/share?url=${encUrl}&text=${encodeURIComponent(text)}`,"_blank");
+  else if(platform==="Facebook") window.open(`https://www.facebook.com/sharer/sharer.php?u=${encUrl}`,"_blank");
+}
+
+// ─── HANDLERS ───────────────────────────────────────────────
+function attachPageHandlers() {
+  document.querySelectorAll(".option-grid").forEach(grid=>{
+    const key=grid.dataset.key; const next=parseInt(grid.dataset.next);
+    grid.querySelectorAll(".option-card").forEach(card=>{
+      card.onclick=()=>{answers[key]=card.dataset.val;goTo(next);};
+    });
+  });
+  document.querySelectorAll(".app-chip").forEach(chip=>{
+    chip.onclick=()=>{
+      const app=chip.dataset.app;
+      if(selectedApps.includes(app)){selectedApps=selectedApps.filter(a=>a!==app);chip.classList.remove("checked");}
+      else{selectedApps.push(app);chip.classList.add("checked");}
+      renderPage();
+    };
+  });
+  document.querySelectorAll(".scenario-card").forEach(card=>{
+    card.onclick=()=>{
+      const val=card.dataset.scenario;
+      if(selectedScenarios.includes(val)){selectedScenarios=selectedScenarios.filter(v=>v!==val);card.classList.remove("selected");}
+      else{selectedScenarios.push(val);card.classList.add("selected");}
+      renderPage();
+    };
+  });
+  document.querySelectorAll(".pref-chips").forEach(row=>{
+    const key=row.dataset.pref;
+    row.querySelectorAll(".pref-chip").forEach(chip=>{
+      chip.onclick=()=>{
+        const label=chip.dataset.label;
+        if(userPrefs[key].includes(label)){userPrefs[key]=userPrefs[key].filter(l=>l!==label);chip.classList.remove("active");}
+        else{userPrefs[key].push(label);chip.classList.add("active");}
+      };
+    });
+  });
+  if(currentStep===6) updateCompareBar();
 }
 
 // ─── MODAL ──────────────────────────────────────────────────
-function showModal(title, body, actions, maxWidth) {
-  document.getElementById("modalTitle").innerHTML = title;
-  document.getElementById("modalBody").innerHTML = body;
-  document.getElementById("modalActions").innerHTML = actions.map(a =>
-    `<button class="${a.cls}" onclick="${a.onclick}">${a.text}</button>`
-  ).join("");
-  document.getElementById("modalBox").style.maxWidth = maxWidth || "460px";
+function showModal(title,body,actions,maxWidth) {
+  document.getElementById("modalTitle").innerHTML=title;
+  document.getElementById("modalBody").innerHTML=body;
+  document.getElementById("modalActions").innerHTML=actions.map(a=>`<button class="${a.cls}" onclick="${a.onclick}">${a.text}</button>`).join("");
+  document.getElementById("modalBox").style.maxWidth=maxWidth||"480px";
   document.getElementById("modalOverlay").classList.add("open");
 }
 function closeModal(event) {
-  if (event && event.target !== document.getElementById("modalOverlay")) return;
+  if(event&&event.target!==document.getElementById("modalOverlay")) return;
   document.getElementById("modalOverlay").classList.remove("open");
 }
 
 // ─── THEME ──────────────────────────────────────────────────
 function toggleTheme() {
-  isDark = !isDark;
-  document.body.classList.toggle("light-mode", !isDark);
-  document.getElementById("themeBtn").textContent = isDark ? "🌙 深色" : "☀️ 淺色";
+  isDark=!isDark;
+  document.body.classList.toggle("dark-mode",isDark);
+  document.getElementById("themeBtn").textContent=isDark?"☀️ 淺色":"🌙 深色";
 }
 
 // ─── DISCLAIMER ─────────────────────────────────────────────
 function showDisclaimer() {
-  const body = `
+  const body=`
     <div class="disclaimer-section">
       <div class="disclaimer-section-title" style="color:var(--accent)">版權所有</div>
-      <div class="disclaimer-section-text">本應用程式「3C 選購顧問」由 捷啟智慧科技 開發與維護，所有內容、設計、程式碼及資料之著作權均歸 捷啟智慧科技 所有，未經授權不得複製、轉載或作商業用途。</div>
+      <div class="disclaimer-section-text">「3C 選購小幫手」由捷啟智慧科技開發，所有內容版權歸捷啟智慧科技所有。</div>
     </div>
     <div class="disclaimer-section">
-      <div class="disclaimer-section-title" style="color:var(--orange)">資訊僅供參考</div>
-      <div class="disclaimer-section-text">本應用程式所提供之產品規格、售價、推薦建議等資訊，均以公開資料整理而成，僅供使用者購買參考之用。實際規格、價格及供貨狀況以各販售通路公告為準。</div>
+      <div class="disclaimer-section-title" style="color:var(--orange)">僅供參考</div>
+      <div class="disclaimer-section-text">所有價格和規格僅供參考，實際以各門市公告為準。</div>
     </div>
     <div class="disclaimer-section">
-      <div class="disclaimer-section-title" style="color:var(--green)">無商業合作關係</div>
-      <div class="disclaimer-section-text">本應用程式與所有列出之品牌廠商、購物平台均無任何商業贊助或合作關係，所有推薦均基於公開資料與中立評估，不涉及廣告或業配。</div>
-    </div>
-    <div style="text-align:center;font-size:11px;color:var(--text3);margin-top:12px">© 2026 捷啟智慧科技  All Rights Reserved.</div>`;
-  showModal("📋 免責聲明", body, [{text:"我已閱讀並了解  ✓", cls:"modal-btn primary", onclick:"closeModal()"}]);
+      <div class="disclaimer-section-title" style="color:var(--green)">中立推薦</div>
+      <div class="disclaimer-section-text">本工具與所有品牌無商業合作，推薦均基於公開資料。</div>
+    </div>`;
+  showModal("📋 使用說明",body,[{text:"我知道了 👍",cls:"modal-btn primary",onclick:"closeModal()"}]);
 }
 
 // ─── INIT ───────────────────────────────────────────────────
 renderStepper();
 recordPrices([...PRODUCTS.laptop, ...PRODUCTS.phone, ...PRODUCTS.tablet]);
-seedPriceHistory();   // 補種過去1年估算歷史
+seedPriceHistory();
 renderPage();
 loadProductDB();
-setTimeout(showDisclaimer, 300);
+setTimeout(showDisclaimer, 400);
 </script>
 </body>
 </html>
