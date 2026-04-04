@@ -665,7 +665,7 @@
   </div>
   <div class="topbar-right">
     <span id="updateBadge" style="display:none;font-size:11px;color:var(--green);background:var(--card2);padding:4px 10px;border-radius:12px;cursor:default"></span>
-    <button class="nav-btn" id="updateBtn" onclick="showUpdateModal()" style="color:var(--green)">🔄 更新</button>
+    <span class="nav-btn" id="updateBtn" style="color:var(--green);cursor:default;font-size:11px"></span>
     <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 深色</button>
     <button class="nav-btn" id="backBtn" onclick="goBack()" style="display:none">← 上一步</button>
     <button class="nav-btn" id="homeBtn" onclick="goTo(0)" style="display:none">🏠 回首頁</button>
@@ -1128,14 +1128,7 @@ function getSetupGuideKey(p) {
   return "android";
 }
 
-// ─── PRODUCT DB AUTO-UPDATE ─────────────────────────────────
-const _PCHOME = "https://ecshweb.pchome.com.tw/search/v3.3/";
-const _PCHOME_QUERIES = {
-  laptop: ["ASUS 筆電","Apple MacBook","Lenovo 筆電","Dell 筆電","Acer 筆電","Samsung 筆電"],
-  phone:  ["iPhone","Samsung Galaxy S","Google Pixel","ASUS 手機","小米手機"],
-  tablet: ["iPad","Samsung Galaxy Tab","Microsoft Surface","小米平板"],
-};
-const _LS_KEY = "3c_products_db_v3";
+// ─── PRODUCT DB (auto-loaded from products.json) ────────────
 
 // ─── PRICE HISTORY ──────────────────────────────────────────
 const _PH_KEY = "3c_price_history";
@@ -1360,81 +1353,36 @@ function priceHistoryHtml(productName) {
   </div>`;
 }
 
-// ─── PCHOME UPDATE ──────────────────────────────────────────
-async function _fetchPChome(query, rows=6) {
-  try { const params=new URLSearchParams({q:query,scope:"TW",sort:"rnk",isinstock:"T",rows}); const r=await fetch(`${_PCHOME}?${params}`); if(!r.ok) return[]; const data=await r.json(); return data.prods||[]; } catch{return[];}
-}
-function _parsePChomeProd(raw) {
-  const name=(raw.Nick||"").trim(); const price=raw.Price?.m||0; if(!name||!price) return null;
-  const brandMap={"ASUS":"ASUS","Apple":"Apple","Samsung":"Samsung","Lenovo":"Lenovo","Acer":"Acer","HP":"HP","Dell":"Dell","Sony":"Sony","Google":"Google","Xiaomi":"Xiaomi","MI":"Xiaomi","OPPO":"OPPO","vivo":"vivo","Huawei":"Huawei","Microsoft":"Microsoft"};
-  let brand=(raw.Brand||"");
-  for(const[k,v] of Object.entries(brandMap)){if(brand.toLowerCase().startsWith(k.toLowerCase())||name.toLowerCase().startsWith(k.toLowerCase())){brand=v;break;}}
-  return {brand, name:name.slice(0,55), price:`NT$${price.toLocaleString()}`, cpu:"規格詳見商品頁", ram:"—", ssd:"—", battery:"—", weight:"—", pros:"PChome 在售新品", cons:"", tag:"🔄 最新上市"};
-}
-async function _updateAllProducts(progressCb) {
-  const db={laptop:[...PRODUCTS.laptop],phone:[...PRODUCTS.phone],tablet:[...PRODUCTS.tablet],desktop:[...PRODUCTS.desktop]};
-  let added=0;
-  for(const[cat,queries] of Object.entries(_PCHOME_QUERIES)){
-    const existingNames=new Set(db[cat].map(p=>p.name.toLowerCase().slice(0,25)));
-    for(const q of queries){
-      if(progressCb) progressCb(`查詢：${q}…`);
-      const raws=await _fetchPChome(q);
-      for(const raw of raws){const p=_parsePChomeProd(raw);if(!p)continue;const key=p.name.toLowerCase().slice(0,25);if([...existingNames].some(n=>n.includes(key)||key.includes(n)))continue;db[cat].push(p);existingNames.add(key);added++;}
-    }
-  }
-  db._updated=new Date().toLocaleString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});
-  return{db,added};
-}
-function _applyProductDB(db) {
-  if(db.laptop?.length) PRODUCTS.laptop=db.laptop;
-  if(db.phone?.length) PRODUCTS.phone=db.phone;
-  if(db.tablet?.length) PRODUCTS.tablet=db.tablet;
-  if(db.desktop?.length) PRODUCTS.desktop=db.desktop;
-  const allProds=[...(PRODUCTS.laptop||[]),...(PRODUCTS.phone||[]),...(PRODUCTS.tablet||[])];
-  recordPrices(allProds); seedPriceHistory();
-  const badge=document.getElementById("updateBadge");
-  if(badge){badge.style.display="";badge.textContent=`⏱ ${db._updated||"已載入"}`;}
-}
-async function _applyDataJson() {
-  try{const r=await fetch("./data.json");if(!r.ok) return 0;const data=await r.json();const prices=data.prices||{};let updated=0;
-  const allProds=[...PRODUCTS.laptop,...PRODUCTS.phone,...PRODUCTS.tablet];
-  for(const p of allProds){const key=`${p.brand}|${p.name}`;const hit=prices[key];
-    if(hit?.price&&hit.price>0){const newPrice=`NT$${hit.price.toLocaleString()}`;if(newPrice!==p.price){p.price=newPrice;updated++;}}
-    if(!prices[key]){for(const[k,v] of Object.entries(prices)){if(v?.price>0&&p.name.includes(k.split("|")[1]?.slice(0,15))){p.price=`NT$${v.price.toLocaleString()}`;updated++;break;}}}}
-  if(updated>0) recordPrices(allProds); return updated;}catch{return 0;}
-}
+// ─── LOAD PRODUCTS FROM products.json ────────────────────────
 async function loadProductDB() {
-  try{const ls=localStorage.getItem(_LS_KEY);if(ls){const db=JSON.parse(ls);if(db.laptop?.length){_applyProductDB(db);await _applyDataJson();renderPage();return;}}}catch{}
-  try{const r=await fetch("./products_db.json");if(r.ok){const db=await r.json();if(db.laptop?.length){_applyProductDB(db);try{localStorage.setItem(_LS_KEY,JSON.stringify(db));}catch{} await _applyDataJson();renderPage();return;}}}catch{}
-  const n=await _applyDataJson();
-  const badge=document.getElementById("updateBadge");
-  if(badge){badge.style.display="";badge.textContent=n>0?`✅ 已更新 ${n} 筆價格`:"📦 內建資料";}
-  if(n>0) renderPage();
+  try {
+    const r = await fetch("./products.json");
+    if (!r.ok) throw new Error("no products.json");
+    const db = await r.json();
+    let loaded = 0;
+    if (db.laptop?.length) { PRODUCTS.laptop = db.laptop; loaded += db.laptop.length; }
+    if (db.phone?.length)  { PRODUCTS.phone  = db.phone;  loaded += db.phone.length; }
+    if (db.tablet?.length) { PRODUCTS.tablet = db.tablet;  loaded += db.tablet.length; }
+    if (db.desktop?.length) PRODUCTS.desktop = db.desktop;
+    // 記錄價格歷史
+    const allProds = [...PRODUCTS.laptop, ...PRODUCTS.phone, ...PRODUCTS.tablet];
+    recordPrices(allProds);
+    seedPriceHistory();
+    // 顯示更新時間
+    const badge = document.getElementById("updateBadge");
+    const btn = document.getElementById("updateBtn");
+    const ts = db.meta?.updated_at?.slice(0,10) || "";
+    if (badge) { badge.style.display = ""; badge.textContent = ts ? `📅 ${ts}` : ""; }
+    if (btn) btn.textContent = loaded > 0 ? `✅ ${loaded} 款產品` : "📦 內建資料";
+    renderPage();
+  } catch {
+    // Fallback: 使用內建寫死的 PRODUCTS
+    const badge = document.getElementById("updateBadge");
+    const btn = document.getElementById("updateBtn");
+    if (btn) btn.textContent = "📦 內建資料";
+    if (badge) badge.style.display = "none";
+  }
 }
-function showUpdateModal() {
-  showModal("🔄 更新產品資料",
-    `<div style="font-size:14px;color:var(--text3);margin-bottom:12px">從 PChome 抓取最新商品，約需 30-60 秒。</div>
-    <div id="updateProgress" style="font-size:12px;color:var(--green);min-height:80px;max-height:160px;overflow-y:auto;background:var(--surface);border-radius:12px;padding:12px;white-space:pre-wrap"></div>`,
-    [{text:"開始更新",cls:"modal-btn primary",onclick:"doProductUpdate()"},{text:"清除快取",cls:"modal-btn danger",onclick:"clearProductCache()"},{text:"關閉",cls:"modal-btn",onclick:"closeModal()"}]
-  );
-}
-async function doProductUpdate() {
-  const btn=document.querySelector("#modalActions .modal-btn.primary");
-  if(btn){btn.disabled=true;btn.textContent="更新中…";}
-  const log=document.getElementById("updateProgress");
-  const addLog=t=>{if(log){log.textContent+=t+"\n";log.scrollTop=log.scrollHeight;}};
-  addLog("🔄 開始抓取最新商品…");
-  try{const{db,added}=await _updateAllProducts(t=>addLog(t));
-    PRODUCTS.laptop=db.laptop;PRODUCTS.phone=db.phone;PRODUCTS.tablet=db.tablet;
-    recordPrices([...db.laptop,...db.phone,...db.tablet]);
-    try{localStorage.setItem(_LS_KEY,JSON.stringify(db));}catch{}
-    const badge=document.getElementById("updateBadge");if(badge){badge.style.display="";badge.textContent=`⏱ ${db._updated}`;}
-    addLog(`\n✅ 完成！新增 ${added} 筆商品`);
-    if(btn){btn.disabled=false;btn.textContent="✅ 再次更新";}
-    if(currentStep===7) renderPage();
-  }catch(e){addLog(`\n❌ 更新失敗：${e.message}`);if(btn){btn.disabled=false;btn.textContent="重試";}}
-}
-function clearProductCache(){try{localStorage.removeItem(_LS_KEY);}catch{} location.reload();}
 
 // ─── STATE ──────────────────────────────────────────────────
 let currentStep = 0;
@@ -1572,10 +1520,11 @@ function goTo(step) {
   currentStep=step; renderStepper(); renderPage();
   document.getElementById("backBtn").style.display=step>0?"":"none";
   document.getElementById("homeBtn").style.display=step>0?"":"none";
-  // 手機上減少按鈕：非首頁時隱藏更新按鈕
-  document.getElementById("updateBtn").style.display=step>0?"none":"";
-  const badge=document.getElementById("updateBadge");
-  if(badge) badge.style.display=step>0?"none":badge.textContent?"":"none";
+  // 手機上減少按鈕：非首頁時隱藏更新資訊
+  const ub=document.getElementById("updateBtn");
+  const ubg=document.getElementById("updateBadge");
+  if(ub) ub.style.display=step>0?"none":"";
+  if(ubg) ubg.style.display=step>0?"none":"";
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function goBack() { if(currentStep>0) goTo(currentStep-1); }
