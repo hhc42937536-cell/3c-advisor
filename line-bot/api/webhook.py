@@ -1,5 +1,5 @@
 """
-LINE Bot Webhook — 捷啟智慧小幫手
+LINE Bot Webhook — 3C 推薦小幫手
 =================================
 Vercel Serverless Function (Python)
 處理所有 LINE 訊息，根據內容路由到不同模組。
@@ -309,7 +309,7 @@ def build_welcome_message() -> list:
     """歡迎訊息 + 快速選單"""
     return [{
         "type": "flex",
-        "altText": "歡迎使用捷啟智慧小幫手！",
+        "altText": "歡迎使用3C 推薦小幫手！",
         "contents": {
             "type": "bubble",
             "size": "mega",
@@ -317,7 +317,7 @@ def build_welcome_message() -> list:
                 "type": "box", "layout": "vertical",
                 "backgroundColor": "#FF8C42",
                 "contents": [
-                    {"type": "text", "text": "🛍️ 捷啟智慧小幫手", "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                    {"type": "text", "text": "🛍️ 3C 推薦小幫手", "color": "#FFFFFF", "size": "lg", "weight": "bold"},
                     {"type": "text", "text": "你的 3C 選購好朋友！", "color": "#FFFFFFCC", "size": "sm"},
                 ]
             },
@@ -419,7 +419,7 @@ def handle_text_message(text: str) -> list:
     # 7. 完全看不懂 → 友善引導
     return [{
         "type": "text",
-        "text": "嗨！我是 3C 選購小幫手 🛍️\n\n你可以跟我說像是：\n📱「推薦 2 萬的手機」\n💻「學生用的筆電」\n📟「給爸媽的平板」\n\n我會幫你找到最適合的！"
+        "text": "嗨！我是 3C 推薦小幫手 🛍️\n\n你可以跟我說像是：\n📱「推薦 2 萬的手機」\n💻「學生用的筆電」\n📟「給爸媽的平板」\n\n我會幫你找到最適合的！"
     }]
 
 
@@ -431,7 +431,7 @@ class handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.end_headers()
-        self.wfile.write(json.dumps({"status": "ok", "bot": "捷啟智慧小幫手"}).encode())
+        self.wfile.write(json.dumps({"status": "ok", "bot": "3C 推薦小幫手"}).encode())
 
     def do_POST(self):
         """接收 LINE Webhook"""
