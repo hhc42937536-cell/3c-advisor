@@ -333,26 +333,36 @@ def build_welcome_message() -> list:
             "body": {
                 "type": "box", "layout": "vertical", "spacing": "md",
                 "contents": [
-                    {"type": "text", "text": "你可以直接跟我說：", "size": "sm", "color": "#8D6E63"},
-                    {"type": "text", "text": "📱 「推薦 2 萬以內的手機」", "size": "sm", "color": "#3E2723"},
-                    {"type": "text", "text": "💻 「學生用的筆電推薦」", "size": "sm", "color": "#3E2723"},
-                    {"type": "text", "text": "📟 「給長輩用的平板」", "size": "sm", "color": "#3E2723"},
-                    {"type": "text", "text": "📷 「拍照好的手機 3 萬」", "size": "sm", "color": "#3E2723"},
-                    {"type": "separator", "margin": "lg"},
-                    {"type": "text", "text": "或是點下面的按鈕快速開始 👇", "size": "xs", "color": "#8D6E63", "margin": "md"},
+                    {"type": "text", "text": "👇 選擇你需要的服務",
+                     "size": "sm", "weight": "bold", "color": "#3E2723"},
+                    {"type": "separator", "margin": "sm"},
+                    {"type": "text", "text": "📱 3C 推薦小幫手",
+                     "size": "sm", "weight": "bold", "color": "#FF8C42", "margin": "sm"},
+                    {"type": "text", "text": "買手機/筆電/平板前來問我，根據你的需求推薦",
+                     "size": "xs", "color": "#8D6E63", "wrap": True},
+                    {"type": "separator", "margin": "sm"},
+                    {"type": "text", "text": "🔍 防詐辨識",
+                     "size": "sm", "weight": "bold", "color": "#C0392B", "margin": "sm"},
+                    {"type": "text", "text": "收到可疑訊息？貼給我分析，即時辨識詐騙風險",
+                     "size": "xs", "color": "#8D6E63", "wrap": True},
+                    {"type": "separator", "margin": "sm"},
+                    {"type": "text", "text": "⚖️ 法律常識",
+                     "size": "sm", "weight": "bold", "color": "#1C2B4A", "margin": "sm"},
+                    {"type": "text", "text": "租屋、勞資、交通事故、消費糾紛的白話說明",
+                     "size": "xs", "color": "#8D6E63", "wrap": True},
                 ]
             },
             "footer": {
                 "type": "box", "layout": "vertical", "spacing": "sm",
                 "contents": [
                     {"type": "button", "style": "primary", "color": "#FF8C42",
-                     "action": {"type": "message", "label": "📱 推薦手機", "text": "推薦手機"}},
-                    {"type": "button", "style": "primary", "color": "#5B9BD5",
-                     "action": {"type": "message", "label": "💻 推薦筆電", "text": "推薦筆電"}},
-                    {"type": "button", "style": "primary", "color": "#4CAF50",
-                     "action": {"type": "message", "label": "📟 推薦平板", "text": "推薦平板"}},
+                     "action": {"type": "message", "label": "📱 3C 推薦", "text": "推薦手機"}},
+                    {"type": "button", "style": "primary", "color": "#C0392B",
+                     "action": {"type": "message", "label": "🔍 防詐辨識", "text": "防詐辨識"}},
+                    {"type": "button", "style": "primary", "color": "#1C2B4A",
+                     "action": {"type": "message", "label": "⚖️ 法律常識", "text": "法律常識"}},
                     {"type": "button", "style": "secondary",
-                     "action": {"type": "uri", "label": "🌐 開啟網站版", "uri": "https://hhc42937536-cell.github.io/3c-advisor/"}},
+                     "action": {"type": "message", "label": "🛠️ 所有工具", "text": "其他工具"}},
                 ]
             }
         }
@@ -734,33 +744,406 @@ def build_spec_explainer(text: str) -> list:
     return messages
 
 
-def build_tools_menu() -> list:
-    """其他工具選單 — 未來加工具只要在這裡加按鈕"""
+# ════════════════════════════════════════════════
+# 防詐辨識模組
+# ════════════════════════════════════════════════
+
+FRAUD_PATTERNS = [
+    (["轉帳", "匯款", "解除分期", "ATM", "存款", "帳戶異常", "保證金", "手續費"], 2, "要求金錢操作"),
+    (["穩賺", "高報酬", "翻倍", "保本", "穩定獲利", "零風險", "日賺", "月入"], 2, "高獲利誘惑"),
+    (["你中獎", "恭喜獲得", "抽中", "得獎", "領獎", "幸運獲選"], 2, "中獎話術"),
+    (["身分證", "帳號密碼", "驗證碼", "個人資料", "銀行卡"], 2, "索取個資"),
+    (["警察", "檢察官", "法院", "調查局", "金管會", "健保署", "國稅局", "刑事局"], 2, "假冒政府機關"),
+    (["假冒", "冒充", "台灣電力", "台灣大哥大客服", "銀行客服"], 2, "假冒身份"),
+    (["今天截止", "立即處理", "馬上", "限時", "24小時", "緊急通知"], 1, "製造緊迫感"),
+    (["點擊連結", "掃描QR", "下載APP", "點此", "加好友", "加入群組"], 1, "引導點擊或加群"),
+    (["在家工作", "輕鬆賺", "高薪兼職", "每天賺", "不用出門", "代購"], 1, "工作詐騙誘餌"),
+    (["老師帶你", "跟著操作", "跟單", "投資群組", "帶單"], 1, "投資詐騙話術"),
+    (["不要告訴", "保密", "別讓家人知道", "私下處理", "不要聲張"], 2, "要求保密"),
+    (["海外", "境外", "虛擬貨幣", "加密貨幣", "USDT", "比特幣"], 1, "境外金融操作"),
+]
+
+def analyze_fraud(text: str) -> dict:
+    """分析文字詐騙風險"""
+    score = 0
+    patterns_found = []
+    for keywords, pts, label in FRAUD_PATTERNS:
+        if any(kw in text for kw in keywords):
+            score += pts
+            patterns_found.append(label)
+    if score >= 4:
+        risk = "high"
+    elif score >= 2:
+        risk = "medium"
+    else:
+        risk = "low"
+    return {"score": score, "risk": risk, "patterns": patterns_found}
+
+
+def build_fraud_intro() -> list:
+    """防詐辨識：引導用戶貼上可疑內容"""
     return [{
-        "type": "flex",
-        "altText": "工具選單",
+        "type": "flex", "altText": "防詐辨識",
         "contents": {
-            "type": "bubble",
+            "type": "bubble", "size": "mega",
             "header": {
                 "type": "box", "layout": "vertical",
-                "backgroundColor": "#5B9BD5",
+                "backgroundColor": "#C0392B",
                 "contents": [
-                    {"type": "text", "text": "🛠️ 所有工具", "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                    {"type": "text", "text": "選擇你需要的服務", "color": "#FFFFFFCC", "size": "sm"},
+                    {"type": "text", "text": "🔍 防詐辨識", "color": "#FFFFFF",
+                     "size": "lg", "weight": "bold"},
+                    {"type": "text", "text": "幫你分析可疑訊息是否為詐騙",
+                     "color": "#FFFFFFCC", "size": "sm"},
+                ]
+            },
+            "body": {
+                "type": "box", "layout": "vertical", "spacing": "md",
+                "contents": [
+                    {"type": "text",
+                     "text": "📋 使用方式",
+                     "size": "sm", "weight": "bold", "color": "#3E2723"},
+                    {"type": "text",
+                     "text": "把可疑的訊息、LINE 對話、簡訊內容\n複製後直接貼給我，我來幫你分析！",
+                     "size": "sm", "color": "#5D4037", "wrap": True},
+                    {"type": "separator", "margin": "md"},
+                    {"type": "text", "text": "⚡ 常見詐騙類型", "size": "sm",
+                     "weight": "bold", "color": "#3E2723", "margin": "md"},
+                    {"type": "text",
+                     "text": "• 假冒政府/銀行/電信客服\n• 投資高報酬誘惑\n• 假交友引導投資\n• 中獎詐騙\n• 工作詐騙（在家高薪）\n• 解除分期付款",
+                     "size": "xs", "color": "#5D4037", "wrap": True},
+                    {"type": "separator", "margin": "md"},
+                    {"type": "text",
+                     "text": "⚠️ 記住：不管對方說什麼，先打 165 問！",
+                     "size": "xs", "color": "#C0392B", "wrap": True, "weight": "bold"},
+                ]
+            },
+            "footer": {
+                "type": "box", "layout": "vertical", "spacing": "sm",
+                "contents": [
+                    {"type": "button", "style": "primary", "color": "#C0392B",
+                     "action": {"type": "uri", "label": "📞 撥打 165 反詐專線",
+                                "uri": "tel:165"}},
+                    {"type": "button", "style": "secondary",
+                     "action": {"type": "message", "label": "🔄 回主選單", "text": "你好"}},
+                ]
+            }
+        }
+    }]
+
+
+def build_fraud_result(text: str) -> list:
+    """回傳詐騙風險分析結果"""
+    result = analyze_fraud(text)
+    risk = result["risk"]
+    patterns = result["patterns"]
+
+    if risk == "high":
+        header_color = "#C0392B"
+        risk_emoji = "🚨"
+        risk_title = "高度疑似詐騙！"
+        risk_desc = "這則訊息含有多項詐騙特徵，請勿轉帳、提供個資或點擊任何連結！"
+        action_text = "立即封鎖對方，並撥打 165 反詐騙專線舉報"
+        btn_label = "🚨 立即撥打 165"
+    elif risk == "medium":
+        header_color = "#E67E22"
+        risk_emoji = "⚠️"
+        risk_title = "發現可疑特徵"
+        risk_desc = "這則訊息有部分可疑跡象，請先向家人或親友確認，勿急著回應。"
+        action_text = "不要急著採取行動，先冷靜向身邊的人確認"
+        btn_label = "📞 撥打 165 諮詢"
+    else:
+        header_color = "#27AE60"
+        risk_emoji = "✅"
+        risk_title = "未發現明顯詐騙特徵"
+        risk_desc = "目前未偵測到明顯詐騙跡象，但仍請保持警覺。"
+        action_text = "如仍有疑慮，隨時可撥打 165 詢問"
+        btn_label = "📞 撥打 165 確認"
+
+    pattern_text = "、".join(patterns) if patterns else "無明顯特徵"
+    short_text = text[:40] + "…" if len(text) > 40 else text
+
+    return [{
+        "type": "flex", "altText": f"{risk_emoji} 詐騙風險分析",
+        "contents": {
+            "type": "bubble", "size": "mega",
+            "header": {
+                "type": "box", "layout": "vertical",
+                "backgroundColor": header_color,
+                "contents": [
+                    {"type": "text", "text": f"{risk_emoji} {risk_title}",
+                     "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                    {"type": "text", "text": f"分析內容：「{short_text}」",
+                     "color": "#FFFFFFCC", "size": "xs", "wrap": True},
+                ]
+            },
+            "body": {
+                "type": "box", "layout": "vertical", "spacing": "md",
+                "contents": [
+                    {"type": "text", "text": risk_desc,
+                     "size": "sm", "color": "#3E2723", "wrap": True, "weight": "bold"},
+                    {"type": "separator", "margin": "md"},
+                    {"type": "text", "text": "🔎 偵測到的特徵",
+                     "size": "xs", "weight": "bold", "color": "#8D6E63", "margin": "md"},
+                    {"type": "text", "text": pattern_text,
+                     "size": "xs", "color": "#5D4037", "wrap": True},
+                    {"type": "separator", "margin": "md"},
+                    {"type": "text", "text": f"💡 建議：{action_text}",
+                     "size": "xs", "color": "#5D4037", "wrap": True, "margin": "md"},
+                    {"type": "text",
+                     "text": "⚠️ 本工具僅供參考，無法取代專業判斷。有疑慮請撥 165。",
+                     "size": "xs", "color": "#BBBBBB", "wrap": True, "margin": "md"},
+                ]
+            },
+            "footer": {
+                "type": "box", "layout": "vertical", "spacing": "sm",
+                "contents": [
+                    {"type": "button", "style": "primary", "color": "#C0392B",
+                     "action": {"type": "uri", "label": btn_label, "uri": "tel:165"}},
+                    {"type": "button", "style": "secondary",
+                     "action": {"type": "message", "label": "🔍 再分析一則",
+                                "text": "防詐辨識"}},
+                    {"type": "button", "style": "secondary",
+                     "action": {"type": "uri", "label": "⚖️ 法律求助資訊",
+                                "uri": "https://hhc42937536-cell.github.io/legal-guide/"}},
+                ]
+            }
+        }
+    }]
+
+
+# ════════════════════════════════════════════════
+# 法律常識模組
+# ════════════════════════════════════════════════
+
+def build_legal_guide_intro() -> list:
+    """法律常識入口"""
+    return [{
+        "type": "flex", "altText": "法律常識小幫手",
+        "contents": {
+            "type": "bubble", "size": "mega",
+            "header": {
+                "type": "box", "layout": "vertical",
+                "backgroundColor": "#1C2B4A",
+                "contents": [
+                    {"type": "text", "text": "⚖️ 法律常識小幫手", "color": "#FFFFFF",
+                     "size": "lg", "weight": "bold"},
+                    {"type": "text", "text": "白話解釋你的法律權益",
+                     "color": "#FFFFFFCC", "size": "sm"},
                 ]
             },
             "body": {
                 "type": "box", "layout": "vertical", "spacing": "sm",
                 "contents": [
-                    # ── 現有工具 ──────────────────────
-                    {"type": "text", "text": "現有工具", "size": "xs", "color": "#8D6E63", "weight": "bold"},
-                    {"type": "button", "style": "primary", "color": "#FF8C42",
-                     "action": {"type": "message", "label": "📱 3C 推薦小幫手", "text": "你好"}},
-                    # ── 未來工具（加在這裡）──────────
+                    {"type": "text", "text": "常見問題，點一個開始：",
+                     "size": "sm", "color": "#8D6E63"},
+                    {"type": "button", "style": "secondary", "margin": "sm",
+                     "action": {"type": "message", "label": "🏠 租屋糾紛怎麼辦？",
+                                "text": "法律 租屋糾紛"}},
+                    {"type": "button", "style": "secondary",
+                     "action": {"type": "message", "label": "💼 被公司欠薪/違法解僱",
+                                "text": "法律 勞資糾紛"}},
+                    {"type": "button", "style": "secondary",
+                     "action": {"type": "message", "label": "🛍️ 買到假貨/商品有問題",
+                                "text": "法律 消費者保護"}},
+                    {"type": "button", "style": "secondary",
+                     "action": {"type": "message", "label": "🚗 發生車禍怎麼處理",
+                                "text": "法律 交通事故"}},
+                    {"type": "button", "style": "secondary",
+                     "action": {"type": "message", "label": "💰 被詐騙了可以怎麼做",
+                                "text": "法律 詐騙求助"}},
+                    {"type": "button", "style": "secondary",
+                     "action": {"type": "message", "label": "👨‍👩‍👧 離婚/家暴/監護權",
+                                "text": "法律 家事"}},
                     {"type": "separator", "margin": "md"},
-                    {"type": "text", "text": "即將推出", "size": "xs", "color": "#BDBDBD", "weight": "bold", "margin": "md"},
-                    {"type": "button", "style": "secondary", "color": "#BDBDBD",
-                     "action": {"type": "message", "label": "🎫 搶票助手（開發中）", "text": "搶票助手"}},
+                    {"type": "button", "style": "primary", "color": "#1C2B4A",
+                     "margin": "md",
+                     "action": {"type": "uri", "label": "🌐 開啟完整法律常識網站",
+                                "uri": "https://hhc42937536-cell.github.io/legal-guide/"}},
+                ]
+            }
+        }
+    }]
+
+
+LEGAL_QA = {
+    "租屋糾紛": {
+        "title": "🏠 租屋糾紛",
+        "content": (
+            "【房東不退押金】\n"
+            "• 搬出前拍照存證（每個房間、每件家具）\n"
+            "• 租約結束後 → 房東須於 30 天內退押金\n"
+            "• 拒不退還 → 發存證信函，再提小額訴訟\n\n"
+            "【房東突然漲租/趕人】\n"
+            "• 租約期間內，房東不得任意漲租或趕人\n"
+            "• 違反租約 → 可要求損害賠償\n\n"
+            "【緊急求助】\n"
+            "• 內政部租屋糾紛申訴：1999\n"
+            "• 法律扶助基金會：412-8518"
+        )
+    },
+    "勞資糾紛": {
+        "title": "💼 勞資糾紛",
+        "content": (
+            "【被欠薪】\n"
+            "• 保留薪資單、轉帳紀錄、通訊對話\n"
+            "• 向勞工局申訴（免費，雇主壓力大）\n"
+            "• 勞工局電話：1955\n\n"
+            "【違法解僱】\n"
+            "• 解僱須有法定事由，否則為違法\n"
+            "• 可要求復職或資遣費補償\n"
+            "• 年資每滿一年給 1 個月平均工資\n\n"
+            "【加班費沒給】\n"
+            "• 平日加班：前 2 小時 × 1.34 倍，之後 × 1.67 倍\n"
+            "• 可申請勞動局調解"
+        )
+    },
+    "消費者保護": {
+        "title": "🛍️ 消費者保護",
+        "content": (
+            "【買到假貨/瑕疵品】\n"
+            "• 網購：7 天內無條件退貨（猶豫期）\n"
+            "• 實體購買：可依消保法要求修補、換貨或退款\n"
+            "• 保留發票、對話紀錄、照片\n\n"
+            "【商家不退款】\n"
+            "• 先向消保官申訴：1950\n"
+            "• 或向消費者保護委員會申訴\n\n"
+            "【信用卡爭議】\n"
+            "• 向發卡銀行申請「帳單爭議」\n"
+            "• 銀行須在 30 天內回覆處理結果"
+        )
+    },
+    "交通事故": {
+        "title": "🚗 交通事故",
+        "content": (
+            "【現場處理】\n"
+            "• 先確認人員安全，有傷亡立即撥 110/119\n"
+            "• 拍照：車輛位置、損傷、現場環境\n"
+            "• 交換資料：姓名、車牌、保險公司\n"
+            "• 不要急著移車（除非造成交通危險）\n\n"
+            "【理賠】\n"
+            "• 強制險（傷亡）→ 對方保險公司\n"
+            "• 第三責任險（財損）→ 視過失比例\n"
+            "• 傷亡可申請強制險：醫療費最高 20 萬\n\n"
+            "【對方逃逸】\n"
+            "• 記車牌，立即報警，可申請犯罪被害補償"
+        )
+    },
+    "詐騙求助": {
+        "title": "💰 被詐騙了怎麼辦",
+        "content": (
+            "【已經轉帳了】\n"
+            "1. 立即撥打 165，請求凍結帳戶\n"
+            "2. 打給你的銀行，請求止付/攔截\n"
+            "3. 到警察局報案（越快越好）\n"
+            "4. 保留所有對話紀錄、交易紀錄\n\n"
+            "【還沒轉帳，但對方一直催】\n"
+            "• 立即封鎖對方\n"
+            "• 撥打 165 確認是否詐騙\n\n"
+            "【重要求助電話】\n"
+            "• 165 反詐騙：24 小時\n"
+            "• 警政署反詐騙官網：可線上舉報\n"
+            "• 法律扶助基金會：412-8518"
+        )
+    },
+    "家事": {
+        "title": "👨‍👩‍👧 家事法律",
+        "content": (
+            "【離婚】\n"
+            "• 協議離婚：兩人合意 + 2 位證人簽名\n"
+            "• 訴訟離婚：須有法定事由（外遇、惡意遺棄等）\n\n"
+            "【監護權】\n"
+            "• 離婚後可協議或由法院判決\n"
+            "• 法院以「子女最佳利益」為原則\n"
+            "• 非監護方有探視權\n\n"
+            "【家暴】\n"
+            "• 撥打 113 家暴保護專線（24 小時）\n"
+            "• 可申請保護令（禁止對方接近）\n"
+            "• 到地方法院聲請，費用全免"
+        )
+    },
+}
+
+
+def build_legal_answer(topic: str) -> list:
+    """回傳特定法律主題的說明"""
+    qa = LEGAL_QA.get(topic)
+    if not qa:
+        return build_legal_guide_intro()
+    return [
+        {
+            "type": "flex", "altText": qa["title"],
+            "contents": {
+                "type": "bubble", "size": "mega",
+                "header": {
+                    "type": "box", "layout": "vertical",
+                    "backgroundColor": "#1C2B4A",
+                    "contents": [
+                        {"type": "text", "text": qa["title"], "color": "#FFFFFF",
+                         "size": "lg", "weight": "bold"},
+                        {"type": "text", "text": "以下為一般性說明，非正式法律意見",
+                         "color": "#FFFFFFCC", "size": "xs"},
+                    ]
+                },
+                "body": {
+                    "type": "box", "layout": "vertical",
+                    "contents": [
+                        {"type": "text", "text": qa["content"], "size": "sm",
+                         "color": "#3E2723", "wrap": True},
+                    ]
+                },
+                "footer": {
+                    "type": "box", "layout": "vertical", "spacing": "sm",
+                    "contents": [
+                        {"type": "button", "style": "primary", "color": "#1C2B4A",
+                         "action": {"type": "uri", "label": "🌐 查看完整說明",
+                                    "uri": "https://hhc42937536-cell.github.io/legal-guide/"}},
+                        {"type": "button", "style": "secondary",
+                         "action": {"type": "message", "label": "⚖️ 看其他法律主題",
+                                    "text": "法律常識"}},
+                    ]
+                }
+            }
+        }
+    ]
+
+
+def build_tools_menu() -> list:
+    """所有工具選單"""
+    return [{
+        "type": "flex", "altText": "所有工具",
+        "contents": {
+            "type": "bubble", "size": "mega",
+            "header": {
+                "type": "box", "layout": "vertical",
+                "backgroundColor": "#2D2D2D",
+                "contents": [
+                    {"type": "text", "text": "🛠️ 生活小幫手工具箱",
+                     "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                    {"type": "text", "text": "選擇你需要的服務",
+                     "color": "#FFFFFFCC", "size": "sm"},
+                ]
+            },
+            "body": {
+                "type": "box", "layout": "vertical", "spacing": "sm",
+                "contents": [
+                    {"type": "text", "text": "現有工具", "size": "xs",
+                     "color": "#8D6E63", "weight": "bold"},
+                    {"type": "button", "style": "primary", "color": "#FF8C42",
+                     "action": {"type": "message", "label": "📱 3C 推薦小幫手",
+                                "text": "推薦手機"}},
+                    {"type": "button", "style": "primary", "color": "#C0392B",
+                     "action": {"type": "message", "label": "🔍 防詐辨識",
+                                "text": "防詐辨識"}},
+                    {"type": "button", "style": "primary", "color": "#1C2B4A",
+                     "action": {"type": "message", "label": "⚖️ 法律常識小幫手",
+                                "text": "法律常識"}},
+                    {"type": "separator", "margin": "md"},
+                    {"type": "text", "text": "即將推出", "size": "xs",
+                     "color": "#BDBDBD", "weight": "bold", "margin": "md"},
+                    {"type": "button", "style": "secondary",
+                     "action": {"type": "message",
+                                "label": "🎫 搶票助手（開發中）",
+                                "text": "搶票助手"}},
                 ]
             }
         }
@@ -923,9 +1306,33 @@ def handle_text_message(text: str) -> list:
     if any(w in text for w in ["購買指南", "購買須知", "買之前", "注意事項", "怎麼買"]):
         return build_purchase_guide_message()
 
-    # ── 5. 其他工具 ──────────────────────────────────
-    if any(w in text for w in ["其他工具", "還有什麼", "其他功能"]):
+    # ── 5. 防詐辨識 ──────────────────────────────────
+    if any(w in text for w in ["防詐", "詐騙", "可疑", "165", "是詐騙嗎", "防詐辨識"]):
+        # 如果只說關鍵字 → 顯示說明；若帶有內容 → 直接分析
+        stripped = text
+        for kw in ["防詐辨識", "幫我看", "這是詐騙嗎", "防詐", "詐騙"]:
+            stripped = stripped.replace(kw, "").strip()
+        if len(stripped) >= 10:
+            return build_fraud_result(stripped)
+        return build_fraud_intro()
+
+    # ── 6. 法律常識 ──────────────────────────────────
+    if any(w in text for w in ["法律", "法律常識", "法律問題", "權益"]):
+        # 偵測特定主題
+        for topic in LEGAL_QA.keys():
+            if topic in text:
+                return build_legal_answer(topic)
+        return build_legal_guide_intro()
+
+    # ── 7. 其他工具 ──────────────────────────────────
+    if any(w in text for w in ["其他工具", "還有什麼", "其他功能", "工具箱"]):
         return build_tools_menu()
+
+    # ── 8. 長文自動防詐分析（用戶直接貼可疑內容）───────
+    if len(text) >= 30:
+        result = analyze_fraud(text)
+        if result["risk"] in ("high", "medium"):
+            return build_fraud_result(text)
 
     # ── 6. 偵測裝置 → 啟動問卷 ──────────────────────
     device = detect_device(text)
