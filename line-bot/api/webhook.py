@@ -1324,8 +1324,58 @@ def handle_text_message(text: str) -> list:
                 return build_legal_answer(topic)
         return build_legal_guide_intro()
 
-    # ── 7. 其他工具 ──────────────────────────────────
-    if any(w in text for w in ["其他工具", "還有什麼", "其他功能", "工具箱"]):
+    # ── 7. 生活自保頁籤按鈕 ──────────────────────────
+    if any(w in text for w in ["消費保護", "消費者保護", "消費糾紛", "退貨", "消保"]):
+        return build_legal_answer("消費者保護")
+
+    if any(w in text for w in ["職場求助", "勞資", "職場", "被資遣", "加班費", "欠薪"]):
+        return build_legal_answer("勞資糾紛")
+
+    if any(w in text for w in ["緊急求助", "緊急", "急救", "求助"]):
+        return [{
+            "type": "flex", "altText": "緊急求助管道",
+            "contents": {
+                "type": "bubble",
+                "header": {
+                    "type": "box", "layout": "vertical",
+                    "backgroundColor": "#C0392B",
+                    "contents": [
+                        {"type": "text", "text": "🆘 緊急求助管道", "color": "#FFFFFF",
+                         "size": "lg", "weight": "bold"}
+                    ]
+                },
+                "body": {
+                    "type": "box", "layout": "vertical", "spacing": "md",
+                    "contents": [
+                        {"type": "text", "text": "📞 165 反詐騙專線（24小時）", "size": "sm", "weight": "bold", "color": "#C0392B"},
+                        {"type": "text", "text": "📞 110 警察報案", "size": "sm", "weight": "bold"},
+                        {"type": "text", "text": "📞 113 家暴/跟蹤騷擾保護（24小時）", "size": "sm"},
+                        {"type": "text", "text": "📞 1955 勞工申訴專線", "size": "sm"},
+                        {"type": "text", "text": "📞 412-8518 法律扶助基金會", "size": "sm"},
+                        {"type": "text", "text": "📞 1950 消費者服務", "size": "sm"},
+                    ]
+                },
+                "footer": {
+                    "type": "box", "layout": "vertical", "spacing": "sm",
+                    "contents": [
+                        {"type": "button", "style": "primary", "color": "#C0392B",
+                         "action": {"type": "message", "label": "🔍 防詐辨識", "text": "防詐辨識"}},
+                        {"type": "button", "style": "secondary",
+                         "action": {"type": "message", "label": "⚖️ 法律常識", "text": "法律常識"}},
+                    ]
+                }
+            }
+        }]
+
+    if any(w in text for w in ["更多功能", "其他工具", "還有什麼", "其他功能", "工具箱"]):
+        return build_tools_menu()
+
+    # ── 8. 頁籤切換訊息（靜默處理）────────────────────
+    if text.startswith("tab:"):
+        return None
+
+    # ── (舊路由保留) 其他工具 ────────────────────────
+    if any(w in text for w in ["其他工具", "還有什麼", "工具箱"]):
         return build_tools_menu()
 
     # ── 8. 長文自動防詐分析（用戶直接貼可疑內容）───────
