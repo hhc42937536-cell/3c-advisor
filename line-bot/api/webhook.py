@@ -359,72 +359,234 @@ def build_welcome_message() -> list:
     }]
 
 
-def build_ask_budget_message(device: str) -> list:
-    """詢問預算"""
-    device_name = {"phone": "手機", "laptop": "筆電", "tablet": "平板"}.get(device, "產品")
+# ─── 導引式問卷（狀態用 | 編碼）────────────────────
+# 格式：裝置|使用者|用途|預算
+# 例如：手機|長輩|拍照|20000
+# 每一步從按鈕中累積，直到 4 個欄位齊全才顯示推薦
+
+DEVICE_USE_OPTIONS = {
+    "手機": [
+        ("📞 日常用（LINE、拍照、上網）", "日常"),
+        ("📷 拍照攝影為主", "拍照"),
+        ("🎮 玩手遊", "遊戲"),
+        ("🎬 看影片追劇", "追劇"),
+    ],
+    "筆電": [
+        ("📝 上課作業報告", "學習"),
+        ("💼 工作文書（Word/Excel）", "工作"),
+        ("🎬 影片剪輯設計", "創作"),
+        ("🎮 玩遊戲", "遊戲"),
+    ],
+    "平板": [
+        ("🎬 看影片追劇", "追劇"),
+        ("📚 閱讀電子書", "閱讀"),
+        ("✏️ 手寫筆記", "工作"),
+        ("🎮 玩遊戲", "遊戲"),
+    ],
+}
+
+BUDGET_OPTIONS = {
+    "手機": [
+        ("💰 1 萬以內", "10000"),
+        ("👍 1～2 萬", "20000"),
+        ("⭐ 2～4 萬", "40000"),
+        ("🏆 不限預算", "999999"),
+    ],
+    "筆電": [
+        ("💰 2 萬以內", "20000"),
+        ("👍 2～3 萬", "30000"),
+        ("⭐ 3～5 萬", "50000"),
+        ("🏆 不限預算", "999999"),
+    ],
+    "平板": [
+        ("💰 1 萬以內", "10000"),
+        ("👍 1～2 萬", "20000"),
+        ("⭐ 2～3 萬", "30000"),
+        ("🏆 不限預算", "999999"),
+    ],
+}
+
+STEP_COLORS = {"手機": "#FF8C42", "筆電": "#5B9BD5", "平板": "#4CAF50"}
+
+
+def build_wizard_who(device_name: str) -> list:
+    """問卷 Step 1：要給誰用？"""
+    color = STEP_COLORS.get(device_name, "#FF8C42")
+    who_options = [
+        ("👤 我自己", "自己"),
+        ("👴 爸媽或長輩", "長輩"),
+        ("🎒 學生", "學生"),
+        ("👶 給小孩", "小孩"),
+    ]
+    btns = [
+        {"type": "button", "style": "secondary",
+         "action": {"type": "message", "label": label,
+                    "text": f"{device_name}|{val}"}}
+        for label, val in who_options
+    ]
     return [{
-        "type": "flex",
-        "altText": f"請問{device_name}預算大概多少？",
+        "type": "flex", "altText": f"步驟 1／3　誰要用這台{device_name}？",
         "contents": {
             "type": "bubble",
-            "body": {
-                "type": "box", "layout": "vertical", "spacing": "md",
+            "header": {
+                "type": "box", "layout": "vertical",
+                "backgroundColor": color,
                 "contents": [
-                    {"type": "text", "text": f"💰 {device_name}預算大概多少呢？", "size": "md", "weight": "bold", "color": "#3E2723"},
-                    {"type": "text", "text": "點一個最接近的，或直接打數字", "size": "xs", "color": "#8D6E63"},
+                    {"type": "text", "text": f"📋 {device_name}推薦　步驟 1／3",
+                     "color": "#FFFFFF", "size": "sm"},
+                    {"type": "text", "text": "誰要用這台？",
+                     "color": "#FFFFFF", "size": "xl", "weight": "bold"},
                 ]
             },
+            "body": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": btns},
             "footer": {
-                "type": "box", "layout": "vertical", "spacing": "sm",
-                "contents": [
-                    {"type": "button", "style": "secondary",
-                     "action": {"type": "message", "label": "💰 1 萬以內（省錢）", "text": f"{device_name} 1萬以內"}},
-                    {"type": "button", "style": "secondary",
-                     "action": {"type": "message", "label": "👍 1~3 萬（夠用）", "text": f"{device_name} 3萬以內"}},
-                    {"type": "button", "style": "secondary",
-                     "action": {"type": "message", "label": "⭐ 3~5 萬（品質好）", "text": f"{device_name} 5萬以內"}},
-                    {"type": "button", "style": "secondary",
-                     "action": {"type": "message", "label": "🏆 5 萬以上（買好的）", "text": f"{device_name} 不限預算"}},
-                ]
+                "type": "box", "layout": "vertical",
+                "contents": [{"type": "button", "style": "secondary",
+                               "action": {"type": "message", "label": "← 重新開始", "text": "你好"}}]
             }
         }
     }]
 
 
-def build_scenario_menu() -> list:
-    """情境推薦：引導用戶說出生活場景"""
+def build_wizard_use(device_name: str, who: str) -> list:
+    """問卷 Step 2：主要做什麼？"""
+    color = STEP_COLORS.get(device_name, "#FF8C42")
+    options = DEVICE_USE_OPTIONS.get(device_name, [])
+    btns = [
+        {"type": "button", "style": "secondary",
+         "action": {"type": "message", "label": label,
+                    "text": f"{device_name}|{who}|{val}"}}
+        for label, val in options
+    ]
+    who_label = {"自己": "你", "長輩": "長輩", "學生": "學生", "小孩": "小孩"}.get(who, who)
     return [{
-        "type": "flex",
-        "altText": "情境推薦",
+        "type": "flex", "altText": f"步驟 2／3　主要做什麼？",
         "contents": {
             "type": "bubble",
-            "size": "mega",
+            "header": {
+                "type": "box", "layout": "vertical",
+                "backgroundColor": color,
+                "contents": [
+                    {"type": "text", "text": f"📋 {device_name}推薦　步驟 2／3",
+                     "color": "#FFFFFF", "size": "sm"},
+                    {"type": "text", "text": f"{who_label}主要用來做什麼？",
+                     "color": "#FFFFFF", "size": "xl", "weight": "bold", "wrap": True},
+                ]
+            },
+            "body": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": btns},
+            "footer": {
+                "type": "box", "layout": "vertical",
+                "contents": [{"type": "button", "style": "secondary",
+                               "action": {"type": "message", "label": "← 上一步",
+                                          "text": f"推薦{device_name}"}}]
+            }
+        }
+    }]
+
+
+def build_wizard_budget(device_name: str, who: str, use: str) -> list:
+    """問卷 Step 3：預算多少？"""
+    color = STEP_COLORS.get(device_name, "#FF8C42")
+    options = BUDGET_OPTIONS.get(device_name, BUDGET_OPTIONS["手機"])
+    btns = [
+        {"type": "button", "style": "secondary",
+         "action": {"type": "message", "label": label,
+                    "text": f"{device_name}|{who}|{use}|{val}"}}
+        for label, val in options
+    ]
+    use_label = {"日常": "日常使用", "拍照": "拍照攝影", "遊戲": "玩遊戲",
+                 "追劇": "追劇看片", "學習": "學習作業", "工作": "工作文書",
+                 "創作": "影片剪輯", "閱讀": "閱讀電子書"}.get(use, use)
+    return [{
+        "type": "flex", "altText": "步驟 3／3　預算大概多少？",
+        "contents": {
+            "type": "bubble",
+            "header": {
+                "type": "box", "layout": "vertical",
+                "backgroundColor": color,
+                "contents": [
+                    {"type": "text", "text": f"📋 {device_name}推薦　步驟 3／3",
+                     "color": "#FFFFFF", "size": "sm"},
+                    {"type": "text", "text": "預算大概多少？",
+                     "color": "#FFFFFF", "size": "xl", "weight": "bold"},
+                    {"type": "text", "text": f"用途：{use_label}",
+                     "color": "#FFFFFFCC", "size": "xs"},
+                ]
+            },
+            "body": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": btns},
+            "footer": {
+                "type": "box", "layout": "vertical",
+                "contents": [{"type": "button", "style": "secondary",
+                               "action": {"type": "message", "label": "← 上一步",
+                                          "text": f"{device_name}|{who}"}}]
+            }
+        }
+    }]
+
+
+def parse_wizard_state(text: str) -> dict | None:
+    """解析 | 編碼的問卷狀態"""
+    if "|" not in text:
+        return None
+    parts = text.split("|")
+    device_map = {"手機": "phone", "筆電": "laptop", "平板": "tablet"}
+    device_key = device_map.get(parts[0])
+    if not device_key:
+        return None
+    state = {"device": device_key, "device_name": parts[0]}
+    if len(parts) >= 2:
+        state["who"] = parts[1]
+    if len(parts) >= 3:
+        state["use"] = parts[2]
+    if len(parts) >= 4:
+        try:
+            state["budget"] = int(parts[3])
+        except Exception:
+            state["budget"] = 0
+    return state
+
+
+def build_scenario_menu() -> list:
+    """情境推薦：快速選情境，直接跳到預算步驟"""
+    return [{
+        "type": "flex", "altText": "情境推薦",
+        "contents": {
+            "type": "bubble", "size": "mega",
             "header": {
                 "type": "box", "layout": "vertical",
                 "backgroundColor": "#5B9BD5",
                 "contents": [
-                    {"type": "text", "text": "🎯 情境推薦", "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                    {"type": "text", "text": "告訴我你的狀況，我來幫你選", "color": "#FFFFFFCC", "size": "sm"},
+                    {"type": "text", "text": "🎯 情境推薦", "color": "#FFFFFF",
+                     "size": "lg", "weight": "bold"},
+                    {"type": "text", "text": "選你的狀況，省略填表步驟", "color": "#FFFFFFCC", "size": "sm"},
                 ]
             },
             "body": {
                 "type": "box", "layout": "vertical", "spacing": "sm",
                 "contents": [
-                    {"type": "text", "text": "👤 要給誰用？", "size": "sm", "weight": "bold", "color": "#3E2723"},
+                    {"type": "text", "text": "點一個最接近你的狀況：",
+                     "size": "sm", "color": "#8D6E63"},
                     {"type": "button", "style": "secondary", "margin": "sm",
-                     "action": {"type": "message", "label": "👴 給爸媽或長輩用", "text": "幫我推薦給長輩用的手機"}},
+                     "action": {"type": "message", "label": "👴 長輩換手機（只用 LINE）",
+                                "text": "手機|長輩|日常"}},
                     {"type": "button", "style": "secondary",
-                     "action": {"type": "message", "label": "🎒 學生自己用", "text": "幫我推薦學生用的筆電"}},
+                     "action": {"type": "message", "label": "📸 想買拍照好的手機",
+                                "text": "手機|自己|拍照"}},
                     {"type": "button", "style": "secondary",
-                     "action": {"type": "message", "label": "💼 上班工作用", "text": "幫我推薦工作用的筆電"}},
+                     "action": {"type": "message", "label": "🎮 手機打遊戲用",
+                                "text": "手機|自己|遊戲"}},
                     {"type": "button", "style": "secondary",
-                     "action": {"type": "message", "label": "🎮 玩遊戲用", "text": "幫我推薦玩遊戲的手機"}},
+                     "action": {"type": "message", "label": "🎒 學生買筆電",
+                                "text": "筆電|學生|學習"}},
                     {"type": "button", "style": "secondary",
-                     "action": {"type": "message", "label": "📸 拍照為主", "text": "幫我推薦拍照好的手機"}},
+                     "action": {"type": "message", "label": "💼 工作文書用筆電",
+                                "text": "筆電|自己|工作"}},
                     {"type": "button", "style": "secondary",
-                     "action": {"type": "message", "label": "🛋️ 在家追劇用", "text": "幫我推薦追劇用的平板"}},
+                     "action": {"type": "message", "label": "🛋️ 在家追劇用平板",
+                                "text": "平板|自己|追劇"}},
                     {"type": "separator", "margin": "md"},
-                    {"type": "text", "text": "或直接跟我說你的狀況，例如：\n「我媽要換手機，她只用 LINE 和拍照」",
+                    {"type": "text",
+                     "text": "沒有符合的？直接跟我說：\n「我媽要換手機，只用 LINE 和拍照」",
                      "size": "xs", "color": "#8D6E63", "wrap": True, "margin": "md"},
                 ]
             }
@@ -700,56 +862,124 @@ def handle_text_message(text: str) -> list:
     text = text.strip()
     text_lower = text.lower()
 
-    # 1. 打招呼 / 幫助
+    # ── 0. 問卷狀態解析（優先處理，避免被其他規則攔截）──────
+    state = parse_wizard_state(text)
+    if state:
+        device_name = state["device_name"]
+        if "budget" in state:
+            # 所有資訊齊全 → 顯示個人化推薦
+            who = state.get("who", "自己")
+            use = state.get("use", "日常")
+            budget = state["budget"]
+            # 將問卷用途對應到 filter_products 的 uses 清單
+            use_map = {
+                "拍照": ["拍照"], "遊戲": ["遊戲"], "追劇": ["追劇"],
+                "工作": ["工作"], "學習": ["學生"], "創作": ["工作"],
+                "日常": [], "閱讀": [],
+            }
+            uses = use_map.get(use, [])
+            if who == "長輩":
+                uses.append("長輩")
+            elif who == "學生":
+                uses.append("學生")
+            msgs = build_recommendation_message(state["device"], budget, uses)
+            # 在推薦結果前加一行個人化說明
+            who_label = {"自己": "你", "長輩": "長輩", "學生": "學生", "小孩": "小孩"}.get(who, who)
+            use_label = {"日常": "日常使用", "拍照": "拍照攝影", "遊戲": "玩遊戲",
+                         "追劇": "追劇看片", "學習": "學校作業", "工作": "工作文書",
+                         "創作": "影片剪輯", "閱讀": "閱讀電子書"}.get(use, use)
+            budget_text = "不限預算" if budget >= 999999 else f"NT${budget:,} 以內"
+            intro = {"type": "text",
+                     "text": f"根據你的需求幫你找到最適合的 {device_name} 👇\n\n"
+                             f"👤 使用者：{who_label}\n"
+                             f"🎯 主要用途：{use_label}\n"
+                             f"💰 預算：{budget_text}"}
+            return [intro] + msgs
+        elif "use" in state:
+            # 有裝置 + 使用者 + 用途 → 問預算
+            return build_wizard_budget(device_name, state["who"], state["use"])
+        elif "who" in state:
+            # 有裝置 + 使用者 → 問用途
+            return build_wizard_use(device_name, state["who"])
+        else:
+            # 只有裝置 → 問使用者（理論上不會到這裡）
+            return build_wizard_who(device_name)
+
+    # ── 1. 打招呼 / 幫助 ────────────────────────────
     greetings = ["你好", "嗨", "hi", "hello", "哈囉", "安安", "開始", "幫助", "help", "選單", "功能"]
     if any(text_lower == g or text_lower.startswith(g) for g in greetings):
         return build_welcome_message()
 
-    # 2. 情境推薦
+    # ── 2. 情境推薦 ──────────────────────────────────
     if any(w in text for w in ["情境推薦", "不知道", "幫我選", "給誰用", "哪種適合"]):
         return build_scenario_menu()
 
-    # 3. 看懂規格
+    # ── 3. 看懂規格 ──────────────────────────────────
     if any(w in text for w in ["看懂規格", "規格", "處理器", "記憶體", "儲存", "螢幕", "電池",
-                                 "cpu", "ram", "ssd", "oled", "hz", "mah", "什麼意思", "看不懂"]):
+                                "cpu", "ram", "ssd", "oled", "hz", "mah", "什麼意思", "看不懂"]):
         return build_spec_explainer(text)
 
-    # 4. 購買指南
-    if any(w in text for w in ["購買指南", "購買須知", "買之前", "注意事項", "怎麼買", "買東西"]):
+    # ── 4. 購買指南 ──────────────────────────────────
+    if any(w in text for w in ["購買指南", "購買須知", "買之前", "注意事項", "怎麼買"]):
         return build_purchase_guide_message()
 
-    # 5. 其他工具選單
-    if any(w in text for w in ["其他工具", "工具", "還有什麼", "其他功能"]):
+    # ── 5. 其他工具 ──────────────────────────────────
+    if any(w in text for w in ["其他工具", "還有什麼", "其他功能"]):
         return build_tools_menu()
 
-    # 2. 偵測裝置類別
+    # ── 6. 偵測裝置 → 啟動問卷 ──────────────────────
     device = detect_device(text)
-    budget = parse_budget(text)
-    uses = detect_use(text)
-
-    # 3. 有裝置但沒預算 → 詢問預算
-    if device and not budget and not uses:
-        # 只說了「推薦手機」沒其他資訊
-        return build_ask_budget_message(device)
-
-    # 4. 有裝置 + 有預算或用途 → 直接推薦
     if device:
-        return build_recommendation_message(device, budget, uses)
+        device_name = {"phone": "手機", "laptop": "筆電", "tablet": "平板"}.get(device, "")
+        budget = parse_budget(text)
+        uses = detect_use(text)
+        # 有足夠資訊（自然語言直接說出來）→ 直接推薦
+        if budget or uses:
+            return build_recommendation_message(device, budget, uses)
+        # 只說了裝置類型 → 啟動問卷 Step 1
+        return build_wizard_who(device_name)
 
-    # 5. 有預算但沒說裝置 → 猜是手機（最常見）
+    # ── 7. 只說了預算 → 問裝置類型 ──────────────────
+    budget = parse_budget(text)
     if budget:
-        return build_recommendation_message("phone", budget, uses)
+        return [{
+            "type": "flex", "altText": "你想買什麼？",
+            "contents": {
+                "type": "bubble",
+                "body": {
+                    "type": "box", "layout": "vertical", "spacing": "sm",
+                    "contents": [
+                        {"type": "text", "text": "你想買哪種裝置？",
+                         "size": "md", "weight": "bold", "color": "#3E2723"},
+                    ]
+                },
+                "footer": {
+                    "type": "box", "layout": "vertical", "spacing": "sm",
+                    "contents": [
+                        {"type": "button", "style": "primary", "color": "#FF8C42",
+                         "action": {"type": "message", "label": "📱 手機",
+                                    "text": f"手機|自己|日常|{budget}"}},
+                        {"type": "button", "style": "primary", "color": "#E07838",
+                         "action": {"type": "message", "label": "💻 筆電",
+                                    "text": f"筆電|自己|工作|{budget}"}},
+                        {"type": "button", "style": "primary", "color": "#C96830",
+                         "action": {"type": "message", "label": "📟 平板",
+                                    "text": f"平板|自己|追劇|{budget}"}},
+                    ]
+                }
+            }
+        }]
 
-    # 6. 有用途關鍵字但沒裝置 → 依用途猜裝置
-    if uses:
-        if any(u in uses for u in ["遊戲"]):
-            return build_recommendation_message("phone", 0, uses)
-        return build_recommendation_message("phone", 0, uses)
-
-    # 7. 完全看不懂 → 友善引導
+    # ── 8. 完全看不懂 → 友善引導 ────────────────────
     return [{
         "type": "text",
-        "text": "嗨！我是 3C 推薦小幫手 🛍️\n\n你可以跟我說像是：\n📱「推薦 2 萬的手機」\n💻「學生用的筆電」\n📟「給爸媽的平板」\n\n我會幫你找到最適合的！"
+        "text": "嗨！我是 3C 推薦小幫手 🛍️\n\n"
+                "我可以幫你：\n"
+                "📱 推薦最適合的手機/筆電/平板\n"
+                "🎯 根據你的生活需求客製化推薦\n"
+                "🔍 用白話解釋看不懂的規格\n"
+                "📖 告訴你買 3C 要注意什麼\n\n"
+                "可以點下方選單，或直接跟我說你的需求 😊"
     }]
 
 
