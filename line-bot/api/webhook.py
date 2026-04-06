@@ -221,10 +221,12 @@ def build_product_flex(p: dict, rank: int) -> dict:
     cons = p.get("cons", "")[:30]
     spec_line = spec_to_plain_line(p)
 
-    # 購買連結
-    search_q = urllib.parse.quote(f"{brand} {name}")
+    # 購買連結（四大平台）
+    search_q   = urllib.parse.quote(f"{brand} {name}")
     pchome_url = f"https://ecshweb.pchome.com.tw/search/v3.3/?q={search_q}"
-    biggo_url  = f"https://biggo.com.tw/search/{search_q}"
+    momo_url   = f"https://www.momoshop.com.tw/search/searchShop.jsp?keyword={search_q}"
+    yahoo_url  = f"https://tw.buy.yahoo.com/search/product?p={search_q}"
+    shopee_url = f"https://shopee.tw/search?keyword={search_q}"
 
     medal = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"][rank] if rank < 5 else ""
 
@@ -252,15 +254,25 @@ def build_product_flex(p: dict, rank: int) -> dict:
             "type": "box", "layout": "vertical", "spacing": "sm",
             "contents": [
                 {
-                    "type": "button", "style": "primary", "color": "#FF8C42",
-                    "action": {"type": "uri", "label": "🛒 PChome 查詢", "uri": pchome_url},
+                    "type": "box", "layout": "horizontal", "spacing": "sm",
+                    "contents": [
+                        {"type": "button", "style": "primary", "color": "#0066CC", "flex": 1, "height": "sm",
+                         "action": {"type": "uri", "label": "PChome", "uri": pchome_url}},
+                        {"type": "button", "style": "primary", "color": "#CC0000", "flex": 1, "height": "sm",
+                         "action": {"type": "uri", "label": "momo", "uri": momo_url}},
+                    ]
                 },
                 {
-                    "type": "button", "style": "primary", "color": "#4CAF50",
-                    "action": {"type": "uri", "label": "💰 BigGo 跨平台比價", "uri": biggo_url},
+                    "type": "box", "layout": "horizontal", "spacing": "sm",
+                    "contents": [
+                        {"type": "button", "style": "primary", "color": "#6600AA", "flex": 1, "height": "sm",
+                         "action": {"type": "uri", "label": "Yahoo!", "uri": yahoo_url}},
+                        {"type": "button", "style": "primary", "color": "#EE4D2D", "flex": 1, "height": "sm",
+                         "action": {"type": "uri", "label": "蝦皮", "uri": shopee_url}},
+                    ]
                 },
                 {
-                    "type": "button", "style": "secondary",
+                    "type": "button", "style": "secondary", "height": "sm",
                     "action": {"type": "message", "label": "❓ 這款適合我嗎？", "text": f"這款適合我嗎 {brand} {name}"},
                 },
             ]
@@ -560,7 +572,7 @@ def parse_wizard_state(text: str) -> dict | None:
     if "|" not in text:
         return None
     parts = text.split("|")
-    device_map = {"手機": "phone", "筆電": "laptop", "平板": "tablet"}
+    device_map = {"手機": "phone", "筆電": "laptop", "平板": "tablet", "桌機": "desktop"}
     device_key = device_map.get(parts[0])
     if not device_key:
         return None
@@ -1455,7 +1467,7 @@ def handle_text_message(text: str) -> list:
     # ── 6. 偵測裝置 → 啟動問卷 ──────────────────────
     device = detect_device(text)
     if device:
-        device_name = {"phone": "手機", "laptop": "筆電", "tablet": "平板"}.get(device, "")
+        device_name = {"phone": "手機", "laptop": "筆電", "tablet": "平板", "desktop": "桌機"}.get(device, "")
         budget = parse_budget(text)
         uses = detect_use(text)
         # 有足夠資訊（自然語言直接說出來）→ 直接推薦
