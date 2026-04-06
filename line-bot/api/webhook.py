@@ -193,6 +193,12 @@ def filter_products(products: list, budget: int, uses: list) -> list:
             score += 3
         if "輕薄" in uses and any(w in name_lower for w in ["輕", "薄", "air", "slim"]):
             score += 8
+        if "日常" in uses or "一般" in uses:
+            if "general" in for_user:
+                score += 5
+            # 不限預算時，日常用途讓中高價也能出現（按分+價格均衡排序）
+            if budget >= 999999 and price <= 50000:
+                score += 2
 
         results.append({**p, "_score": score, "_price": price})
 
@@ -347,8 +353,8 @@ def build_suitability_message(product_name: str) -> list:
         for p in db.get(device, []):
             p_name = p.get("name", "").lower()
             p_brand = p.get("brand", "").lower()
-            # 品牌+部分型號比對
-            if p_brand and p_brand in search_lower and any(w in search_lower for w in p_name.split()[:3]):
+            # 用前20字元做精確比對，避免品牌名相同導致永遠匹配第一個
+            if p_name[:20] and p_name[:20] in search_lower:
                 found = p
                 break
 
