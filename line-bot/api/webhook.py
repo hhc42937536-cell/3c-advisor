@@ -87,15 +87,15 @@ def verify_signature(body: bytes, signature: str) -> bool:
 
 # ─── 3C 推薦模組 ─────────────────────────────────
 
-# 關鍵字 → 裝置類別
+# 關鍵字 → 裝置類別（laptop 放最前，避免 vivobook 被 vivo(phone) 誤判）
 DEVICE_KEYWORDS = {
+    "laptop":  ["筆電", "筆記型電腦", "laptop", "notebook", "macbook", "vivobook", "zenbook",
+                "thinkpad", "ideapad", "swift", "inspiron", "pavilion",
+                "asus", "華碩", "lenovo", "聯想", "hp", "dell", "acer", "宏碁", "msi", "微星"],
+    "tablet":  ["平板", "tablet", "ipad", "surface", "galaxy tab", "matepad"],
+    "desktop": ["桌機", "桌上型電腦", "桌電", "desktop", "主機", "電腦主機", "組裝電腦"],
     "phone":   ["手機", "phone", "iphone", "三星", "samsung", "galaxy", "pixel", "小米", "redmi",
                 "紅米", "oppo", "vivo", "sony", "zenfone", "realme", "motorola"],
-    "laptop":  ["筆電", "筆記型電腦", "laptop", "notebook", "macbook", "asus", "華碩", "lenovo",
-                "聯想", "thinkpad", "hp", "dell", "acer", "宏碁", "msi", "微星", "vivobook",
-                "zenbook", "swift", "inspiron", "pavilion", "ideapad"],
-    "tablet":  ["平板", "tablet", "ipad", "surface", "galaxy tab", "matePad"],
-    "desktop": ["桌機", "桌上型電腦", "桌電", "desktop", "主機", "電腦主機", "組裝電腦"],
 }
 
 # 關鍵字 → 用途偏好
@@ -158,22 +158,37 @@ def filter_products(products: list, budget: int, uses: list) -> list:
     """根據預算和用途篩選並排序產品"""
     results = []
     for p in products:
-        price = int(re.sub(r"[^0-9]", "", p.get("price", "0")))
+        # 桌機用 total_price，其他用 price
+        price_str = p.get("price") or p.get("total_price", "0")
+        price = int(re.sub(r"[^0-9]", "", price_str))
         if 0 < budget < 999999 and price > budget * 1.2:
             continue
-        if price < 3000:
+        if price < 1000:   # 桌機配件不篩掉（桌機最低約 16000）
             continue
 
         # 計算匹配分數
         score = 0
         name_lower = (p.get("name", "") + p.get("pros", "")).lower()
+        for_user = p.get("for_user", [])  # 桌機用此欄位
 
         if "拍照" in uses and any(w in name_lower for w in ["鏡頭", "攝影", "相機", "拍照", "pixel", "蔡司"]):
             score += 10
-        if "遊戲" in uses and any(w in name_lower for w in ["電競", "rog", "gaming", "rtx", "效能"]):
-            score += 10
-        if "長輩" in uses and price < 20000:
-            score += 5
+        if "遊戲" in uses:
+            if any(w in name_lower for w in ["電競", "rog", "gaming", "rtx", "效能"]):
+                score += 10
+            if "game" in for_user:
+                score += 10   # 桌機 for_user 命中
+        if "工作" in uses or "創作" in uses:
+            if "create" in for_user or "work" in for_user:
+                score += 8
+        if "學習" in uses or "學生" in uses:
+            if "student" in for_user:
+                score += 6
+        if "長輩" in uses:
+            if "senior" in for_user:
+                score += 6
+            elif price < 20000:
+                score += 5
         if "學生" in uses and price < 35000:
             score += 3
         if "輕薄" in uses and any(w in name_lower for w in ["輕", "薄", "air", "slim"]):
@@ -214,34 +229,32 @@ def spec_to_plain_line(p: dict) -> str:
 
 
 def build_product_flex(p: dict, rank: int) -> dict:
-    """建立單個產品的 Flex Message bubble"""
+    """建立單個產品的 Flex Message bubble（支援手機/筆電/平板/桌機）"""
     import urllib.parse
-    price = p.get("price", "")
+    # 桌機用 total_price，其他用 price
+    price = p.get("price") or p.get("total_price", "")
     brand = p.get("brand", "")
-    name = p.get("name", "")[:30]
-    tag = p.get("tag", "")
-    pros = p.get("pros", "")[:40]
-    cons = p.get("cons", "")[:30]
+    name  = p.get("name", "")[:30]
+    tag   = p.get("tag", "")
+    pros  = p.get("pros", "")[:40]
+    cons  = p.get("cons", "")[:30]
     spec_line = spec_to_plain_line(p)
-
-    # 購買連結（四大平台）
-    search_q   = urllib.parse.quote(f"{brand} {name}")
-    pchome_url = f"https://ecshweb.pchome.com.tw/search/v3.3/?q={search_q}"
-    momo_url   = f"https://www.momoshop.com.tw/search/searchShop.jsp?keyword={search_q}"
-    yahoo_url  = f"https://tw.buy.yahoo.com/search/product?p={search_q}"
-    shopee_url = f"https://shopee.tw/search?keyword={search_q}"
+    is_desktop = bool(p.get("total_price") or p.get("motherboard"))
 
     medal = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"][rank] if rank < 5 else ""
+    header_label = "🖥️ 自組推薦配置" if is_desktop else brand
 
     bubble = {
         "type": "bubble",
         "size": "kilo",
         "header": {
             "type": "box", "layout": "vertical",
-            "backgroundColor": "#FF8C42",
+            "backgroundColor": "#8D6E63" if is_desktop else "#FF8C42",
             "contents": [
-                {"type": "text", "text": f"{medal} {brand}", "color": "#FFFFFF", "size": "sm", "weight": "bold"},
-                {"type": "text", "text": name, "color": "#FFFFFF", "size": "md", "weight": "bold", "wrap": True},
+                {"type": "text", "text": f"{medal} {header_label}", "color": "#FFFFFF",
+                 "size": "sm", "weight": "bold"},
+                {"type": "text", "text": name, "color": "#FFFFFF",
+                 "size": "md", "weight": "bold", "wrap": True},
             ]
         },
         "body": {
@@ -250,10 +263,45 @@ def build_product_flex(p: dict, rank: int) -> dict:
                 {"type": "text", "text": price, "size": "xl", "weight": "bold", "color": "#3E2723"},
                 {"type": "text", "text": f"📖 {spec_line}", "size": "xs", "color": "#8D6E63", "wrap": True},
                 {"type": "separator", "margin": "md"},
-                {"type": "text", "text": f"👍 {pros}", "size": "xs", "color": "#4CAF50", "wrap": True, "margin": "md"},
+                {"type": "text", "text": f"👍 {pros}", "size": "xs", "color": "#4CAF50",
+                 "wrap": True, "margin": "md"},
             ]
         },
-        "footer": {
+        "footer": _build_product_footer(p, is_desktop, brand, name)
+    }
+
+    if cons and cons != "規格詳見商品頁":
+        bubble["body"]["contents"].append(
+            {"type": "text", "text": f"⚠️ {cons}", "size": "xs", "color": "#FF9800", "wrap": True}
+        )
+
+    return bubble
+
+
+def _build_product_footer(p: dict, is_desktop: bool, brand: str, name: str) -> dict:
+    """產品卡片底部按鈕（桌機和一般產品分開處理）"""
+    import urllib.parse
+    if is_desktop:
+        # 桌機：連結到網站配置頁 + 詢問組裝
+        website_url = "https://hhc42937536-cell.github.io/3c-advisor/"
+        return {
+            "type": "box", "layout": "vertical", "spacing": "sm",
+            "contents": [
+                {"type": "button", "style": "primary", "color": "#8D6E63", "height": "sm",
+                 "action": {"type": "uri", "label": "🖥️ 查看完整規格建議", "uri": website_url}},
+                {"type": "button", "style": "secondary", "height": "sm",
+                 "action": {"type": "message", "label": "❓ 這配置適合我嗎？",
+                            "text": f"這款適合我嗎 桌機 {name}"}},
+            ]
+        }
+    else:
+        # 一般產品：四大電商平台
+        search_q   = urllib.parse.quote(f"{brand} {name}")
+        pchome_url = f"https://ecshweb.pchome.com.tw/search/v3.3/?q={search_q}"
+        momo_url   = f"https://www.momoshop.com.tw/search/searchShop.jsp?keyword={search_q}"
+        yahoo_url  = f"https://tw.buy.yahoo.com/search/product?p={search_q}"
+        shopee_url = f"https://shopee.tw/search?keyword={search_q}"
+        return {
             "type": "box", "layout": "vertical", "spacing": "sm",
             "contents": [
                 {
@@ -276,18 +324,11 @@ def build_product_flex(p: dict, rank: int) -> dict:
                 },
                 {
                     "type": "button", "style": "secondary", "height": "sm",
-                    "action": {"type": "message", "label": "❓ 這款適合我嗎？", "text": f"這款適合我嗎 {brand} {name}"},
+                    "action": {"type": "message", "label": "❓ 這款適合我嗎？",
+                               "text": f"這款適合我嗎 {brand} {name}"},
                 },
             ]
         }
-    }
-
-    if cons and cons != "規格詳見商品頁":
-        bubble["body"]["contents"].append(
-            {"type": "text", "text": f"⚠️ {cons}", "size": "xs", "color": "#FF9800", "wrap": True}
-        )
-
-    return bubble
 
 
 def build_suitability_message(product_name: str) -> list:
@@ -312,7 +353,7 @@ def build_suitability_message(product_name: str) -> list:
                 break
 
     search_q  = urllib.parse.quote(product_name)
-    biggo_url = f"https://biggo.com.tw/search/{search_q}"
+    biggo_url = f"https://biggo.com.tw/s/{search_q}"
 
     # body 內容
     if found:
@@ -1382,7 +1423,7 @@ def build_compare_price_message(text: str) -> list:
     keyword = text.replace("幫我比價", "").replace("比價", "").strip()
     if len(keyword) >= 2:
         q = urllib.parse.quote(keyword)
-        biggo_url = f"https://biggo.com.tw/search/{q}"
+        biggo_url = f"https://biggo.com.tw/s/{q}"
         feebee_url = f"https://feebee.com.tw/search/?q={q}"
         return [{
             "type": "flex",
