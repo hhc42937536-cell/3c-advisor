@@ -1803,24 +1803,58 @@ function scoreBarHtml(label, val, color) {
 }
 
 function desktopCardHtml(b) {
-  const parts=[["CPU",b.cpu],["主機板",b.motherboard],["記憶體",b.ram],["SSD",b.ssd],["顯示卡",b.gpu],["電源",b.psu]];
+  const isBrandPC = !b.total_price && !b.motherboard;
   const userMatch=b.for_user&&answers.user&&b.for_user.includes(answers.user);
   const matchBadge=userMatch?`<span style="font-size:12px;font-weight:700;color:var(--green);background:var(--pros-bg);border-radius:10px;padding:3px 10px">✅ 適合你</span>`:"";
+  const displayPrice = isBrandPC ? (b.price||"—") : (b.total_price||"—");
+  const headerLabel = isBrandPC ? (b.brand||"品牌主機") : "🔧 自組推薦配置";
+
+  // specs rows
+  let specsHtml = "";
+  if (isBrandPC) {
+    const parts=[["品牌",b.brand],["CPU",b.cpu],["記憶體",b.ram],["SSD",b.ssd]];
+    specsHtml=`<div class="desktop-parts" style="margin-bottom:12px">
+      ${parts.map(([l,v])=>`<div class="desktop-part"><div class="part-label">${l}</div><div class="part-val">${v||"—"}</div></div>`).join("")}
+    </div>`;
+  } else {
+    const parts=[["CPU",b.cpu],["主機板",b.motherboard],["記憶體",b.ram],["SSD",b.ssd],["顯示卡",b.gpu],["電源",b.psu]];
+    specsHtml=`<div class="desktop-parts" style="margin-bottom:12px">
+      ${parts.map(([l,v])=>`<div class="desktop-part"><div class="part-label">${l}</div><div class="part-val">${v||"—"}</div></div>`).join("")}
+    </div>`;
+  }
+
+  // buy buttons for brand PC
+  let buyHtml = "";
+  if (isBrandPC) {
+    const q = encodeURIComponent((b.brand||"")+" "+(b.name||""));
+    const links=[
+      {name:"PChome", url:`https://ecshweb.pchome.com.tw/search/v3.3/?q=${q}`, color:"#E83030"},
+      {name:"momo",   url:`https://www.momoshop.com.tw/search/searchShop.jsp?keyword=${q}`, color:"#CC0000"},
+      {name:"Yahoo!", url:`https://tw.buy.yahoo.com/search/product?p=${q}`, color:"#7B0099"},
+      {name:"蝦皮",   url:`https://shopee.tw/search?keyword=${q}`, color:"#EE4D2D"},
+    ];
+    buyHtml=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
+      ${links.map(l=>`<a href="${l.url}" target="_blank" style="display:block;text-align:center;padding:8px 4px;border-radius:8px;background:${l.color};color:#fff;font-size:13px;font-weight:700;text-decoration:none">${l.name}</a>`).join("")}
+    </div>`;
+  } else {
+    buyHtml=`<div style="margin-top:10px"><a href="#" onclick="scrollToSection('guide');return false;" style="display:block;text-align:center;padding:8px;border-radius:8px;background:var(--accent);color:#fff;font-size:13px;font-weight:700;text-decoration:none">🔧 查看完整組裝說明</a></div>`;
+  }
+
   return `<div class="desktop-card" style="${userMatch?"border:2px solid var(--green);":""}">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
       <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px">
-        <div style="font-size:18px;font-weight:900;color:var(--text)">${b.name}</div>
-        <span class="badge tag">${b.tag}</span>${matchBadge}
+        <div style="font-size:13px;font-weight:700;color:#8D6E63;background:#EFEBE9;border-radius:8px;padding:2px 8px">${headerLabel}</div>
+        <div style="font-size:16px;font-weight:900;color:var(--text)">${b.name}</div>
+        <span class="badge tag">${b.tag||""}</span>${matchBadge}
       </div>
-      <div style="font-size:24px;font-weight:900;color:var(--green)">${b.total_price}</div>
+      <div style="font-size:22px;font-weight:900;color:var(--green)">${displayPrice}</div>
     </div>
-    <div class="desktop-parts" style="margin-bottom:12px">
-      ${parts.map(([l,v])=>`<div class="desktop-part"><div class="part-label">${l}</div><div class="part-val">${v||"—"}</div></div>`).join("")}
-    </div>
+    ${specsHtml}
     ${b.pros||b.cons?`<div class="pros-cons" style="margin-top:4px">
       ${b.pros?`<div class="pros-box"><div class="pros-title">👍 優點</div><div class="pros-text">${b.pros}</div></div>`:""}
       ${b.cons?`<div class="cons-box"><div class="cons-title">⚠️ 要注意</div><div class="cons-text">${b.cons}</div></div>`:""}
     </div>`:""}
+    ${buyHtml}
   </div>`;
 }
 
