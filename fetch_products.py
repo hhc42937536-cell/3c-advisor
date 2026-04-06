@@ -65,6 +65,17 @@ QUERIES = {
         "Microsoft Surface Go",
         "Lenovo Tab",
     ],
+    "desktop": [
+        "ASUS 桌上型電腦",
+        "Acer 桌上型電腦",
+        "HP 桌上型電腦",
+        "Dell 桌上型電腦",
+        "Lenovo 桌上型電腦",
+        "MSI 桌上型電腦",
+        "Apple Mac mini",
+        "Apple iMac",
+        "Intel NUC",
+    ],
 }
 
 # 每個類別最多保留幾筆
@@ -479,7 +490,6 @@ def run(dry_run: bool = False):
             "updated_at": datetime.now().isoformat(timespec="seconds"),
             "counts": {},
         },
-        "desktop": DESKTOP_DATA,
     }
 
     total_fetched = 0
@@ -509,8 +519,13 @@ def run(dry_run: bool = False):
         deduped.sort(key=lambda p: int(re.sub(r"[^0-9]", "", p["price"])))
         # 限制數量
         final = deduped[:MAX_PER_CATEGORY]
-        total_kept += len(final)
 
+        # 桌機：若 PChome 抓不到品牌套裝機，補上自組參考配置
+        if category == "desktop" and len(final) < 3:
+            print(f"  ⚠ 品牌套裝機不足，補上自組參考配置")
+            final = DESKTOP_DATA + final
+
+        total_kept += len(final)
         result[category] = final
         result["meta"]["counts"][category] = len(final)
         print(f"  ✅ {category}：{len(all_products)} 筆 → 去重 {len(deduped)} → 保留 {len(final)}")
