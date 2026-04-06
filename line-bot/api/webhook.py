@@ -89,9 +89,12 @@ def verify_signature(body: bytes, signature: str) -> bool:
 
 # 關鍵字 → 裝置類別
 DEVICE_KEYWORDS = {
-    "phone":   ["手機", "phone", "iphone", "三星", "samsung", "pixel", "小米", "oppo", "vivo", "sony"],
-    "laptop":  ["筆電", "筆記型電腦", "laptop", "notebook", "macbook"],
-    "tablet":  ["平板", "tablet", "ipad", "surface"],
+    "phone":   ["手機", "phone", "iphone", "三星", "samsung", "galaxy", "pixel", "小米", "redmi",
+                "紅米", "oppo", "vivo", "sony", "zenfone", "realme", "motorola"],
+    "laptop":  ["筆電", "筆記型電腦", "laptop", "notebook", "macbook", "asus", "華碩", "lenovo",
+                "聯想", "thinkpad", "hp", "dell", "acer", "宏碁", "msi", "微星", "vivobook",
+                "zenbook", "swift", "inspiron", "pavilion", "ideapad"],
+    "tablet":  ["平板", "tablet", "ipad", "surface", "galaxy tab", "matePad"],
     "desktop": ["桌機", "桌上型電腦", "桌電", "desktop", "主機", "電腦主機", "組裝電腦"],
 }
 
@@ -285,6 +288,109 @@ def build_product_flex(p: dict, rank: int) -> dict:
         )
 
     return bubble
+
+
+def build_suitability_message(product_name: str) -> list:
+    """'這款適合我嗎' → 顯示產品優缺點 + 引導用途問卷"""
+    import urllib.parse
+
+    # 偵測裝置類型
+    device = detect_device(product_name)
+    device_name = {"phone": "手機", "laptop": "筆電", "tablet": "平板", "desktop": "桌機"}.get(device, "產品")
+
+    # 嘗試從 products.json 找到這個產品
+    db = load_products()
+    found = None
+    if device:
+        search_lower = product_name.lower()
+        for p in db.get(device, []):
+            p_name = p.get("name", "").lower()
+            p_brand = p.get("brand", "").lower()
+            # 品牌+部分型號比對
+            if p_brand and p_brand in search_lower and any(w in search_lower for w in p_name.split()[:3]):
+                found = p
+                break
+
+    search_q  = urllib.parse.quote(product_name)
+    biggo_url = f"https://biggo.com.tw/search/{search_q}"
+
+    # body 內容
+    if found:
+        pros   = found.get("pros", "")
+        cons   = found.get("cons", "")
+        price  = found.get("price", "")
+        budget_val = int(price.replace("NT$", "").replace(",", "").strip()) if price else 30000
+        body_contents = [
+            {"type": "text", "text": price, "size": "xl", "weight": "bold", "color": "#FF8C42"},
+            {"type": "separator", "margin": "md"},
+            {"type": "text", "text": "✅ 優點", "weight": "bold", "size": "sm", "margin": "md", "color": "#3E2723"},
+            {"type": "text", "text": pros, "size": "xs", "color": "#4CAF50", "wrap": True},
+        ]
+        if cons and cons != "規格詳見商品頁":
+            body_contents += [
+                {"type": "text", "text": "⚠️ 注意", "weight": "bold", "size": "sm", "margin": "md", "color": "#3E2723"},
+                {"type": "text", "text": cons, "size": "xs", "color": "#FF9800", "wrap": True},
+            ]
+    else:
+        budget_val = 30000
+        body_contents = [
+            {"type": "text", "text": "想知道這款適不適合你？", "size": "sm", "wrap": True, "weight": "bold", "color": "#3E2723"},
+            {"type": "text", "text": "點選下方的用途，我幫你找同預算內最好的選擇！",
+             "size": "xs", "color": "#8D6E63", "wrap": True, "margin": "sm"},
+        ]
+
+    # 根據裝置類型選用途按鈕
+    use_buttons_map = {
+        "手機": [("📸 拍照攝影", "拍照"), ("🎮 玩遊戲", "遊戲"), ("📺 追劇看片", "追劇"), ("💼 工作文書", "工作")],
+        "筆電": [("💼 工作文書", "工作"), ("🎮 玩遊戲", "遊戲"), ("🎬 影片剪輯", "創作"), ("📚 上課學習", "學習")],
+        "平板": [("📖 閱讀", "閱讀"), ("📺 追劇", "追劇"), ("✏️ 繪圖筆記", "創作"), ("📚 學習", "學習")],
+        "桌機": [("💼 辦公文書", "工作"), ("🎮 玩遊戲", "遊戲"), ("🎬 影片剪輯", "創作"), ("🏠 家用多功能", "日常")],
+    }
+    use_btns = use_buttons_map.get(device_name, use_buttons_map["手機"])
+    dk = device_name if device_name != "產品" else "手機"
+    colors = ["#FF8C42", "#E07838", "#C96830", "#A05820"]
+
+    def _btn(label, use, color):
+        return {"type": "button", "style": "primary", "color": color, "flex": 1, "height": "sm",
+                "action": {"type": "message", "label": label, "text": f"{dk}|自己|{use}|{budget_val}"}}
+
+    return [{
+        "type": "flex", "altText": f"這款適合我嗎？{product_name[:20]}",
+        "contents": {
+            "type": "bubble",
+            "header": {
+                "type": "box", "layout": "vertical",
+                "backgroundColor": "#3E2723",
+                "contents": [
+                    {"type": "text", "text": "❓ 這款適合我嗎？", "color": "#FFFFFF",
+                     "size": "md", "weight": "bold"},
+                    {"type": "text", "text": product_name[:40], "color": "#FFCC80",
+                     "size": "xs", "wrap": True},
+                ]
+            },
+            "body": {
+                "type": "box", "layout": "vertical", "spacing": "sm",
+                "contents": body_contents
+            },
+            "footer": {
+                "type": "box", "layout": "vertical", "spacing": "sm",
+                "contents": [
+                    {"type": "text", "text": f"你買{device_name}主要用來做什麼？",
+                     "size": "sm", "weight": "bold", "color": "#3E2723"},
+                    {"type": "text", "text": "點選後幫你找同預算內最佳選擇比較",
+                     "size": "xs", "color": "#8D6E63"},
+                    {"type": "box", "layout": "horizontal", "spacing": "sm",
+                     "contents": [_btn(use_btns[0][0], use_btns[0][1], colors[0]),
+                                  _btn(use_btns[1][0], use_btns[1][1], colors[1])]},
+                    {"type": "box", "layout": "horizontal", "spacing": "sm",
+                     "contents": [_btn(use_btns[2][0], use_btns[2][1], colors[2]),
+                                  _btn(use_btns[3][0], use_btns[3][1], colors[3])]},
+                    {"type": "button", "style": "secondary", "height": "sm",
+                     "action": {"type": "uri", "label": "💰 BigGo 跨平台比價", "uri": biggo_url}},
+                ]
+            }
+        }
+    }]
 
 
 def build_recommendation_message(device: str, budget: int, uses: list) -> list:
@@ -1318,6 +1424,11 @@ def handle_text_message(text: str) -> list:
     """主路由：分析文字，決定回覆什麼"""
     text = text.strip()
     text_lower = text.lower()
+
+    # ── 0-a. 這款適合我嗎（產品卡片按鈕，必須最優先攔截）──────
+    if text.startswith("這款適合我嗎"):
+        product_name = text.replace("這款適合我嗎", "").strip()
+        return build_suitability_message(product_name)
 
     # ── 0. 問卷狀態解析（優先處理，避免被其他規則攔截）──────
     state = parse_wizard_state(text)
