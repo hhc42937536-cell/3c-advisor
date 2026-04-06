@@ -48,6 +48,9 @@ def load_products():
 # ─── LINE API 工具 ────────────────────────────────
 def reply_message(reply_token, messages):
     """回覆使用者訊息"""
+    if not messages:  # None 或空清單 → 靜默略過（例如 tab: 切換訊息）
+        print(f"[reply] SKIPPED: messages is None/empty")
+        return
     print(f"[reply] token={reply_token[:20]}... ACCESS_TOKEN={'SET' if CHANNEL_ACCESS_TOKEN else 'EMPTY'} msgs={len(messages)}")
     if not CHANNEL_ACCESS_TOKEN or not reply_token:
         print(f"[reply] SKIPPED: token={'empty' if not reply_token else 'ok'}, access_token={'empty' if not CHANNEL_ACCESS_TOKEN else 'ok'}")
@@ -1370,9 +1373,11 @@ def handle_text_message(text: str) -> list:
     if any(w in text for w in ["更多功能", "其他工具", "還有什麼", "其他功能", "工具箱"]):
         return build_tools_menu()
 
-    # ── 8. 頁籤切換訊息（靜默處理）────────────────────
+    # ── 8. 頁籤切換訊息（點到已啟用頁籤 → 顯示對應選單）──────
     if text.startswith("tab:"):
-        return None
+        if "生活" in text:
+            return build_tools_menu()   # 已在生活自保頁 → 顯示工具箱
+        return build_welcome_message()  # 已在3C推薦頁 → 顯示歡迎選單
 
     # ── (舊路由保留) 其他工具 ────────────────────────
     if any(w in text for w in ["其他工具", "還有什麼", "工具箱"]):
