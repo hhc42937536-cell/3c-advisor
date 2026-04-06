@@ -1140,13 +1140,6 @@ def build_tools_menu() -> list:
                     {"type": "button", "style": "primary", "color": "#1C2B4A",
                      "action": {"type": "message", "label": "⚖️ 法律常識小幫手",
                                 "text": "法律常識"}},
-                    {"type": "separator", "margin": "md"},
-                    {"type": "text", "text": "即將推出", "size": "xs",
-                     "color": "#BDBDBD", "weight": "bold", "margin": "md"},
-                    {"type": "button", "style": "secondary",
-                     "action": {"type": "message",
-                                "label": "🎫 搶票助手（開發中）",
-                                "text": "搶票助手"}},
                 ]
             }
         }
