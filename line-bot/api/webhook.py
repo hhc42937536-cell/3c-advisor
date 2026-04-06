@@ -89,9 +89,10 @@ def verify_signature(body: bytes, signature: str) -> bool:
 
 # 關鍵字 → 裝置類別
 DEVICE_KEYWORDS = {
-    "phone": ["手機", "phone", "iphone", "三星", "samsung", "pixel", "小米", "oppo", "vivo", "sony"],
-    "laptop": ["筆電", "筆記型電腦", "laptop", "notebook", "macbook", "電腦"],
-    "tablet": ["平板", "tablet", "ipad", "surface"],
+    "phone":   ["手機", "phone", "iphone", "三星", "samsung", "pixel", "小米", "oppo", "vivo", "sony"],
+    "laptop":  ["筆電", "筆記型電腦", "laptop", "notebook", "macbook"],
+    "tablet":  ["平板", "tablet", "ipad", "surface"],
+    "desktop": ["桌機", "桌上型電腦", "桌電", "desktop", "主機", "電腦主機", "組裝電腦"],
 }
 
 # 關鍵字 → 用途偏好
@@ -279,7 +280,7 @@ def build_recommendation_message(device: str, budget: int, uses: list) -> list:
     db = load_products()
 
     # 裝置對應
-    device_map = {"phone": "phone", "laptop": "laptop", "tablet": "tablet"}
+    device_map = {"phone": "phone", "laptop": "laptop", "tablet": "tablet", "desktop": "desktop"}
     key = device_map.get(device, "phone")
     products = db.get(key, [])
 
@@ -294,7 +295,7 @@ def build_recommendation_message(device: str, budget: int, uses: list) -> list:
         return [{"type": "text", "text": f"在{budget_hint}條件下沒有找到適合的產品 😅\n\n請到網站版看更多選擇 👇\nhttps://hhc42937536-cell.github.io/3c-advisor/"}]
 
     # 組合 Flex carousel
-    device_name = {"phone": "手機", "laptop": "筆電", "tablet": "平板"}.get(device, "產品")
+    device_name = {"phone": "手機", "laptop": "筆電", "tablet": "平板", "desktop": "桌機"}.get(device, "產品")
     if budget >= 999999:
         budget_text = "（不限預算）"
     elif budget > 0:
@@ -401,6 +402,12 @@ DEVICE_USE_OPTIONS = {
         ("✏️ 手寫筆記", "工作"),
         ("🎮 玩遊戲", "遊戲"),
     ],
+    "桌機": [
+        ("💼 辦公文書（Word/Excel）", "工作"),
+        ("🎮 玩電腦遊戲", "遊戲"),
+        ("🎬 影片剪輯/設計", "創作"),
+        ("🏠 家用多功能", "日常"),
+    ],
 }
 
 BUDGET_OPTIONS = {
@@ -422,9 +429,15 @@ BUDGET_OPTIONS = {
         ("⭐ 2～3 萬", "30000"),
         ("🏆 不限預算", "999999"),
     ],
+    "桌機": [
+        ("💰 2 萬以內", "20000"),
+        ("👍 2～4 萬", "40000"),
+        ("⭐ 4～8 萬", "80000"),
+        ("🏆 不限預算", "999999"),
+    ],
 }
 
-STEP_COLORS = {"手機": "#FF8C42", "筆電": "#5B9BD5", "平板": "#4CAF50"}
+STEP_COLORS = {"手機": "#FF8C42", "筆電": "#5B9BD5", "平板": "#4CAF50", "桌機": "#8D6E63"}
 
 
 def build_wizard_who(device_name: str) -> list:
