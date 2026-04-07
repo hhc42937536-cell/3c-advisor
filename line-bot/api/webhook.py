@@ -956,57 +956,437 @@ def build_money_message(text: str) -> list:
     return build_money_menu()
 
 
+# ─── 今天吃什麼 ──────────────────────────────────────
+
+import random as _random
+
+# 食物推薦庫（健康版 / 享樂版 / 快速版）
+_FOOD_DB = {
+    "健康": [
+        {"name": "雞肉飯 + 燙青菜", "desc": "高蛋白、低脂，台灣小吃最健康選項", "price": "~80元", "key": "雞肉飯"},
+        {"name": "越南河粉", "desc": "清湯底、蔬菜多、熱量低，飽足感高", "price": "~120元", "key": "越南河粉"},
+        {"name": "日式定食", "desc": "蒸煮為主、蔬菜豐富，可選烤魚或豆腐", "price": "~180元", "key": "日式定食"},
+        {"name": "素食自助餐", "desc": "可自由搭配蔬菜豆製品，熱量最容易控制", "price": "~100元", "key": "素食自助餐"},
+        {"name": "韓式豆腐鍋", "desc": "低卡高蛋白，辣度可調，暖胃又健康", "price": "~180元", "key": "韓式豆腐鍋"},
+        {"name": "壽司輕食", "desc": "份量小、選海鮮口味熱量低，適合減脂", "price": "~150元", "key": "迴轉壽司"},
+        {"name": "鮭魚酪梨沙拉", "desc": "好脂肪、高蛋白，健身族最愛", "price": "~200元", "key": "健康輕食沙拉"},
+        {"name": "蒸蛋 + 燙蔬菜便當", "desc": "清爽低卡，適合腸胃不好時", "price": "~90元", "key": "健康便當"},
+    ],
+    "享樂": [
+        {"name": "麻辣火鍋", "desc": "過癮、暖身、社交神器，吃完很滿足", "price": "~350元", "key": "麻辣火鍋"},
+        {"name": "燒肉吃到飽", "desc": "肉量管夠，週末犒賞自己首選", "price": "~599元", "key": "燒肉吃到飽"},
+        {"name": "牛肉麵", "desc": "濃郁湯底、大塊牛肉，台灣魂料理", "price": "~160元", "key": "牛肉麵"},
+        {"name": "鹽酥雞 + 珍奶", "desc": "台灣夜市靈魂，爽快就是最大理由", "price": "~120元", "key": "鹽酥雞"},
+        {"name": "拉麵", "desc": "濃厚豚骨或醬油湯底，讓你忘記煩惱", "price": "~280元", "key": "拉麵"},
+        {"name": "炸雞排便當", "desc": "台式便當王者，誰不愛？", "price": "~100元", "key": "雞排便當"},
+        {"name": "韓式炸雞", "desc": "外酥內嫩、沾醬選甜辣，停不下來", "price": "~280元", "key": "韓式炸雞"},
+        {"name": "壽喜燒", "desc": "甜鹹醬汁配嫩牛肉，超級下飯", "price": "~350元", "key": "壽喜燒"},
+    ],
+    "快速": [
+        {"name": "超商關東煮 + 飯糰", "desc": "5分鐘解決，便宜又不踩雷", "price": "~60元", "key": "超商熟食"},
+        {"name": "滷肉飯 + 貢丸湯", "desc": "台灣人的靈魂食物，快速又飽足", "price": "~70元", "key": "滷肉飯"},
+        {"name": "乾麵 + 滷蛋", "desc": "台式早午餐點頭選項，10分鐘內上桌", "price": "~70元", "key": "乾麵"},
+        {"name": "水餃（冷凍或店面）", "desc": "煮一鍋快速搞定，可加湯增飽足", "price": "~80元", "key": "水餃"},
+        {"name": "潛艇堡或三明治", "desc": "快速、可客製，蛋白蔬菜都有", "price": "~100元", "key": "三明治輕食"},
+        {"name": "蛋餅 + 豆漿", "desc": "早餐店隨時都有，簡單溫暖", "price": "~50元", "key": "蛋餅"},
+    ],
+}
+
+
+def _maps_url(keyword: str, area: str = "") -> str:
+    """產生 Google Maps 搜尋連結"""
+    q = urllib.parse.quote(f"{area} {keyword}".strip())
+    return f"https://www.google.com/maps/search/{q}"
+
+
+def build_food_flex(style: str, area: str = "") -> list:
+    """隨機挑 3 道推薦，回傳 Flex 訊息"""
+    pool = _FOOD_DB.get(style, _FOOD_DB["享樂"])
+    picks = _random.sample(pool, min(3, len(pool)))
+    area_label = f"（{area}附近）" if area else ""
+    colors = {"健康": "#2E7D32", "享樂": "#C62828", "快速": "#E65100"}
+    color = colors.get(style, "#FF8C42")
+    icons = {"健康": "🥗", "享樂": "🍖", "快速": "⚡"}
+    icon = icons.get(style, "🍽️")
+
+    items = []
+    for i, p in enumerate(picks):
+        items += [
+            {"type": "box", "layout": "horizontal", "contents": [
+                {"type": "text", "text": f"{i+1}. {p['name']}", "weight": "bold",
+                 "size": "sm", "color": color, "flex": 3},
+                {"type": "text", "text": p["price"], "size": "xs",
+                 "color": "#888888", "flex": 1, "align": "end"},
+            ]},
+            {"type": "text", "text": p["desc"], "size": "xs",
+             "color": "#555555", "wrap": True, "margin": "xs"},
+            {"type": "button", "style": "link", "height": "sm",
+             "action": {"type": "uri", "label": f"📍 找附近{p['name']}", "uri": _maps_url(p["key"], area)}},
+        ]
+        if i < len(picks)-1:
+            items.append({"type": "separator", "margin": "sm"})
+
+    next_style = {"健康": "享樂", "享樂": "快速", "快速": "健康"}[style]
+    return [{"type": "flex", "altText": f"今天吃什麼 — {icon}{style}版",
+             "contents": {
+                 "type": "bubble",
+                 "header": {"type": "box", "layout": "vertical", "backgroundColor": color,
+                            "contents": [
+                                {"type": "text", "text": f"🍽️ 今天吃什麼{area_label}",
+                                 "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                                {"type": "text", "text": f"{icon} {style}版推薦",
+                                 "color": "#FFFFFF", "size": "xs", "margin": "sm"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": items},
+                 "footer": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": [
+                     {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
+                         {"type": "button", "style": "primary", "color": color, "flex": 1,
+                          "height": "sm", "action": {"type": "message", "label": "🔄 再換一組",
+                                                      "text": f"吃什麼 {style} {area}"}},
+                         {"type": "button", "style": "secondary", "flex": 1,
+                          "height": "sm", "action": {"type": "message", "label": f"換{next_style}版",
+                                                      "text": f"吃什麼 {next_style} {area}"}},
+                     ]},
+                 ]},
+             }}]
+
+
+def build_food_menu() -> list:
+    """今天吃什麼 — 主選單"""
+    return [{"type": "flex", "altText": "今天吃什麼？",
+             "contents": {
+                 "type": "bubble",
+                 "header": {"type": "box", "layout": "vertical", "backgroundColor": "#FF5722",
+                            "contents": [
+                                {"type": "text", "text": "🍽️ 今天吃什麼？", "color": "#FFFFFF",
+                                 "size": "lg", "weight": "bold"},
+                                {"type": "text", "text": "幫你快速決定，外食族救星！",
+                                 "color": "#FFCCBC", "size": "xs", "margin": "sm"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "contents": [
+                     {"type": "text", "text": "想吃哪種風格？", "size": "sm",
+                      "color": "#555555", "weight": "bold"},
+                     {"type": "text", "text": "也可以說「台南東區 健康版」「台北信義 享樂版」",
+                      "size": "xs", "color": "#AAAAAA", "wrap": True, "margin": "sm"},
+                 ]},
+                 "footer": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": [
+                     {"type": "button", "style": "primary", "color": "#2E7D32", "height": "sm",
+                      "action": {"type": "message", "label": "🥗 健康清爽版", "text": "吃什麼 健康"}},
+                     {"type": "button", "style": "primary", "color": "#C62828", "height": "sm",
+                      "action": {"type": "message", "label": "🍖 享樂滿足版", "text": "吃什麼 享樂"}},
+                     {"type": "button", "style": "primary", "color": "#E65100", "height": "sm",
+                      "action": {"type": "message", "label": "⚡ 快速方便版", "text": "吃什麼 快速"}},
+                 ]},
+             }}]
+
+
+def build_food_message(text: str) -> list:
+    """今天吃什麼 — 主路由"""
+    text_s = text.strip()
+
+    # 解析風格和區域（例如「吃什麼 健康 台南東區」）
+    style = "享樂"  # 預設
+    if any(w in text_s for w in ["健康", "清爽", "低卡", "減脂"]):
+        style = "健康"
+    elif any(w in text_s for w in ["快速", "方便", "省時", "懶得"]):
+        style = "快速"
+    elif any(w in text_s for w in ["享樂", "好吃", "過癮", "大吃", "犒賞"]):
+        style = "享樂"
+
+    # 解析區域
+    area = ""
+    area_match = re.search(r'(台南|高雄|台北|台中|新北|桃園|新竹|嘉義|屏東|宜蘭|花蓮|台東)\S{0,6}', text_s)
+    if area_match:
+        area = area_match.group(0)
+
+    # 純呼叫主選單（沒有風格關鍵字且不是內部按鈕觸發）
+    if text_s in ["今天吃什麼", "晚餐吃什麼", "午餐吃什麼", "吃什麼", "晚餐推薦", "午餐推薦"]:
+        return build_food_menu()
+
+    return build_food_flex(style, area)
+
+
+# ─── 周末活動推薦 ──────────────────────────────────────
+
+_ACTIVITY_DB = {
+    "戶外踏青": [
+        {"name": "陽明山國家公園", "desc": "火山地形、花海、登山步道，四季皆宜", "area": "台北"},
+        {"name": "太平山國家森林遊樂區", "desc": "雲海、檜木林、原始森林，超療癒", "area": "宜蘭"},
+        {"name": "合歡山", "desc": "高山草原、冬天賞雪，壯觀視野", "area": "南投"},
+        {"name": "墾丁國家公園", "desc": "海灘、珊瑚礁、熱帶風情，全年可玩", "area": "屏東"},
+        {"name": "奮起湖", "desc": "老街、森林鐵路便當，小鎮氛圍超好", "area": "嘉義"},
+        {"name": "七股鹽山", "desc": "鹽田生態、台灣鹽博物館，老少皆宜", "area": "台南"},
+        {"name": "壽山自然公園", "desc": "獼猴、海景步道、市區旁輕鬆踏青", "area": "高雄"},
+        {"name": "清境農場", "desc": "高山牧場、歐式風情、雲霧繚繞", "area": "南投"},
+    ],
+    "文青咖啡": [
+        {"name": "赤峰街商圈", "desc": "台北文青聖地，老屋改造咖啡廳密集", "area": "台北"},
+        {"name": "神農街", "desc": "台南百年老街、文創小店、咖啡廳林立", "area": "台南"},
+        {"name": "駁二藝術特區", "desc": "高雄港邊倉庫改造，藝術展覽 + 咖啡", "area": "高雄"},
+        {"name": "審計新村", "desc": "台中文創聚落，週末市集 + 質感小店", "area": "台中"},
+        {"name": "松山文創園區", "desc": "老煙草工廠、設計展覽、咖啡廳", "area": "台北"},
+        {"name": "藍晒圖文創園區", "desc": "台南文創地標，特色商店 + 裝置藝術", "area": "台南"},
+        {"name": "勝利星村", "desc": "屏東眷村改造，慢活咖啡 + 特色小店", "area": "屏東"},
+    ],
+    "親子同樂": [
+        {"name": "臺灣科學教育館", "desc": "互動展覽、科學實驗，小孩最愛", "area": "台北"},
+        {"name": "兒童新樂園", "desc": "遊樂設施、摩天輪、週末親子首選", "area": "台北"},
+        {"name": "麗寶樂園", "desc": "遊樂園 + 水樂園，暑假必去", "area": "台中"},
+        {"name": "義大遊樂世界", "desc": "高雄最大樂園，刺激設施超豐富", "area": "高雄"},
+        {"name": "國立自然科學博物館", "desc": "恐龍、太空、生命科學館，必去", "area": "台中"},
+        {"name": "台南市立動物園", "desc": "免費入場、動物種類多，台南親子必去", "area": "台南"},
+        {"name": "海生館（國立海洋生物博物館）", "desc": "全台最大水族館，企鵝 + 鯊魚超壯觀", "area": "屏東"},
+    ],
+    "運動健身": [
+        {"name": "大佳河濱公園", "desc": "腳踏車道、跑步步道、河岸風光", "area": "台北"},
+        {"name": "愛河自行車道", "desc": "高雄愛河沿岸，夜晚也很美", "area": "高雄"},
+        {"name": "東豐自行車綠廊", "desc": "舊鐵道改造，景色優美，適合全家", "area": "台中"},
+        {"name": "左營蓮池潭", "desc": "環潭慢跑、龍虎塔打卡，假日熱鬧", "area": "高雄"},
+        {"name": "大安森林公園", "desc": "台北市中心綠洲，跑步 + 戶外瑜伽", "area": "台北"},
+        {"name": "虎頭山公園", "desc": "桃園輕鬆爬山、視野好，假日常見跑者", "area": "桃園"},
+    ],
+    "吃喝玩樂": [
+        {"name": "士林夜市", "desc": "台灣最大夜市，必吃大餅包小餅、士林大香腸", "area": "台北"},
+        {"name": "花園夜市", "desc": "台南最大夜市，週四六日才有，必訪", "area": "台南"},
+        {"name": "六合夜市", "desc": "高雄觀光夜市，海鮮 + 在地小吃", "area": "高雄"},
+        {"name": "逢甲夜市", "desc": "台中最熱鬧夜市，創意小吃層出不窮", "area": "台中"},
+        {"name": "饒河街觀光夜市", "desc": "台北知名夜市，胡椒餅不能錯過", "area": "台北"},
+        {"name": "瑞豐夜市", "desc": "高雄在地人愛去的夜市，週末才開", "area": "高雄"},
+    ],
+}
+
+
+def build_activity_flex(category: str, area: str = "") -> list:
+    """隨機挑 3 個活動推薦"""
+    pool = _ACTIVITY_DB.get(category, [])
+    if area:
+        filtered = [a for a in pool if area[:2] in a.get("area", "")]
+        if not filtered:
+            filtered = pool
+    else:
+        filtered = pool
+
+    picks = _random.sample(filtered, min(3, len(filtered)))
+    colors = {
+        "戶外踏青": "#2E7D32", "文青咖啡": "#4527A0", "親子同樂": "#E65100",
+        "運動健身": "#1565C0", "吃喝玩樂": "#C62828",
+    }
+    color = colors.get(category, "#FF8C42")
+    area_label = f"（{area}）" if area else ""
+
+    items = []
+    for i, act in enumerate(picks):
+        items += [
+            {"type": "box", "layout": "horizontal", "contents": [
+                {"type": "text", "text": f"{i+1}. {act['name']}", "weight": "bold",
+                 "size": "sm", "color": color, "flex": 3},
+                {"type": "text", "text": act.get("area", ""), "size": "xs",
+                 "color": "#888888", "flex": 1, "align": "end"},
+            ]},
+            {"type": "text", "text": act["desc"], "size": "xs",
+             "color": "#555555", "wrap": True, "margin": "xs"},
+            {"type": "button", "style": "link", "height": "sm",
+             "action": {"type": "uri", "label": "📍 Google Maps 導航",
+                        "uri": _maps_url(act["name"], act.get("area", ""))}},
+        ]
+        if i < len(picks)-1:
+            items.append({"type": "separator", "margin": "sm"})
+
+    cats = list(_ACTIVITY_DB.keys())
+    next_cat = cats[(cats.index(category) + 1) % len(cats)]
+    return [{"type": "flex", "altText": f"周末活動 — {category}",
+             "contents": {
+                 "type": "bubble",
+                 "header": {"type": "box", "layout": "vertical", "backgroundColor": color,
+                            "contents": [
+                                {"type": "text", "text": f"🗓️ 周末去哪{area_label}",
+                                 "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                                {"type": "text", "text": category,
+                                 "color": "#FFFFFF", "size": "xs", "margin": "sm"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": items},
+                 "footer": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": [
+                     {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
+                         {"type": "button", "style": "primary", "color": color, "flex": 1,
+                          "height": "sm", "action": {"type": "message", "label": "🔄 再換一組",
+                                                      "text": f"周末 {category} {area}"}},
+                         {"type": "button", "style": "secondary", "flex": 1,
+                          "height": "sm", "action": {"type": "message", "label": f"換{next_cat}",
+                                                      "text": f"周末 {next_cat} {area}"}},
+                     ]},
+                 ]},
+             }}]
+
+
+def build_activity_menu() -> list:
+    """周末活動 — 主選單"""
+    return [{"type": "flex", "altText": "周末去哪？",
+             "contents": {
+                 "type": "bubble",
+                 "header": {"type": "box", "layout": "vertical", "backgroundColor": "#5B9BD5",
+                            "contents": [
+                                {"type": "text", "text": "🗓️ 周末去哪？", "color": "#FFFFFF",
+                                 "size": "lg", "weight": "bold"},
+                                {"type": "text", "text": "幫你找好玩的地方！",
+                                 "color": "#DDEEFF", "size": "xs", "margin": "sm"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "contents": [
+                     {"type": "text", "text": "選一個你想玩的類型 👇", "size": "sm", "color": "#555555"},
+                     {"type": "text", "text": "也可以說「台南 戶外踏青」「台北 文青咖啡」",
+                      "size": "xs", "color": "#AAAAAA", "wrap": True, "margin": "sm"},
+                 ]},
+                 "footer": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": [
+                     {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
+                         {"type": "button", "style": "primary", "color": "#2E7D32", "flex": 1,
+                          "height": "sm", "action": {"type": "message", "label": "🌿 戶外踏青", "text": "周末 戶外踏青"}},
+                         {"type": "button", "style": "primary", "color": "#4527A0", "flex": 1,
+                          "height": "sm", "action": {"type": "message", "label": "☕ 文青咖啡", "text": "周末 文青咖啡"}},
+                     ]},
+                     {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
+                         {"type": "button", "style": "primary", "color": "#E65100", "flex": 1,
+                          "height": "sm", "action": {"type": "message", "label": "👶 親子同樂", "text": "周末 親子同樂"}},
+                         {"type": "button", "style": "primary", "color": "#1565C0", "flex": 1,
+                          "height": "sm", "action": {"type": "message", "label": "🏃 運動健身", "text": "周末 運動健身"}},
+                     ]},
+                     {"type": "button", "style": "primary", "color": "#C62828", "height": "sm",
+                      "action": {"type": "message", "label": "🍜 吃喝玩樂", "text": "周末 吃喝玩樂"}},
+                 ]},
+             }}]
+
+
+def build_activity_message(text: str) -> list:
+    """周末活動 — 主路由"""
+    text_s = text.strip()
+
+    # 解析類別
+    category = None
+    for cat in _ACTIVITY_DB.keys():
+        if cat in text_s:
+            category = cat
+            break
+    if not category:
+        if any(w in text_s for w in ["爬山", "踏青", "健行", "大自然"]):
+            category = "戶外踏青"
+        elif any(w in text_s for w in ["咖啡", "文青", "藝文", "展覽"]):
+            category = "文青咖啡"
+        elif any(w in text_s for w in ["小孩", "親子", "家庭", "帶小孩"]):
+            category = "親子同樂"
+        elif any(w in text_s for w in ["運動", "跑步", "騎車", "健身"]):
+            category = "運動健身"
+        elif any(w in text_s for w in ["夜市", "美食", "吃", "逛街"]):
+            category = "吃喝玩樂"
+
+    # 解析區域
+    area = ""
+    area_match = re.search(r'(台南|高雄|台北|台中|新北|桃園|新竹|嘉義|屏東|宜蘭|花蓮|台東)', text_s)
+    if area_match:
+        area = area_match.group(0)
+
+    if not category:
+        return build_activity_menu()
+    return build_activity_flex(category, area)
+
+
 # ─── 對話路由 ─────────────────────────────────────
 
 def build_welcome_message() -> list:
     """歡迎訊息 + 快速選單"""
     return [{
         "type": "flex",
-        "altText": "歡迎使用3C 推薦小幫手！",
+        "altText": "嗨！我是你的生活超級助理 ✨",
         "contents": {
             "type": "bubble",
             "size": "mega",
             "header": {
                 "type": "box", "layout": "vertical",
-                "backgroundColor": "#FF8C42",
+                "backgroundColor": "#1C2B4A",
+                "paddingAll": "lg",
                 "contents": [
-                    {"type": "text", "text": "🛍️ 3C 推薦小幫手", "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                    {"type": "text", "text": "你的 3C 選購好朋友！", "color": "#FFFFFFCC", "size": "sm"},
+                    {"type": "text", "text": "✨ 生活超級助理",
+                     "color": "#FFFFFF", "size": "xl", "weight": "bold"},
+                    {"type": "text", "text": "你的日常好夥伴，什麼都能問我！",
+                     "color": "#FFFFFFBB", "size": "sm", "margin": "xs"},
                 ]
             },
             "body": {
-                "type": "box", "layout": "vertical", "spacing": "md",
+                "type": "box", "layout": "vertical", "spacing": "sm",
+                "paddingAll": "lg",
                 "contents": [
-                    {"type": "text", "text": "👇 選擇你需要的服務",
-                     "size": "sm", "weight": "bold", "color": "#3E2723"},
+                    {"type": "text", "text": "👇 我可以幫你做這些事",
+                     "size": "sm", "weight": "bold", "color": "#1C2B4A"},
                     {"type": "separator", "margin": "sm"},
-                    {"type": "text", "text": "📱 3C 推薦小幫手",
-                     "size": "sm", "weight": "bold", "color": "#FF8C42", "margin": "sm"},
-                    {"type": "text", "text": "買手機/筆電/平板前來問我，根據你的需求推薦",
-                     "size": "xs", "color": "#8D6E63", "wrap": True},
+                    # 3C
+                    {"type": "box", "layout": "horizontal", "margin": "sm", "spacing": "sm",
+                     "contents": [
+                         {"type": "text", "text": "📱", "size": "sm", "flex": 0},
+                         {"type": "text", "text": "3C 推薦", "size": "sm", "weight": "bold",
+                          "color": "#FF8C42", "flex": 2},
+                         {"type": "text", "text": "手機/筆電/平板選購建議", "size": "xs",
+                          "color": "#8D6E63", "flex": 5, "wrap": True},
+                     ]},
+                    # 吃什麼
+                    {"type": "box", "layout": "horizontal", "margin": "xs", "spacing": "sm",
+                     "contents": [
+                         {"type": "text", "text": "🍽️", "size": "sm", "flex": 0},
+                         {"type": "text", "text": "今天吃什麼", "size": "sm", "weight": "bold",
+                          "color": "#E65100", "flex": 2},
+                         {"type": "text", "text": "健康/享樂/快速餐廳推薦", "size": "xs",
+                          "color": "#8D6E63", "flex": 5, "wrap": True},
+                     ]},
+                    # 周末
+                    {"type": "box", "layout": "horizontal", "margin": "xs", "spacing": "sm",
+                     "contents": [
+                         {"type": "text", "text": "🗓️", "size": "sm", "flex": 0},
+                         {"type": "text", "text": "周末去哪", "size": "sm", "weight": "bold",
+                          "color": "#5C6BC0", "flex": 2},
+                         {"type": "text", "text": "戶外/咖啡/親子/運動活動", "size": "xs",
+                          "color": "#8D6E63", "flex": 5, "wrap": True},
+                     ]},
+                    # 健康
+                    {"type": "box", "layout": "horizontal", "margin": "xs", "spacing": "sm",
+                     "contents": [
+                         {"type": "text", "text": "💪", "size": "sm", "flex": 0},
+                         {"type": "text", "text": "健康小幫手", "size": "sm", "weight": "bold",
+                          "color": "#43A047", "flex": 2},
+                         {"type": "text", "text": "BMI 計算/睡眠/壓力紓解", "size": "xs",
+                          "color": "#8D6E63", "flex": 5, "wrap": True},
+                     ]},
+                    # 金錢
+                    {"type": "box", "layout": "horizontal", "margin": "xs", "spacing": "sm",
+                     "contents": [
+                         {"type": "text", "text": "💰", "size": "sm", "flex": 0},
+                         {"type": "text", "text": "金錢小幫手", "size": "sm", "weight": "bold",
+                          "color": "#00897B", "flex": 2},
+                         {"type": "text", "text": "薪資規劃/信用卡/保險建議", "size": "xs",
+                          "color": "#8D6E63", "flex": 5, "wrap": True},
+                     ]},
                     {"type": "separator", "margin": "sm"},
-                    {"type": "text", "text": "🔍 防詐辨識",
-                     "size": "sm", "weight": "bold", "color": "#C0392B", "margin": "sm"},
-                    {"type": "text", "text": "收到可疑訊息？貼給我分析，即時辨識詐騙風險",
-                     "size": "xs", "color": "#8D6E63", "wrap": True},
-                    {"type": "separator", "margin": "sm"},
-                    {"type": "text", "text": "⚖️ 法律常識",
-                     "size": "sm", "weight": "bold", "color": "#1C2B4A", "margin": "sm"},
-                    {"type": "text", "text": "租屋、勞資、交通事故、消費糾紛的白話說明",
-                     "size": "xs", "color": "#8D6E63", "wrap": True},
+                    {"type": "text",
+                     "text": "🔍 防詐辨識  ⚖️ 法律常識  也都有！",
+                     "size": "xs", "color": "#8D6E63", "margin": "sm"},
                 ]
             },
             "footer": {
                 "type": "box", "layout": "vertical", "spacing": "sm",
                 "contents": [
-                    {"type": "button", "style": "primary", "color": "#FF8C42",
-                     "action": {"type": "message", "label": "📱 3C 推薦", "text": "推薦手機"}},
-                    {"type": "button", "style": "primary", "color": "#C0392B",
-                     "action": {"type": "message", "label": "🔍 防詐辨識", "text": "防詐辨識"}},
-                    {"type": "button", "style": "primary", "color": "#1C2B4A",
-                     "action": {"type": "message", "label": "⚖️ 法律常識", "text": "法律常識"}},
-                    {"type": "button", "style": "secondary",
-                     "action": {"type": "message", "label": "🛠️ 所有工具", "text": "其他工具"}},
+                    {"type": "box", "layout": "horizontal", "spacing": "sm",
+                     "contents": [
+                         {"type": "button", "style": "primary", "color": "#FF8C42", "flex": 1,
+                          "action": {"type": "message", "label": "📱 3C推薦", "text": "推薦手機"}},
+                         {"type": "button", "style": "primary", "color": "#E65100", "flex": 1,
+                          "action": {"type": "message", "label": "🍽️ 吃什麼", "text": "今天吃什麼"}},
+                         {"type": "button", "style": "primary", "color": "#5C6BC0", "flex": 1,
+                          "action": {"type": "message", "label": "🗓️ 周末", "text": "周末去哪"}},
+                     ]},
+                    {"type": "box", "layout": "horizontal", "spacing": "sm", "margin": "sm",
+                     "contents": [
+                         {"type": "button", "style": "primary", "color": "#43A047", "flex": 1,
+                          "action": {"type": "message", "label": "💪 健康", "text": "健康小幫手"}},
+                         {"type": "button", "style": "primary", "color": "#00897B", "flex": 1,
+                          "action": {"type": "message", "label": "💰 金錢", "text": "金錢小幫手"}},
+                         {"type": "button", "style": "secondary", "flex": 1,
+                          "action": {"type": "message", "label": "🛠️ 更多", "text": "其他工具"}},
+                     ]},
                 ]
             }
         }
@@ -1830,17 +2210,41 @@ def build_tools_menu() -> list:
             "body": {
                 "type": "box", "layout": "vertical", "spacing": "sm",
                 "contents": [
-                    {"type": "text", "text": "現有工具", "size": "xs",
-                     "color": "#8D6E63", "weight": "bold"},
-                    {"type": "button", "style": "primary", "color": "#FF8C42",
+                    {"type": "text", "text": "📱 3C 工具", "size": "xs",
+                     "color": "#FF8C42", "weight": "bold"},
+                    {"type": "button", "style": "primary", "color": "#FF8C42", "height": "sm",
                      "action": {"type": "message", "label": "📱 3C 推薦小幫手",
                                 "text": "推薦手機"}},
-                    {"type": "button", "style": "primary", "color": "#C0392B",
+                    {"type": "separator", "margin": "sm"},
+                    {"type": "text", "text": "🛡️ 安全 & 法律", "size": "xs",
+                     "color": "#C0392B", "weight": "bold", "margin": "sm"},
+                    {"type": "button", "style": "primary", "color": "#C0392B", "height": "sm",
                      "action": {"type": "message", "label": "🔍 防詐辨識",
                                 "text": "防詐辨識"}},
-                    {"type": "button", "style": "primary", "color": "#1C2B4A",
-                     "action": {"type": "message", "label": "⚖️ 法律常識小幫手",
+                    {"type": "button", "style": "primary", "color": "#1C2B4A", "height": "sm",
+                     "margin": "sm",
+                     "action": {"type": "message", "label": "⚖️ 法律常識",
                                 "text": "法律常識"}},
+                    {"type": "separator", "margin": "sm"},
+                    {"type": "text", "text": "💚 生活健康", "size": "xs",
+                     "color": "#2E7D32", "weight": "bold", "margin": "sm"},
+                    {"type": "button", "style": "primary", "color": "#43A047", "height": "sm",
+                     "action": {"type": "message", "label": "💪 健康小幫手",
+                                "text": "健康小幫手"}},
+                    {"type": "button", "style": "primary", "color": "#00897B", "height": "sm",
+                     "margin": "sm",
+                     "action": {"type": "message", "label": "💰 金錢小幫手",
+                                "text": "金錢小幫手"}},
+                    {"type": "separator", "margin": "sm"},
+                    {"type": "text", "text": "🍽️ 今日生活", "size": "xs",
+                     "color": "#E65100", "weight": "bold", "margin": "sm"},
+                    {"type": "button", "style": "primary", "color": "#E65100", "height": "sm",
+                     "action": {"type": "message", "label": "🍽️ 今天吃什麼",
+                                "text": "今天吃什麼"}},
+                    {"type": "button", "style": "primary", "color": "#5C6BC0", "height": "sm",
+                     "margin": "sm",
+                     "action": {"type": "message", "label": "🗓️ 周末去哪",
+                                "text": "周末去哪"}},
                 ]
             }
         }
@@ -2013,17 +2417,29 @@ def handle_text_message(text: str) -> list:
         return build_compare_price_message(text)
 
     # ── 4.6 健康小幫手 ───────────────────────────────
-    if any(w in text for w in ["健康", "BMI", "bmi", "身高", "體重", "減肥", "瘦身",
+    if any(w in text for w in ["健康小幫手", "健康", "BMI", "bmi", "身高", "體重", "減肥", "瘦身",
                                 "失眠", "睡不著", "睡眠", "睡不好", "壓力大", "焦慮",
                                 "減重", "肥胖", "運動建議", "睡眠改善", "壓力紓解",
-                                "幫我算BMI", "壓力紓解"]):
+                                "幫我算BMI"]):
         return build_health_message(text)
 
     # ── 4.7 金錢小幫手 ───────────────────────────────
-    if any(w in text for w in ["存錢", "理財", "月薪", "薪水", "薪資", "預算規劃",
+    if any(w in text for w in ["金錢小幫手", "存錢", "理財", "月薪", "薪水", "薪資", "預算規劃",
                                 "信用卡", "循環利息", "保險", "醫療險", "儲蓄",
                                 "記帳", "怎麼存", "信用卡使用", "保險建議", "金錢"]):
         return build_money_message(text)
+
+    # ── 4.8 今天吃什麼 ──────────────────────────────
+    if any(w in text for w in ["吃什麼", "吃啥", "晚餐", "午餐", "早餐",
+                                "吃飯", "外食", "今天吃", "推薦餐廳", "餐廳推薦",
+                                "吃什麼好", "要吃什麼"]):
+        return build_food_message(text)
+
+    # ── 4.9 周末活動 ────────────────────────────────
+    if any(w in text for w in ["周末", "週末", "假日", "出去玩", "去哪玩",
+                                "活動推薦", "景點推薦", "玩什麼", "去哪裡",
+                                "踏青", "咖啡廳", "親子", "週末活動"]):
+        return build_activity_message(text)
 
     # ── 5. 防詐辨識 ──────────────────────────────────
     if any(w in text for w in ["防詐", "詐騙", "可疑", "165", "是詐騙嗎", "防詐辨識"]):
