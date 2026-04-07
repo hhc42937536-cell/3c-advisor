@@ -177,10 +177,29 @@ def filter_products(products: list, budget: int, uses: list) -> list:
             if any(w in name_lower for w in ["電競", "rog", "gaming", "rtx", "效能"]):
                 score += 10
             if "game" in for_user:
-                score += 10   # 桌機 for_user 命中
-        if "工作" in uses or "創作" in uses:
-            if "create" in for_user or "work" in for_user:
+                score += 10
+        if "工作" in uses:
+            if "work" in for_user:
                 score += 8
+            if any(w in name_lower for w in ["thinkpad", "商務", "business"]):
+                score += 5
+        if "創作" in uses:
+            if "create" in for_user:
+                score += 8
+            if any(w in name_lower for w in ["pro", "studio", "create", "creator", "m3", "m4", "rtx"]):
+                score += 5
+        if "追劇" in uses:
+            # OLED 螢幕、大螢幕、音效優先
+            if any(w in name_lower for w in ["oled", "amoled", "螢幕", "display", "音效", "dolby"]):
+                score += 8
+            if price < 20000:   # 追劇不需要太貴
+                score += 3
+        if "閱讀" in uses:
+            # 平板輕薄、長續航優先
+            if any(w in name_lower for w in ["mini", "air", "輕", "薄", "slim", "oled"]):
+                score += 8
+            if price < 25000:
+                score += 3
         if "學習" in uses or "學生" in uses:
             if "student" in for_user:
                 score += 6
@@ -196,7 +215,6 @@ def filter_products(products: list, budget: int, uses: list) -> list:
         if "日常" in uses or "一般" in uses:
             if "general" in for_user:
                 score += 5
-            # 不限預算時，日常用途讓中高價也能出現（按分+價格均衡排序）
             if budget >= 999999 and price <= 50000:
                 score += 2
 
@@ -350,13 +368,17 @@ def build_suitability_message(product_name: str) -> list:
     found = None
     if device:
         search_lower = product_name.lower()
+        best_len = 0
         for p in db.get(device, []):
             p_name = p.get("name", "").lower()
-            p_brand = p.get("brand", "").lower()
-            # 用前20字元做精確比對，避免品牌名相同導致永遠匹配第一個
-            if p_name[:20] and p_name[:20] in search_lower:
-                found = p
-                break
+            # 找「最長前綴」匹配：誰的名稱前N字在搜尋字串裡出現最長，就是正確的產品
+            check_len = min(len(p_name), 40)
+            for l in range(check_len, 9, -1):
+                if p_name[:l] in search_lower:
+                    if l > best_len:
+                        best_len = l
+                        found = p
+                    break
 
     search_q  = urllib.parse.quote(product_name)
     biggo_url = f"https://biggo.com.tw/s/{search_q}"
@@ -1489,8 +1511,8 @@ def handle_text_message(text: str) -> list:
             # 將問卷用途對應到 filter_products 的 uses 清單
             use_map = {
                 "拍照": ["拍照"], "遊戲": ["遊戲"], "追劇": ["追劇"],
-                "工作": ["工作"], "學習": ["學生"], "創作": ["工作"],
-                "日常": [], "閱讀": [],
+                "工作": ["工作"], "學習": ["學生"], "創作": ["創作"],
+                "日常": ["日常"], "閱讀": ["閱讀"],
             }
             uses = use_map.get(use, [])
             if who == "長輩":
