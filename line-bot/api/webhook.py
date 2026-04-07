@@ -1317,6 +1317,37 @@ def build_activity_menu() -> list:
              }}]
 
 
+def build_activity_area_picker(category: str) -> list:
+    """周末活動 — 選擇城市"""
+    colors = {"戶外踏青": "#43A047", "文青咖啡": "#795548", "親子同樂": "#1E88E5",
+              "運動健身": "#E53935", "吃喝玩樂": "#FB8C00"}
+    color = colors.get(category, "#5B9BD5")
+    areas = ["台北", "新北", "桃園", "新竹", "台中", "台南", "高雄", "屏東", "宜蘭", "花蓮", "嘉義", "南投"]
+    buttons = []
+    for i in range(0, len(areas), 3):
+        row = areas[i:i+3]
+        buttons.append({
+            "type": "box", "layout": "horizontal", "spacing": "sm",
+            "contents": [
+                {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                 "action": {"type": "message", "label": a, "text": f"周末 {category} {a}"}}
+                for a in row
+            ]
+        })
+    return [{"type": "flex", "altText": f"周末{category}在哪個城市？",
+             "contents": {
+                 "type": "bubble",
+                 "header": {"type": "box", "layout": "vertical", "backgroundColor": color,
+                            "contents": [
+                                {"type": "text", "text": "🗓️ 你在哪個城市？",
+                                 "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                                {"type": "text", "text": f"選擇後推薦你附近的「{category}」景點",
+                                 "color": "#FFFFFFBB", "size": "xs", "margin": "xs"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": buttons},
+             }}]
+
+
 def build_activity_message(text: str) -> list:
     """周末活動 — 主路由"""
     text_s = text.strip()
@@ -1347,6 +1378,9 @@ def build_activity_message(text: str) -> list:
 
     if not category:
         return build_activity_menu()
+    # 有類別但沒指定區域 → 先問在哪個城市
+    if not area:
+        return build_activity_area_picker(category)
     return build_activity_flex(category, area)
 
 
