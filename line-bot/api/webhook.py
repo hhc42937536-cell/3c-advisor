@@ -7490,18 +7490,8 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     if any(w in text for w in ["更多功能", "其他工具", "還有什麼", "其他功能", "工具箱", "所有工具", "生活工具"]):
         return build_tools_menu()
 
-    # ── 找車位（手動模式：GPS 無法取得時，請用 LINE 原生位置分享）──
-    if text == "找車位手動":
-        return [{"type": "text",
-                 "text": "📍 手動分享位置步驟：\n\n"
-                         "點聊天室下方的 ➕\n"
-                         "→ 選「位置」\n"
-                         "→ 確認位置後送出\n\n"
-                         "Bot 收到後立刻幫你查附近停車場 🅿️"}]
-
     # ── 找車位 ──────────────────────────────────────────
     if any(w in text for w in ["找車位", "車位", "停車", "停車場", "哪裡停車", "附近停車"]):
-        liff_url = "https://liff.line.me/2009774625-KwBrQAbV?action=parking"
         return [{"type": "flex", "altText": "🅿️ 找附近停車位",
                  "contents": {
                      "type": "bubble", "size": "mega",
@@ -7519,37 +7509,32 @@ def handle_text_message(text: str, user_id: str = "") -> list:
                               "align": "center"},
                              {"type": "separator", "margin": "lg", "color": "#ffffff20"},
                              {"type": "box", "layout": "vertical", "margin": "lg",
-                              "spacing": "sm", "contents": [
+                              "spacing": "md", "contents": [
                                  {"type": "box", "layout": "horizontal", "spacing": "sm",
                                   "contents": [
                                      {"type": "text", "text": "①", "color": "#26A69A",
-                                      "size": "sm", "flex": 0},
+                                      "size": "md", "weight": "bold", "flex": 0},
                                      {"type": "text", "wrap": True, "size": "sm",
                                       "color": "#CCD6F6",
-                                      "text": "點下方按鈕開啟定位"},
+                                      "text": "點聊天室下方的  ➕"},
                                  ]},
                                  {"type": "box", "layout": "horizontal", "spacing": "sm",
                                   "contents": [
                                      {"type": "text", "text": "②", "color": "#26A69A",
-                                      "size": "sm", "flex": 0},
+                                      "size": "md", "weight": "bold", "flex": 0},
                                      {"type": "text", "wrap": True, "size": "sm",
                                       "color": "#CCD6F6",
-                                      "text": "允許位置存取"},
+                                      "text": "選「位置」"},
                                  ]},
                                  {"type": "box", "layout": "horizontal", "spacing": "sm",
                                   "contents": [
                                      {"type": "text", "text": "③", "color": "#26A69A",
-                                      "size": "sm", "flex": 0},
+                                      "size": "md", "weight": "bold", "flex": 0},
                                      {"type": "text", "wrap": True, "size": "sm",
                                       "color": "#CCD6F6",
-                                      "text": "Bot 自動顯示附近停車場與空位數"},
+                                      "text": "確認位置後送出，Bot 立刻顯示附近停車場與空位"},
                                  ]},
                              ]},
-                             {"type": "button", "style": "primary", "color": "#26A69A",
-                              "margin": "xl",
-                              "action": {"type": "uri",
-                                         "label": "📍 一鍵找附近停車場",
-                                         "uri": liff_url}},
                          ]
                      }
                  }}]
@@ -9423,26 +9408,6 @@ class handler(BaseHTTPRequestHandler):
                             import traceback; traceback.print_exc()
                             push_message(user_id, [{"type": "text", "text": "定位失敗，請稍後再試 🙏"}])
                         continue
-                    # LIFF 自動定位並執行動作（格式：__city_action__:台北:天氣）
-                    if user_text.startswith("__city_action__:"):
-                        try:
-                            parts = user_text.split(":", 2)
-                            city = parts[1].strip() if len(parts) > 1 else ""
-                            action = parts[2].strip() if len(parts) > 2 else ""
-                            import re as _re
-                            all_cities_pat = "|".join(_ALL_CITIES)
-                            city_m = _re.search(rf"({all_cities_pat})", city)
-                            if city_m:
-                                city = city_m.group(1)
-                                _set_user_city(user_id, city)
-                            if action:
-                                msgs = handle_text_message(action, user_id=user_id)
-                                reply_message(reply_token, msgs)
-                                log_usage(user_id, "city_action", sub_action=f"liff_{action}")
-                        except Exception as ca_e:
-                            print(f"[webhook] city_action error: {ca_e}")
-                        continue
-
                     # 判斷功能類別（用於 log，不影響路由）
                     _feature, _sub = _detect_feature(user_text)
                     try:

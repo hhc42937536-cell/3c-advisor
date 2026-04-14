@@ -257,12 +257,12 @@
 
     <!-- Row 1: 吃什麼 + 近期活動 -->
     <div class="grid-2">
-      <div class="card card-food" onclick="autoLocateAndSend('今天吃什麼')">
+      <div class="card card-food" onclick="send('今天吃什麼')">
         <div class="card-img-placeholder">🍜</div>
         <div class="card-name">吃什麼</div>
         <div class="card-desc">3秒決定<br>今天吃啥</div>
       </div>
-      <div class="card card-event" onclick="autoLocateAndSend('近期活動')">
+      <div class="card card-event" onclick="send('近期活動')">
         <div class="card-img-placeholder">🗓️</div>
         <div class="card-name">近期活動</div>
         <div class="card-desc">周末<br>去哪玩</div>
@@ -271,7 +271,7 @@
 
     <!-- Row 2: 找車位 + 健康 -->
     <div class="grid-2">
-      <div class="card card-park" id="parking-card" onclick="findParking()">
+      <div class="card card-park" id="parking-card" onclick="send('找車位')">
         <div class="card-img-placeholder">🅿️</div>
         <div class="card-name">找車位</div>
         <div class="card-desc" id="parking-desc">附近空位<br>即時查詢</div>
@@ -300,7 +300,7 @@
     <!-- 小工具列 -->
     <div class="section-label" style="margin-top:4px">快速工具</div>
     <div class="grid-3">
-      <div class="small-card" onclick="autoLocateAndSend('天氣')">
+      <div class="small-card" onclick="send('天氣')">
         <div class="small-icon">🌤️</div>
         <div class="small-name">天氣</div>
       </div>
@@ -462,77 +462,11 @@ async function send(message) {
   }
 }
 
-// 找車位：自動抓 GPS → 直接傳位置給 Bot（不需要手動按「分享」）
-function findParking() {
-  const card = document.getElementById('parking-card');
-  const desc = document.getElementById('parking-desc');
-
-  if (!navigator.geolocation) {
-    send('找車位');
-    return;
-  }
-
-  // 顯示定位中
-  card.style.opacity = '0.6';
-  card.style.pointerEvents = 'none';
-  desc.innerHTML = '定位中...<br>請稍候';
-
-  // 5 秒後若還沒回應，恢復卡片讓使用者重試
-  const fallbackTimer = setTimeout(() => {
-    resetParkingCard();
-    desc.innerHTML = '定位逾時<br>請再試一次';
-    setTimeout(() => { desc.innerHTML = '附近空位<br>即時查詢'; }, 2000);
-  }, 8000);
-
-  navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      clearTimeout(fallbackTimer);
-      const { latitude, longitude } = pos.coords;
-      desc.innerHTML = '傳送中...<br>即將顯示結果';
-      try {
-        await liff.sendMessages([{
-          type: 'location',
-          title: '我的目前位置',
-          address: '目前位置',
-          latitude: latitude,
-          longitude: longitude
-        }]);
-        liff.closeWindow();
-      } catch (e) {
-        // LIFF sendMessages 失敗（例如外部瀏覽器）→ fallback
-        resetParkingCard();
-        send('找車位');
-      }
-    },
-    (err) => {
-      clearTimeout(fallbackTimer);
-      resetParkingCard();
-      send('找車位');
-    },
-    { timeout: 8000, maximumAge: 60000, enableHighAccuracy: false }
-  );
-}
-
-function resetParkingCard() {
-  const card = document.getElementById('parking-card');
-  const desc = document.getElementById('parking-desc');
-  card.style.opacity = '1';
-  card.style.pointerEvents = '';
-  desc.innerHTML = '附近空位<br>即時查詢';
-}
-
 async function init() {
   try {
     await liff.init({ liffId: LIFF_ID });
 
-    // 若帶有 ?action=parking → 直接自動定位，不顯示主選單
     const params = new URLSearchParams(window.location.search);
-    if (params.get('action') === 'parking') {
-      document.getElementById('loading').querySelector('.loading-text').textContent = '定位中，請稍候...';
-      autoFindParking();
-      return;
-    }
-
     if (params.get('action') === 'morning') {
       autoLocateMorningCity();
       return;
@@ -541,7 +475,6 @@ async function init() {
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
 
-    // shareTargetPicker 只能在 LINE App 內使用，外部瀏覽器隱藏分享橫幅
     if (!liff.isInClient()) {
       const banner = document.getElementById('share-banner');
       if (banner) banner.style.display = 'none';
@@ -562,101 +495,7 @@ function setLoadingState(icon, text, sub, showBtn) {
   btnEl.style.display = showBtn ? 'block' : 'none';
 }
 
-// 從 Bot 連結直接觸發（不顯示主選單）
-function autoFindParking() {
-  // 手動按鈕「從一開始」就顯示，GPS 慢或無法取得時使用者不會卡住
-  setLoadingState('📡', '定位中，請稍候...', 'GPS 取得位置中，或點下方手動選擇', true);
-  const btn = document.getElementById('loading-btn');
-  btn.textContent = '📍 手動選擇位置';
-  btn.onclick = manualLocationFallback;
-
-  if (!navigator.geolocation) {
-    setLoadingState('⚠️', '裝置不支援定位', '請改用手動選擇位置', true);
-    btn.textContent = '📍 手動選擇位置';
-    btn.onclick = manualLocationFallback;
-    return;
-  }
-
-  let resolved = false;
-
-  // 保險用的 JS timer：10 秒後若 GPS 完全沒回應，更新提示文字
-  const hardTimer = setTimeout(() => {
-    if (!resolved) {
-      setLoadingState('⏱', '定位逾時', '請改用手動選擇位置', true);
-      btn.textContent = '📍 手動選擇位置';
-      btn.onclick = manualLocationFallback;
-    }
-  }, 10000);
-
-  navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      resolved = true;
-      clearTimeout(hardTimer);
-      const { latitude, longitude } = pos.coords;
-      setLoadingState('🔍', '找附近停車場中...', '', false);
-      try {
-        await liff.sendMessages([{
-          type: 'location',
-          title: '我的目前位置',
-          address: '目前位置',
-          latitude: latitude,
-          longitude: longitude
-        }]);
-        setLoadingState('✅', '已找到位置！', '稍後回到對話查看結果', false);
-        setTimeout(() => liff.closeWindow(), 600);
-      } catch (e) {
-        try {
-          await liff.sendMessages([{
-            type: 'text',
-            text: `__parking__:${latitude},${longitude}`
-          }]);
-          setLoadingState('✅', '已找到位置！', '稍後回到對話查看結果', false);
-          setTimeout(() => liff.closeWindow(), 600);
-        } catch (e2) {
-          setLoadingState('⚠️', '請重新開啟此連結', '首次使用需重新授權', false);
-          setTimeout(() => liff.closeWindow(), 2000);
-        }
-      }
-    },
-    (err) => {
-      resolved = true;
-      clearTimeout(hardTimer);
-      if (err.code === 1) {
-        setLoadingState('🔒', '定位權限未開啟', '', false);
-        openLocationSettings();
-      } else {
-        setLoadingState('⚠️', '定位失敗，請手動選擇', '', true);
-        btn.textContent = '📍 手動選擇位置';
-        btn.onclick = manualLocationFallback;
-      }
-    },
-    { timeout: 10000, maximumAge: 0, enableHighAccuracy: false }
-  );
-}
-
-function openLocationSettings() {
-  // iOS: 直接跳到 app 設定頁（開啟位置權限）
-  // app-settings: 在 WKWebView (LINE) 上會開啟 iOS 設定 → LINE → 位置
-  try {
-    window.location.href = 'app-settings:';
-  } catch(e) {}
-
-  // 同時更新畫面，讓使用者知道要做什麼
-  setTimeout(() => {
-    setLoadingState('🔒', '請開啟 LINE 定位權限', '設定 → LINE → 位置 → 使用 App 期間', true);
-    document.getElementById('loading-btn').textContent = '✅ 我已開啟，重新定位';
-    document.getElementById('loading-btn').onclick = () => autoFindParking();
-  }, 300);
-}
-
-async function manualLocationFallback() {
-  try {
-    await liff.sendMessages([{ type: 'text', text: '找車位手動' }]);
-  } catch(e) {}
-  liff.closeWindow();
-}
-
-// ── 共用：GPS 座標 → 台灣縣市名 ──────────────────────────────
+// 早安自動定位城市（GPS → Nominatim 反查 → 傳回 Bot）
 async function reverseGeocodeCity(latitude, longitude) {
   const resp = await fetch(
     `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=zh-TW`,
@@ -668,57 +507,6 @@ async function reverseGeocodeCity(latitude, longitude) {
   return raw.replace(/臺/g, '台').replace(/[市縣]$/, '');
 }
 
-// ── 共用：自動定位 → 傳送城市+動作給 Bot ────────────────────
-// action: '天氣' / '今天吃什麼' / '近期活動' 等
-function autoLocateAndSend(action) {
-  // 蓋上全屏 loading（隱藏主選單）
-  document.getElementById('app').classList.add('hidden');
-  document.getElementById('loading').classList.remove('hidden');
-  setLoadingState('📡', '自動定位中...', '取得位置後立即開啟', false);
-
-  // 5 秒後若還沒拿到位置，顯示「跳過」按鈕（不強制中斷 GPS）
-  const fallbackTimer = setTimeout(() => {
-    const btn = document.getElementById('loading-btn');
-    btn.textContent = '⏭ 跳過定位，直接開啟';
-    btn.onclick = () => {
-      clearTimeout(fallbackTimer);
-      liff.sendMessages([{ type: 'text', text: action }])
-        .then(() => liff.closeWindow())
-        .catch(() => liff.closeWindow());
-    };
-    btn.style.display = 'block';
-  }, 5000);
-
-  if (!navigator.geolocation) {
-    clearTimeout(fallbackTimer);
-    send(action);
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      clearTimeout(fallbackTimer);
-      try {
-        const city = await reverseGeocodeCity(pos.coords.latitude, pos.coords.longitude);
-        const msg = city ? `__city_action__:${city}:${action}` : action;
-        await liff.sendMessages([{ type: 'text', text: msg }]);
-      } catch (e) {
-        await liff.sendMessages([{ type: 'text', text: action }]).catch(() => {});
-      }
-      liff.closeWindow();
-    },
-    (err) => {
-      clearTimeout(fallbackTimer);
-      // 權限被拒或其他錯誤 → 直接送動作，Bot 用已存城市或顯示選單
-      liff.sendMessages([{ type: 'text', text: action }])
-        .then(() => liff.closeWindow())
-        .catch(() => liff.closeWindow());
-    },
-    { timeout: 8000, maximumAge: 0, enableHighAccuracy: false }
-  );
-}
-
-// 早安自動定位城市（GPS → Nominatim 反查 → 傳回 Bot）
 function autoLocateMorningCity() {
   setLoadingState('🌅', '偵測所在城市...', '正在取得你的 GPS 位置', false);
 
@@ -730,20 +518,18 @@ function autoLocateMorningCity() {
   }
 
   const fallbackTimer = setTimeout(() => {
-    const btn = document.getElementById('loading-btn');
-    btn.textContent = '關閉';
-    btn.onclick = () => liff.closeWindow();
-    btn.style.display = 'block';
-  }, 8000);
+    setLoadingState('⚠️', '定位逾時', '請回到對話手動選擇城市', true);
+    document.getElementById('loading-btn').textContent = '關閉';
+    document.getElementById('loading-btn').onclick = () => liff.closeWindow();
+  }, 10000);
 
   navigator.geolocation.getCurrentPosition(
     async (pos) => {
       clearTimeout(fallbackTimer);
-      const { latitude, longitude } = pos.coords;
       setLoadingState('🔍', '查詢所在縣市...', '', false);
       try {
-        const city = await reverseGeocodeCity(latitude, longitude);
-        if (!city) throw new Error('無法解析城市');
+        const city = await reverseGeocodeCity(pos.coords.latitude, pos.coords.longitude);
+        if (!city) throw new Error('no city');
         setLoadingState('✅', `偵測到：${city}`, '正在載入早安資訊...', false);
         await liff.sendMessages([{ type: 'text', text: `__morning_city__:${city}` }]);
         setTimeout(() => liff.closeWindow(), 600);
@@ -755,29 +541,12 @@ function autoLocateMorningCity() {
     },
     (err) => {
       clearTimeout(fallbackTimer);
-      if (err.code === 1) {
-        setLoadingState('🔒', '定位權限未開啟', '', false);
-        openLocationSettings();
-        setTimeout(() => {
-          document.getElementById('loading-btn').onclick = () => autoLocateMorningCity();
-        }, 350);
-      } else {
-        setLoadingState('⚠️', '定位失敗，請手動選擇', '', true);
-        document.getElementById('loading-btn').textContent = '關閉';
-        document.getElementById('loading-btn').onclick = () => liff.closeWindow();
-      }
+      setLoadingState('⚠️', '定位失敗', '請回到對話手動選擇城市', true);
+      document.getElementById('loading-btn').textContent = '關閉';
+      document.getElementById('loading-btn').onclick = () => liff.closeWindow();
     },
     { timeout: 10000, maximumAge: 60000, enableHighAccuracy: false }
   );
-}
-
-async function sendAndClose(message) {
-  try {
-    await liff.sendMessages([{ type: 'text', text: message }]);
-    liff.closeWindow();
-  } catch (e) {
-    liff.closeWindow();
-  }
 }
 
 init();
