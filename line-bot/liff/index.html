@@ -649,8 +649,11 @@ function openLocationSettings() {
   }, 300);
 }
 
-function manualLocationFallback() {
-  window.location.href = 'https://line.me/R/nv/location';
+async function manualLocationFallback() {
+  try {
+    await liff.sendMessages([{ type: 'text', text: '找車位手動' }]);
+  } catch(e) {}
+  liff.closeWindow();
 }
 
 // ── 共用：GPS 座標 → 台灣縣市名 ──────────────────────────────

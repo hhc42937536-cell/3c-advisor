@@ -7490,6 +7490,15 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     if any(w in text for w in ["更多功能", "其他工具", "還有什麼", "其他功能", "工具箱", "所有工具", "生活工具"]):
         return build_tools_menu()
 
+    # ── 找車位（手動模式：GPS 無法取得時，請用 LINE 原生位置分享）──
+    if text == "找車位手動":
+        return [{"type": "text",
+                 "text": "📍 手動分享位置步驟：\n\n"
+                         "點聊天室下方的 ➕\n"
+                         "→ 選「位置」\n"
+                         "→ 確認位置後送出\n\n"
+                         "Bot 收到後立刻幫你查附近停車場 🅿️"}]
+
     # ── 找車位 ──────────────────────────────────────────
     if any(w in text for w in ["找車位", "車位", "停車", "停車場", "哪裡停車", "附近停車"]):
         liff_url = "https://liff.line.me/2009774625-KwBrQAbV?action=parking"
