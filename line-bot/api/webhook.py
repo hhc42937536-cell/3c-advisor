@@ -4888,15 +4888,36 @@ def _fetch_quick_rates() -> dict:
         return {}
 
 
-def build_morning_summary(text: str) -> list:
+def _get_user_city(user_id: str) -> str:
+    """從 Redis 取得用戶上次使用的城市"""
+    if not user_id:
+        return ""
+    cached = _redis_get(f"user_city:{user_id}")
+    if cached and isinstance(cached, str):
+        return cached
+    return ""
+
+
+def _set_user_city(user_id: str, city: str):
+    """將用戶城市偏好存入 Redis（90 天）"""
+    if user_id and city:
+        _redis_set(f"user_city:{user_id}", city, ttl=86400 * 90)
+
+
+def build_morning_summary(text: str, user_id: str = "") -> list:
     """早安摘要：天氣 + 匯率 + 每日健康 tip"""
     import threading as _thr
     import datetime as _dt
 
-    # 城市偵測（預設台北）
+    # 城市偵測：文字指定 > Redis 記憶 > 預設台北
     all_cities_pat = "|".join(_ALL_CITIES)
     city_m = re.search(rf"({all_cities_pat})", text)
-    city = city_m.group(1) if city_m else "台北"
+    if city_m:
+        city = city_m.group(1)
+        _set_user_city(user_id, city)
+    else:
+        saved = _get_user_city(user_id)
+        city = saved if saved else "台北"
 
     # 平行抓天氣 + 匯率
     wx_result, rate_result = {}, {}
@@ -5036,13 +5057,13 @@ def build_morning_summary(text: str) -> list:
                 "spacing": "sm", "paddingAll": "10px",
                 "contents": [
                     {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                     "action": {"type": "message", "label": "🌤 查天氣",
+                     "action": {"type": "message", "label": "天氣",
                                 "text": f"{city}天氣"}},
                     {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                     "action": {"type": "message", "label": "🍽️ 吃什麼",
+                     "action": {"type": "message", "label": "吃什麼",
                                 "text": "今天吃什麼"}},
                     {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                     "action": {"type": "message", "label": "🗓️ 活動",
+                     "action": {"type": "message", "label": "活動",
                                 "text": "近期活動"}},
                 ]
             }
@@ -5050,12 +5071,13 @@ def build_morning_summary(text: str) -> list:
     }]
 
 
-def build_weather_message(text: str) -> list:
+def build_weather_message(text: str, user_id: str = "") -> list:
     """天氣模組主路由"""
     # 解析城市（全台 22 縣市）
     all_cities_pat = "|".join(_ALL_CITIES)
     city_m = re.search(rf"({all_cities_pat})", text)
     if city_m:
+        _set_user_city(user_id, city_m.group(1))
         return build_weather_flex(city_m.group(1))
 
     # 解析地區
@@ -6384,7 +6406,7 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     _morning_kw = ["早安", "早上好", "早啊", "早哦", "morning", "good morning", "早起了", "早安安"]
     if any(w in text_lower for w in _morning_kw):
         log_usage(user_id, "morning_summary")
-        return build_morning_summary(text)
+        return build_morning_summary(text, user_id=user_id)
 
     # ── 1. 打招呼 / 幫助 ────────────────────────────
     greetings = ["你好", "嗨", "hi", "hello", "哈囉", "安安", "開始", "幫助", "help", "選單", "功能"]
@@ -6423,7 +6445,7 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     # ── 4.5 天氣＋穿搭建議 ──────────────────────────────
     if any(w in text for w in ["天氣", "穿什麼", "穿搭", "氣溫", "幾度", "下雨嗎",
                                 "要帶傘", "帶傘", "氣象", "預報", "今天冷", "今天熱"]):
-        return build_weather_message(text)
+        return build_weather_message(text, user_id=user_id)
 
     # ── 4.6 今天吃什麼（比健康小幫手更早，避免「吃什麼 健康」被誤判）──
     # ── 4.61 聚餐推薦（比一般吃什麼更早攔截）──────────
