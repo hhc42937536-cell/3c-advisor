@@ -2,8 +2,8 @@ name: 每週更新活動資料（全台爬蟲）
 
 on:
   schedule:
-    # 每週一、五 UTC 14:00（台灣 22:00）自動跑
-    - cron: '0 14 * * 1,5'
+    # 每週一、三、五 UTC 14:00（台灣 22:00）自動跑
+    - cron: '0 14 * * 1,3,5'
   workflow_dispatch:   # 也可在 GitHub Actions 頁面手動觸發
 
 jobs:
