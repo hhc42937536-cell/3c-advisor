@@ -5484,18 +5484,40 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                             *action_items,
                         ]
                     },
-                    # ── 今日小驚喜 ──
+                    # ── 今日熱話題 / 好康 ──
                     {
                         "type": "box", "layout": "vertical",
                         "backgroundColor": "#FFF8E1",
                         "cornerRadius": "10px", "paddingAll": "12px", "spacing": "xs",
                         "contents": [
-                            {"type": "text", "text": f"{surprise_icon} 今日小驚喜",
+                            {"type": "text", "text": f"{surprise_icon} 今日熱話題",
                              "size": "xs", "color": "#E65100", "weight": "bold"},
                             {"type": "text", "text": surprise_title,
                              "size": "sm", "color": "#BF360C", "weight": "bold"},
                             {"type": "text", "text": surprise_body,
                              "size": "xs", "color": "#37474F", "wrap": True},
+                            {"type": "separator", "margin": "sm", "color": "#FFCC80"},
+                            {"type": "text", "text": "📱 更多即時好康",
+                             "size": "xxs", "color": "#E65100", "weight": "bold",
+                             "margin": "sm"},
+                            {"type": "box", "layout": "vertical", "spacing": "xs",
+                             "contents": [
+                                 {"type": "text",
+                                  "text": "• 好康情報誌（Threads）→ 限時餐飲優惠",
+                                  "size": "xxs", "color": "#1976D2", "wrap": True,
+                                  "action": {"type": "uri", "label": "好康情報誌",
+                                             "uri": "https://www.threads.com/@info.talk_tw"}},
+                                 {"type": "text",
+                                  "text": "• V 妞的旅行 → KKday 折扣碼＋信用卡",
+                                  "size": "xxs", "color": "#1976D2", "wrap": True,
+                                  "action": {"type": "uri", "label": "V妞的旅行",
+                                             "uri": "https://vniki.com/"}},
+                                 {"type": "text",
+                                  "text": "• 莉芙小姐愛旅遊 → Klook 折扣碼",
+                                  "size": "xxs", "color": "#1976D2", "wrap": True,
+                                  "action": {"type": "uri", "label": "莉芙小姐",
+                                             "uri": "https://nicklee.tw/"}},
+                             ]},
                         ]
                     },
                 ]
