@@ -4876,7 +4876,7 @@ def _estimate_uvi(wx: str, max_t: int) -> dict:
     return {"ok": True, "label": label}
 
 
-def build_weather_flex(city: str) -> list:
+def build_weather_flex(city: str, user_id: str = "") -> list:
     """天氣＋穿搭建議卡片"""
     w = _fetch_cwa_weather(city)
     if not w.get("ok"):
@@ -4992,11 +4992,6 @@ def build_weather_flex(city: str) -> list:
         ]},
     ]
 
-    others = [c for c in _WEATHER_CITIES if c != city][:4]
-    city_row = [{"type": "button", "style": "secondary", "flex": 1, "height": "sm",
-                 "action": {"type": "message", "label": c, "text": f"{c}天氣"}}
-                for c in others]
-
     food_label = "雨天吃什麼" if "雨" in w["wx"] else "今天吃什麼"
     food_text  = "吃什麼 享樂" if "雨" in w["wx"] else "今天吃什麼"
 
@@ -5044,11 +5039,17 @@ def build_weather_flex(city: str) -> list:
                                                  "label": food_label, "text": food_text}},
                                  ]},
                                 {"type": "box", "layout": "horizontal", "spacing": "sm",
-                                 "margin": "xs", "contents": city_row},
-                                {"type": "button", "style": "link", "height": "sm",
-                                 "action": {"type": "uri",
-                                            "label": "📤 傳給家人朋友提醒穿搭",
-                                            "uri": _weather_share_url}},
+                                 "contents": [
+                                     {"type": "button", "style": "secondary", "flex": 1,
+                                      "height": "sm",
+                                      "action": {"type": "message", "label": "📍 換城市",
+                                                 "text": "換城市"}},
+                                     {"type": "button", "style": "link", "flex": 1,
+                                      "height": "sm",
+                                      "action": {"type": "uri",
+                                                 "label": "📤 傳給家人朋友",
+                                                 "uri": _weather_share_url}},
+                                 ]},
                             ]},
              }}]
 
@@ -5948,12 +5949,17 @@ def build_weather_message(text: str, user_id: str = "") -> list:
     city_m = re.search(rf"({all_cities_pat})", text)
     if city_m:
         _set_user_city(user_id, city_m.group(1))
-        return build_weather_flex(city_m.group(1))
+        return build_weather_flex(city_m.group(1), user_id=user_id)
 
     # 解析地區
     for r in _AREA_REGIONS:
         if r in text:
             return build_weather_city_picker(r)
+
+    # 沒有指定城市 → 自動用已儲存城市
+    saved = _get_user_city(user_id) if user_id else ""
+    if saved:
+        return build_weather_flex(saved, user_id=user_id)
 
     return build_weather_region_picker()
 
@@ -7333,6 +7339,9 @@ def handle_text_message(text: str, user_id: str = "") -> list:
         return build_compare_price_message(text)
 
     # ── 4.5 天氣＋穿搭建議 ──────────────────────────────
+    if text in ("換城市",):
+        return build_weather_region_picker()
+
     if any(w in text for w in ["天氣", "穿什麼", "穿搭", "氣溫", "幾度", "下雨嗎",
                                 "要帶傘", "帶傘", "氣象", "預報", "今天冷", "今天熱"]):
         return build_weather_message(text, user_id=user_id)
