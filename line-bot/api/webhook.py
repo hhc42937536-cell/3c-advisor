@@ -5103,8 +5103,13 @@ def _build_morning_city_picker() -> list:
                 "type": "box", "layout": "vertical",
                 "spacing": "sm", "paddingAll": "14px",
                 "contents": [
-                    {"type": "text", "text": "🏙️ 常用城市", "size": "sm",
-                     "weight": "bold", "color": "#37474F"},
+                    {"type": "button", "style": "primary", "height": "sm",
+                     "color": "#2E7D32",
+                     "action": {"type": "uri", "label": "📍 自動定位（出差/旅遊適用）",
+                                "uri": "https://liff.line.me/2009774625-KwBrQAbV?action=morning"}},
+                    {"type": "separator", "margin": "sm"},
+                    {"type": "text", "text": "🏙️ 或手動選擇城市", "size": "sm",
+                     "weight": "bold", "color": "#37474F", "margin": "sm"},
                     *buttons,
                     {"type": "separator", "margin": "md"},
                     {"type": "text", "text": "📍 其他縣市", "size": "xs",
@@ -5250,18 +5255,25 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                 ]
             },
             "footer": {
-                "type": "box", "layout": "horizontal",
-                "spacing": "sm", "paddingAll": "10px",
+                "type": "box", "layout": "vertical",
+                "spacing": "xs", "paddingAll": "10px",
                 "contents": [
-                    {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                     "action": {"type": "message", "label": "吃什麼",
-                                "text": "今天吃什麼"}},
-                    {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                     "action": {"type": "message", "label": "查活動",
-                                "text": "近期活動"}},
-                    {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                     "action": {"type": "message", "label": "健康",
-                                "text": "健康小幫手"}},
+                    {"type": "box", "layout": "horizontal", "spacing": "sm",
+                     "contents": [
+                         {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                          "action": {"type": "message", "label": "吃什麼",
+                                     "text": "今天吃什麼"}},
+                         {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                          "action": {"type": "message", "label": "查活動",
+                                     "text": "近期活動"}},
+                         {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                          "action": {"type": "message", "label": "健康",
+                                     "text": "健康小幫手"}},
+                     ]},
+                    {"type": "button", "style": "secondary", "height": "sm",
+                     "color": "#ECEFF1",
+                     "action": {"type": "uri", "label": f"📍 換城市（現在：{city}）",
+                                "uri": "https://liff.line.me/2009774625-KwBrQAbV?action=morning"}},
                 ]
             }
         }
@@ -8650,6 +8662,26 @@ class handler(BaseHTTPRequestHandler):
                     reply_token = event.get("replyToken", "")
                     user_text = event["message"]["text"]
                     print(f"[webhook] user said: {user_text}")
+
+                    # LIFF 早安自動定位隱藏指令（格式：__morning_city__:台北）
+                    if user_text.startswith("__morning_city__:"):
+                        try:
+                            city = user_text.split(":", 1)[1].strip()
+                            all_cities_pat = "|".join(_ALL_CITIES)
+                            import re as _re
+                            city_m = _re.search(rf"({all_cities_pat})", city)
+                            if city_m:
+                                city = city_m.group(1)
+                                _set_user_city(user_id, city)
+                                msgs = build_morning_summary(city, user_id=user_id)
+                                reply_message(reply_token, msgs)
+                                log_usage(user_id, "morning_summary", sub_action="liff_locate")
+                            else:
+                                reply_message(reply_token, _build_morning_city_picker())
+                        except Exception as me:
+                            print(f"[webhook] morning_city error: {me}")
+                            reply_message(reply_token, _build_morning_city_picker())
+                        continue
 
                     # LIFF 自動定位隱藏指令（格式：__parking__:lat,lon）
                     if user_text.startswith("__parking__:"):
