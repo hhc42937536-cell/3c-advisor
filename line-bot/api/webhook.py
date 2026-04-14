@@ -3297,9 +3297,10 @@ def build_food_menu() -> list:
         "輕食":    ("輕食",    "吃什麼 輕食"),
     }
     _period_order = {
-        "M": ["早午餐", "飲料甜點", "輕食", "便當", "麵食", "小吃", "日韓", "火鍋"],
-        "D": ["便當",   "麵食",    "小吃", "日韓", "輕食", "早午餐", "飲料甜點", "火鍋"],
-        "N": ["火鍋",   "日韓",    "麵食", "便當", "小吃", "飲料甜點", "輕食", "早午餐"],
+        # 飲料甜點固定放 index 6（第三排 2 格列），避免 3 格列截字
+        "M": ["早午餐", "輕食",  "便當", "麵食", "小吃", "日韓", "飲料甜點", "火鍋"],
+        "D": ["便當",   "麵食",  "小吃", "日韓", "輕食", "早午餐", "飲料甜點", "火鍋"],
+        "N": ["火鍋",   "日韓",  "麵食", "便當", "小吃", "輕食",  "飲料甜點", "早午餐"],
     }
     order = _period_order.get(period, _period_order["D"])
 
@@ -5660,26 +5661,6 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                                 "size": "xxs", "color": "#C62828", "weight": "bold",
                                 "margin": "sm"},
                                *ptt_deal_items] if ptt_deal_items else []),
-                            # 精選好康來源
-                            {"type": "separator", "margin": "sm", "color": "#FFCC80"},
-                            {"type": "text", "text": "📱 深度好康情報",
-                             "size": "xxs", "color": "#1565C0", "weight": "bold",
-                             "margin": "sm"},
-                            {"type": "text",
-                             "text": "• 好康情報誌（Threads）→ 限時餐飲優惠",
-                             "size": "xxs", "color": "#1976D2", "wrap": True,
-                             "action": {"type": "uri", "label": "好康情報誌",
-                                        "uri": "https://www.threads.com/@info.talk_tw"}},
-                            {"type": "text",
-                             "text": "• V 妞的旅行 → KKday 折扣碼＋信用卡",
-                             "size": "xxs", "color": "#1976D2", "wrap": True,
-                             "action": {"type": "uri", "label": "V妞的旅行",
-                                        "uri": "https://vniki.com/"}},
-                            {"type": "text",
-                             "text": "• 莉芙小姐愛旅遊 → Klook 折扣碼",
-                             "size": "xxs", "color": "#1976D2", "wrap": True,
-                             "action": {"type": "uri", "label": "莉芙小姐",
-                                        "uri": "https://nicklee.tw/"}},
                         ]
                     },
                 ]
