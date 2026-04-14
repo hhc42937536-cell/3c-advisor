@@ -2814,20 +2814,26 @@ def build_bib_gourmand_flex(area: str = "") -> list:
 _FEEDBACK_LOG = []  # 暫存在記憶體，定期匯出
 
 
-def handle_food_feedback(text: str) -> list:
-    """處理使用者對餐廳的回饋（好吃/倒閉）"""
+def handle_food_feedback(text: str, user_id: str = "") -> list:
+    """處理使用者對餐廳的回饋（好吃/倒閉），並推播通知開發者"""
     import datetime as _dt
     ts = (_dt.datetime.utcnow() + _dt.timedelta(hours=8)).strftime("%Y-%m-%d %H:%M")
 
     if "好吃" in text:
         shop = text.replace("回報", "").replace("好吃", "").strip()
         _FEEDBACK_LOG.append({"shop": shop, "type": "good", "time": ts})
+        if ADMIN_USER_ID:
+            push_message(ADMIN_USER_ID, [{"type": "text",
+                "text": f"👍 使用者回報好吃\n店家：{shop}\n時間：{ts}\nUID：{user_id[:10]}..."}])
         return [{"type": "text", "text":
                  f"👍 感謝推薦！已記錄「{shop}」為好吃店家 🎉\n"
                  f"你的回饋會幫助其他使用者找到更好的餐廳！"}]
     elif "倒閉" in text or "歇業" in text:
         shop = text.replace("回報", "").replace("倒閉", "").replace("歇業", "").strip()
         _FEEDBACK_LOG.append({"shop": shop, "type": "closed", "time": ts})
+        if ADMIN_USER_ID:
+            push_message(ADMIN_USER_ID, [{"type": "text",
+                "text": f"❌ 使用者回報歇業\n店家：{shop}\n時間：{ts}\nUID：{user_id[:10]}..."}])
         return [{"type": "text", "text":
                  f"❌ 感謝回報！已標記「{shop}」可能歇業 📝\n"
                  f"我們會在下次更新時確認並移除，謝謝你！"}]
@@ -6747,7 +6753,7 @@ def handle_text_message(text: str, user_id: str = "") -> list:
 
     # ── 0.1 使用者回饋（餐廳好吃/倒閉）──────
     if text.startswith("回報 "):
-        result = handle_food_feedback(text)
+        result = handle_food_feedback(text, user_id)
         if result:
             return result
 
