@@ -5688,10 +5688,10 @@ def build_welcome_message() -> list:
                                   "color": "#4527A0", "align": "center"},
                              ]},
                             {"type": "box", "flex": 1, "layout": "vertical",
-                             "action": {"type": "message", "label": "回饋", "text": "許願"},
+                             "action": {"type": "message", "label": "回報", "text": "回報"},
                              "contents": [
                                  {"type": "text", "text": "💡", "align": "center", "size": "md"},
-                                 {"type": "text", "text": "回饋", "size": "xxs",
+                                 {"type": "text", "text": "回報", "size": "xxs",
                                   "color": "#6C5CE7", "align": "center"},
                              ]},
                         ]
@@ -7024,7 +7024,7 @@ def handle_text_message(text: str, user_id: str = "") -> list:
 
     # ── 功能建議 / 許願池 ──────────────────────────────
     if any(w in text for w in ["功能建議", "許願", "許願池", "我想要功能", "希望有功能",
-                                "功能回饋", "意見回饋", "回饋"]) or \
+                                "功能回報", "意見回報"]) or \
        text == "回報" or \
        (text.startswith("建議") and len(text) >= 4):
         # 取得使用者名稱（若有）
