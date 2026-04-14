@@ -27,6 +27,7 @@ CHANNEL_ACCESS_TOKEN = os.environ.get("LINE_CHANNEL_ACCESS_TOKEN", "")
 PRODUCTS_URL = os.environ.get("PRODUCTS_URL", "https://hhc42937536-cell.github.io/3c-advisor/products.json")
 # LINE Bot ID（用於分享邀請連結，格式：@xxxxxxxx，可在 LINE Developers 查到）
 LINE_BOT_ID = os.environ.get("LINE_BOT_ID", "")
+ADMIN_USER_ID = os.environ.get("ADMIN_USER_ID", "")  # 開發者 LINE userId，用於接收回饋通知
 
 # ─── Supabase 數據記錄 ────────────────────────────
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
@@ -139,6 +140,30 @@ def push_message(user_id: str, messages: list):
         print(f"[push] ERROR: {e}")
         if hasattr(e, 'read'):
             print(f"[push] BODY: {e.read().decode('utf-8','ignore')}")
+
+
+def _broadcast_message(text: str):
+    """廣播訊息給所有好友（LINE Messaging API broadcast）"""
+    if not CHANNEL_ACCESS_TOKEN:
+        return
+    data = json.dumps({
+        "messages": [{"type": "text", "text": text}],
+    }).encode("utf-8")
+    req = urllib.request.Request(
+        "https://api.line.me/v2/bot/message/broadcast",
+        data=data,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {CHANNEL_ACCESS_TOKEN}",
+        },
+    )
+    try:
+        resp = urllib.request.urlopen(req, timeout=10)
+        print(f"[broadcast] SUCCESS: {resp.status}")
+    except Exception as e:
+        print(f"[broadcast] ERROR: {e}")
+        if hasattr(e, 'read'):
+            print(f"[broadcast] BODY: {e.read().decode('utf-8','ignore')}")
 
 
 def verify_signature(body: bytes, signature: str) -> bool:
@@ -2369,6 +2394,39 @@ def _build_group_result(city: str, dining_type: str) -> list:
 
 import random as _random
 
+# ── 食物關鍵字分類（入口觸發 + 分類解析共用）──
+_STYLE_KEYWORDS = {
+    "便當": ["便當", "排骨", "雞腿", "控肉", "滷肉飯", "自助餐",
+             "燒臘", "豬腳", "雞肉飯", "焢肉", "魯肉飯", "飯", "燒肉飯", "咖哩飯"],
+    "麵食": ["麵", "拉麵", "牛肉麵", "乾麵", "河粉", "義大利",
+             "鍋燒", "涼麵", "麵線", "切仔", "米粉", "粄條", "刀削", "餛飩", "炒麵",
+             "擔仔麵", "陽春麵", "酸辣"],
+    "小吃": ["小吃", "蚵仔", "臭豆腐", "肉圓", "鹽酥雞", "雞排", "滷味", "水餃", "鍋貼",
+             "鹹水雞", "潤餅", "蔥油餅", "蔥抓餅", "大腸包小腸", "豬血糕", "碗粿",
+             "米糕", "筒仔米糕", "麻糬", "地瓜球", "春捲", "炸物", "香腸",
+             "關東煮", "雞蛋糕", "車輪餅", "紅豆餅", "章魚燒"],
+    "火鍋": ["火鍋", "麻辣", "薑母鴨", "羊肉爐", "豆腐鍋",
+             "涮涮鍋", "鍋物", "石頭鍋", "酸菜白肉", "牛奶鍋", "藥膳", "螃蟹鍋",
+             "壽喜燒", "泡菜鍋", "麻油雞"],
+    "日韓": ["日式", "日韓", "壽司", "丼飯", "韓式", "燒肉", "居酒屋", "咖哩",
+             "生魚片", "定食", "韓式炸雞", "拌飯", "炸豬排", "天婦羅",
+             "烏龍", "味噌", "鰻魚", "炸蝦", "石鍋", "部隊鍋", "年糕"],
+    "早午餐": ["早午餐", "早餐", "蛋餅", "飯糰", "燒餅", "吐司", "三明治",
+               "豆漿", "蘿蔔糕", "粥", "漢堡", "鬆餅", "可頌", "brunch",
+               "法式吐司", "班尼迪克蛋", "歐姆蛋"],
+    "飲料甜點": ["飲料", "甜點", "珍奶", "珍珠", "蛋糕", "咖啡", "豆花", "冰", "果汁", "奶茶",
+                 "仙草", "愛玉", "抹茶", "冰淇淋", "芋圓", "手搖", "茶", "可可",
+                 "鬆餅", "銅鑼燒", "甜湯", "紅豆湯", "花生湯", "湯圓"],
+    "輕食": ["輕食", "沙拉", "健康", "低卡", "減脂", "清爽", "優格", "燕麥",
+             "水煮餐", "蔬食", "素食", "無糖", "蛋白質", "健身餐", "貝果"],
+}
+# 扁平化所有食物關鍵字（供入口觸發用）
+# 排除太通用的短詞，避免誤觸（這些詞仍用於分類解析）
+_FOOD_TRIGGER_SKIP = {"麵", "飯", "冰", "茶", "粥", "健康", "早餐", "清爽"}
+_ALL_FOOD_KEYWORDS = set()
+for _kws in _STYLE_KEYWORDS.values():
+    _ALL_FOOD_KEYWORDS.update(w for w in _kws if w not in _FOOD_TRIGGER_SKIP)
+
 # 食物推薦庫（食物類型分類，像 foodpanda 的直覺式選擇）
 # m: "M"=早餐限定  "D"=午餐以後  "N"=晚餐消夜限定  ""=全天
 _FOOD_DB = {
@@ -2383,6 +2441,9 @@ _FOOD_DB = {
         {"name": "雞肉飯", "desc": "嘉義式雞肉飯，油蔥雞汁超香", "price": "~40–70元", "key": "雞肉飯", "m": "D"},
         {"name": "滷肉飯", "desc": "台灣庶民之光，便宜飽足又療癒", "price": "~35–60元", "key": "滷肉飯", "m": "D"},
         {"name": "超商便當", "desc": "加熱90秒上桌，不用挑不用等", "price": "~55–90元", "key": "超商便當", "m": ""},
+        {"name": "咖哩飯", "desc": "日式濃厚咖哩淋白飯，配福神漬超搭", "price": "~100–160元", "key": "咖哩飯", "m": "D"},
+        {"name": "燒肉飯", "desc": "炭烤醬燒肉片鋪飯上，鹹香停不下來", "price": "~90–130元", "key": "燒肉飯", "m": "D"},
+        {"name": "魯肉飯＋排骨湯", "desc": "滷肉飯加碗排骨湯，台灣人的日常奢華", "price": "~70–100元", "key": "魯肉飯", "m": "D"},
     ],
     "麵食": [
         {"name": "牛肉麵", "desc": "大塊牛腱＋濃郁湯底，台灣魂料理", "price": "~120–200元", "key": "牛肉麵", "m": "D"},
@@ -2395,6 +2456,11 @@ _FOOD_DB = {
         {"name": "蚵仔麵線", "desc": "滑溜麵線配大腸蚵仔，5分鐘吃完", "price": "~50–75元", "key": "蚵仔麵線", "m": "D"},
         {"name": "越南河粉", "desc": "清湯底蔬菜多，飽足感意外高", "price": "~100–140元", "key": "越南河粉", "m": "D"},
         {"name": "魚片湯麵", "desc": "清湯不油，腸胃弱也能吃", "price": "~100–130元", "key": "魚片湯麵", "m": "D"},
+        {"name": "擔仔麵", "desc": "台南經典，肉燥蝦仁小碗精緻", "price": "~50–80元", "key": "擔仔麵", "m": "D"},
+        {"name": "米粉湯", "desc": "清湯米粉配黑白切，台式速食", "price": "~40–70元", "key": "米粉湯", "m": "D"},
+        {"name": "炒麵", "desc": "醬油炒麵加荷包蛋，簡單但超香", "price": "~50–80元", "key": "炒麵", "m": "D"},
+        {"name": "餛飩湯麵", "desc": "薄皮大餡鮮肉餛飩，湯鮮麵Q", "price": "~70–100元", "key": "餛飩麵", "m": "D"},
+        {"name": "刀削麵", "desc": "手削厚實麵條，嚼勁十足配牛肉", "price": "~100–150元", "key": "刀削麵", "m": "D"},
     ],
     "小吃": [
         {"name": "蚵仔煎", "desc": "鮮蚵配甜辣醬，夜市經典第一名", "price": "~60–80元", "key": "蚵仔煎", "m": "D"},
@@ -2408,6 +2474,17 @@ _FOOD_DB = {
         {"name": "割包", "desc": "台版漢堡，控肉花生粉酸菜", "price": "~50–80元", "key": "刈包", "m": "D"},
         {"name": "胡椒餅", "desc": "炭烤酥皮包蔥肉，排隊也值得", "price": "~50–60元", "key": "胡椒餅", "m": "D"},
         {"name": "肉粽", "desc": "南部粽北部粽，帶著走的飽足感", "price": "~35–60元", "key": "肉粽", "m": ""},
+        {"name": "鹹水雞", "desc": "冰鎮雞肉配蒜蓉醬油，夏天必吃涼食", "price": "~80–150元", "key": "鹹水雞", "m": "N"},
+        {"name": "潤餅", "desc": "薄皮包花生粉豆芽蛋酥，清明不限定", "price": "~50–70元", "key": "潤餅", "m": "D"},
+        {"name": "蔥油餅", "desc": "煎到金黃酥脆，加蛋更邪惡", "price": "~30–50元", "key": "蔥油餅", "m": "D"},
+        {"name": "大腸包小腸", "desc": "糯米腸夾香腸，夜市雙拼經典", "price": "~60–80元", "key": "大腸包小腸", "m": "N"},
+        {"name": "豬血糕", "desc": "花生粉香菜醬油膏，外國人怕台灣人愛", "price": "~30–50元", "key": "豬血糕", "m": "D"},
+        {"name": "碗粿", "desc": "軟嫩米漿蒸糕配醬油膏，南部經典", "price": "~30–50元", "key": "碗粿", "m": "D"},
+        {"name": "筒仔米糕", "desc": "糯米蒸進竹筒，配甜辣醬超對味", "price": "~40–60元", "key": "筒仔米糕", "m": "D"},
+        {"name": "地瓜球", "desc": "QQ彈彈炸地瓜球，越吃越涮嘴", "price": "~40–60元", "key": "地瓜球", "m": "D"},
+        {"name": "關東煮", "desc": "蘿蔔竹輪魚板，暖呼呼一碗搞定", "price": "~50–80元", "key": "關東煮", "m": "D"},
+        {"name": "車輪餅", "desc": "奶油紅豆芋頭，銅板甜點隨買隨吃", "price": "~15–25元", "key": "車輪餅", "m": "D"},
+        {"name": "香腸", "desc": "烤得焦香配蒜頭，夜市散步必拿", "price": "~40–60元", "key": "烤香腸", "m": "N"},
     ],
     "火鍋": [
         {"name": "個人小火鍋", "desc": "一個人也能吃，湯底自選料夠多", "price": "~150–250元", "key": "個人小火鍋", "m": "D"},
@@ -2417,6 +2494,11 @@ _FOOD_DB = {
         {"name": "酸菜白肉鍋", "desc": "酸菜湯底配白肉，清爽解膩", "price": "~250–400元", "key": "酸菜白肉鍋", "m": "N"},
         {"name": "韓式豆腐鍋", "desc": "豆腐蔬菜蛋，低卡高蛋白暖胃", "price": "~150–200元", "key": "韓式豆腐鍋", "m": "D"},
         {"name": "海鮮鍋", "desc": "蝦蟹蛤蜊鮮甜湯底，海味滿滿", "price": "~300–500元", "key": "海鮮火鍋", "m": "N"},
+        {"name": "涮涮鍋", "desc": "一人一鍋現涮現吃，清湯養生", "price": "~200–350元", "key": "涮涮鍋", "m": "D"},
+        {"name": "壽喜燒", "desc": "甜鹹醬汁涮牛肉裹蛋液，日式經典", "price": "~300–500元", "key": "壽喜燒", "m": "N"},
+        {"name": "麻油雞", "desc": "麻油薑香暖全身，冬天進補首選", "price": "~200–350元", "key": "麻油雞", "m": "N"},
+        {"name": "泡菜鍋", "desc": "韓式辣泡菜配豬肉豆腐，酸辣開胃", "price": "~150–250元", "key": "泡菜鍋", "m": "D"},
+        {"name": "牛奶鍋", "desc": "濃郁奶香湯底，小朋友也愛", "price": "~200–300元", "key": "牛奶鍋", "m": "D"},
     ],
     "日韓": [
         {"name": "壽司", "desc": "迴轉壽司或超商壽司，清爽方便", "price": "~60–300元", "key": "壽司", "m": ""},
@@ -2427,6 +2509,12 @@ _FOOD_DB = {
         {"name": "咖哩飯", "desc": "日式咖哩配白飯，一盤解決", "price": "~120–180元", "key": "咖哩飯", "m": "D"},
         {"name": "居酒屋", "desc": "下班小酌串燒配啤酒，辛苦值了", "price": "~300–500元", "key": "居酒屋", "m": "N"},
         {"name": "韓式拌飯", "desc": "石鍋拌飯蔬菜蛋肉均衡，營養滿分", "price": "~150–250元", "key": "韓式拌飯", "m": "D"},
+        {"name": "炸豬排", "desc": "厚切酥炸豬排配高麗菜絲，吃完超滿足", "price": "~180–280元", "key": "炸豬排", "m": "D"},
+        {"name": "天婦羅", "desc": "炸蝦炸蔬菜輕薄酥脆，沾醬油最對味", "price": "~150–250元", "key": "天婦羅", "m": "D"},
+        {"name": "鰻魚飯", "desc": "蒲燒鰻魚配醬汁飯，奢華但值得", "price": "~300–500元", "key": "鰻魚飯", "m": "D"},
+        {"name": "生魚片丼", "desc": "新鮮生魚片鋪滿醋飯，海味滿滿", "price": "~200–400元", "key": "生魚片丼", "m": "D"},
+        {"name": "韓式炸雞", "desc": "甜辣醬裹酥脆炸雞，配啤酒絕配", "price": "~200–350元", "key": "韓式炸雞", "m": "N"},
+        {"name": "部隊鍋", "desc": "泡麵年糕香腸起司大雜燴，韓式暖胃", "price": "~250–400元", "key": "部隊鍋", "m": "N"},
     ],
     "早午餐": [
         {"name": "蛋餅＋豆漿", "desc": "台灣人的晨間能量補給站", "price": "~45–70元", "key": "早餐店", "m": "M"},
@@ -2439,6 +2527,9 @@ _FOOD_DB = {
         {"name": "漢堡＋奶茶", "desc": "西式早餐店套餐，簡單快速", "price": "~60–100元", "key": "早午餐", "m": "M"},
         {"name": "三明治＋紅茶", "desc": "帶著走的最速配組合", "price": "~50–80元", "key": "三明治", "m": "M"},
         {"name": "粥品", "desc": "清淡好消化，早餐吃粥最養胃", "price": "~50–80元", "key": "粥 台式", "m": "M"},
+        {"name": "鬆餅早午餐", "desc": "鬆餅配培根蛋，假日慢慢吃", "price": "~150–250元", "key": "鬆餅 早午餐", "m": "M"},
+        {"name": "可頌三明治", "desc": "酥脆可頌夾火腿起司，法式早餐", "price": "~80–130元", "key": "可頌", "m": "M"},
+        {"name": "法式吐司", "desc": "蛋液浸吐司煎到金黃，淋蜂蜜楓糖", "price": "~100–180元", "key": "法式吐司", "m": "M"},
     ],
     "飲料甜點": [
         {"name": "珍珠奶茶", "desc": "台灣國飲，心情不好來一杯就解決", "price": "~50–80元", "key": "珍珠奶茶", "m": ""},
@@ -2454,6 +2545,9 @@ _FOOD_DB = {
         {"name": "楊枝甘露", "desc": "芒果椰汁西米露，港式甜品經典", "price": "~80–150元", "key": "港式甜品", "m": "D"},
         {"name": "抹茶拿鐵", "desc": "日本宇治抹茶配鮮奶，苦甜平衡剛好", "price": "~80–130元", "key": "抹茶拿鐵", "m": ""},
         {"name": "冰淇淋", "desc": "義式濃縮口味多樣，隨心情換口味", "price": "~80–180元", "key": "冰淇淋", "m": "D"},
+        {"name": "紅豆湯＋湯圓", "desc": "冬天暖呼呼甜湯，加湯圓超滿足", "price": "~40–70元", "key": "紅豆湯 湯圓", "m": "D"},
+        {"name": "花生湯", "desc": "綿密花生甜湯，古早味暖胃甜品", "price": "~40–60元", "key": "花生湯", "m": "D"},
+        {"name": "手搖飲", "desc": "四季春烏龍鮮奶茶，下午三點必來一杯", "price": "~40–70元", "key": "手搖飲", "m": ""},
     ],
     "輕食": [
         {"name": "沙拉", "desc": "雞胸肉沙拉，超商或輕食店都有", "price": "~80–150元", "key": "沙拉 輕食", "m": ""},
@@ -2464,6 +2558,9 @@ _FOOD_DB = {
         {"name": "燕麥飲", "desc": "膳食纖維＋低糖，健康族首選", "price": "~30–50元", "key": "燕麥牛奶", "m": ""},
         {"name": "水煮餐", "desc": "健身族最愛，雞胸花椰菜糙米", "price": "~100–150元", "key": "水煮餐", "m": "D"},
         {"name": "蔬食便當", "desc": "素食自助餐，自選蔬菜控制油量", "price": "~80–110元", "key": "素食自助餐", "m": "D"},
+        {"name": "貝果", "desc": "嚼勁十足配酪梨或鮪魚，健康又飽足", "price": "~60–120元", "key": "貝果", "m": "M"},
+        {"name": "雞胸肉便當", "desc": "低脂高蛋白，健身族外食首選", "price": "~100–150元", "key": "健身餐", "m": "D"},
+        {"name": "豆腐料理", "desc": "涼拌豆腐或紅燒豆腐，高蛋白低熱量", "price": "~60–100元", "key": "豆腐料理", "m": "D"},
     ],
 }
 
@@ -2735,6 +2832,86 @@ def handle_food_feedback(text: str) -> list:
                  f"❌ 感謝回報！已標記「{shop}」可能歇業 📝\n"
                  f"我們會在下次更新時確認並移除，謝謝你！"}]
     return []
+
+
+# ── 使用者功能建議 / 許願回饋 ──
+def build_feedback_intro() -> list:
+    """顯示回饋引導卡片"""
+    return [{"type": "flex", "altText": "💡 功能建議",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {"type": "box", "layout": "vertical",
+                            "backgroundColor": "#6C5CE7", "paddingAll": "16px",
+                            "contents": [
+                                {"type": "text", "text": "💡 功能建議 / 許願池",
+                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"}
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "md",
+                          "paddingAll": "20px",
+                          "contents": [
+                              {"type": "text", "text": "想要什麼新功能？覺得哪裡可以更好？",
+                               "wrap": True, "size": "sm", "color": "#555555"},
+                              {"type": "separator", "margin": "md"},
+                              {"type": "text", "text": "📝 使用方式", "weight": "bold",
+                               "size": "sm", "margin": "md"},
+                              {"type": "text", "wrap": True, "size": "xs", "color": "#888888",
+                               "text": "直接打「建議 你想說的內容」\n\n"
+                                       "範例：\n"
+                                       "• 建議 希望有記帳功能\n"
+                                       "• 建議 食物推薦可以加素食選項\n"
+                                       "• 建議 天氣可以顯示紫外線指數"},
+                          ]},
+             }}]
+
+
+def handle_user_suggestion(text: str, user_id: str, display_name: str = "") -> list:
+    """處理使用者功能建議，推播通知給開發者"""
+    import datetime as _dt
+    ts = (_dt.datetime.utcnow() + _dt.timedelta(hours=8)).strftime("%Y-%m-%d %H:%M")
+
+    # 提取建議內容
+    content = text
+    for kw in ["建議", "許願", "功能建議", "我想要", "希望有", "回饋"]:
+        content = content.replace(kw, "").strip()
+
+    if len(content) < 2:
+        return build_feedback_intro()
+
+    # 回覆使用者
+    reply = [{"type": "text", "text":
+              f"💡 收到你的建議！\n\n"
+              f"「{content}」\n\n"
+              f"已送達開發者，感謝你讓生活優轉變得更好 🙏"}]
+
+    # 推播通知給開發者
+    if ADMIN_USER_ID:
+        name_str = f"（{display_name}）" if display_name else ""
+        push_message(ADMIN_USER_ID, [{"type": "flex", "altText": "💡 新功能建議",
+            "contents": {
+                "type": "bubble", "size": "mega",
+                "header": {"type": "box", "layout": "vertical",
+                           "backgroundColor": "#6C5CE7", "paddingAll": "16px",
+                           "contents": [
+                               {"type": "text", "text": "💡 新功能建議",
+                                "color": "#FFFFFF", "size": "lg", "weight": "bold"}
+                           ]},
+                "body": {"type": "box", "layout": "vertical", "spacing": "md",
+                         "paddingAll": "20px",
+                         "contents": [
+                             {"type": "text", "text": content,
+                              "wrap": True, "size": "md", "weight": "bold"},
+                             {"type": "separator", "margin": "md"},
+                             {"type": "box", "layout": "vertical", "margin": "md",
+                              "spacing": "sm", "contents": [
+                                  {"type": "text", "size": "xs", "color": "#888888",
+                                   "text": f"👤 {user_id[:10]}...{name_str}"},
+                                  {"type": "text", "size": "xs", "color": "#888888",
+                                   "text": f"🕐 {ts}"},
+                              ]},
+                         ]},
+            }}])
+
+    return reply
 
 
 # ── 餐廳資料庫（觀光署開放資料）──
@@ -3607,17 +3784,7 @@ def build_food_message(text: str) -> list:
 
     # ── 解析食物類型 ──
     style = ""
-    _style_keywords = {
-        "便當": ["便當", "排骨", "雞腿", "控肉", "滷肉飯", "自助餐"],
-        "麵食": ["麵", "拉麵", "牛肉麵", "乾麵", "河粉", "義大利"],
-        "小吃": ["小吃", "蚵仔", "臭豆腐", "肉圓", "鹽酥雞", "雞排", "滷味", "水餃", "鍋貼"],
-        "火鍋": ["火鍋", "麻辣", "薑母鴨", "羊肉爐", "豆腐鍋"],
-        "日韓": ["日式", "日韓", "壽司", "丼飯", "拉麵", "韓式", "燒肉", "居酒屋", "咖哩"],
-        "早午餐": ["早午餐", "早餐", "蛋餅", "飯糰", "燒餅", "吐司", "三明治"],
-        "飲料甜點": ["飲料", "甜點", "珍奶", "珍珠", "蛋糕", "咖啡", "豆花", "冰", "果汁", "奶茶"],
-        "輕食": ["輕食", "沙拉", "健康", "低卡", "減脂", "清爽", "優格", "燕麥"],
-    }
-    for cat, kws in _style_keywords.items():
+    for cat, kws in _STYLE_KEYWORDS.items():
         if any(w in text_s for w in kws):
             style = cat
             break
@@ -5463,6 +5630,13 @@ def build_welcome_message() -> list:
                                  {"type": "text", "text": "法律", "size": "xxs",
                                   "color": "#4527A0", "align": "center"},
                              ]},
+                            {"type": "box", "flex": 1, "layout": "vertical",
+                             "action": {"type": "message", "label": "許願", "text": "許願"},
+                             "contents": [
+                                 {"type": "text", "text": "💡", "align": "center", "size": "md"},
+                                 {"type": "text", "text": "許願", "size": "xxs",
+                                  "color": "#6C5CE7", "align": "center"},
+                             ]},
                         ]
                     }
                 ]
@@ -6513,10 +6687,11 @@ def build_compare_price_message(text: str) -> list:
 def _detect_feature(text: str) -> tuple:
     """從用戶文字快速分類功能（用於 log，不影響路由邏輯）回傳 (feature, sub_action)"""
     t = text.lower().strip()
-    if any(w in t for w in ["吃什麼", "吃甚麼", "吃啥", "晚餐", "午餐", "早餐", "餐廳", "必比登", "米其林"]):
+    if any(w in t for w in ["吃什麼", "吃甚麼", "吃啥", "晚餐", "午餐", "早餐", "餐廳", "必比登", "米其林"]) or \
+       any(w in t for w in _ALL_FOOD_KEYWORDS):
         # 嘗試抓食物類型
-        for style in ["便當", "麵食", "小吃", "火鍋", "日韓", "早午餐", "飲料", "輕食"]:
-            if style in t:
+        for style, kws in _STYLE_KEYWORDS.items():
+            if any(w in t for w in kws):
                 return ("food", style)
         return ("food", None)
     if any(w in t for w in ["天氣", "穿什麼", "穿搭", "氣溫", "幾度", "下雨", "帶傘"]):
@@ -6561,6 +6736,17 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     if text.startswith("這款適合我嗎"):
         product_name = text.replace("這款適合我嗎", "").strip()
         return build_suitability_message(product_name)
+
+    # ── 0.01 查詢自己的 LINE userId ──────
+    if text in ("我的ID", "我的id", "myid"):
+        return [{"type": "text", "text": f"你的 LINE userId：\n{user_id}\n\n📋 長按可複製，貼到 Vercel 環境變數 ADMIN_USER_ID"}]
+
+    # ── 0.05 管理員廣播（僅開發者可用）──────
+    if text.startswith("廣播 ") and user_id and user_id == ADMIN_USER_ID:
+        _bc_content = text[3:].strip()
+        if _bc_content:
+            _broadcast_message(_bc_content)
+            return [{"type": "text", "text": f"📢 已廣播給所有使用者：\n{_bc_content}"}]
 
     # ── 0.1 使用者回饋（餐廳好吃/倒閉）──────
     if text.startswith("回報 "):
@@ -6666,7 +6852,8 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     if any(w in text for w in ["吃什麼", "吃甚麼", "吃啥", "晚餐", "午餐", "早餐",
                                 "吃飯", "外食", "今天吃", "推薦餐廳", "餐廳推薦",
                                 "吃什麼好", "要吃什麼", "本週美食", "美食活動",
-                                "在地餐廳", "餐廳", "必比登", "米其林"]):
+                                "在地餐廳", "餐廳", "必比登", "米其林"]) or \
+       any(w in text for w in _ALL_FOOD_KEYWORDS):
         return build_food_message(text)
 
     # ── 4.7 健康小幫手（移除裸字「健康」，避免誤觸）──────
@@ -6776,6 +6963,23 @@ def handle_text_message(text: str, user_id: str = "") -> list:
                 }
             }
         }]
+
+    # ── 功能建議 / 許願池 ──────────────────────────────
+    if any(w in text for w in ["功能建議", "許願", "許願池", "我想要功能", "希望有功能",
+                                "功能回饋", "意見回饋"]) or \
+       (text.startswith("建議") and len(text) >= 4):
+        # 取得使用者名稱（若有）
+        _fb_name = ""
+        try:
+            _fb_profile_req = urllib.request.Request(
+                f"https://api.line.me/v2/bot/profile/{user_id}",
+                headers={"Authorization": f"Bearer {CHANNEL_ACCESS_TOKEN}"},
+            )
+            _fb_profile = json.loads(urllib.request.urlopen(_fb_profile_req, timeout=5).read())
+            _fb_name = _fb_profile.get("displayName", "")
+        except Exception:
+            pass
+        return handle_user_suggestion(text, user_id, _fb_name)
 
     if any(w in text for w in ["更多功能", "其他工具", "還有什麼", "其他功能", "工具箱", "所有工具", "生活工具"]):
         return build_tools_menu()
