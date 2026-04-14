@@ -4932,6 +4932,54 @@ def build_weather_flex(city: str) -> list:
         body.append({"type": "text", "text": umbrella, "size": "sm",
                      "color": "#1565C0", "weight": "bold", "margin": "sm"})
 
+    # UV 指數（規則估算，不需額外 API）
+    uvi = _estimate_uvi(w["wx"], w["max_t"])
+    if uvi.get("ok"):
+        body.append({"type": "text", "text": uvi["label"], "size": "sm",
+                     "color": "#E65100", "wrap": True, "margin": "xs"})
+
+    body.append({"type": "separator", "margin": "md"})
+
+    # ── 今日建議 ──────────────────────────────────────
+    _suggest = []
+    _tdiff = w["max_t"] - w["min_t"]
+    if _tdiff >= 10:
+        _suggest.append(f"🌡️ 今日溫差 {_tdiff}°C，外出一定要帶外套")
+    elif _tdiff >= 7:
+        _suggest.append(f"🌡️ 溫差 {_tdiff}°C，早晚記得加衣")
+
+    if "雨" in w["wx"] or w["pop"] >= 60:
+        _suggest.append("🏠 雨天最適合咖啡廳、室內逛街或窩在家")
+    elif w["max_t"] >= 33:
+        _suggest.append("🏊 高溫天，泳池或室內冷氣活動最涼快")
+    elif w["max_t"] >= 27 and ("晴" in w["wx"] or "多雲" in w["wx"]):
+        _suggest.append("🚴 好天氣！適合騎車、健行、戶外活動")
+    elif w["max_t"] <= 20:
+        _suggest.append("☕ 涼爽天，逛夜市、喝熱飲、散步心情好")
+    else:
+        _suggest.append("🌿 天氣舒適，外出走走心情好")
+
+    if aqi.get("ok"):
+        if aqi["aqi"] <= 50:
+            _suggest.append("💨 空氣品質良好，適合開窗通風")
+        elif aqi["aqi"] > 100:
+            _suggest.append("😷 空氣品質不佳，外出建議戴口罩")
+
+    _trend = w["max_tom"] - w["max_t"]
+    if _trend >= 3:
+        _suggest.append(f"📈 明天升溫 +{_trend}°C，越來越熱囉")
+    elif _trend <= -3:
+        _suggest.append(f"📉 明天降溫 {abs(_trend)}°C，多備一件衣")
+    elif "雨" in w["wx_tom"] and "雨" not in w["wx"]:
+        _suggest.append("🌧️ 明天有雨，今天記得把衣服收進來")
+
+    if _suggest:
+        body.append({"type": "text", "text": "💡 今日建議",
+                     "size": "sm", "weight": "bold", "color": "#37474F", "margin": "sm"})
+        for _s in _suggest:
+            body.append({"type": "text", "text": _s, "size": "xs",
+                         "color": "#555555", "wrap": True, "margin": "xs"})
+
     body += [
         {"type": "separator", "margin": "md"},
         # 明天預覽
@@ -5220,22 +5268,37 @@ _SURPRISES_FALLBACK = [
 ]
 
 
-def _get_ptt_deals_list(n: int = 3) -> list:
-    """取 n 筆 PTT 好康（每天輪播不同組）"""
+def _day_city_hash(doy: int, city: str, salt: int = 0) -> int:
+    """用日期+城市+salt 產生穩定隨機數，確保每城市每天看到不同內容"""
+    import hashlib
+    key = f"{doy}:{city}:{salt}"
+    return int(hashlib.md5(key.encode()).hexdigest()[:8], 16)
+
+
+def _get_ptt_deals_list(n: int = 3, city: str = "") -> list:
+    """取 n 筆好康（每天+每城市輪播不同組，含 PTT + Dcard）"""
     import datetime as _dt
     deals = _SURPRISE_CACHE.get("deals", []) if _SURPRISE_CACHE else []
     if not deals:
         return []
     doy = _dt.date.today().timetuple().tm_yday
+    # 城市+日期 hash 決定起始偏移，確保不同城市/不同天看到不同組合
+    offset = _day_city_hash(doy, city or "tw", salt=7)
     picks = []
-    for i in range(min(n, len(deals))):
-        idx = (doy * n + i) % len(deals)
-        picks.append(deals[idx])
+    seen = set()
+    for i in range(len(deals)):
+        idx = (offset + i) % len(deals)
+        title = deals[idx].get("title", "")
+        if title and title not in seen:
+            seen.add(title)
+            picks.append(deals[idx])
+            if len(picks) >= n:
+                break
     return picks
 
 
 def _get_morning_surprise(city: str, wx_result: dict) -> tuple:
-    """回傳 (icon, title, body)。特殊日期最優先，其餘每天輪播不同類型"""
+    """回傳 (icon, title, body)。特殊日期最優先，其餘城市+日期雙重 hash 輪播"""
     import datetime as _dt
     today = _dt.date.today()
     doy = today.timetuple().tm_yday
@@ -5249,24 +5312,25 @@ def _get_morning_surprise(city: str, wx_result: dict) -> tuple:
     # ── 收集所有可用的驚喜來源 ──
     candidates = []  # (type_name, surprise_tuple)
 
-    # 週期性優惠
+    # 週期性優惠（城市 hash 決定從哪個選項開始）
     weekly = _WEEKLY_DEALS.get(weekday, [])
     if weekly:
-        pick = weekly[doy % len(weekly)]
+        pick = weekly[_day_city_hash(doy, city, 1) % len(weekly)]
         candidates.append(("deal", pick))
 
     # 爬蟲：新歌
     songs = _SURPRISE_CACHE.get("songs", []) if _SURPRISE_CACHE else []
     if songs:
-        song = songs[doy % len(songs)]
+        song = songs[_day_city_hash(doy, city, 2) % len(songs)]
         candidates.append(("song", ("🎵", "今日推薦新歌",
             f"《{song.get('name','')}》— {song.get('artist','')}")))
 
-    # 爬蟲：PTT 優惠
+    # 爬蟲：好康（PTT + Dcard）
     deals = _SURPRISE_CACHE.get("deals", []) if _SURPRISE_CACHE else []
     if deals:
-        deal = deals[doy % len(deals)]
-        candidates.append(("ptt", ("🔥", "今日網友好康",
+        deal = deals[_day_city_hash(doy, city, 3) % len(deals)]
+        tag = deal.get("tag", "PTT")
+        candidates.append(("ptt", ("🔥", f"今日網友好康（{tag}）",
             deal.get("title", ""))))
 
     # Accupass 當地活動
@@ -5277,17 +5341,17 @@ def _get_morning_surprise(city: str, wx_result: dict) -> tuple:
             if isinstance(events, list):
                 city_events.extend(events)
         if city_events:
-            ev = city_events[doy % len(city_events)]
+            ev = city_events[_day_city_hash(doy, city, 4) % len(city_events)]
             candidates.append(("event", ("🎉", f"{city}近期活動",
                 f"{ev.get('name', '精彩活動')}，有空去看看～")))
 
-    # ── 用 day_of_year 輪播不同類型 ──
+    # ── 城市+日期 hash 決定今天看哪種類型（各城市不同）──
     if candidates:
-        pick = candidates[doy % len(candidates)]
+        pick = candidates[_day_city_hash(doy, city, 0) % len(candidates)]
         return pick[1]
 
     # ── 保底 ──
-    return _SURPRISES_FALLBACK[doy % len(_SURPRISES_FALLBACK)]
+    return _SURPRISES_FALLBACK[_day_city_hash(doy, city, 9) % len(_SURPRISES_FALLBACK)]
 
 
 def _fetch_quick_oil() -> dict:
@@ -5479,7 +5543,7 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     surprise_icon, surprise_title, surprise_body = _get_morning_surprise(city, wx_result)
 
     # 今日網友熱推 PTT 好康（3 筆輪播）
-    ptt_deals = _get_ptt_deals_list(3)
+    ptt_deals = _get_ptt_deals_list(3, city)
     ptt_deal_items = []
     for d in ptt_deals:
         title = (d.get("title") or "").strip()
