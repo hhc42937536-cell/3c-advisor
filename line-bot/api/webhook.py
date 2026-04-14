@@ -4872,48 +4872,131 @@ def _get_morning_actions() -> list:
     return result
 
 
-# ── 今日小驚喜 ──
-_SURPRISES_GENERAL = [
-    ("🎯", "今日挑戰", "試試看中午不滑手機，專心吃飯 15 分鐘"),
-    ("📸", "拍照挑戰", "今天拍一張讓你覺得美的照片，記錄生活小確幸"),
-    ("💌", "感恩時刻", "傳一句謝謝給最近幫過你的人，對方會很開心"),
-    ("🎲", "今日冒險", "午餐試一家沒吃過的店，也許會有驚喜！"),
-    ("📖", "閱讀 10 分鐘", "找一篇有趣的文章或書，讓腦袋換換口味"),
-    ("🌸", "觀察自然", "注意路邊的花草樹木，你會發現城市也很美"),
-    ("🎧", "聽一首新歌", "打開推薦歌單，讓今天有新的背景音樂"),
-    ("✍️", "寫下三件好事", "睡前寫下今天三件值得感謝的事，幸福感 UP"),
-    ("🧹", "整理一個角落", "花 5 分鐘整理桌面或包包，清爽一整天"),
-    ("😊", "對陌生人微笑", "今天對一個陌生人友善微笑，好心情會傳染"),
-    ("🍰", "獎勵自己", "今天做完該做的事，買個小點心犒賞自己"),
-    ("🤝", "約朋友聊天", "傳訊息給很久沒聯絡的朋友，約個時間聊聊"),
-    ("🌅", "看一次天空", "不管晴雨，今天抬頭看看天空 30 秒"),
-    ("🎁", "隨機善行", "幫同事帶杯飲料或幫忙開門，小舉動大溫暖"),
-]
+# ── 今日小驚喜：週期性優惠 ──
+# 格式：(icon, title, body)
+# 每個星期幾可放多條，當天隨機選一條
+_WEEKLY_DEALS = {
+    0: [  # 星期一
+        ("☕", "星巴克好友分享日", "指定飲品第二杯半價，揪同事一起喝！"),
+        ("🍔", "麥當勞振奮星期一", "大麥克套餐限時優惠，開啟新的一週"),
+        ("🛒", "全聯週一生鮮日", "指定蔬果肉品有折扣，下班順路買"),
+    ],
+    1: [  # 星期二
+        ("🧋", "CoCo 週二飲品日", "指定飲品第二杯優惠，下午茶時間到！"),
+        ("🍕", "必勝客週二大披薩日", "大披薩外帶特價，晚餐不用煩惱"),
+        ("📦", "momo 週二品牌日", "逛逛有沒有需要的東西在特價"),
+    ],
+    2: [  # 星期三
+        ("🍦", "全家霜淇淋日", "霜淇淋第二件半價，下午來一支消暑"),
+        ("☕", "路易莎週三咖啡日", "拿鐵系列有優惠，提神好時機"),
+        ("🎬", "威秀影城半價日", "部分場次電影半價，下班看場電影"),
+    ],
+    3: [  # 星期四
+        ("🍗", "肯德基瘋狂星期四", "指定套餐超值優惠，炸雞控必看"),
+        ("☕", "星巴克數位體驗日", "APP 會員獨享優惠，打開看看有什麼"),
+        ("🛍️", "蝦皮週四免運", "滿額免運門檻降低，該補貨的趁今天"),
+    ],
+    4: [  # 星期五
+        ("🍺", "TGIF！週五小確幸", "辛苦一週了，下班買杯飲料犒賞自己"),
+        ("🎉", "Uber Eats 週五優惠", "外送滿額折扣，在家舒服吃晚餐"),
+        ("🎮", "Steam 週末特賣", "看看有沒有想玩的遊戲在打折"),
+    ],
+    5: [  # 星期六
+        ("🌿", "假日農夫市集", "各地有農夫市集，新鮮蔬果等你逛"),
+        ("☕", "cama café 假日優惠", "假日外帶咖啡有折扣，出門帶一杯"),
+        ("🎪", "週末市集情報", "搜尋你附近的週末市集，吃喝逛一波"),
+    ],
+    6: [  # 星期日
+        ("🍳", "週日早午餐提案", "找家好吃的早午餐店，慢慢享受假日"),
+        ("📚", "誠品週日閱讀", "逛逛書店，也許會遇到一本好書"),
+        ("🛒", "家樂福週日生鮮特價", "一週食材採購日，趁特價補齊"),
+    ],
+}
 
-_SURPRISES_HOT = [
-    ("🧊", "消暑提案", "天氣熱，來杯自製檸檬水或仙草茶消暑～"),
-    ("🍦", "冰品放題", "今天很熱！下班來支冰棒犒賞自己吧"),
-    ("🌊", "涼快一下", "天氣炎熱，找個有冷氣的咖啡廳坐坐也不錯"),
-]
+# 特殊日期優惠（月/日 → deals）
+_SPECIAL_DEALS = {
+    (1, 1):   ("🎊", "新年快樂", "各大通路新年特賣中，逛逛有沒有好康！"),
+    (2, 14):  ("💝", "情人節快樂", "各大餐廳、甜點店推出情人節限定，約個人吃飯吧"),
+    (3, 8):   ("👩", "婦女節快樂", "不少品牌有女性專屬優惠，犒賞自己"),
+    (3, 14):  ("🍫", "白色情人節", "回禮日！甜點烘焙材料特價中"),
+    (4, 1):   ("😜", "愚人節", "小心被整！不過各品牌常推愚人節限定商品"),
+    (4, 4):   ("🧒", "兒童節", "遊樂園、親子餐廳有兒童節優惠"),
+    (5, 1):   ("💪", "勞動節快樂", "辛苦了！不少店家勞動節有特別優惠"),
+    (6, 18):  ("🛒", "618 年中慶", "momo、蝦皮、PChome 年中大促銷，趁機撿便宜"),
+    (7, 1):   ("🏖️", "暑假開始", "旅遊平台暑期早鳥優惠最後機會"),
+    (9, 1):   ("🎓", "開學季", "文具、3C 開學優惠中，學生族群看過來"),
+    (10, 10): ("🇹🇼", "國慶日快樂", "百貨週年慶陸續開跑，準備搶好康"),
+    (10, 31): ("🎃", "萬聖節", "超商、餐廳萬聖節限定商品登場"),
+    (11, 1):  ("🛍️", "雙11預熱", "各大電商雙11活動開始暖身，先加購物車"),
+    (11, 11): ("🛍️", "雙11來了！", "蝦皮/momo/PChome 年度最大折扣日，衝！"),
+    (12, 12): ("🛒", "雙12最後一波", "年末最後一波電商大促，錯過等明年"),
+    (12, 24): ("🎄", "聖誕快樂", "聖誕大餐/交換禮物/市集，享受節日氣氛"),
+    (12, 25): ("🎅", "Merry Christmas", "各大百貨聖誕特賣，甜點店限定款別錯過"),
+    (12, 31): ("🎆", "跨年夜", "跨年活動、演唱會、煙火資訊，準備迎接新年！"),
+}
 
-_SURPRISES_RAIN = [
-    ("☔", "雨天浪漫", "下雨天最適合窩在家看部好電影，配杯熱飲"),
-    ("🍜", "雨天食慾", "下雨天最適合來碗熱湯麵，暖胃又暖心"),
-    ("📚", "雨天閱讀", "雨聲配書本，今天找篇好文章慢慢讀"),
-]
 
-_SURPRISES_COLD = [
-    ("🍲", "暖暖的", "天冷來碗熱湯或薑茶，從裡暖到外"),
-    ("🧣", "溫暖穿搭", "天冷記得圍巾和暖暖包，溫暖出門"),
+def _load_surprise_cache() -> dict:
+    """載入爬蟲驚喜快取（surprise_cache.json）"""
+    try:
+        base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        path = os.path.join(base, "surprise_cache.json")
+        if not os.path.exists(path):
+            return {}
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+_SURPRISE_CACHE = _load_surprise_cache()
+
+# 保底驚喜池（只在以上都沒資料時用）
+_SURPRISES_FALLBACK = [
+    ("🎯", "今日挑戰", "中午不滑手機，專心吃飯 15 分鐘，你做得到！"),
+    ("📸", "拍照挑戰", "拍一張今天讓你覺得美的東西，記錄小確幸"),
+    ("🎲", "午餐冒險", "今天午餐試一家沒吃過的店，也許會有驚喜"),
+    ("🎧", "聽首新歌", "打開 Spotify 或 KKBOX 推薦，讓今天有新 BGM"),
+    ("✍️", "三件好事", "睡前寫下今天 3 件值得感謝的事，幸福感 UP"),
+    ("🍰", "犒賞自己", "完成今天的事之後，買個小甜點獎勵自己"),
 ]
 
 
 def _get_morning_surprise(city: str, wx_result: dict) -> tuple:
-    """回傳 (icon, title, body)，優先 Accupass 活動，其次靜態驚喜"""
+    """回傳 (icon, title, body)。特殊日期最優先，其餘每天輪播不同類型"""
     import datetime as _dt
+    today = _dt.date.today()
+    doy = today.timetuple().tm_yday
+    weekday = today.weekday()  # 0=Monday
 
-    # 1. 嘗試 Accupass 快取找該城市活動
-    # 快取格式: { city: { category: [events] } }
+    # ── 特殊日期（節日/電商大促）永遠最優先 ──
+    special = _SPECIAL_DEALS.get((today.month, today.day))
+    if special:
+        return special
+
+    # ── 收集所有可用的驚喜來源 ──
+    candidates = []  # (type_name, surprise_tuple)
+
+    # 週期性優惠
+    weekly = _WEEKLY_DEALS.get(weekday, [])
+    if weekly:
+        pick = weekly[doy % len(weekly)]
+        candidates.append(("deal", pick))
+
+    # 爬蟲：新歌
+    songs = _SURPRISE_CACHE.get("songs", []) if _SURPRISE_CACHE else []
+    if songs:
+        song = songs[doy % len(songs)]
+        candidates.append(("song", ("🎵", "今日推薦新歌",
+            f"《{song.get('name','')}》— {song.get('artist','')}")))
+
+    # 爬蟲：PTT 優惠
+    deals = _SURPRISE_CACHE.get("deals", []) if _SURPRISE_CACHE else []
+    if deals:
+        deal = deals[doy % len(deals)]
+        candidates.append(("ptt", ("🔥", "今日網友好康",
+            deal.get("title", ""))))
+
+    # Accupass 當地活動
     if _ACCUPASS_CACHE:
         city_data = _ACCUPASS_CACHE.get(city, {})
         city_events = []
@@ -4921,26 +5004,17 @@ def _get_morning_surprise(city: str, wx_result: dict) -> tuple:
             if isinstance(events, list):
                 city_events.extend(events)
         if city_events:
-            doy = _dt.date.today().timetuple().tm_yday
             ev = city_events[doy % len(city_events)]
-            return ("🎉", f"{city}好消息",
-                    f"{ev.get('name', '精彩活動')}！有空去看看～")
+            candidates.append(("event", ("🎉", f"{city}近期活動",
+                f"{ev.get('name', '精彩活動')}，有空去看看～")))
 
-    # 2. 根據天氣選驚喜池
-    doy = _dt.date.today().timetuple().tm_yday
-    pool = list(_SURPRISES_GENERAL)
-    if wx_result.get("ok"):
-        max_t = wx_result.get("max_t", 25)
-        pop = wx_result.get("pop", 0)
-        if max_t >= 32:
-            pool.extend(_SURPRISES_HOT)
-        if pop >= 60:
-            pool.extend(_SURPRISES_RAIN)
-        if max_t <= 16:
-            pool.extend(_SURPRISES_COLD)
+    # ── 用 day_of_year 輪播不同類型 ──
+    if candidates:
+        pick = candidates[doy % len(candidates)]
+        return pick[1]
 
-    pick = pool[doy % len(pool)]
-    return pick
+    # ── 保底 ──
+    return _SURPRISES_FALLBACK[doy % len(_SURPRISES_FALLBACK)]
 
 
 def _fetch_quick_rates() -> dict:
