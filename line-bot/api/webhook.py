@@ -2840,32 +2840,83 @@ def handle_food_feedback(text: str, user_id: str = "") -> list:
     return []
 
 
+# ── 通用回報（bug / 功能異常 / 錯誤）──
+def handle_general_report(text: str, user_id: str = "") -> list:
+    """處理通用回報，推播通知開發者"""
+    import datetime as _dt
+    ts = (_dt.datetime.utcnow() + _dt.timedelta(hours=8)).strftime("%Y-%m-%d %H:%M")
+
+    content = text.replace("回報", "").strip()
+    if len(content) < 2:
+        return build_feedback_intro()
+
+    # 自動分類
+    if any(w in content for w in ["bug", "壞", "錯誤", "失敗", "沒反應", "當掉", "跑不出來", "無法", "不能"]):
+        tag = "🐛 Bug"
+    elif any(w in content for w in ["慢", "卡", "lag", "等很久", "超時", "timeout"]):
+        tag = "🐌 效能"
+    else:
+        tag = "📋 回報"
+
+    # 推播通知開發者
+    if ADMIN_USER_ID:
+        push_message(ADMIN_USER_ID, [{"type": "flex", "altText": f"{tag} 使用者回報",
+            "contents": {
+                "type": "bubble", "size": "mega",
+                "header": {"type": "box", "layout": "vertical",
+                           "backgroundColor": "#E74C3C", "paddingAll": "16px",
+                           "contents": [
+                               {"type": "text", "text": f"{tag} 使用者回報",
+                                "color": "#FFFFFF", "size": "lg", "weight": "bold"}
+                           ]},
+                "body": {"type": "box", "layout": "vertical", "spacing": "md",
+                         "paddingAll": "20px",
+                         "contents": [
+                             {"type": "text", "text": content,
+                              "wrap": True, "size": "md", "weight": "bold"},
+                             {"type": "separator", "margin": "md"},
+                             {"type": "box", "layout": "vertical", "margin": "md",
+                              "spacing": "sm", "contents": [
+                                  {"type": "text", "size": "xs", "color": "#888888",
+                                   "text": f"👤 {user_id[:10]}..."},
+                                  {"type": "text", "size": "xs", "color": "#888888",
+                                   "text": f"🕐 {ts}"},
+                              ]},
+                         ]},
+            }}])
+
+    return [{"type": "text", "text":
+             f"📋 收到你的回報！\n\n"
+             f"「{content}」\n\n"
+             f"已通知開發者，會盡快處理 🙏"}]
+
+
 # ── 使用者功能建議 / 許願回饋 ──
 def build_feedback_intro() -> list:
-    """顯示回饋引導卡片"""
-    return [{"type": "flex", "altText": "💡 功能建議",
+    """顯示回饋/許願引導卡片"""
+    return [{"type": "flex", "altText": "💡 許願 & 回報",
              "contents": {
                  "type": "bubble", "size": "mega",
                  "header": {"type": "box", "layout": "vertical",
                             "backgroundColor": "#6C5CE7", "paddingAll": "16px",
                             "contents": [
-                                {"type": "text", "text": "💡 功能建議 / 許願池",
+                                {"type": "text", "text": "💡 許願池 & 問題回報",
                                  "color": "#FFFFFF", "size": "lg", "weight": "bold"}
                             ]},
                  "body": {"type": "box", "layout": "vertical", "spacing": "md",
                           "paddingAll": "20px",
                           "contents": [
-                              {"type": "text", "text": "想要什麼新功能？覺得哪裡可以更好？",
+                              {"type": "text", "text": "想要新功能？遇到問題？都可以告訴我！",
                                "wrap": True, "size": "sm", "color": "#555555"},
                               {"type": "separator", "margin": "md"},
-                              {"type": "text", "text": "📝 使用方式", "weight": "bold",
-                               "size": "sm", "margin": "md"},
+                              {"type": "text", "text": "✨ 許願（想要新功能）", "weight": "bold",
+                               "size": "sm", "margin": "md", "color": "#6C5CE7"},
                               {"type": "text", "wrap": True, "size": "xs", "color": "#888888",
-                               "text": "直接打「建議 你想說的內容」\n\n"
-                                       "範例：\n"
-                                       "• 建議 希望有記帳功能\n"
-                                       "• 建議 食物推薦可以加素食選項\n"
-                                       "• 建議 天氣可以顯示紫外線指數"},
+                               "text": "建議 希望有記帳功能\n建議 天氣可以顯示紫外線"},
+                              {"type": "text", "text": "🐛 回報（功能異常）", "weight": "bold",
+                               "size": "sm", "margin": "md", "color": "#E74C3C"},
+                              {"type": "text", "wrap": True, "size": "xs", "color": "#888888",
+                               "text": "回報 吃什麼沒反應\n回報 天氣顯示錯誤"},
                           ]},
              }}]
 
@@ -6751,11 +6802,15 @@ def handle_text_message(text: str, user_id: str = "") -> list:
             _broadcast_message(_bc_content)
             return [{"type": "text", "text": f"📢 已廣播給所有使用者：\n{_bc_content}"}]
 
-    # ── 0.1 使用者回饋（餐廳好吃/倒閉）──────
+    # ── 0.1 使用者回報（餐廳好吃/倒閉 + 通用回報）──────
     if text.startswith("回報 "):
-        result = handle_food_feedback(text, user_id)
-        if result:
-            return result
+        # 餐廳回報（好吃/倒閉）
+        if "好吃" in text or "倒閉" in text or "歇業" in text:
+            result = handle_food_feedback(text, user_id)
+            if result:
+                return result
+        # 通用回報（bug、功能異常、錯誤等）
+        return handle_general_report(text, user_id)
 
     # ── 0. 問卷狀態解析（優先處理，避免被其他規則攔截）──────
     state = parse_wizard_state(text)
