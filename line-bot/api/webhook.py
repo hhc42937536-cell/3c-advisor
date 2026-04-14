@@ -8231,11 +8231,22 @@ class handler(BaseHTTPRequestHandler):
             push_uid = qs.get("push", [""])[0]
             city = qs.get("city", [""])[0] or ""
             test_text = f"早安 {city}".strip() if city else "早安"
+            diag = {
+                "env": {
+                    "SECRET_set": bool(CHANNEL_SECRET),
+                    "SECRET_len": len(CHANNEL_SECRET) if CHANNEL_SECRET else 0,
+                    "TOKEN_set": bool(CHANNEL_ACCESS_TOKEN),
+                    "TOKEN_prefix": CHANNEL_ACCESS_TOKEN[:20] + "..." if CHANNEL_ACCESS_TOKEN else "EMPTY",
+                    "CWA_KEY_set": bool(os.environ.get("CWA_API_KEY", "")),
+                },
+            }
             try:
                 msgs = build_morning_summary(test_text)
-                result = {"ok": True, "count": len(msgs),
+                msg_json = json.dumps(msgs, ensure_ascii=False)
+                diag["build"] = {"ok": True, "count": len(msgs),
                           "altText": msgs[0].get("altText", "") if msgs else "",
-                          "type": msgs[0].get("type", "") if msgs else ""}
+                          "type": msgs[0].get("type", "") if msgs else "",
+                          "json_size": len(msg_json)}
                 if push_uid and msgs:
                     try:
                         push_data = json.dumps({
@@ -8248,18 +8259,19 @@ class handler(BaseHTTPRequestHandler):
                                      "Authorization": f"Bearer {CHANNEL_ACCESS_TOKEN}"},
                         )
                         presp = urllib.request.urlopen(push_req, timeout=10)
-                        result["push"] = f"SUCCESS {presp.status}"
+                        diag["push"] = f"SUCCESS {presp.status}: {presp.read().decode('utf-8','ignore')}"
                     except Exception as pe:
-                        result["push"] = f"FAILED: {pe}"
+                        err_body = ""
                         if hasattr(pe, 'read'):
-                            result["push"] += f" | {pe.read().decode('utf-8','ignore')}"
+                            err_body = pe.read().decode('utf-8','ignore')
+                        diag["push"] = f"FAILED: {pe} | {err_body}"
             except Exception as e:
                 import traceback
-                result = {"ok": False, "error": str(e), "trace": traceback.format_exc()}
+                diag["build"] = {"ok": False, "error": str(e), "trace": traceback.format_exc()}
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
-            self.wfile.write(json.dumps(result, ensure_ascii=False).encode("utf-8"))
+            self.wfile.write(json.dumps(diag, ensure_ascii=False).encode("utf-8"))
 
         elif parsed.path == "/api/stats":
             # ── 使用統計儀表板 ──────────────────────────────
