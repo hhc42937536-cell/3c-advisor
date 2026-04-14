@@ -5219,6 +5219,20 @@ _SURPRISES_FALLBACK = [
 ]
 
 
+def _get_ptt_deals_list(n: int = 3) -> list:
+    """取 n 筆 PTT 好康（每天輪播不同組）"""
+    import datetime as _dt
+    deals = _SURPRISE_CACHE.get("deals", []) if _SURPRISE_CACHE else []
+    if not deals:
+        return []
+    doy = _dt.date.today().timetuple().tm_yday
+    picks = []
+    for i in range(min(n, len(deals))):
+        idx = (doy * n + i) % len(deals)
+        picks.append(deals[idx])
+    return picks
+
+
 def _get_morning_surprise(city: str, wx_result: dict) -> tuple:
     """回傳 (icon, title, body)。特殊日期最優先，其餘每天輪播不同類型"""
     import datetime as _dt
@@ -5463,6 +5477,20 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     # 今日小驚喜
     surprise_icon, surprise_title, surprise_body = _get_morning_surprise(city, wx_result)
 
+    # 今日網友熱推 PTT 好康（3 筆輪播）
+    ptt_deals = _get_ptt_deals_list(3)
+    ptt_deal_items = []
+    for d in ptt_deals:
+        title = (d.get("title") or "").strip()
+        if not title:
+            continue
+        item = {"type": "text",
+                "text": f"• {title[:40]}",
+                "size": "xs", "color": "#1976D2", "wrap": True}
+        if d.get("url"):
+            item["action"] = {"type": "uri", "label": "看原文", "uri": d["url"]}
+        ptt_deal_items.append(item)
+
     _WEEKDAYS = ["一", "二", "三", "四", "五", "六", "日"]
     today = _dt.date.today()
     today_str = f"{today.month}月{today.day}日（星期{_WEEKDAYS[today.weekday()]}）"
@@ -5614,7 +5642,7 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                             *info_items,
                         ]
                     },
-                    # ── 今日小驚喜 ──
+                    # ── 今日小驚喜（含網友熱推 + 精選來源）──
                     {
                         "type": "box", "layout": "vertical",
                         "backgroundColor": "#FFF8E1",
@@ -5626,28 +5654,32 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                              "size": "sm", "color": "#BF360C", "weight": "bold"},
                             {"type": "text", "text": surprise_body,
                              "size": "xs", "color": "#37474F", "wrap": True},
+                            # 網友熱推（如有 PTT 好康）
+                            *([{"type": "separator", "margin": "sm", "color": "#FFCC80"},
+                               {"type": "text", "text": "🔥 網友熱推",
+                                "size": "xxs", "color": "#C62828", "weight": "bold",
+                                "margin": "sm"},
+                               *ptt_deal_items] if ptt_deal_items else []),
+                            # 精選好康來源
                             {"type": "separator", "margin": "sm", "color": "#FFCC80"},
-                            {"type": "text", "text": "📱 更多即時好康",
-                             "size": "xxs", "color": "#E65100", "weight": "bold",
+                            {"type": "text", "text": "📱 深度好康情報",
+                             "size": "xxs", "color": "#1565C0", "weight": "bold",
                              "margin": "sm"},
-                            {"type": "box", "layout": "vertical", "spacing": "xs",
-                             "contents": [
-                                 {"type": "text",
-                                  "text": "• 好康情報誌（Threads）→ 限時餐飲優惠",
-                                  "size": "xxs", "color": "#1976D2", "wrap": True,
-                                  "action": {"type": "uri", "label": "好康情報誌",
-                                             "uri": "https://www.threads.com/@info.talk_tw"}},
-                                 {"type": "text",
-                                  "text": "• V 妞的旅行 → KKday 折扣碼＋信用卡",
-                                  "size": "xxs", "color": "#1976D2", "wrap": True,
-                                  "action": {"type": "uri", "label": "V妞的旅行",
-                                             "uri": "https://vniki.com/"}},
-                                 {"type": "text",
-                                  "text": "• 莉芙小姐愛旅遊 → Klook 折扣碼",
-                                  "size": "xxs", "color": "#1976D2", "wrap": True,
-                                  "action": {"type": "uri", "label": "莉芙小姐",
-                                             "uri": "https://nicklee.tw/"}},
-                             ]},
+                            {"type": "text",
+                             "text": "• 好康情報誌（Threads）→ 限時餐飲優惠",
+                             "size": "xxs", "color": "#1976D2", "wrap": True,
+                             "action": {"type": "uri", "label": "好康情報誌",
+                                        "uri": "https://www.threads.com/@info.talk_tw"}},
+                            {"type": "text",
+                             "text": "• V 妞的旅行 → KKday 折扣碼＋信用卡",
+                             "size": "xxs", "color": "#1976D2", "wrap": True,
+                             "action": {"type": "uri", "label": "V妞的旅行",
+                                        "uri": "https://vniki.com/"}},
+                            {"type": "text",
+                             "text": "• 莉芙小姐愛旅遊 → Klook 折扣碼",
+                             "size": "xxs", "color": "#1976D2", "wrap": True,
+                             "action": {"type": "uri", "label": "莉芙小姐",
+                                        "uri": "https://nicklee.tw/"}},
                         ]
                     },
                 ]
