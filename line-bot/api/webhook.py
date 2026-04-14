@@ -4828,35 +4828,119 @@ def build_weather_city_picker(region: str = "") -> list:
 
 # ─── 早安摘要 ────────────────────────────────────────
 
-_MORNING_TIPS = [
-    ("💧", "喝杯溫水", "起床第一件事喝 200ml 溫水，啟動腸胃、促進新陳代謝"),
-    ("🚶", "飯後散步", "午餐後走 10 分鐘，血糖控制比坐著好 30%"),
-    ("🧘", "深呼吸", "壓力大時做 4-7-8 呼吸法：吸 4 秒、憋 7 秒、呼 8 秒"),
-    ("💪", "起床伸展", "起床先做 2 分鐘伸展，趕走腰背僵硬感"),
-    ("😴", "睡前放下手機", "睡前 30 分鐘放下手機，入睡品質明顯提升"),
-    ("🥗", "先吃蔬菜", "用餐先吃蔬菜，血糖上升速度減緩，不容易餓"),
-    ("🏃", "久坐提醒", "每坐 45 分鐘起身動一動，頸肩腰背感謝你"),
-    ("🌞", "曬太陽", "早上曬 15 分鐘太陽，補維生素 D + 調整生理時鐘"),
-    ("🍳", "早餐加蛋白質", "早餐加一顆蛋或豆漿，撐到中午不暴食"),
-    ("💊", "補充水分", "今天目標：體重（kg）× 30ml 的水，分散全天喝"),
-    ("🧠", "數位排毒", "早上第一小時不看社群媒體，心情會更好"),
-    ("🥜", "護心食物", "今天加一把堅果（約 10 顆），心臟和腦都說讚"),
-    ("🚪", "開窗換氣", "早上開窗 10 分鐘，CO₂ 降低，思緒更清晰"),
-    ("🍵", "少糖飲料", "手搖飲選無糖或少糖，一週省下 2000+ 卡"),
-    ("🔋", "真正休息", "充電時間 ≠ 休息時間，身體也需要離螢幕"),
-    ("🎵", "音樂通勤", "通勤聽音樂或 podcast，比滑手機壓力小很多"),
-    ("👁️", "護眼 20-20-20", "用螢幕 20 分鐘，看 6 公尺遠處 20 秒，眼睛謝謝"),
-    ("🧴", "出門防曬", "今天塗防曬，預防老化比去除更有效"),
-    ("🍊", "維生素 C", "吃一顆橘子或奇異果，增強免疫力"),
-    ("🛏️", "固定起床", "即使假日也固定起床時間，睡眠品質明顯提升"),
+_MORNING_ACTIONS = [
+    "🍳 早餐加一顆蛋或豆漿，撐到中午不暴食",
+    "💧 今天目標喝水 2000cc 以上",
+    "🏃 每工作 50 分鐘起來動一動脖子肩膀",
+    "😴 睡前 30 分鐘放下手機，入睡品質提升",
+    "🥗 用餐先吃蔬菜，血糖穩定不容易餓",
+    "🌞 早上曬 15 分鐘太陽，補維生素 D",
+    "🧘 壓力大時做深呼吸：吸 4 秒、憋 7 秒、呼 8 秒",
+    "💪 起床先做 2 分鐘伸展，趕走僵硬感",
+    "🚶 午餐後走 10 分鐘，血糖控制好 30%",
+    "🧠 早上第一小時不看社群，心情會更好",
+    "🥜 今天吃一把堅果（約 10 顆），護心又護腦",
+    "🚪 早上開窗 10 分鐘，換新鮮空氣",
+    "🍵 手搖飲選無糖或少糖，一週省 2000 卡",
+    "👁️ 螢幕 20 分鐘就看遠處 20 秒，眼睛謝謝你",
+    "🧴 出門記得擦防曬，預防比修復更有效",
+    "🍊 吃一顆橘子或奇異果，補充維生素 C",
+    "🎵 通勤聽音樂或 podcast，比滑手機減壓",
+    "🔋 安排 10 分鐘真正休息，離開螢幕放空",
+    "🛏️ 今天固定時間起床，調好生理時鐘",
+    "🥤 起床第一件事喝杯溫水，啟動腸胃",
+    "📵 吃飯時把手機翻面，專心享受食物",
+    "🧊 下午嘴饞選水果代替零食，更健康",
+    "🌿 找一個綠色植物看 30 秒，舒緩眼睛疲勞",
+    "🎯 今天設一個小目標，完成後獎勵自己",
 ]
 
 
-def _get_morning_tip() -> tuple:
-    """根據今天日期輪播健康 tip"""
+def _get_morning_actions() -> list:
+    """根據今天日期選 4 條行動建議（每天不同）"""
     import datetime as _dt
-    day_of_year = _dt.date.today().timetuple().tm_yday
-    return _MORNING_TIPS[day_of_year % len(_MORNING_TIPS)]
+    doy = _dt.date.today().timetuple().tm_yday
+    n = len(_MORNING_ACTIONS)
+    indices = [(doy * 4 + i) % n for i in range(4)]
+    # 避免重複
+    seen, result = set(), []
+    for idx in indices:
+        while idx in seen:
+            idx = (idx + 1) % n
+        seen.add(idx)
+        result.append(_MORNING_ACTIONS[idx])
+    return result
+
+
+# ── 今日小驚喜 ──
+_SURPRISES_GENERAL = [
+    ("🎯", "今日挑戰", "試試看中午不滑手機，專心吃飯 15 分鐘"),
+    ("📸", "拍照挑戰", "今天拍一張讓你覺得美的照片，記錄生活小確幸"),
+    ("💌", "感恩時刻", "傳一句謝謝給最近幫過你的人，對方會很開心"),
+    ("🎲", "今日冒險", "午餐試一家沒吃過的店，也許會有驚喜！"),
+    ("📖", "閱讀 10 分鐘", "找一篇有趣的文章或書，讓腦袋換換口味"),
+    ("🌸", "觀察自然", "注意路邊的花草樹木，你會發現城市也很美"),
+    ("🎧", "聽一首新歌", "打開推薦歌單，讓今天有新的背景音樂"),
+    ("✍️", "寫下三件好事", "睡前寫下今天三件值得感謝的事，幸福感 UP"),
+    ("🧹", "整理一個角落", "花 5 分鐘整理桌面或包包，清爽一整天"),
+    ("😊", "對陌生人微笑", "今天對一個陌生人友善微笑，好心情會傳染"),
+    ("🍰", "獎勵自己", "今天做完該做的事，買個小點心犒賞自己"),
+    ("🤝", "約朋友聊天", "傳訊息給很久沒聯絡的朋友，約個時間聊聊"),
+    ("🌅", "看一次天空", "不管晴雨，今天抬頭看看天空 30 秒"),
+    ("🎁", "隨機善行", "幫同事帶杯飲料或幫忙開門，小舉動大溫暖"),
+]
+
+_SURPRISES_HOT = [
+    ("🧊", "消暑提案", "天氣熱，來杯自製檸檬水或仙草茶消暑～"),
+    ("🍦", "冰品放題", "今天很熱！下班來支冰棒犒賞自己吧"),
+    ("🌊", "涼快一下", "天氣炎熱，找個有冷氣的咖啡廳坐坐也不錯"),
+]
+
+_SURPRISES_RAIN = [
+    ("☔", "雨天浪漫", "下雨天最適合窩在家看部好電影，配杯熱飲"),
+    ("🍜", "雨天食慾", "下雨天最適合來碗熱湯麵，暖胃又暖心"),
+    ("📚", "雨天閱讀", "雨聲配書本，今天找篇好文章慢慢讀"),
+]
+
+_SURPRISES_COLD = [
+    ("🍲", "暖暖的", "天冷來碗熱湯或薑茶，從裡暖到外"),
+    ("🧣", "溫暖穿搭", "天冷記得圍巾和暖暖包，溫暖出門"),
+]
+
+
+def _get_morning_surprise(city: str, wx_result: dict) -> tuple:
+    """回傳 (icon, title, body)，優先 Accupass 活動，其次靜態驚喜"""
+    import datetime as _dt
+
+    # 1. 嘗試 Accupass 快取找該城市活動
+    # 快取格式: { city: { category: [events] } }
+    if _ACCUPASS_CACHE:
+        city_data = _ACCUPASS_CACHE.get(city, {})
+        city_events = []
+        for cat, events in city_data.items():
+            if isinstance(events, list):
+                city_events.extend(events)
+        if city_events:
+            doy = _dt.date.today().timetuple().tm_yday
+            ev = city_events[doy % len(city_events)]
+            return ("🎉", f"{city}好消息",
+                    f"{ev.get('name', '精彩活動')}！有空去看看～")
+
+    # 2. 根據天氣選驚喜池
+    doy = _dt.date.today().timetuple().tm_yday
+    pool = list(_SURPRISES_GENERAL)
+    if wx_result.get("ok"):
+        max_t = wx_result.get("max_t", 25)
+        pop = wx_result.get("pop", 0)
+        if max_t >= 32:
+            pool.extend(_SURPRISES_HOT)
+        if pop >= 60:
+            pool.extend(_SURPRISES_RAIN)
+        if max_t <= 16:
+            pool.extend(_SURPRISES_COLD)
+
+    pick = pool[doy % len(pool)]
+    return pick
 
 
 def _fetch_quick_rates() -> dict:
@@ -4976,53 +5060,60 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         else:
             return _build_morning_city_picker()
 
-    # 平行抓天氣 + 匯率
-    wx_result, rate_result = {}, {}
+    # 抓天氣
+    wx_result = _fetch_cwa_weather(city)
 
-    def _fetch_wx():
-        nonlocal wx_result
-        wx_result = _fetch_cwa_weather(city)
+    # 今日行動
+    actions = _get_morning_actions()
 
-    def _fetch_rate():
-        nonlocal rate_result
-        rate_result = _fetch_quick_rates()
+    # 今日小驚喜
+    surprise_icon, surprise_title, surprise_body = _get_morning_surprise(city, wx_result)
 
-    t1 = _thr.Thread(target=_fetch_wx, daemon=True)
-    t2 = _thr.Thread(target=_fetch_rate, daemon=True)
-    t1.start(); t2.start()
-    t1.join(timeout=6); t2.join(timeout=6)
+    _WEEKDAYS = ["一", "二", "三", "四", "五", "六", "日"]
+    today = _dt.date.today()
+    today_str = f"{today.month}月{today.day}日（星期{_WEEKDAYS[today.weekday()]}）"
 
-    # 健康 tip
-    tip_icon, tip_title, tip_body = _get_morning_tip()
-
-    today_str = f"{_dt.date.today().month}月{_dt.date.today().day}日"
-
-    # ── 天氣區塊 ──
+    # ── 天氣 + 穿搭 ──
     if wx_result.get("ok"):
         wx = wx_result
         wx_icon = _wx_icon(wx["wx"])
         pop = wx["pop"]
-        umbrella_hint = ""
-        if pop >= 70:   umbrella_hint = " ☂️ 記得帶傘！"
-        elif pop >= 40: umbrella_hint = " 🌂 備傘備用"
-        outfit, outfit_note, _ = _outfit_advice(wx["max_t"], wx["min_t"], pop)
-        wx_text = f"{wx_icon} {wx['wx']}　{wx['min_t']}–{wx['max_t']}°C"
-        wx_sub  = f"降雨機率 {pop}%{umbrella_hint}"
+        diff = wx["max_t"] - wx["min_t"]
+        # 天氣描述
+        wx_main = f"{wx_icon} {wx['wx']}　{wx['min_t']}–{wx['max_t']}°C"
+        # 溫差/降雨提示
+        if pop >= 70:
+            wx_hint = "☂️ 降雨機率高，記得帶傘！"
+        elif pop >= 40:
+            wx_hint = "🌂 可能有雨，建議帶傘備用"
+        elif diff >= 10:
+            wx_hint = "早晚溫差大，注意保暖"
+        elif wx["max_t"] >= 32:
+            wx_hint = "中午很熱，注意防曬補水"
+        else:
+            wx_hint = "氣溫舒適，適合外出走走"
+        # 穿搭行動建議
+        outfit, _, umbrella = _outfit_advice(wx["max_t"], wx["min_t"], pop)
+        action_parts = [outfit]
+        if pop >= 40:
+            action_parts.append("帶傘")
+        if wx["max_t"] >= 28:
+            action_parts.append("防曬必備")
+        wx_action = f"👔 行動建議：{'＋'.join(action_parts)}"
     else:
-        wx_text   = "☁️ 天氣資料暫無"
-        wx_sub    = f"請查「{city}天氣」"
-        outfit    = "—"
-        outfit_note = ""
+        wx_main = "☁️ 天氣資料暫時無法取得"
+        wx_hint = f"可以說「{city}天氣」查詳細"
+        wx_action = "👔 建議穿著舒適出門"
 
-    # ── 匯率區塊 ──
-    usd_sell = rate_result.get("USD", {}).get("spot_sell", 0)
-    jpy_sell = rate_result.get("JPY", {}).get("spot_sell", 0)
-    usd_text = f"🇺🇸 美金　{usd_sell:.2f}" if usd_sell else "🇺🇸 美金　—"
-    jpy_text = f"🇯🇵 日圓　{jpy_sell:.4f}" if jpy_sell else "🇯🇵 日圓　—"
+    # ── 行動清單 ──
+    action_items = [
+        {"type": "text", "text": a, "size": "xs", "color": "#37474F", "wrap": True}
+        for a in actions
+    ]
 
     return [{
         "type": "flex",
-        "altText": f"☀️ 早安！今天 {city} {wx_text}",
+        "altText": f"☀️ 早安！{city} {today_str}",
         "contents": {
             "type": "bubble",
             "size": "mega",
@@ -5030,80 +5121,55 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                 "type": "box", "layout": "vertical",
                 "backgroundColor": "#1A1F3A",
                 "paddingAll": "16px",
-                "contents": [{
-                    "type": "box", "layout": "horizontal",
-                    "contents": [
-                        {"type": "text", "text": "☀️", "size": "xxl", "flex": 0,
-                         "gravity": "center"},
-                        {
-                            "type": "box", "layout": "vertical", "flex": 1, "margin": "md",
-                            "contents": [
-                                {"type": "text", "text": "早安！今天的一天",
-                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                                {"type": "text",
-                                 "text": f"{today_str}  {city}",
-                                 "color": "#8892B0", "size": "xs", "margin": "xs"},
-                            ]
-                        }
-                    ]
-                }]
+                "contents": [
+                    {"type": "text", "text": f"☀️ 早安！{city}",
+                     "color": "#FFFFFF", "size": "xl", "weight": "bold"},
+                    {"type": "text", "text": today_str,
+                     "color": "#8892B0", "size": "sm", "margin": "xs"},
+                ]
             },
             "body": {
                 "type": "box", "layout": "vertical",
                 "spacing": "md", "paddingAll": "14px",
                 "contents": [
-                    # ── 天氣卡 ──
+                    # ── 天氣穿搭區塊 ──
                     {
                         "type": "box", "layout": "vertical",
                         "backgroundColor": "#EBF5FB",
                         "cornerRadius": "10px", "paddingAll": "12px", "spacing": "sm",
                         "contents": [
-                            {"type": "text", "text": "🌤 今日天氣",
+                            {"type": "text", "text": "🌤 今日天氣與穿搭",
                              "size": "xs", "color": "#1565C0", "weight": "bold"},
-                            {"type": "text", "text": wx_text,
+                            {"type": "text", "text": wx_main,
                              "size": "md", "color": "#1A1F3A", "weight": "bold"},
-                            {"type": "text", "text": wx_sub,
-                             "size": "xs", "color": "#546E7A"},
-                            {"type": "separator", "margin": "sm"},
-                            {"type": "text", "text": f"👔 {outfit}",
+                            {"type": "text", "text": wx_hint,
+                             "size": "xs", "color": "#546E7A", "wrap": True},
+                            {"type": "text", "text": wx_action,
                              "size": "xs", "color": "#37474F", "wrap": True},
-                            *([{"type": "text", "text": outfit_note,
-                                "size": "xxs", "color": "#90A4AE", "wrap": True}]
-                              if outfit_note else []),
                         ]
                     },
-                    # ── 匯率卡 ──
-                    {
-                        "type": "box", "layout": "vertical",
-                        "backgroundColor": "#F3F4FE",
-                        "cornerRadius": "10px", "paddingAll": "12px", "spacing": "sm",
-                        "contents": [
-                            {"type": "text", "text": "💱 今日匯率（台銀即期賣出）",
-                             "size": "xs", "color": "#4527A0", "weight": "bold"},
-                            {
-                                "type": "box", "layout": "horizontal", "spacing": "lg",
-                                "contents": [
-                                    {"type": "text", "text": usd_text,
-                                     "size": "sm", "color": "#37474F", "flex": 1},
-                                    {"type": "text", "text": jpy_text,
-                                     "size": "sm", "color": "#37474F", "flex": 1},
-                                ]
-                            },
-                            {"type": "text", "text": "更多幣別說「美金匯率」查詳細",
-                             "size": "xxs", "color": "#9E9E9E"},
-                        ]
-                    },
-                    # ── 健康 tip 卡 ──
+                    # ── 今日重點行動 ──
                     {
                         "type": "box", "layout": "vertical",
                         "backgroundColor": "#F1F8E9",
                         "cornerRadius": "10px", "paddingAll": "12px", "spacing": "xs",
                         "contents": [
-                            {"type": "text", "text": "💪 今日健康提醒",
+                            {"type": "text", "text": "📋 今日重點行動",
                              "size": "xs", "color": "#2E7D32", "weight": "bold"},
-                            {"type": "text", "text": f"{tip_icon} {tip_title}",
-                             "size": "sm", "color": "#1B5E20", "weight": "bold"},
-                            {"type": "text", "text": tip_body,
+                            *action_items,
+                        ]
+                    },
+                    # ── 今日小驚喜 ──
+                    {
+                        "type": "box", "layout": "vertical",
+                        "backgroundColor": "#FFF8E1",
+                        "cornerRadius": "10px", "paddingAll": "12px", "spacing": "xs",
+                        "contents": [
+                            {"type": "text", "text": f"{surprise_icon} 今日小驚喜",
+                             "size": "xs", "color": "#E65100", "weight": "bold"},
+                            {"type": "text", "text": surprise_title,
+                             "size": "sm", "color": "#BF360C", "weight": "bold"},
+                            {"type": "text", "text": surprise_body,
                              "size": "xs", "color": "#37474F", "wrap": True},
                         ]
                     },
@@ -5114,14 +5180,14 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                 "spacing": "sm", "paddingAll": "10px",
                 "contents": [
                     {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                     "action": {"type": "message", "label": "天氣",
-                                "text": f"{city}天氣"}},
-                    {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
                      "action": {"type": "message", "label": "吃什麼",
                                 "text": "今天吃什麼"}},
                     {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                     "action": {"type": "message", "label": "活動",
+                     "action": {"type": "message", "label": "查活動",
                                 "text": "近期活動"}},
+                    {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                     "action": {"type": "message", "label": "健康",
+                                "text": "健康小幫手"}},
                 ]
             }
         }
