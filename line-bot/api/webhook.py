@@ -9414,6 +9414,26 @@ class handler(BaseHTTPRequestHandler):
                             import traceback; traceback.print_exc()
                             push_message(user_id, [{"type": "text", "text": "定位失敗，請稍後再試 🙏"}])
                         continue
+                    # LIFF 自動定位並執行動作（格式：__city_action__:台北:天氣）
+                    if user_text.startswith("__city_action__:"):
+                        try:
+                            parts = user_text.split(":", 2)
+                            city = parts[1].strip() if len(parts) > 1 else ""
+                            action = parts[2].strip() if len(parts) > 2 else ""
+                            import re as _re
+                            all_cities_pat = "|".join(_ALL_CITIES)
+                            city_m = _re.search(rf"({all_cities_pat})", city)
+                            if city_m:
+                                city = city_m.group(1)
+                                _set_user_city(user_id, city)
+                            if action:
+                                msgs = handle_text_message(action, user_id=user_id)
+                                reply_message(reply_token, msgs)
+                                log_usage(user_id, "city_action", sub_action=f"liff_{action}")
+                        except Exception as ca_e:
+                            print(f"[webhook] city_action error: {ca_e}")
+                        continue
+
                     # 判斷功能類別（用於 log，不影響路由）
                     _feature, _sub = _detect_feature(user_text)
                     try:
