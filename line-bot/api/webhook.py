@@ -5263,6 +5263,27 @@ def _get_morning_surprise(city: str, wx_result: dict) -> tuple:
     return _SURPRISES_FALLBACK[doy % len(_SURPRISES_FALLBACK)]
 
 
+def _fetch_quick_oil() -> dict:
+    """輕量抓中油本週 92/95/98 油價"""
+    import ssl as _ssl
+    _ctx = _ssl.create_default_context()
+    _ctx.check_hostname = False
+    _ctx.verify_mode = _ssl.CERT_NONE
+    try:
+        req = urllib.request.Request(
+            "https://www.cpc.com.tw/GetOilPriceJson.aspx?type=TodayOilPriceString",
+            headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=4, context=_ctx) as r:
+            data = json.loads(r.read().decode("utf-8"))
+        return {
+            "92": data.get("sPrice1", "?"),
+            "95": data.get("sPrice2", "?"),
+            "98": data.get("sPrice3", "?"),
+        }
+    except Exception:
+        return {}
+
+
 def _fetch_quick_rates() -> dict:
     """只抓 USD / JPY 即期賣出匯率（台灣銀行 CSV）"""
     import csv as _csv
@@ -5385,11 +5406,22 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         else:
             return _build_morning_city_picker()
 
-    # 抓天氣
-    wx_result = _fetch_cwa_weather(city)
-
-    # 今日行動
-    actions = _get_morning_actions()
+    # 並行抓：天氣 + 匯率 + 油價（加速早安反應時間）
+    wx_result = {}
+    rates = {}
+    oil = {}
+    def _wx():
+        nonlocal wx_result
+        wx_result = _fetch_cwa_weather(city)
+    def _rt():
+        nonlocal rates
+        rates = _fetch_quick_rates()
+    def _oil():
+        nonlocal oil
+        oil = _fetch_quick_oil()
+    _t1 = _thr.Thread(target=_wx); _t2 = _thr.Thread(target=_rt); _t3 = _thr.Thread(target=_oil)
+    _t1.start(); _t2.start(); _t3.start()
+    _t1.join(timeout=6); _t2.join(timeout=5); _t3.join(timeout=5)
 
     # 今日小驚喜
     surprise_icon, surprise_title, surprise_body = _get_morning_surprise(city, wx_result)
@@ -5430,11 +5462,27 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         wx_hint = f"可以說「{city}天氣」查詳細"
         wx_action = "👔 建議穿著舒適出門"
 
-    # ── 行動清單 ──
-    action_items = [
-        {"type": "text", "text": a, "size": "xs", "color": "#37474F", "wrap": True}
-        for a in actions
-    ]
+    # ── 今日實用資訊：匯率 + 油價 ──
+    info_items = []
+    usd = rates.get("USD", {}) if rates else {}
+    jpy = rates.get("JPY", {}) if rates else {}
+    if usd.get("spot_sell") or jpy.get("spot_sell"):
+        _rate_parts = []
+        if usd.get("spot_sell"):
+            _rate_parts.append(f"USD {usd['spot_sell']:.3f}")
+        if jpy.get("spot_sell"):
+            _rate_parts.append(f"JPY {jpy['spot_sell']:.4f}")
+        info_items.append({"type": "text",
+            "text": "💵 台銀即期賣出　" + "　".join(_rate_parts),
+            "size": "xs", "color": "#37474F", "wrap": True})
+    if oil.get("92") and oil.get("92") != "?":
+        info_items.append({"type": "text",
+            "text": f"⛽ 中油 92/{oil.get('92')}　95/{oil.get('95')}　98/{oil.get('98')}",
+            "size": "xs", "color": "#37474F", "wrap": True})
+    if not info_items:
+        info_items = [{"type": "text",
+            "text": "即時資訊暫時抓不到，請稍後再試 🙏",
+            "size": "xs", "color": "#888888"}]
 
     # ── 分享文字（傳給朋友/另一半/同事）──
     _bot_invite = f"https://line.me/R/ti/p/{LINE_BOT_ID}" if LINE_BOT_ID else "https://line.me/R/"
@@ -5483,15 +5531,15 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                              "size": "xs", "color": "#37474F", "wrap": True},
                         ]
                     },
-                    # ── 今日重點行動 ──
+                    # ── 今日實用資訊（匯率＋油價）──
                     {
                         "type": "box", "layout": "vertical",
-                        "backgroundColor": "#F1F8E9",
+                        "backgroundColor": "#E8F5E9",
                         "cornerRadius": "10px", "paddingAll": "12px", "spacing": "xs",
                         "contents": [
-                            {"type": "text", "text": "📋 今日重點行動",
+                            {"type": "text", "text": "💡 今日實用資訊",
                              "size": "xs", "color": "#2E7D32", "weight": "bold"},
-                            *action_items,
+                            *info_items,
                         ]
                     },
                     # ── 今日小驚喜 ──
