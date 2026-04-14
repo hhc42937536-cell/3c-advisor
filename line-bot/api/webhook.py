@@ -5484,13 +5484,13 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                             *action_items,
                         ]
                     },
-                    # ── 今日熱話題 / 好康 ──
+                    # ── 今日小驚喜 ──
                     {
                         "type": "box", "layout": "vertical",
                         "backgroundColor": "#FFF8E1",
                         "cornerRadius": "10px", "paddingAll": "12px", "spacing": "xs",
                         "contents": [
-                            {"type": "text", "text": f"{surprise_icon} 今日熱話題",
+                            {"type": "text", "text": f"{surprise_icon} 今日小驚喜",
                              "size": "xs", "color": "#E65100", "weight": "bold"},
                             {"type": "text", "text": surprise_title,
                              "size": "sm", "color": "#BF360C", "weight": "bold"},
@@ -5689,10 +5689,10 @@ def build_welcome_message() -> list:
                         "margin": "md",
                         "action": {"type": "message", "label": "早安", "text": "早安"},
                         "contents": [
-                            {"type": "text", "text": "🔥",
+                            {"type": "text", "text": "☀️",
                              "size": "sm", "flex": 0, "gravity": "center"},
                             {"type": "text",
-                             "text": " 打「早安」→ 今日熱話題／優惠／活動，跟朋友有聊不完的梗",
+                             "text": " 打「早安」→ 天氣＋今日小驚喜，每天一個好梗跟朋友聊",
                              "size": "xxs", "color": "#B45309", "flex": 1,
                              "gravity": "center", "wrap": True},
                         ]
