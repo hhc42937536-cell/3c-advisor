@@ -8224,6 +8224,58 @@ class handler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
             self.wfile.write(json.dumps(diag, ensure_ascii=False).encode("utf-8"))
+        elif parsed.path == "/api/diag":
+            # 全面診斷：LINE API + webhook URL + env
+            diag = {
+                "env": {
+                    "SECRET_set": bool(CHANNEL_SECRET),
+                    "SECRET_len": len(CHANNEL_SECRET),
+                    "TOKEN_set": bool(CHANNEL_ACCESS_TOKEN),
+                    "TOKEN_len": len(CHANNEL_ACCESS_TOKEN),
+                    "TOKEN_prefix": CHANNEL_ACCESS_TOKEN[:30] + "..." if CHANNEL_ACCESS_TOKEN else "EMPTY",
+                },
+            }
+            # 1. Check bot info
+            try:
+                req_bot = urllib.request.Request(
+                    "https://api.line.me/v2/bot/info",
+                    headers={"Authorization": f"Bearer {CHANNEL_ACCESS_TOKEN}"})
+                resp_bot = urllib.request.urlopen(req_bot, timeout=10)
+                diag["bot_info"] = json.loads(resp_bot.read().decode("utf-8"))
+            except Exception as e:
+                err_body = ""
+                if hasattr(e, 'read'): err_body = e.read().decode("utf-8","ignore")
+                diag["bot_info_error"] = f"{e} | {err_body}"
+            # 2. Check webhook endpoint
+            try:
+                req_wh = urllib.request.Request(
+                    "https://api.line.me/v2/bot/channel/webhook/endpoint",
+                    headers={"Authorization": f"Bearer {CHANNEL_ACCESS_TOKEN}"})
+                resp_wh = urllib.request.urlopen(req_wh, timeout=10)
+                diag["webhook"] = json.loads(resp_wh.read().decode("utf-8"))
+            except Exception as e:
+                err_body = ""
+                if hasattr(e, 'read'): err_body = e.read().decode("utf-8","ignore")
+                diag["webhook_error"] = f"{e} | {err_body}"
+            # 3. Test webhook from LINE's side
+            try:
+                test_data = json.dumps({"endpoint": "https://3c-advisor.vercel.app/api/webhook"}).encode("utf-8")
+                req_test = urllib.request.Request(
+                    "https://api.line.me/v2/bot/channel/webhook/test",
+                    data=test_data,
+                    headers={"Authorization": f"Bearer {CHANNEL_ACCESS_TOKEN}",
+                             "Content-Type": "application/json"})
+                resp_test = urllib.request.urlopen(req_test, timeout=15)
+                diag["webhook_test"] = json.loads(resp_test.read().decode("utf-8"))
+            except Exception as e:
+                err_body = ""
+                if hasattr(e, 'read'): err_body = e.read().decode("utf-8","ignore")
+                diag["webhook_test_error"] = f"{e} | {err_body}"
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(json.dumps(diag, ensure_ascii=False).encode("utf-8"))
+
         elif parsed.path == "/api/morning_test":
             # 測試早安摘要（debug 用）
             from urllib.parse import parse_qs

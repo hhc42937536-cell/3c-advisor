@@ -36,6 +36,10 @@
       "dest": "api/webhook.py"
     },
     {
+      "src": "/api/diag",
+      "dest": "api/webhook.py"
+    },
+    {
       "src": "/api/morning_test",
       "dest": "api/webhook.py"
     },
