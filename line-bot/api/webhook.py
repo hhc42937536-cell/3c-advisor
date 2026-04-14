@@ -6737,9 +6737,9 @@ def handle_text_message(text: str, user_id: str = "") -> list:
         product_name = text.replace("這款適合我嗎", "").strip()
         return build_suitability_message(product_name)
 
-    # ── 0.01 查詢自己的 LINE userId ──────
-    if text in ("我的ID", "我的id", "myid"):
-        return [{"type": "text", "text": f"你的 LINE userId：\n{user_id}\n\n📋 長按可複製，貼到 Vercel 環境變數 ADMIN_USER_ID"}]
+    # ── 0.01 查詢自己的 LINE userId（管理員暗號）──────
+    if text == "!admin-uid":
+        return [{"type": "text", "text": f"{user_id}"}]
 
     # ── 0.05 管理員廣播（僅開發者可用）──────
     if text.startswith("廣播 ") and user_id and user_id == ADMIN_USER_ID:
