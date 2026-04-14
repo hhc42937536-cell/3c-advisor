@@ -7022,10 +7022,11 @@ def handle_text_message(text: str, user_id: str = "") -> list:
             }
         }]
 
-    # ── 功能建議 / 許願池 ──────────────────────────────
-    if any(w in text for w in ["功能建議", "許願", "許願池", "我想要功能", "希望有功能",
-                                "功能回報", "意見回報"]) or \
-       text == "回報" or \
+    # ── 功能建議 / 許願池 / 問題回報 ──────────────────────
+    if text in ("回報", "許願", "許願池", "功能建議", "功能回報", "意見回報"):
+        return build_feedback_intro()
+
+    if any(w in text for w in ["我想要功能", "希望有功能"]) or \
        (text.startswith("建議") and len(text) >= 4):
         # 取得使用者名稱（若有）
         _fb_name = ""
