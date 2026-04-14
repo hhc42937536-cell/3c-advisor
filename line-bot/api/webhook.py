@@ -5462,23 +5462,58 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         wx_hint = f"可以說「{city}天氣」查詳細"
         wx_action = "👔 建議穿著舒適出門"
 
-    # ── 今日實用資訊：匯率 + 油價 ──
+    # ── 今日實用資訊：匯率 + 油價（附便宜/貴提示）──
     info_items = []
     usd = rates.get("USD", {}) if rates else {}
     jpy = rates.get("JPY", {}) if rates else {}
-    if usd.get("spot_sell") or jpy.get("spot_sell"):
-        _rate_parts = []
-        if usd.get("spot_sell"):
-            _rate_parts.append(f"USD {usd['spot_sell']:.3f}")
-        if jpy.get("spot_sell"):
-            _rate_parts.append(f"JPY {jpy['spot_sell']:.4f}")
+
+    # 匯率判讀（近 3 年區間參考）
+    def _usd_tip(rate):
+        if rate <= 29.5: return ("🎉", "偏便宜！適合換美金/去美國", "#2E7D32")
+        if rate <= 31.0: return ("⚖️", "價位普通", "#555555")
+        if rate <= 32.0: return ("⚠️", "略偏高，再等等", "#E65100")
+        return ("💸", "近期高點，換匯不划算", "#C62828")
+
+    def _jpy_tip(rate):
+        if rate <= 0.215: return ("🎉", "日幣超便宜！衝日本", "#2E7D32")
+        if rate <= 0.225: return ("😊", "不錯的換匯點", "#2E7D32")
+        if rate <= 0.240: return ("⚖️", "價位普通", "#555555")
+        return ("💸", "日幣偏貴，再觀望", "#C62828")
+
+    def _oil_tip(p92):
+        try:
+            p = float(p92)
+        except (ValueError, TypeError):
+            return None
+        if p <= 28.5: return ("🎉", "油價便宜，該加滿了！", "#2E7D32")
+        if p <= 30.5: return ("⚖️", "價位普通", "#555555")
+        if p <= 32.0: return ("⚠️", "略偏高，非必要緩一緩", "#E65100")
+        return ("💸", "油價高點，省油駕駛", "#C62828")
+
+    # USD 匯率
+    if usd.get("spot_sell"):
+        icon, tip, color = _usd_tip(usd["spot_sell"])
         info_items.append({"type": "text",
-            "text": "💵 台銀即期賣出　" + "　".join(_rate_parts),
-            "size": "xs", "color": "#37474F", "wrap": True})
+            "text": f"💵 美金 {usd['spot_sell']:.2f}　{icon} {tip}",
+            "size": "xs", "color": color, "wrap": True})
+    # JPY 匯率
+    if jpy.get("spot_sell"):
+        icon, tip, color = _jpy_tip(jpy["spot_sell"])
+        info_items.append({"type": "text",
+            "text": f"💴 日幣 {jpy['spot_sell']:.4f}　{icon} {tip}",
+            "size": "xs", "color": color, "wrap": True})
+    # 油價
     if oil.get("92") and oil.get("92") != "?":
+        oil_tip_result = _oil_tip(oil["92"])
+        oil_suffix = ""
+        oil_color = "#37474F"
+        if oil_tip_result:
+            icon, tip, oil_color = oil_tip_result
+            oil_suffix = f"　{icon} {tip}"
         info_items.append({"type": "text",
-            "text": f"⛽ 中油 92/{oil.get('92')}　95/{oil.get('95')}　98/{oil.get('98')}",
-            "size": "xs", "color": "#37474F", "wrap": True})
+            "text": f"⛽ 92/{oil['92']}　95/{oil['95']}　98/{oil['98']}{oil_suffix}",
+            "size": "xs", "color": oil_color, "wrap": True})
+
     if not info_items:
         info_items = [{"type": "text",
             "text": "即時資訊暫時抓不到，請稍後再試 🙏",
