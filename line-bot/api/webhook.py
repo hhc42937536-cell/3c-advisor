@@ -8224,6 +8224,43 @@ class handler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
             self.wfile.write(json.dumps(diag, ensure_ascii=False).encode("utf-8"))
+        elif parsed.path == "/api/morning_test":
+            # 測試早安摘要（debug 用）
+            from urllib.parse import parse_qs
+            qs = parse_qs(parsed.query or "")
+            push_uid = qs.get("push", [""])[0]
+            city = qs.get("city", [""])[0] or ""
+            test_text = f"早安 {city}".strip() if city else "早安"
+            try:
+                msgs = build_morning_summary(test_text)
+                result = {"ok": True, "count": len(msgs),
+                          "altText": msgs[0].get("altText", "") if msgs else "",
+                          "type": msgs[0].get("type", "") if msgs else ""}
+                if push_uid and msgs:
+                    try:
+                        push_data = json.dumps({
+                            "to": push_uid, "messages": msgs[:5]
+                        }, ensure_ascii=False).encode("utf-8")
+                        push_req = urllib.request.Request(
+                            "https://api.line.me/v2/bot/message/push",
+                            data=push_data,
+                            headers={"Content-Type": "application/json",
+                                     "Authorization": f"Bearer {CHANNEL_ACCESS_TOKEN}"},
+                        )
+                        presp = urllib.request.urlopen(push_req, timeout=10)
+                        result["push"] = f"SUCCESS {presp.status}"
+                    except Exception as pe:
+                        result["push"] = f"FAILED: {pe}"
+                        if hasattr(pe, 'read'):
+                            result["push"] += f" | {pe.read().decode('utf-8','ignore')}"
+            except Exception as e:
+                import traceback
+                result = {"ok": False, "error": str(e), "trace": traceback.format_exc()}
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(json.dumps(result, ensure_ascii=False).encode("utf-8"))
+
         elif parsed.path == "/api/stats":
             # ── 使用統計儀表板 ──────────────────────────────
             html = _build_stats_html()

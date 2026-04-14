@@ -4,12 +4,52 @@
     {
       "src": "api/webhook.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "liff/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/api/webhook",
       "dest": "api/webhook.py"
+    },
+    {
+      "src": "/api/warm_cache",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/api/parking_worker",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/api/parking_debug",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/api/push_test",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/api/tdx_test",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/api/morning_test",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/api/stats",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/liff",
+      "dest": "/liff/index.html"
+    },
+    {
+      "src": "/liff/(.*)",
+      "dest": "/liff/$1"
     }
   ]
 }
