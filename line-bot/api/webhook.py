@@ -5436,6 +5436,16 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         for a in actions
     ]
 
+    # ── 分享文字（傳給朋友/另一半/同事）──
+    _bot_invite = f"https://line.me/R/ti/p/{LINE_BOT_ID}" if LINE_BOT_ID else "https://line.me/R/"
+    _share_text = (
+        f"☀️ 早安！{city} {today_str}\n\n"
+        f"🌤 {wx_main}\n{wx_hint}\n\n"
+        f"{surprise_icon} 今日小驚喜：{surprise_title}\n{surprise_body}\n\n"
+        f"👉 加「生活優轉」每天收到今日小驚喜：\n{_bot_invite}"
+    )
+    _share_url = "https://line.me/R/share?text=" + urllib.parse.quote(_share_text)
+
     return [{
         "type": "flex",
         "altText": f"☀️ 早安！{city} {today_str}",
@@ -5538,6 +5548,10 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                           "action": {"type": "message", "label": "健康",
                                      "text": "健康小幫手"}},
                      ]},
+                    {"type": "button", "style": "primary", "color": "#E65100",
+                     "height": "sm",
+                     "action": {"type": "uri", "label": "📤 分享給朋友/另一半/同事",
+                                "uri": _share_url}},
                     {"type": "button", "style": "secondary", "height": "sm",
                      "color": "#ECEFF1",
                      "action": {"type": "uri", "label": f"📍 換城市（現在：{city}）",
