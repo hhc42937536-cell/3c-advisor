@@ -4691,9 +4691,16 @@ _AQI_STATION = {
 
 
 def _fetch_cwa_weather(city: str) -> dict:
-    """呼叫中央氣象署 F-C0032-001 取得36小時天氣預報"""
+    """呼叫中央氣象署 F-C0032-001 取得36小時天氣預報（Redis cache 15 分鐘）"""
     if not _CWA_KEY:
         return {"ok": False, "error": "no_key"}
+    # 先查 cache
+    try:
+        cached = _redis_get(f"cwa_wx:{city}")
+        if cached:
+            return json.loads(cached) if isinstance(cached, str) else cached
+    except Exception:
+        pass
     cwb_name = _CWA_CITY_MAP.get(city, city + "市")
     url = (
         "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001"
@@ -4717,7 +4724,7 @@ def _fetch_cwa_weather(city: str) -> dict:
             except Exception:
                 return default
 
-        return {
+        result = {
             "ok": True, "city": city,
             # 今日白天
             "wx": _get("Wx", 0), "pop": int(_get("PoP", 0, "0")),
@@ -4728,6 +4735,11 @@ def _fetch_cwa_weather(city: str) -> dict:
             "wx_tom": _get("Wx", 2), "pop_tom": int(_get("PoP", 2, "0")),
             "min_tom": int(_get("MinT", 2, "20")), "max_tom": int(_get("MaxT", 2, "25")),
         }
+        try:
+            _redis_set(f"cwa_wx:{city}", json.dumps(result), ttl=900)  # 15 分鐘
+        except Exception:
+            pass
+        return result
     except Exception as e:
         print(f"[weather] {e}")
         return {"ok": False, "error": str(e)}
@@ -5264,7 +5276,15 @@ def _get_morning_surprise(city: str, wx_result: dict) -> tuple:
 
 
 def _fetch_quick_oil() -> dict:
-    """輕量抓中油本週 92/95/98 油價"""
+    """輕量抓中油本週 92/95/98 油價（Redis cache 6 小時）"""
+    # 先查 cache
+    try:
+        cached = _redis_get("morning_oil")
+        if cached:
+            return json.loads(cached) if isinstance(cached, str) else cached
+    except Exception:
+        pass
+
     import ssl as _ssl
     _ctx = _ssl.create_default_context()
     _ctx.check_hostname = False
@@ -5275,17 +5295,30 @@ def _fetch_quick_oil() -> dict:
             headers={"User-Agent": "Mozilla/5.0"})
         with urllib.request.urlopen(req, timeout=4, context=_ctx) as r:
             data = json.loads(r.read().decode("utf-8"))
-        return {
+        result = {
             "92": data.get("sPrice1", "?"),
             "95": data.get("sPrice2", "?"),
             "98": data.get("sPrice3", "?"),
         }
+        try:
+            _redis_set("morning_oil", json.dumps(result), ttl=21600)  # 6 小時
+        except Exception:
+            pass
+        return result
     except Exception:
         return {}
 
 
 def _fetch_quick_rates() -> dict:
-    """只抓 USD / JPY 即期賣出匯率（台灣銀行 CSV）"""
+    """只抓 USD / JPY 即期賣出匯率（台灣銀行 CSV，Redis cache 1 小時）"""
+    # 先查 cache
+    try:
+        cached = _redis_get("morning_rates")
+        if cached:
+            return json.loads(cached) if isinstance(cached, str) else cached
+    except Exception:
+        pass
+
     import csv as _csv
     try:
         req = urllib.request.Request(
@@ -5307,6 +5340,10 @@ def _fetch_quick_rates() -> dict:
                 }
             except (ValueError, IndexError):
                 pass
+        try:
+            _redis_set("morning_rates", json.dumps(result), ttl=3600)  # 1 小時
+        except Exception:
+            pass
         return result
     except Exception as e:
         print(f"[quick_rates] {e}")
