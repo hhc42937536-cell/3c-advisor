@@ -4904,12 +4904,66 @@ def _set_user_city(user_id: str, city: str):
         _redis_set(f"user_city:{user_id}", city, ttl=86400 * 90)
 
 
+def _build_morning_city_picker() -> list:
+    """第一次說早安時，讓用戶選城市"""
+    # 常用 6 大城市快速選擇 + 更多選項
+    quick_cities = ["台北", "新北", "桃園", "台中", "台南", "高雄"]
+    buttons = [
+        {"type": "button", "style": "primary", "color": "#1A1F3A", "height": "sm",
+         "action": {"type": "message", "label": c, "text": f"早安 {c}"}}
+        for c in quick_cities
+    ]
+    # 其他城市用兩排小按鈕
+    other_cities = [c for c in _ALL_CITIES if c not in quick_cities]
+    other_rows = []
+    for i in range(0, len(other_cities), 4):
+        chunk = other_cities[i:i+4]
+        other_rows.append({
+            "type": "box", "layout": "horizontal", "spacing": "sm",
+            "contents": [
+                {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                 "action": {"type": "message", "label": c, "text": f"早安 {c}"}}
+                for c in chunk
+            ] + [{"type": "filler"}] * (4 - len(chunk))
+        })
+    return [{
+        "type": "flex",
+        "altText": "早安！請選擇你的所在城市",
+        "contents": {
+            "type": "bubble", "size": "mega",
+            "header": {
+                "type": "box", "layout": "vertical",
+                "backgroundColor": "#1A1F3A", "paddingAll": "16px",
+                "contents": [
+                    {"type": "text", "text": "☀️ 早安！", "color": "#FFFFFF",
+                     "size": "xl", "weight": "bold"},
+                    {"type": "text", "text": "選擇你的城市，之後每天自動顯示當地資訊",
+                     "color": "#8892B0", "size": "xs", "wrap": True, "margin": "sm"},
+                ]
+            },
+            "body": {
+                "type": "box", "layout": "vertical",
+                "spacing": "sm", "paddingAll": "14px",
+                "contents": [
+                    {"type": "text", "text": "🏙️ 常用城市", "size": "sm",
+                     "weight": "bold", "color": "#37474F"},
+                    *buttons,
+                    {"type": "separator", "margin": "md"},
+                    {"type": "text", "text": "📍 其他縣市", "size": "xs",
+                     "color": "#90A4AE", "margin": "md"},
+                    *other_rows,
+                ]
+            }
+        }
+    }]
+
+
 def build_morning_summary(text: str, user_id: str = "") -> list:
     """早安摘要：天氣 + 匯率 + 每日健康 tip"""
     import threading as _thr
     import datetime as _dt
 
-    # 城市偵測：文字指定 > Redis 記憶 > 預設台北
+    # 城市偵測：文字指定 > Redis 記憶 > 問用戶
     all_cities_pat = "|".join(_ALL_CITIES)
     city_m = re.search(rf"({all_cities_pat})", text)
     if city_m:
@@ -4917,7 +4971,10 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         _set_user_city(user_id, city)
     else:
         saved = _get_user_city(user_id)
-        city = saved if saved else "台北"
+        if saved:
+            city = saved
+        else:
+            return _build_morning_city_picker()
 
     # 平行抓天氣 + 匯率
     wx_result, rate_result = {}, {}
