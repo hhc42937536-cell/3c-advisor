@@ -564,27 +564,34 @@ function setLoadingState(icon, text, sub, showBtn) {
 
 // 從 Bot 連結直接觸發（不顯示主選單）
 function autoFindParking() {
-  setLoadingState('📡', '定位中，請稍候...', '正在取得你的 GPS 位置', false);
+  // 手動按鈕「從一開始」就顯示，GPS 慢或無法取得時使用者不會卡住
+  setLoadingState('📡', '定位中，請稍候...', 'GPS 取得位置中，或點下方手動選擇', true);
+  const btn = document.getElementById('loading-btn');
+  btn.textContent = '📍 手動選擇位置';
+  btn.onclick = manualLocationFallback;
 
   if (!navigator.geolocation) {
     setLoadingState('⚠️', '裝置不支援定位', '請改用手動選擇位置', true);
+    btn.textContent = '📍 手動選擇位置';
+    btn.onclick = manualLocationFallback;
     return;
   }
 
-  // 5 秒後若 GPS 還沒回應，先顯示手動按鈕（繼續等待中）
-  const fallbackTimer = setTimeout(() => {
-    const btn = document.getElementById('loading-btn');
-    btn.textContent = '📍 改用手動選擇位置';
-    btn.onclick = manualLocationFallback;
-    btn.style.display = 'block';
-    const sub = document.getElementById('loading-sub');
-    sub.textContent = '定位較慢？可點下方手動選擇';
-    sub.style.display = 'block';
-  }, 5000);
+  let resolved = false;
+
+  // 保險用的 JS timer：10 秒後若 GPS 完全沒回應，更新提示文字
+  const hardTimer = setTimeout(() => {
+    if (!resolved) {
+      setLoadingState('⏱', '定位逾時', '請改用手動選擇位置', true);
+      btn.textContent = '📍 手動選擇位置';
+      btn.onclick = manualLocationFallback;
+    }
+  }, 10000);
 
   navigator.geolocation.getCurrentPosition(
     async (pos) => {
-      clearTimeout(fallbackTimer);
+      resolved = true;
+      clearTimeout(hardTimer);
       const { latitude, longitude } = pos.coords;
       setLoadingState('🔍', '找附近停車場中...', '', false);
       try {
@@ -598,7 +605,6 @@ function autoFindParking() {
         setLoadingState('✅', '已找到位置！', '稍後回到對話查看結果', false);
         setTimeout(() => liff.closeWindow(), 600);
       } catch (e) {
-        // sendMessages 失敗 → 重新用文字訊息傳座標
         try {
           await liff.sendMessages([{
             type: 'text',
@@ -613,15 +619,18 @@ function autoFindParking() {
       }
     },
     (err) => {
-      clearTimeout(fallbackTimer);
+      resolved = true;
+      clearTimeout(hardTimer);
       if (err.code === 1) {
         setLoadingState('🔒', '定位權限未開啟', '', false);
         openLocationSettings();
       } else {
         setLoadingState('⚠️', '定位失敗，請手動選擇', '', true);
+        btn.textContent = '📍 手動選擇位置';
+        btn.onclick = manualLocationFallback;
       }
     },
-    { timeout: 10000, maximumAge: 60000, enableHighAccuracy: false }
+    { timeout: 10000, maximumAge: 0, enableHighAccuracy: false }
   );
 }
 
