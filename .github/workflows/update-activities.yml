@@ -1,0 +1,53 @@
+name: 每週更新活動資料（全台爬蟲）
+
+on:
+  schedule:
+    # 每週一、五 UTC 14:00（台灣 22:00）自動跑
+    - cron: '0 14 * * 1,5'
+  workflow_dispatch:   # 也可在 GitHub Actions 頁面手動觸發
+
+jobs:
+  scrape-activities:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Chrome (headless)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y google-chrome-stable
+          google-chrome --version
+
+      - name: Install Python dependencies
+        run: pip install selenium requests
+
+      - name: Run activity scraper
+        run: python line-bot/scrape_all.py
+        env:
+          CI: true          # 讓 make_stealth_driver 自動切換 headless
+          PYTHONIOENCODING: utf-8
+        timeout-minutes: 50
+
+      - name: Commit & push accupass_cache.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git reset --hard origin/main
+          cp line-bot/accupass_cache.json /tmp/accupass_cache_new.json
+          git checkout -- .
+          cp /tmp/accupass_cache_new.json line-bot/accupass_cache.json
+          git add line-bot/accupass_cache.json
+          git diff --cached --quiet || git commit -m "🎉 自動更新活動資料 $(date +'%Y-%m-%d')"
+          git push
