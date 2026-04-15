@@ -48,6 +48,10 @@
       "dest": "api/webhook.py"
     },
     {
+      "src": "/api/debug_routes",
+      "dest": "api/webhook.py"
+    },
+    {
       "src": "/liff",
       "dest": "/liff/index.html"
     },

@@ -9267,6 +9267,23 @@ class handler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
             self.wfile.write(html.encode("utf-8"))
+        elif parsed.path == "/api/debug_routes":
+            # ── Rich menu 路由測試 ─────────────────────────
+            import traceback as _tb
+            test_cases = ["推薦手機", "今天吃什麼", "周末去哪", "健康小幫手", "金錢小幫手", "其他工具"]
+            results = {}
+            import sys as _sys
+            results["python_version"] = _sys.version
+            for t in test_cases:
+                try:
+                    msgs = handle_text_message(t, user_id="debug_test")
+                    results[t] = {"ok": True, "count": len(msgs), "type": msgs[0].get("type") if msgs else None}
+                except Exception as e:
+                    results[t] = {"ok": False, "error": str(e), "trace": _tb.format_exc()}
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(json.dumps(results, ensure_ascii=False, indent=2).encode("utf-8"))
         else:
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
