@@ -9242,42 +9242,70 @@ class handler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
 
         if parsed.path in ("/api/warm_cache", "/api/webhook"):
-            # 預熱主要城市的 TDX 停車資料
-            _WARM_CITIES = ["Taipei", "NewTaipei", "Taoyuan", "Taichung", "Tainan", "Kaohsiung"]
-            # 代表座標（市中心附近）
-            _CITY_COORDS = {
-                "Taipei":     (25.047, 121.517),
-                "NewTaipei":  (25.012, 121.466),
-                "Taoyuan":    (24.993, 121.301),
-                "Taichung":   (24.147, 120.674),
-                "Tainan":     (22.999, 120.227),
-                "Kaohsiung":  (22.627, 120.301),
-            }
             import threading as _th
-            token = _get_tdx_token()
             results = {}
 
-            def _warm(city):
+            # 1. 預熱停車場（TDX）
+            _WARM_CITIES = ["Taipei", "NewTaipei", "Taoyuan", "Taichung", "Tainan", "Kaohsiung"]
+            token = _get_tdx_token()
+            def _warm_parking(city):
                 try:
-                    # 只有 lots 需要預熱（24h TTL）；avail 讓使用者觸發即可
                     if _redis_get(f"tdx_lots_{city}") is None:
-                        lots = _tdx_get(f"Parking/OffStreet/CarPark/City/{city}?$format=JSON", token, timeout=8)
-                        if lots:  # 空結果不快取，避免 24h 鎖死
+                        lots = _tdx_get(f"Parking/OffStreet/CarPark/City/{city}?$format=JSON", token, timeout=6)
+                        if lots:
                             _redis_set(f"tdx_lots_{city}", lots, ttl=86400)
-                        results[city] = f"fetched {len(lots)} lots"
+                        results[f"parking_{city}"] = f"fetched {len(lots)}"
                     else:
-                        results[city] = "cache hit"
+                        results[f"parking_{city}"] = "cache_hit"
                 except Exception as e:
-                    results[city] = f"error: {e}"
+                    results[f"parking_{city}"] = f"err:{e}"
 
-            threads = [_th.Thread(target=_warm, args=(c,), daemon=True) for c in _WARM_CITIES]
+            # 2. 預熱天氣（6 大城市，15 分鐘 TTL）
+            _WEATHER_WARM = ["台北", "新北", "台中", "台南", "高雄", "桃園"]
+            def _warm_weather(city):
+                try:
+                    if not _redis_get(f"cwa_wx:{city}"):
+                        _fetch_cwa_weather(city)
+                        results[f"wx_{city}"] = "fetched"
+                    else:
+                        results[f"wx_{city}"] = "cache_hit"
+                except Exception as e:
+                    results[f"wx_{city}"] = f"err:{e}"
+
+            # 3. 預熱匯率 + 油價（TTL 1h / 6h）
+            def _warm_rates():
+                try:
+                    if not _redis_get("morning_rates"):
+                        _fetch_quick_rates()
+                        results["rates"] = "fetched"
+                    else:
+                        results["rates"] = "cache_hit"
+                except Exception as e:
+                    results["rates"] = f"err:{e}"
+
+            def _warm_oil():
+                try:
+                    if not _redis_get("morning_oil"):
+                        _fetch_quick_oil()
+                        results["oil"] = "fetched"
+                    else:
+                        results["oil"] = "cache_hit"
+                except Exception as e:
+                    results["oil"] = f"err:{e}"
+
+            threads = (
+                [_th.Thread(target=_warm_parking, args=(c,), daemon=True) for c in _WARM_CITIES] +
+                [_th.Thread(target=_warm_weather, args=(c,), daemon=True) for c in _WEATHER_WARM] +
+                [_th.Thread(target=_warm_rates, daemon=True),
+                 _th.Thread(target=_warm_oil,   daemon=True)]
+            )
             for t in threads: t.start()
-            for t in threads: t.join(timeout=9)
+            for t in threads: t.join(timeout=8)
 
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.end_headers()
-            self.wfile.write(json.dumps({"status": "warmed", "cities": results}).encode())
+            self.wfile.write(json.dumps({"status": "warmed", "detail": results}).encode())
         elif parsed.path == "/api/push_test":
             # 直接測試 push_message，顯示 LINE API 真實回應
             from urllib.parse import parse_qs
