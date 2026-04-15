@@ -749,16 +749,9 @@ def build_bmi_flex(height: float, weight: float) -> list:
 
     return [{"type": "flex", "altText": f"BMI 計算結果：{bmi}", "contents": {
         "type": "bubble",
-        "header": {"type": "box", "layout": "horizontal",
+        "header": {"type": "box", "layout": "vertical",
                    "backgroundColor": "#1A1F3A", "paddingAll": "16px",
                    "contents": [
-                       {"type": "image",
-                        "url": "https://3c-advisor.vercel.app/liff/images/dumbbell.jpg",
-                        "flex": 0, "size": "72px",
-                        "aspectRatio": "1:1", "aspectMode": "fit"},
-                       {"type": "box", "layout": "vertical", "width": "4px",
-                        "cornerRadius": "4px", "backgroundColor": ACCENT,
-                        "margin": "md", "contents": []},
                        {"type": "box", "layout": "vertical", "flex": 1,
                         "paddingStart": "12px", "contents": [
                             {"type": "text", "text": "💪 BMI 健康分析",
@@ -1130,17 +1123,10 @@ def build_health_menu() -> list:
     return [{"type": "flex", "altText": "健康小幫手",
              "contents": {
                  "type": "bubble", "size": "mega",
-                 "header": {"type": "box", "layout": "horizontal",
+                 "header": {"type": "box", "layout": "vertical",
                             "backgroundColor": "#1A1F3A",
                             "paddingAll": "16px",
                             "contents": [
-                                {"type": "image",
-                                 "url": "https://3c-advisor.vercel.app/liff/images/dumbbell.jpg",
-                                 "flex": 0, "size": "72px",
-                                 "aspectRatio": "1:1", "aspectMode": "fit"},
-                                {"type": "box", "layout": "vertical", "width": "4px",
-                                 "cornerRadius": "4px", "backgroundColor": ACCENT,
-                                 "margin": "md", "contents": []},
                                 {"type": "box", "layout": "vertical", "flex": 1,
                                  "paddingStart": "12px", "contents": [
                                      {"type": "text", "text": "💪 健康小幫手",
@@ -1739,17 +1725,10 @@ def build_money_menu() -> list:
     return [{"type": "flex", "altText": "金錢小幫手",
              "contents": {
                  "type": "bubble", "size": "mega",
-                 "header": {"type": "box", "layout": "horizontal",
+                 "header": {"type": "box", "layout": "vertical",
                             "backgroundColor": "#1A1F3A",
                             "paddingAll": "16px",
                             "contents": [
-                                {"type": "image",
-                                 "url": "https://3c-advisor.vercel.app/liff/images/coin.jpg",
-                                 "flex": 0, "size": "72px",
-                                 "aspectRatio": "1:1", "aspectMode": "fit"},
-                                {"type": "box", "layout": "vertical", "width": "4px",
-                                 "cornerRadius": "4px", "backgroundColor": ACCENT,
-                                 "margin": "md", "contents": []},
                                 {"type": "box", "layout": "vertical", "flex": 1,
                                  "paddingStart": "12px", "contents": [
                                      {"type": "text", "text": "💰 金錢小幫手",
@@ -3082,16 +3061,9 @@ def build_food_flex(style: str, area: str = "") -> list:
     return [{"type": "flex", "altText": f"今天吃什麼 — {icon}{style}版",
              "contents": {
                  "type": "bubble", "size": "mega",
-                 "header": {"type": "box", "layout": "horizontal",
+                 "header": {"type": "box", "layout": "vertical",
                             "backgroundColor": "#1A1F3A", "paddingAll": "16px",
                             "contents": [
-                                {"type": "image",
-                                 "url": "https://3c-advisor.vercel.app/liff/images/ramen.jpg",
-                                 "flex": 0, "size": "72px",
-                                 "aspectRatio": "1:1", "aspectMode": "fit"},
-                                {"type": "box", "layout": "vertical", "width": "4px",
-                                 "cornerRadius": "4px", "backgroundColor": color,
-                                 "margin": "md", "contents": []},
                                 {"type": "box", "layout": "vertical", "flex": 1,
                                  "paddingStart": "12px", "contents": [
                                      {"type": "text", "text": f"🍽️ {meal_label}{area_label}",
@@ -3307,9 +3279,10 @@ def build_food_menu() -> list:
     ACCENT = "#FF6B35"
 
     def _btn(key):
-        label, text = _all_btns[key]
+        label, _ = _all_btns[key]
+        maps_url = f"https://www.google.com/maps/search/{urllib.parse.quote(label + '餐廳')}"
         return {"type": "button", "style": "primary", "color": ACCENT, "flex": 1,
-                "height": "sm", "action": {"type": "message", "label": label, "text": text}}
+                "height": "sm", "action": {"type": "uri", "label": label, "uri": maps_url}}
 
     row1 = [_btn(k) for k in order[0:3]]
     row2 = [_btn(k) for k in order[3:6]]
@@ -3325,31 +3298,19 @@ def build_food_menu() -> list:
     return [{"type": "flex", "altText": "今天吃什麼？",
              "contents": {
                  "type": "bubble", "size": "mega",
-                 "header": {"type": "box", "layout": "horizontal",
+                 "header": {"type": "box", "layout": "vertical",
                             "backgroundColor": "#1A1F3A",
                             "paddingAll": "16px",
                             "contents": [
-                                {"type": "image",
-                                 "url": "https://3c-advisor.vercel.app/liff/images/ramen.jpg",
-                                 "flex": 0, "size": "72px",
-                                 "aspectRatio": "1:1", "aspectMode": "fit"},
-                                {"type": "box", "layout": "vertical", "width": "4px",
-                                 "cornerRadius": "4px", "backgroundColor": ACCENT,
-                                 "margin": "md", "contents": []},
-                                {"type": "box", "layout": "vertical", "flex": 1,
-                                 "paddingStart": "12px", "contents": [
-                                     {"type": "text", "text": f"🍽️ {meal_label}",
-                                      "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                                     {"type": "text", "text": hint,
-                                      "color": "#8892B0", "size": "xs", "margin": "xs"},
-                                 ]},
+                                {"type": "text", "text": f"🍽️ {meal_label}",
+                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                                {"type": "text", "text": hint,
+                                 "color": "#8892B0", "size": "xs", "margin": "xs"},
                             ]},
                  "body": {"type": "box", "layout": "vertical", "backgroundColor": "#FFFFFF",
                           "contents": [
-                     {"type": "text", "text": "選一個類型，3秒決定 👇",
-                      "size": "sm", "color": "#1A1F3A", "weight": "bold"},
-                     {"type": "text", "text": "也可以直接說「台南 火鍋」「台北 拉麵」",
-                      "size": "xs", "color": "#8892B0", "wrap": True, "margin": "sm"},
+                     {"type": "text", "text": "選類型，直接開 Google Maps 找附近 👇",
+                      "size": "sm", "color": "#1A1F3A", "weight": "bold", "wrap": True},
                  ]},
                  "footer": {"type": "box", "layout": "vertical", "spacing": "sm",
                             "backgroundColor": "#FFFFFF",
@@ -4481,17 +4442,10 @@ def build_activity_menu() -> list:
     return [{"type": "flex", "altText": "近期活動",
              "contents": {
                  "type": "bubble", "size": "mega",
-                 "header": {"type": "box", "layout": "horizontal",
+                 "header": {"type": "box", "layout": "vertical",
                             "backgroundColor": "#1A1F3A",
                             "paddingAll": "16px",
                             "contents": [
-                                {"type": "image",
-                                 "url": "https://3c-advisor.vercel.app/liff/images/calendar.jpg",
-                                 "flex": 0, "size": "72px",
-                                 "aspectRatio": "1:1", "aspectMode": "fit"},
-                                {"type": "box", "layout": "vertical", "width": "4px",
-                                 "cornerRadius": "4px", "backgroundColor": ACCENT,
-                                 "margin": "md", "contents": []},
                                 {"type": "box", "layout": "vertical", "flex": 1,
                                  "paddingStart": "12px", "contents": [
                                      {"type": "text", "text": "🗓️ 近期活動？",
@@ -7292,16 +7246,9 @@ def build_tools_menu() -> list:
         "contents": {
             "type": "bubble", "size": "mega",
             "header": {
-                "type": "box", "layout": "horizontal",
+                "type": "box", "layout": "vertical",
                 "backgroundColor": "#1A1F3A", "paddingAll": "16px",
                 "contents": [
-                    {"type": "image",
-                     "url": "https://3c-advisor.vercel.app/liff/images/wrench.jpg",
-                     "flex": 0, "size": "72px",
-                     "aspectRatio": "1:1", "aspectMode": "fit"},
-                    {"type": "box", "layout": "vertical", "width": "4px",
-                     "cornerRadius": "4px", "backgroundColor": ACCENT,
-                     "margin": "md", "contents": []},
                     {"type": "box", "layout": "vertical", "flex": 1,
                      "paddingStart": "12px", "contents": [
                          {"type": "text", "text": "🗃️ 生活工具箱",
