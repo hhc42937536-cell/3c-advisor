@@ -5257,7 +5257,6 @@ def _load_surprise_cache() -> dict:
         return {}
 
 _SURPRISE_CACHE = _load_surprise_cache()
-
 # 保底驚喜池（只在以上都沒資料時用）
 _SURPRISES_FALLBACK = [
     ("🎯", "今日挑戰", "中午不滑手機，專心吃飯 15 分鐘，你做得到！"),
@@ -5445,10 +5444,188 @@ _GENERIC_LOCAL_TIPS = [
 ]
 
 
+# ── 城市在地店家優惠池 ─────────────────────────────────────
+# 格式：(icon, title, body)
+# 每城市 8 則以上，每天+每人 hash 輪播，確保同事拿到不同則
+_CITY_LOCAL_DEALS: dict[str, list[tuple]] = {
+    "台北": [
+        ("🛒", "南門市場午後特惠", "下午 4 點後熟食區當日特價，點心也便宜，下班順路撿便宜"),
+        ("☕", "大安巷弄咖啡 Happy Hour", "永康街、師大附近精品咖啡廳週間下午 2-5 點有優惠"),
+        ("🧋", "公館商圈學生優惠", "台大周邊眾多店家有學生折扣，出示學生證即享"),
+        ("🌊", "淡水漁港現撈直售", "週末早上現撈漁貨直售，比超市便宜且新鮮，搭捷運就到"),
+        ("🎪", "華山文創市集", "不定期創意市集，手作品＋獨立品牌都比定價親民"),
+        ("🏙️", "信義商圈週間積點", "新光三越、ATT 百貨週間消費積點加倍，比假日划算"),
+        ("🎭", "兩廳院演前折扣票", "當天未售完票演前 2 小時常有折扣，官網或現場詢問"),
+        ("🎡", "迪化街農夫市集", "週末有小農市集，中藥香加咖啡香，南北貨直接批發價"),
+    ],
+    "新北": [
+        ("🍜", "三峽老街豆腐直售", "在地豆腐製品直售，平日人少店家有更多時間介紹"),
+        ("🌊", "淡水老街平日特惠", "平日來人少，阿給、鐵蛋等小吃攤常有平日優惠"),
+        ("♨️", "烏來溫泉平日優惠", "平日泡湯比假日便宜 20-30%，記得先訂，人也少很多"),
+        ("🎨", "鶯歌陶瓷老街批發", "平日陶瓷商家有批發優惠，手作體驗費用比假日少"),
+        ("🛍️", "板橋大遠百週間", "不定期週間折扣活動，美食街外帶有折扣"),
+        ("🦞", "八里渡船頭海鮮", "渡船頭旁海鮮攤平日比假日有更多議價空間"),
+        ("🌿", "永和樂華夜市早場", "下午開始營業時段，部分攤位有開市特惠"),
+        ("🏔️", "九份老街平日優惠", "平日遊客少，老街商家有時間聊天，更願意議價"),
+    ],
+    "桃園": [
+        ("🌺", "大溪老街平日優惠", "平日木器工藝店家來客少，部分有平日特惠並附贈解說"),
+        ("🛍️", "中壢大遠百週間日", "每月特定週間積點加倍或滿額贈，上官網確認活動日期"),
+        ("🍎", "觀音農場蔬果直售", "觀音、新屋一帶農場週末有蔬果直售，比市場便宜"),
+        ("🏊", "石門水庫農產", "環湖道路旁假日有農民直售，番薯、花生等當季農產品"),
+        ("☕", "桃園藝文特區咖啡", "鐵道故事館周邊文創咖啡廳，週間有買一送一"),
+        ("🍱", "中壢觀光夜市早場", "下午開市時人少，部分攤位有開攤優惠"),
+    ],
+    "台中": [
+        ("🌈", "審計新村週末市集", "勤美術館旁手作市集，獨立品牌小物＋有機農產品直售"),
+        ("🍱", "第二市場早市特惠", "廬山飯糰、老攤販週間早上人少，早到有現做限定品項"),
+        ("☕", "草悟道咖啡一條街", "審計新村到勤美廣場沿線，週間外帶有折扣"),
+        ("🏪", "台中港三井出清季", "每季末有品牌清倉，折上折可達 3-4 折"),
+        ("🌙", "逢甲早場優惠", "逢甲夜市下午 4-6 點剛開市，攤位剛擺好有開市特惠"),
+        ("🦭", "梧棲漁港週六早市", "週六早上 6-10 點現撈海鮮直售，比超市便宜且更新鮮"),
+        ("🎨", "國美館常設展免費", "國立台灣美術館免費入場，品質不輸付費展覽"),
+        ("🌊", "高美濕地農產採買", "梧棲區農家週末有現採蔬菜直售，順路可去高美"),
+    ],
+    "台南": [
+        ("🌺", "花園夜市開市日確認", "花園夜市週四、六、日才開，外地朋友記得確認再出發"),
+        ("🦐", "安平漁港直售", "安平漁港周邊漁產直售攤，蝦子、文蛤比超市便宜很多"),
+        ("🏛️", "奇美博物館網路票優惠", "官網購票比現場便宜，早上人少，建議預約"),
+        ("🌙", "神農街老宅咖啡", "晚上 7-9 點最有氛圍，部分有最低消費優惠組合"),
+        ("🎪", "歸仁農夫市集", "歸仁、仁德週末有有機蔬果直售，附近居民錯過可惜"),
+        ("☕", "中西區老宅咖啡", "赤崁樓周邊老宅改建咖啡館，週間拿鐵第二杯折扣"),
+        ("🛒", "永樂市場布料批發", "週間比假日更願意議價，量多更便宜"),
+        ("🍜", "保安路食材行", "散裝販售當地食材，採購量大可議價"),
+    ],
+    "高雄": [
+        ("🌊", "旗津海鮮週末直售", "旗津渡輪旁週末早上特價，風螺、章魚、花枝很便宜"),
+        ("🛍️", "夢時代品牌週活動", "週一到週四常有品牌週，美食街午間外帶有折扣"),
+        ("🍱", "三鳳中街南北貨批發", "乾貨批發價格比超市實惠，節慶前更划算"),
+        ("🌿", "美濃農村直售", "週末農家直售有機蔬菜，菸草文化節期間更熱鬧"),
+        ("🎭", "高雄流行音樂中心", "KHMC 常有免費展演活動，河岸景色加免費表演超值"),
+        ("🏖️", "西子灣旁海鮮小吃", "周邊在地海鮮攤比觀光區便宜，當地人才知道的位置"),
+        ("🌙", "瑞豐夜市開市日", "瑞豐週三四不開，週一二五六日才有，出發前確認"),
+        ("🎨", "駁二周邊文創週間", "駁二藝術特區附近文創小店週間人少，有週間優惠"),
+    ],
+    "新竹": [
+        ("🍜", "城隍廟美食早市", "城隍廟周邊貢丸、米粉攤平日比觀光客多的假日便宜"),
+        ("🌊", "南寮漁港假日市集", "週末有漁產直售＋手作市集，順遊海邊吹海風"),
+        ("🎨", "新竹美術館免費展", "市立美術館多數展覽免費，平日來人更少更舒適"),
+        ("🌺", "內灣老街平日優惠", "野薑花粽、客家料理店家平日有時間詳細介紹"),
+        ("☕", "竹北文青咖啡館", "竹北咖啡館密集，許多有學生/上班族午間優惠"),
+        ("🏢", "竹科周邊午餐優惠", "竹北新竹科學園區周邊餐廳有工作日午餐特惠"),
+    ],
+    "嘉義": [
+        ("🌲", "嘉義農會超市農產", "嘉義農會超市有阿里山高山茶、梅子等產季特價"),
+        ("🍜", "文化路夜市早場", "下午 5 點剛開市人少，攤位剛擺好可以慢慢選"),
+        ("🏛️", "故宮南院套票優惠", "常設展＋特展套票組合比個別買便宜"),
+        ("🍊", "大林番茄、柳丁季", "大林、民雄一帶果農產季路邊直售，剛採超新鮮"),
+        ("☕", "嘉義老屋咖啡館", "老屋改建咖啡館週間有下午茶套餐優惠"),
+        ("🛒", "東市場早市", "每天早上 5-9 點，生鮮蔬果比大賣場新鮮且便宜"),
+    ],
+    "屏東": [
+        ("🌺", "墾丁平日超值優惠", "民宿、水上活動平日比假日便宜 3-5 成，避開人潮"),
+        ("🦐", "東港現撈漁貨", "東港漁港黑鮪魚、旗魚直售，比台北海鮮市場便宜很多"),
+        ("🍍", "南州、枋寮農產直售", "鳳梨產季路邊直售，甜度高且比超市親民"),
+        ("🐠", "小琉球非假日浮潛", "非假日包船費可砍到假日的 6-7 折，視野也更清晰"),
+        ("🌿", "霧台原住民農產", "小米、愛玉、山地蔬菜直售，支持在地部落"),
+        ("☕", "屏東市區咖啡街", "勝利路周邊咖啡館近年聚集，週間有買一送一活動"),
+    ],
+    "宜蘭": [
+        ("🦞", "烏石港現撈漁市", "每天上午漁船靠港後有現撈直售，花枝、蝦最便宜"),
+        ("♨️", "礁溪溫泉平日優惠", "各大飯店泡湯池平日比假日便宜約 2-3 成，人也少"),
+        ("🍎", "礁溪番茄、草莓季", "附近農家產季可直接進農場採買，省掉中間商"),
+        ("🎪", "傳藝中心表演優惠", "演前購票有優惠，旺季外的平日人少悠閒"),
+        ("🌾", "冬山河花農切花", "周邊花農有切花直售，百合花產季更便宜"),
+        ("🧀", "頭城農場體驗優惠", "農村體驗平日有特惠組合，比假日少排隊"),
+    ],
+    "花蓮": [
+        ("🌸", "吉安有機農產直售", "吉安農民直售站有機蔬菜、木瓜、洛神花，比市區便宜"),
+        ("🏔️", "太魯閣平日停車", "平日停車容易，建議早上去，光線好且人少"),
+        ("🦞", "花蓮漁港現撈市場", "每天早上現撈旗魚、鬼頭刀，比台北超市便宜很多"),
+        ("🍞", "花蓮麻糬伴手禮優惠", "在地麻糬店平日有試吃＋組合優惠"),
+        ("🌊", "七星潭石花凍早餐", "旁邊小店石花凍＋車輪餅，在地早餐組合超值"),
+        ("☕", "花蓮市區老宅咖啡", "中正路周邊老宅改建咖啡館，週間有店長特調優惠"),
+    ],
+    "台東": [
+        ("🌺", "池上農會直售", "池上農會超市有池上米、紅烏龍茶產季特價"),
+        ("🦞", "成功漁港現撈", "每天早上現撈旗魚、鬼頭刀，料理店門口超新鮮"),
+        ("♨️", "知本溫泉平日優惠", "各旅館泡湯池平日比假日便宜，人也少很多"),
+        ("🎪", "台東縱谷農夫市集", "週末台東糖廠附近有有機農夫市集，原住民特色農產"),
+        ("🌾", "關山有機米直售", "關山農家有機稻米產季直售，比市區百貨超市便宜"),
+        ("☕", "台東火車站周邊咖啡", "老宅改建咖啡館，週間有旅客優惠"),
+    ],
+    "基隆": [
+        ("🦞", "崁仔頂漁市早市", "凌晨 1-5 點漁貨批發市場，早起的人有最新鮮的魚"),
+        ("🍜", "廟口夜市平日優惠", "廟口小吃平日遊客少，攤販有更多時間服務，可挑慢慢吃"),
+        ("🌊", "正濱漁港彩色屋", "週間人少，附近咖啡廳有午後優惠，景色超美"),
+        ("🏔️", "情人湖周邊農產", "周邊農家有機茶葉、蔬菜直售，假日下午有特惠"),
+        ("☕", "仁愛區咖啡巷弄", "基隆市區精品咖啡館隱藏在巷弄，週間有特調優惠"),
+        ("🛒", "仁愛市場早市", "傳統市場早上 6-9 點最齊全，蔬果比超市便宜"),
+    ],
+    "苗栗": [
+        ("🍓", "大湖草莓季直售", "冬季草莓採摘農場，比市面上便宜且超新鮮，建議平日來"),
+        ("🎨", "三義木雕老街", "平日工藝師傅有空可以聊作品，部分有平日特惠"),
+        ("🌺", "獅頭山桂花季", "桂花產季農家有桂花釀、糕點直售，價格親民"),
+        ("☕", "頭份商圈咖啡", "頭份近年咖啡館增多，週間有買一送一優惠"),
+        ("🧺", "公館番茄農場", "公館紅番茄採摘農場產季直售，酸甜剛好"),
+        ("🏔️", "南庄老街平日優惠", "假日人潮多，平日來商家有時間介紹手工藝品"),
+    ],
+    "彰化": [
+        ("🐄", "田尾公路花園直售", "花卉直售比花店便宜 3-5 成，假日有更多攤位"),
+        ("🌺", "鹿港老街平日優惠", "平日遊客少，鹿港小吃攤、傳統糕餅行服務更好"),
+        ("🍱", "彰化肉圓老店", "市區幾家百年老店早上 9 點前就有新鮮現蒸，別錯過"),
+        ("☕", "員林商圈午間優惠", "員林百貨周邊餐廳週間有午餐套餐特惠"),
+        ("🛒", "彰化第一市場", "彰化市傳統市場早上食材新鮮齊全，比量販店便宜"),
+        ("🌿", "埔心牧場平日優惠", "平日入場票較假日便宜，動物互動也更悠閒"),
+    ],
+    "南投": [
+        ("🍵", "鹿谷高山茶直售", "鹿谷茶農產季在農場直售，比市區茶行便宜且可試喝"),
+        ("🌊", "日月潭周邊農產", "日月潭周邊邵族農特產直售，紅茶、香菇、木耳"),
+        ("🌸", "武陵農場花季", "春天賞梅/賞桃花，平日進場更有空間拍照"),
+        ("☕", "埔里咖啡一條街", "埔里精品咖啡發展多年，週間有特調優惠組合"),
+        ("🧺", "集集小鎮農產採買", "集集農家有有機蔬菜直售，順遊集集車站"),
+        ("🌿", "奧萬大楓葉季", "秋季賞楓，平日門票比假日便宜且不塞車"),
+    ],
+    "雲林": [
+        ("🧅", "西螺蔬果批發直售", "西螺果菜市場周邊農家直售，大蒜、洋蔥超便宜"),
+        ("🍊", "古坑柳丁、咖啡", "古坑柳丁產季農場直售，台灣咖啡豆也在這裡"),
+        ("🎪", "北港朝天宮廟會", "媽祖誕辰前後廟會熱鬧，周邊小吃攤有廟會特惠"),
+        ("☕", "斗六市區咖啡街", "斗六太平老街周邊老宅改咖啡，週間有優惠"),
+        ("🛒", "斗南傳統市場", "斗南市場早市蔬果新鮮，供應台北市場的源頭"),
+        ("🌺", "虎尾糖廠冰棒", "台灣糖業博物館糖廠冰棒現在也能買到，懷舊"),
+    ],
+    "澎湖": [
+        ("🦞", "馬公漁港現撈直售", "下午漁船靠港後有現撈海鮮，比觀光市場便宜很多"),
+        ("🌺", "花火節淡季旅遊", "花火節結束後民宿費用大降，海水一樣清澈"),
+        ("🐠", "吉貝浮潛非假日", "非假日包船費較低，海水視野好且安靜"),
+        ("☕", "馬公市區古厝咖啡", "老建築改建咖啡館，週間有下午茶套餐優惠"),
+        ("🛒", "中央老街海產乾貨", "海產乾貨直接跟店家買比台灣本島便宜"),
+        ("🌿", "七美、望安秘境", "離島來回船票平日比假日便宜，人少景更美"),
+    ],
+}
+
+# 沒有城市資料的通用在地優惠保底池
+_GENERIC_LOCAL_DEALS = [
+    ("🛒", "傳統市場早市特惠", "傳統市場早上 8 點前攤販最多，蔬果比超市新鮮且便宜"),
+    ("♨️", "當地溫泉平日優惠", "若附近有溫泉，平日泡湯比假日便宜約 2-3 成"),
+    ("🌿", "農夫直售站採買", "搜尋附近「農產品直售站」，當季農產比超市新鮮且便宜"),
+    ("🏔️", "國家公園步道免費", "多數國家公園步道免費，平日人少更好走、好停車"),
+    ("🎨", "縣市立美術館免費展", "各縣市文化中心美術館展覽多數免費，平日來更舒適"),
+    ("🍜", "老市場隱藏美食", "傳統市場二樓或深處常有低調老攤，價格比周邊餐廳實惠"),
+]
+
+
 def _day_city_hash(doy: int, city: str, salt: int = 0) -> int:
     """用日期+城市+salt 產生穩定隨機數，確保每城市每天看到不同內容"""
     import hashlib
     key = f"{doy}:{city}:{salt}"
+    return int(hashlib.md5(key.encode()).hexdigest()[:8], 16)
+
+
+def _day_user_city_hash(doy: int, city: str, user_id: str, salt: int = 0) -> int:
+    """用日期+城市+用戶ID+salt 產生穩定隨機數，讓同城市同天的不同人看到不同內容"""
+    import hashlib
+    key = f"{doy}:{city}:{user_id}:{salt}"
     return int(hashlib.md5(key.encode()).hexdigest()[:8], 16)
 
 
@@ -5474,43 +5651,60 @@ def _get_ptt_deals_list(n: int = 3, city: str = "") -> list:
     return picks
 
 
-def _get_morning_surprise(city: str, wx_result: dict) -> tuple:
-    """回傳 (icon, title, body)。特殊日期最優先，其餘城市+日期雙重 hash 輪播"""
+def _get_national_deal(city: str, user_id: str = "") -> tuple:
+    """全台通用好康：(icon, title, body)
+    特殊日期最優先；其次週期性連鎖優惠；其次 PTT/Threads 網友好康；最後新歌。
+    加入 user_id 讓同城市同天不同人看到不同則。
+    """
     import datetime as _dt
     today = _dt.date.today()
     doy = today.timetuple().tm_yday
-    weekday = today.weekday()  # 0=Monday
+    weekday = today.weekday()
 
-    # ── 特殊日期（節日/電商大促）永遠最優先 ──
+    # ── 特殊日期（節日/電商大促）全員相同，不按 user 區分 ──
     special = _SPECIAL_DEALS.get((today.month, today.day))
     if special:
         return special
 
-    # ── 收集所有可用的驚喜來源 ──
-    candidates = []  # (type_name, surprise_tuple)
+    candidates = []
 
-    # 週期性優惠（城市 hash 決定從哪個選項開始）
+    # 週期性連鎖優惠（同城市同天不同人看不同則）
     weekly = _WEEKLY_DEALS.get(weekday, [])
     if weekly:
-        pick = weekly[_day_city_hash(doy, city, 1) % len(weekly)]
+        pick = weekly[_day_user_city_hash(doy, city, user_id, 1) % len(weekly)]
         candidates.append(("deal", pick))
 
-    # 爬蟲：新歌
+    # 爬蟲：PTT/Dcard/Threads 好康
+    deals = _SURPRISE_CACHE.get("deals", []) if _SURPRISE_CACHE else []
+    if deals:
+        deal = deals[_day_user_city_hash(doy, city, user_id, 3) % len(deals)]
+        tag = deal.get("tag", "PTT")
+        candidates.append(("ptt", ("🔥", f"網友好康（{tag}）", deal.get("title", ""))))
+
+    # 爬蟲：新歌（作為候補）
     songs = _SURPRISE_CACHE.get("songs", []) if _SURPRISE_CACHE else []
     if songs:
-        song = songs[_day_city_hash(doy, city, 2) % len(songs)]
+        song = songs[_day_user_city_hash(doy, city, user_id, 2) % len(songs)]
         candidates.append(("song", ("🎵", "今日推薦新歌",
             f"《{song.get('name','')}》— {song.get('artist','')}")))
 
-    # 爬蟲：好康（PTT + Dcard）
-    deals = _SURPRISE_CACHE.get("deals", []) if _SURPRISE_CACHE else []
-    if deals:
-        deal = deals[_day_city_hash(doy, city, 3) % len(deals)]
-        tag = deal.get("tag", "PTT")
-        candidates.append(("ptt", ("🔥", f"今日網友好康（{tag}）",
-            deal.get("title", ""))))
+    if candidates:
+        pick = candidates[_day_user_city_hash(doy, city, user_id, 0) % len(candidates)]
+        return pick[1]
 
-    # Accupass 當地活動
+    return _SURPRISES_FALLBACK[_day_user_city_hash(doy, city, user_id, 9) % len(_SURPRISES_FALLBACK)]
+
+
+def _get_city_local_deal(city: str, user_id: str = "") -> tuple:
+    """當地在地優惠：(icon, title, body)
+    Accupass 近期活動最優先；其次城市在地優惠池；最後通用保底。
+    加入 user_id 讓同城市同天不同人看到不同則。
+    """
+    import datetime as _dt
+    today = _dt.date.today()
+    doy = today.timetuple().tm_yday
+
+    # Accupass 當地活動（如有爬蟲資料）
     if _ACCUPASS_CACHE:
         city_data = _ACCUPASS_CACHE.get(city, {})
         city_events = []
@@ -5518,23 +5712,16 @@ def _get_morning_surprise(city: str, wx_result: dict) -> tuple:
             if isinstance(events, list):
                 city_events.extend(events)
         if city_events:
-            ev = city_events[_day_city_hash(doy, city, 4) % len(city_events)]
-            candidates.append(("event", ("🎉", f"{city}近期活動",
-                f"{ev.get('name', '精彩活動')}，有空去看看～")))
+            ev = city_events[_day_user_city_hash(doy, city, user_id, 4) % len(city_events)]
+            return ("🎉", f"{city}近期活動", f"{ev.get('name', '精彩活動')}，有空去看看～")
 
-    # 城市在地驚喜（景點/美食/季節限定）
-    local_pool = _CITY_LOCAL_TIPS.get(city, _GENERIC_LOCAL_TIPS)
-    if local_pool:
-        tip = local_pool[_day_city_hash(doy, city, 5) % len(local_pool)]
-        candidates.append(("local", tip))
+    # 城市在地優惠（含景點、店家、市集）
+    deal_pool = _CITY_LOCAL_DEALS.get(city, _GENERIC_LOCAL_DEALS)
+    tip_pool = _CITY_LOCAL_TIPS.get(city, _GENERIC_LOCAL_TIPS)
 
-    # ── 城市+日期 hash 決定今天看哪種類型（各城市不同）──
-    if candidates:
-        pick = candidates[_day_city_hash(doy, city, 0) % len(candidates)]
-        return pick[1]
-
-    # ── 保底 ──
-    return _SURPRISES_FALLBACK[_day_city_hash(doy, city, 9) % len(_SURPRISES_FALLBACK)]
+    # 今天用優惠池還是景點 tips 由 user hash 決定（7:3 偏向優惠）
+    combined = deal_pool + tip_pool
+    return combined[_day_user_city_hash(doy, city, user_id, 5) % len(combined)]
 
 
 def _fetch_quick_oil() -> dict:
@@ -5722,8 +5909,9 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     _t1.start(); _t2.start(); _t3.start()
     _t1.join(timeout=6); _t2.join(timeout=5); _t3.join(timeout=5)
 
-    # 今日小驚喜
-    surprise_icon, surprise_title, surprise_body = _get_morning_surprise(city, wx_result)
+    # 今日好康：全台通用一則 + 當地在地一則（user_id 決定每人不同）
+    nat_icon, nat_title, nat_body = _get_national_deal(city, user_id)
+    loc_icon, loc_title, loc_body = _get_city_local_deal(city, user_id)
 
     # 今日網友熱推 PTT 好康（3 筆輪播）
     ptt_deals = _get_ptt_deals_list(3, city)
@@ -5741,6 +5929,7 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
 
     _WEEKDAYS = ["一", "二", "三", "四", "五", "六", "日"]
     today = _dt.date.today()
+    doy = today.timetuple().tm_yday
     today_str = f"{today.month}月{today.day}日（星期{_WEEKDAYS[today.weekday()]}）"
 
     # ── 天氣 + 穿搭 ──
@@ -5837,8 +6026,9 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     _share_text = (
         f"☀️ 早安！{city} {today_str}\n\n"
         f"🌤 {wx_main}\n{wx_hint}\n\n"
-        f"{surprise_icon} 今日小驚喜：{surprise_title}\n{surprise_body}\n\n"
-        f"👉 加「生活優轉」每天收到今日小驚喜：\n{_bot_invite}"
+        f"{nat_icon} 全台好康：{nat_title}\n{nat_body}\n\n"
+        f"{loc_icon} {city}在地：{loc_title}\n{loc_body}\n\n"
+        f"👉 加「生活優轉」每天收到專屬好康：\n{_bot_invite}"
     )
     _share_url = "https://line.me/R/share?text=" + urllib.parse.quote(_share_text)
 
@@ -5890,19 +6080,54 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                             *info_items,
                         ]
                     },
-                    # ── 今日小驚喜（含網友熱推 + 精選來源）──
+                    # ── 今日好康（全台一則 + 在地一則）──
                     {
                         "type": "box", "layout": "vertical",
                         "backgroundColor": "#FFF8E1",
-                        "cornerRadius": "10px", "paddingAll": "12px", "spacing": "xs",
+                        "cornerRadius": "10px", "paddingAll": "12px", "spacing": "sm",
                         "contents": [
-                            {"type": "text", "text": f"{surprise_icon} 今日小驚喜",
+                            {"type": "text", "text": "🎁 今日好康",
                              "size": "xs", "color": "#E65100", "weight": "bold"},
-                            {"type": "text", "text": surprise_title,
-                             "size": "sm", "color": "#BF360C", "weight": "bold"},
-                            {"type": "text", "text": surprise_body,
-                             "size": "xs", "color": "#37474F", "wrap": True},
-                            # 網友熱推（如有 PTT 好康）
+                            # 全台通用好康
+                            {
+                                "type": "box", "layout": "vertical", "spacing": "xs",
+                                "backgroundColor": "#FFFFFF", "cornerRadius": "8px",
+                                "paddingAll": "8px",
+                                "contents": [
+                                    {"type": "box", "layout": "horizontal", "spacing": "sm",
+                                     "contents": [
+                                         {"type": "text", "text": "🌐 全台",
+                                          "size": "xxs", "color": "#F57C00", "weight": "bold",
+                                          "flex": 0},
+                                         {"type": "text", "text": nat_title,
+                                          "size": "xs", "color": "#BF360C", "weight": "bold",
+                                          "flex": 1, "wrap": True},
+                                     ]},
+                                    {"type": "text", "text": nat_body,
+                                     "size": "xs", "color": "#37474F", "wrap": True},
+                                ]
+                            },
+                            {"type": "separator", "color": "#FFCC80"},
+                            # 當地在地優惠
+                            {
+                                "type": "box", "layout": "vertical", "spacing": "xs",
+                                "backgroundColor": "#EDE7F6", "cornerRadius": "8px",
+                                "paddingAll": "8px",
+                                "contents": [
+                                    {"type": "box", "layout": "horizontal", "spacing": "sm",
+                                     "contents": [
+                                         {"type": "text", "text": f"📍 {city}",
+                                          "size": "xxs", "color": "#6A1B9A", "weight": "bold",
+                                          "flex": 0},
+                                         {"type": "text", "text": loc_title,
+                                          "size": "xs", "color": "#4A148C", "weight": "bold",
+                                          "flex": 1, "wrap": True},
+                                     ]},
+                                    {"type": "text", "text": loc_body,
+                                     "size": "xs", "color": "#37474F", "wrap": True},
+                                ]
+                            },
+                            # 網友熱推（如有 PTT/Threads 好康）
                             *([{"type": "separator", "margin": "sm", "color": "#FFCC80"},
                                {"type": "text", "text": "🔥 網友熱推",
                                 "size": "xxs", "color": "#C62828", "weight": "bold",

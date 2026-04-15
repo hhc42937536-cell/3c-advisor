@@ -1,11 +1,13 @@
 """
-今日小驚喜爬蟲 — KKBOX 新歌 + PTT 優惠
-========================================
+今日小驚喜爬蟲 — KKBOX 新歌 + PTT + Dcard + Threads 好康
+=============================================================
 輸出：surprise_cache.json（webhook.py 早安摘要使用）
 
 來源：
   1. KKBOX 華語新歌榜（HTML 爬蟲）
-  2. PTT Lifeismoney 板（JSON API，熱門優惠文）
+  2. PTT Lifeismoney 板（HTML，熱門優惠文）
+  3. Dcard 省錢板（JSON API）
+  4. Threads 好康帳號（非官方 HTML parse，失敗時自動跳過）
 
 執行：python scrape_surprises.py
 排程：GitHub Actions 每天 06:00 TST
@@ -142,6 +144,69 @@ def scrape_dcard_deals(limit=10):
         return []
 
 
+# Threads 好康帳號清單
+_THREADS_ACCOUNTS = [
+    "info.talk_tw",           # 好康情報誌：速食/超商即時優惠
+    "group_buying_information",  # 團購資訊整理：免費兌換/限時折扣
+]
+
+_THREADS_DEAL_KW = ["優惠", "折扣", "特價", "買一送一", "免費", "好康", "打折", "半價", "兌換", "限定", "送"]
+
+
+def scrape_threads_deals(limit_per_account: int = 5) -> list:
+    """抓 Threads 好康帳號最新貼文（非官方 HTML parse，失敗時靜默跳過）
+    Threads 無公開 API，此方式隨時可能因版面更新而失效。
+    """
+    print("[Threads] 開始抓即時好康帳號...")
+    headers = {
+        # 模擬 Android 裝置，取得較精簡的 HTML 回應
+        "User-Agent": "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
+        "Referer": "https://www.threads.net/",
+    }
+
+    all_deals = []
+    for account in _THREADS_ACCOUNTS:
+        try:
+            url = f"https://www.threads.net/@{account}"
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                html = resp.read().decode("utf-8", errors="ignore")
+
+            posts = []
+            # Threads 在 HTML 內嵌 JSON-LD 或 __bbox.require 結構
+            # 嘗試抓出 "text" 欄位中的貼文內容
+            text_candidates = re.findall(r'"text"\s*:\s*"((?:[^"\\]|\\.){10,120})"', html)
+            for raw in text_candidates:
+                try:
+                    text = raw.encode().decode("unicode_escape")
+                except Exception:
+                    text = raw
+                text = text.strip()
+                if len(text) < 8:
+                    continue
+                # 過濾含優惠關鍵字的貼文
+                if any(kw in text for kw in _THREADS_DEAL_KW):
+                    posts.append({
+                        "title": text[:60],
+                        "url": url,
+                        "tag": "Threads",
+                    })
+                if len(posts) >= limit_per_account:
+                    break
+
+            print(f"[Threads] @{account}: {len(posts)} 筆")
+            all_deals.extend(posts)
+            time.sleep(1)
+
+        except Exception as e:
+            print(f"[Threads] @{account} 失敗（跳過）: {e}")
+
+    print(f"[Threads] 共 {len(all_deals)} 筆即時好康")
+    return all_deals
+
+
 def main():
     print("=" * 50)
     print(f"今日小驚喜爬蟲 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
@@ -161,16 +226,20 @@ def main():
     ptt = scrape_ptt_deals(limit=12)
     time.sleep(1)
     dcard = scrape_dcard_deals(limit=10)
+    time.sleep(1)
 
-    # 合併：先 PTT 後 Dcard，標題去重
+    # 爬 Threads 即時好康（非官方，失敗不影響整體）
+    threads = scrape_threads_deals()
+
+    # 合併：Threads 最新鮮放最前，再接 PTT、Dcard，標題去重
     seen_titles = set()
     merged = []
-    for d in ptt + dcard:
+    for d in threads + ptt + dcard:
         t = d.get("title", "").strip()
         if t and t not in seen_titles:
             seen_titles.add(t)
             merged.append(d)
-    result["deals"] = merged[:20]
+    result["deals"] = merged[:25]
 
     # 寫出
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
@@ -178,7 +247,7 @@ def main():
 
     print(f"\n✅ 已寫入 {OUTPUT_FILE}")
     print(f"   新歌: {len(result['songs'])} 首")
-    print(f"   優惠: {len(result['deals'])} 篇（PTT {len(ptt)} + Dcard {len(dcard)}）")
+    print(f"   好康: {len(result['deals'])} 篇（Threads {len(threads)} + PTT {len(ptt)} + Dcard {len(dcard)}）")
 
 
 if __name__ == "__main__":
