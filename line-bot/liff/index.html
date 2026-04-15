@@ -453,26 +453,19 @@ async function shareBot() {
   }
 }
 
-async function send(message) {
-  const inClient = liff.isInClient();
-
-  if (inClient) {
-    const timeout = new Promise((_, rej) =>
-      setTimeout(() => rej(new Error('timeout')), 3000)
-    );
-    try {
-      await Promise.race([
-        liff.sendMessages([{ type: 'text', text: message }]),
-        timeout
-      ]);
-    } catch (e) {
-      console.warn('sendMessages:', e.message);
-    }
-    try { liff.closeWindow(); } catch (e) {}
-  } else {
-    // 不在 LINE 內（外部瀏覽器）→ 顯示提示
+function send(message) {
+  if (!liff.isInClient()) {
     showNotInClient();
+    return;
   }
+  // 先送訊息（不 await），500ms 後關閉視窗
+  // closeWindow 在 async 回呼裡常無效，改用 setTimeout 確保可靠關閉
+  liff.sendMessages([{ type: 'text', text: message }]).catch(e => {
+    console.warn('sendMessages:', e.message);
+  });
+  setTimeout(() => {
+    try { liff.closeWindow(); } catch (e) {}
+  }, 500);
 }
 
 function showNotInClient() {
