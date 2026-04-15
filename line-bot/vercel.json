@@ -4,10 +4,6 @@
     {
       "src": "api/webhook.py",
       "use": "@vercel/python"
-    },
-    {
-      "src": "liff/**",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -58,14 +54,6 @@
     {
       "src": "/api/setup_richmenu",
       "dest": "api/webhook.py"
-    },
-    {
-      "src": "/liff",
-      "dest": "/liff/index.html"
-    },
-    {
-      "src": "/liff/(.*)",
-      "dest": "/liff/$1"
     }
   ]
 }
