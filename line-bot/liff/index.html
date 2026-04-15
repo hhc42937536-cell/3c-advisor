@@ -458,14 +458,36 @@ function send(message) {
     showNotInClient();
     return;
   }
-  // 先送訊息（不 await），500ms 後關閉視窗
-  // closeWindow 在 async 回呼裡常無效，改用 setTimeout 確保可靠關閉
-  liff.sendMessages([{ type: 'text', text: message }]).catch(e => {
-    console.warn('sendMessages:', e.message);
-  });
-  setTimeout(() => {
-    try { liff.closeWindow(); } catch (e) {}
-  }, 500);
+  // 先送訊息，再顯示「已傳送」畫面（不依賴 closeWindow 自動關閉）
+  liff.sendMessages([{ type: 'text', text: message }])
+    .then(() => showSent())
+    .catch(e => {
+      console.warn('sendMessages error:', e.message);
+      // 即使送訊息失敗，也嘗試關閉；無法關閉就顯示提示
+      try { liff.closeWindow(); } catch (_) { showSent(true); }
+    });
+}
+
+function showSent(failed) {
+  // 嘗試一次 closeWindow
+  try { liff.closeWindow(); } catch (e) {}
+  // 無論 closeWindow 有沒有效，同時顯示「已傳送」畫面讓用戶手動關閉
+  document.body.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;
+                justify-content:center;height:100vh;background:#0D1B35;
+                color:white;text-align:center;padding:24px;gap:20px">
+      <div style="font-size:56px">${failed ? '⚠️' : '✅'}</div>
+      <div style="font-size:20px;font-weight:700">${failed ? '傳送失敗' : '已傳送！'}</div>
+      <div style="font-size:14px;color:#8892B0;line-height:1.8">
+        ${failed ? '請重新點選選單再試' : '請滑下或點下方按鈕<br>回到聊天室查看 Bot 回覆'}
+      </div>
+      <button onclick="try{liff.closeWindow()}catch(e){}"
+        style="margin-top:8px;padding:14px 32px;background:#26A69A;border:none;
+               border-radius:24px;color:white;font-size:16px;font-weight:700;
+               cursor:pointer;letter-spacing:1px">
+        關閉視窗
+      </button>
+    </div>`;
 }
 
 function showNotInClient() {
