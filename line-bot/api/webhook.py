@@ -9558,7 +9558,7 @@ class handler(BaseHTTPRequestHandler):
                 # 3. 複製舊 Rich Menu 的圖片到新的
                 if old_id:
                     img_req = urllib.request.Request(
-                        f"https://api.line.me/v2/bot/richmenu/{old_id}/content",
+                        f"https://api-data.line.me/v2/bot/richmenu/{old_id}/content",
                         headers=headers_line
                     )
                     with urllib.request.urlopen(img_req, timeout=15) as img_resp:
@@ -9582,15 +9582,21 @@ class handler(BaseHTTPRequestHandler):
                 urllib.request.urlopen(set_req, timeout=10).close()
                 log.append("set_default=ok")
 
-                # 5. 刪舊的
-                if old_id:
-                    del_req = urllib.request.Request(
-                        f"https://api.line.me/v2/bot/richmenu/{old_id}",
-                        method="DELETE",
-                        headers=headers_line
-                    )
-                    urllib.request.urlopen(del_req, timeout=10).close()
-                    log.append(f"deleted_old={old_id}")
+                # 5. 刪所有舊的（含孤立選單）
+                for m in menus:
+                    mid = m["richMenuId"]
+                    if mid == new_id:
+                        continue
+                    try:
+                        del_req = urllib.request.Request(
+                            f"https://api.line.me/v2/bot/richmenu/{mid}",
+                            method="DELETE",
+                            headers=headers_line
+                        )
+                        urllib.request.urlopen(del_req, timeout=10).close()
+                        log.append(f"deleted={mid}")
+                    except Exception as de:
+                        log.append(f"delete_failed={mid}:{de}")
 
                 result = {"ok": True, "log": log}
             except Exception as e:
