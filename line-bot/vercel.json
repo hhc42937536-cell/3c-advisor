@@ -52,6 +52,14 @@
       "dest": "api/webhook.py"
     },
     {
+      "src": "/api/richmenu_info",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/api/setup_richmenu",
+      "dest": "api/webhook.py"
+    },
+    {
       "src": "/liff",
       "dest": "/liff/index.html"
     },
