@@ -271,7 +271,7 @@
 
     <!-- Row 2: 找車位 + 健康 -->
     <div class="grid-2">
-      <div class="card card-park" id="parking-card" onclick="send('找車位')">
+      <div class="card card-park" id="parking-card" onclick="startParkingLocate()">
         <div class="card-img-placeholder">🅿️</div>
         <div class="card-name">找車位</div>
         <div class="card-desc" id="parking-desc">附近空位<br>即時查詢</div>
@@ -546,6 +546,52 @@ function autoLocateMorningCity() {
       document.getElementById('loading-btn').onclick = () => liff.closeWindow();
     },
     { timeout: 10000, maximumAge: 60000, enableHighAccuracy: false }
+  );
+}
+
+// 找車位自動定位（GPS → 送座標給 Bot → 關閉 LIFF）
+function startParkingLocate() {
+  if (!liff.isInClient()) {
+    send('找車位');
+    return;
+  }
+  if (!navigator.geolocation) {
+    send('找車位');
+    return;
+  }
+
+  // 顯示定位中畫面
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('loading').classList.remove('hidden');
+  setLoadingState('🅿️', '正在定位...', '取得位置後立刻搜尋附近車位', false);
+
+  const fallbackTimer = setTimeout(() => {
+    // 逾時 → 降級為手動分享流程
+    send('找車位');
+    liff.closeWindow();
+  }, 8000);
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      clearTimeout(fallbackTimer);
+      const lat = pos.coords.latitude.toFixed(6);
+      const lon = pos.coords.longitude.toFixed(6);
+      setLoadingState('🔍', '定位成功，搜尋中...', '', false);
+      try {
+        await liff.sendMessages([{ type: 'text', text: `__parking__:${lat},${lon}` }]);
+        setTimeout(() => liff.closeWindow(), 400);
+      } catch (e) {
+        send('找車位');
+        liff.closeWindow();
+      }
+    },
+    () => {
+      clearTimeout(fallbackTimer);
+      // 拒絕或失敗 → 降級
+      send('找車位');
+      liff.closeWindow();
+    },
+    { timeout: 7000, maximumAge: 30000, enableHighAccuracy: false }
   );
 }
 
