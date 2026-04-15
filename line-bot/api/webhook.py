@@ -4564,6 +4564,52 @@ def build_activity_area_picker(category: str, region: str = "") -> list:
              }}]
 
 
+def build_activity_city_picker(category: str = "") -> list:
+    """近期活動 — 問城市（直接列全台城市，不再走地區兩步）"""
+    ACCENT = "#5C6BC0"
+    quick_cities = ["台北", "新北", "桃園", "台中", "台南", "高雄"]
+    other_cities = [c for c in _ALL_CITIES if c not in quick_cities]
+    cat_suffix = f" {category}" if category else ""
+
+    quick_btns = [
+        {"type": "button", "style": "primary", "color": ACCENT, "height": "sm",
+         "action": {"type": "message", "label": c,
+                    "text": f"近期活動{cat_suffix} {c}"}}
+        for c in quick_cities
+    ]
+    rows = [{"type": "box", "layout": "horizontal", "spacing": "sm",
+             "contents": quick_btns[i:i+3]}
+            for i in range(0, len(quick_btns), 3)]
+
+    other_btns = []
+    for i in range(0, len(other_cities), 4):
+        chunk = other_cities[i:i+4]
+        other_btns.append({
+            "type": "box", "layout": "horizontal", "spacing": "sm",
+            "contents": [
+                {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                 "action": {"type": "message", "label": c,
+                            "text": f"近期活動{cat_suffix} {c}"}}
+                for c in chunk
+            ]
+        })
+
+    return [{"type": "flex", "altText": "近期活動 — 你在哪個城市？",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {"type": "box", "layout": "vertical",
+                            "backgroundColor": "#1A1F3A", "paddingAll": "16px",
+                            "contents": [
+                                {"type": "text", "text": "🗓️ 近期活動",
+                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                                {"type": "text", "text": "你在哪個城市？",
+                                 "color": "#8892B0", "size": "xs", "margin": "xs"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                          "contents": rows + other_btns},
+             }}]
+
+
 def build_activity_message(text: str) -> list:
     """近期活動 — 主路由"""
     text_s = text.strip()
@@ -4605,15 +4651,18 @@ def build_activity_message(text: str) -> list:
             break
 
     if not category:
-        return build_activity_menu()
+        # 沒指定類別 → 先問城市，選完城市再推薦
+        if area:
+            return build_activity_flex("吃喝玩樂", area)
+        return build_activity_city_picker()
     # 有類別 + 有城市 → 直接顯示活動
     if area:
         return build_activity_flex(category, area)
     # 有類別 + 有地區 → 顯示該地區城市選擇
     if region:
         return build_activity_area_picker(category, region)
-    # 有類別但沒地區 → 先問在哪個地區
-    return build_activity_region_picker(category)
+    # 有類別但沒地區 → 先問城市
+    return build_activity_city_picker(category)
 
 
 # ─── 天氣＋穿搭建議 ──────────────────────────────────────
