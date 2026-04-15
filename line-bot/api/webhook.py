@@ -5913,9 +5913,9 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         oil = _fetch_quick_oil()
     _t1 = _thr.Thread(target=_wx); _t2 = _thr.Thread(target=_rt); _t3 = _thr.Thread(target=_oil)
     _t1.start(); _t2.start(); _t3.start()
-    # 共享 deadline：三個 API 一起跑，總等待不超過 5 秒（Vercel 免費版 10 秒限制）
+    # 共享 deadline：三個 API 一起跑，總等待不超過 3 秒（reply 已先送出，剩餘時間做 push）
     import time as _time
-    _deadline = _time.time() + 5
+    _deadline = _time.time() + 3
     _t1.join(timeout=max(0, _deadline - _time.time()))
     _t2.join(timeout=max(0, _deadline - _time.time()))
     _t3.join(timeout=max(0, _deadline - _time.time()))
@@ -9786,6 +9786,30 @@ class handler(BaseHTTPRequestHandler):
                         continue
                     # 判斷功能類別（用於 log，不影響路由）
                     _feature, _sub = _detect_feature(user_text)
+
+                    # 早安：先快速 reply「準備中」，再 push 完整摘要（避免 Vercel 10s 超時）
+                    _morning_kw = ["早安", "早上好", "早啊", "早哦", "morning", "good morning", "早起了", "早安安"]
+                    _is_morning = any(w in user_text.lower() for w in _morning_kw)
+                    if _is_morning:
+                        try:
+                            _saved_city = _get_user_city(user_id)
+                            all_cities_pat_m = "|".join(_ALL_CITIES)
+                            _city_in_text = re.search(rf"({all_cities_pat_m})", user_text)
+                            if not _city_in_text and not _saved_city:
+                                # 沒有城市記憶 → 直接回城市選單
+                                reply_message(reply_token, _build_morning_city_picker())
+                            else:
+                                # 有城市 → 先回「準備中」，再 push 完整摘要（同一 request 內完成）
+                                reply_message(reply_token, [{"type": "text", "text": "☀️ 正在準備早安摘要，稍等一下..."}])
+                                msgs = build_morning_summary(user_text, user_id=user_id)
+                                if msgs:
+                                    push_message(user_id, msgs)
+                                log_usage(user_id, "morning_summary")
+                        except Exception as he:
+                            import traceback; traceback.print_exc()
+                            push_message(user_id, [{"type": "text", "text": "早安摘要發生錯誤，請稍後再試 🙏"}])
+                        continue
+
                     try:
                         messages = handle_text_message(user_text, user_id=user_id)
                         reply_message(reply_token, messages)
