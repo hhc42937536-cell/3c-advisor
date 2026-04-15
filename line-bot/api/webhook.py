@@ -4565,34 +4565,41 @@ def build_activity_area_picker(category: str, region: str = "") -> list:
 
 
 def build_activity_city_picker(category: str = "") -> list:
-    """近期活動 — 問城市（直接列全台城市，不再走地區兩步）"""
+    """近期活動 — 問城市（按北中南東離島分區顯示）"""
     ACCENT = "#5C6BC0"
-    quick_cities = ["台北", "新北", "桃園", "台中", "台南", "高雄"]
-    other_cities = [c for c in _ALL_CITIES if c not in quick_cities]
     cat_suffix = f" {category}" if category else ""
 
-    quick_btns = [
-        {"type": "button", "style": "primary", "color": ACCENT, "height": "sm",
-         "action": {"type": "message", "label": c,
-                    "text": f"近期活動{cat_suffix} {c}"}}
-        for c in quick_cities
-    ]
-    rows = [{"type": "box", "layout": "horizontal", "spacing": "sm",
-             "contents": quick_btns[i:i+3]}
-            for i in range(0, len(quick_btns), 3)]
+    def _btn(c, primary=False):
+        btn = {"type": "button",
+               "style": "primary" if primary else "secondary",
+               "height": "sm", "flex": 1,
+               "action": {"type": "message", "label": c,
+                          "text": f"近期活動{cat_suffix} {c}"}}
+        if primary:
+            btn["color"] = ACCENT
+        return btn
 
-    other_btns = []
-    for i in range(0, len(other_cities), 4):
-        chunk = other_cities[i:i+4]
-        other_btns.append({
-            "type": "box", "layout": "horizontal", "spacing": "sm",
-            "contents": [
-                {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                 "action": {"type": "message", "label": c,
-                            "text": f"近期活動{cat_suffix} {c}"}}
-                for c in chunk
-            ]
-        })
+    def _rows(cities, primary=False):
+        btns = [_btn(c, primary) for c in cities]
+        return [{"type": "box", "layout": "horizontal", "spacing": "sm",
+                 "contents": btns[i:i+3]}
+                for i in range(0, len(btns), 3)]
+
+    def _section(label, cities, primary=False):
+        header = {"type": "text", "text": label, "size": "xs",
+                  "color": "#8892B0", "margin": "md"}
+        return [header] + _rows(cities, primary)
+
+    region_order = [
+        ("🏙️ 北部", ["台北", "新北", "基隆", "桃園", "新竹", "苗栗"], True),
+        ("🌾 中部", ["台中", "彰化", "南投", "雲林"], False),
+        ("☀️ 南部", ["嘉義", "台南", "高雄", "屏東"], False),
+        ("🏔️ 東部 ＋ 離島", ["宜蘭", "花蓮", "台東", "澎湖", "金門", "連江"], False),
+    ]
+
+    body_contents = []
+    for label, cities, primary in region_order:
+        body_contents.extend(_section(label, cities, primary))
 
     return [{"type": "flex", "altText": "近期活動 — 你在哪個城市？",
              "contents": {
@@ -4606,7 +4613,7 @@ def build_activity_city_picker(category: str = "") -> list:
                                  "color": "#8892B0", "size": "xs", "margin": "xs"},
                             ]},
                  "body": {"type": "box", "layout": "vertical", "spacing": "sm",
-                          "contents": rows + other_btns},
+                          "paddingAll": "12px", "contents": body_contents},
              }}]
 
 
@@ -6185,11 +6192,7 @@ def build_weather_message(text: str, user_id: str = "") -> list:
         if r in text:
             return build_weather_city_picker(r)
 
-    # 沒有指定城市 → 自動用已儲存城市
-    saved = _get_user_city(user_id) if user_id else ""
-    if saved:
-        return build_weather_flex(saved, user_id=user_id)
-
+    # 沒有指定城市 → 先問城市（不自動用記憶城市，避免預設非預期城市）
     return build_weather_region_picker()
 
 
