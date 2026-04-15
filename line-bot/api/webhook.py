@@ -7761,6 +7761,22 @@ def handle_text_message(text: str, user_id: str = "") -> list:
                                  ]},
                              ]},
                          ]
+                     },
+                     "footer": {
+                         "type": "box", "layout": "vertical",
+                         "backgroundColor": "#0D1B35",
+                         "paddingAll": "16px",
+                         "contents": [
+                             {"type": "button",
+                              "action": {
+                                  "type": "uri",
+                                  "label": "📍 分享我的位置",
+                                  "uri": "line://nv/location"
+                              },
+                              "style": "primary",
+                              "color": "#26A69A",
+                              "height": "sm"}
+                         ]
                      }
                  }}]
 
