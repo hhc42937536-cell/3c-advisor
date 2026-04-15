@@ -454,19 +454,44 @@ async function shareBot() {
 }
 
 async function send(message) {
-  const timeout = new Promise((_, rej) =>
-    setTimeout(() => rej(new Error('timeout')), 3000)
-  );
-  try {
-    await Promise.race([
-      liff.sendMessages([{ type: 'text', text: message }]),
-      timeout
-    ]);
-  } catch (e) {
-    console.warn('sendMessages:', e.message);
+  const inClient = liff.isInClient();
+
+  if (inClient) {
+    const timeout = new Promise((_, rej) =>
+      setTimeout(() => rej(new Error('timeout')), 3000)
+    );
+    try {
+      await Promise.race([
+        liff.sendMessages([{ type: 'text', text: message }]),
+        timeout
+      ]);
+    } catch (e) {
+      console.warn('sendMessages:', e.message);
+    }
+    try { liff.closeWindow(); } catch (e) {}
+  } else {
+    // 不在 LINE 內（外部瀏覽器）→ 顯示提示
+    showNotInClient();
   }
-  // 不管成功/失敗/逾時，一定關閉 LIFF 回到 Bot
-  try { liff.closeWindow(); } catch (e) {}
+}
+
+function showNotInClient() {
+  document.body.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;
+                justify-content:center;height:100vh;background:#1A1F3A;
+                color:white;text-align:center;padding:24px;gap:16px">
+      <div style="font-size:48px">⚠️</div>
+      <div style="font-size:18px;font-weight:700">請在 LINE 內開啟</div>
+      <div style="font-size:13px;color:#8892B0;line-height:1.6">
+        此功能需在 LINE App 內使用<br>
+        請從 LINE Bot 聊天室點選選單
+      </div>
+      <div style="margin-top:8px;padding:12px 16px;background:#252B4E;
+                  border-radius:12px;font-size:12px;color:#64B5F6">
+        isInClient: false<br>
+        請截圖回報此畫面
+      </div>
+    </div>`;
 }
 
 async function init() {
