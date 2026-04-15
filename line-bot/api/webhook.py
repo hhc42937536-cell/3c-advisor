@@ -9505,6 +9505,22 @@ class handler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
             self.wfile.write(html.encode("utf-8"))
+        elif parsed.path == "/api/richmenu_info":
+            # ── 查目前 Rich Menu 設定（一次性診斷）────────────────
+            try:
+                req = urllib.request.Request(
+                    "https://api.line.me/v2/bot/richmenu/list",
+                    headers={"Authorization": f"Bearer {CHANNEL_ACCESS_TOKEN}"}
+                )
+                with urllib.request.urlopen(req, timeout=10) as r:
+                    data = json.loads(r.read().decode("utf-8"))
+            except Exception as e:
+                data = {"error": str(e)}
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(json.dumps(data, ensure_ascii=False, indent=2).encode("utf-8"))
+
         elif parsed.path == "/api/debug_routes":
             # ── Rich menu 路由測試 ─────────────────────────
             import traceback as _tb
