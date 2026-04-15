@@ -9505,6 +9505,102 @@ class handler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
             self.wfile.write(html.encode("utf-8"))
+        elif parsed.path == "/api/setup_richmenu":
+            # ── 一次性：把 Rich Menu 第一排 LIFF 按鈕改成 message 類型 ──
+            log = []
+            try:
+                headers_line = {"Authorization": f"Bearer {CHANNEL_ACCESS_TOKEN}"}
+
+                # 1. 取現有 rich menu 清單
+                req = urllib.request.Request("https://api.line.me/v2/bot/richmenu/list", headers=headers_line)
+                with urllib.request.urlopen(req, timeout=10) as r:
+                    menus = json.loads(r.read().decode())["richmenus"]
+                old_id = menus[0]["richMenuId"] if menus else None
+                log.append(f"old_id={old_id}")
+
+                # 2. 建新 Rich Menu（同版型，前三個改 message）
+                new_menu = {
+                    "size": {"width": 2500, "height": 1686},
+                    "selected": True,
+                    "name": "生活優轉選單（無LIFF版）",
+                    "chatBarText": "✨ 點我開啟功能選單",
+                    "areas": [
+                        {"bounds": {"x": 0,    "y": 0,    "width": 833,  "height": 562},
+                         "action": {"type": "message", "label": "今天吃什麼", "text": "今天吃什麼"}},
+                        {"bounds": {"x": 833,  "y": 0,    "width": 834,  "height": 562},
+                         "action": {"type": "message", "label": "近期活動",  "text": "近期活動"}},
+                        {"bounds": {"x": 1667, "y": 0,    "width": 833,  "height": 562},
+                         "action": {"type": "message", "label": "天氣+穿搭", "text": "天氣"}},
+                        {"bounds": {"x": 0,    "y": 562,  "width": 833,  "height": 562},
+                         "action": {"type": "message", "label": "健康小幫手", "text": "健康小幫手"}},
+                        {"bounds": {"x": 833,  "y": 562,  "width": 834,  "height": 562},
+                         "action": {"type": "message", "label": "金錢小幫手", "text": "金錢小幫手"}},
+                        {"bounds": {"x": 1667, "y": 562,  "width": 833,  "height": 562},
+                         "action": {"type": "message", "label": "找車位",    "text": "找車位"}},
+                        {"bounds": {"x": 0,    "y": 1124, "width": 833,  "height": 562},
+                         "action": {"type": "message", "label": "3C 推薦",   "text": "推薦手機"}},
+                        {"bounds": {"x": 833,  "y": 1124, "width": 834,  "height": 562},
+                         "action": {"type": "message", "label": "防詐騙",    "text": "防詐辨識"}},
+                        {"bounds": {"x": 1667, "y": 1124, "width": 833,  "height": 562},
+                         "action": {"type": "message", "label": "法律常識",  "text": "法律常識"}},
+                    ]
+                }
+                body = json.dumps(new_menu, ensure_ascii=False).encode("utf-8")
+                req2 = urllib.request.Request(
+                    "https://api.line.me/v2/bot/richmenu",
+                    data=body,
+                    headers={**headers_line, "Content-Type": "application/json"}
+                )
+                with urllib.request.urlopen(req2, timeout=10) as r:
+                    new_id = json.loads(r.read().decode())["richMenuId"]
+                log.append(f"new_id={new_id}")
+
+                # 3. 複製舊 Rich Menu 的圖片到新的
+                if old_id:
+                    img_req = urllib.request.Request(
+                        f"https://api.line.me/v2/bot/richmenu/{old_id}/content",
+                        headers=headers_line
+                    )
+                    with urllib.request.urlopen(img_req, timeout=15) as img_resp:
+                        img_data = img_resp.read()
+                        content_type = img_resp.headers.get("Content-Type", "image/png")
+                    upload_req = urllib.request.Request(
+                        f"https://api-data.line.me/v2/bot/richmenu/{new_id}/content",
+                        data=img_data,
+                        headers={**headers_line, "Content-Type": content_type}
+                    )
+                    urllib.request.urlopen(upload_req, timeout=15).close()
+                    log.append("image_copied=ok")
+
+                # 4. 設為全體預設
+                set_req = urllib.request.Request(
+                    f"https://api.line.me/v2/bot/user/all/richmenu/{new_id}",
+                    data=b"",
+                    method="POST",
+                    headers=headers_line
+                )
+                urllib.request.urlopen(set_req, timeout=10).close()
+                log.append("set_default=ok")
+
+                # 5. 刪舊的
+                if old_id:
+                    del_req = urllib.request.Request(
+                        f"https://api.line.me/v2/bot/richmenu/{old_id}",
+                        method="DELETE",
+                        headers=headers_line
+                    )
+                    urllib.request.urlopen(del_req, timeout=10).close()
+                    log.append(f"deleted_old={old_id}")
+
+                result = {"ok": True, "log": log}
+            except Exception as e:
+                result = {"ok": False, "error": str(e), "log": log}
+
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(json.dumps(result, ensure_ascii=False, indent=2).encode("utf-8"))
+
         elif parsed.path == "/api/richmenu_info":
             # ── 查目前 Rich Menu 設定（一次性診斷）────────────────
             try:
