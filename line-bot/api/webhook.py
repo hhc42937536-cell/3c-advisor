@@ -3323,6 +3323,8 @@ def build_food_menu() -> list:
                           "height": "sm", "action": {"type": "message", "label": "必比登", "text": "必比登"}},
                          {"type": "button", "style": "primary", "color": "#1A1F3A", "flex": 1,
                           "height": "sm", "action": {"type": "message", "label": "在地餐廳", "text": "在地餐廳"}},
+                         {"type": "button", "style": "primary", "color": "#E67E22", "flex": 1,
+                          "height": "sm", "action": {"type": "message", "label": "🍻 聚餐", "text": "聚餐"}},
                      ]},
                      {"type": "button", "style": "primary", "color": "#1A1F3A", "height": "sm",
                       "action": {"type": "message", "label": "美食活動", "text": "本週美食活動"}},
@@ -7161,6 +7163,12 @@ def build_tools_menu() -> list:
     tools = [
         _tool_row("📱", "3C 選購小幫手", "推薦最適合你的手機、筆電、平板",
                   "推薦手機", "#FF8C42"),
+        _tool_row("🍻", "聚餐找餐廳",   "多人聚餐、包廂、生日餐廳一鍵找",
+                  "聚餐", "#E67E22"),
+        _tool_row("💰", "比價查詢",     "輸入商品名稱，直接開 BigGo/飛比比價",
+                  "幫我比價", "#27AE60"),
+        _tool_row("🤔", "消費決策",     "「這支手機 2 萬划算嗎？」幫你判斷",
+                  "消費決策", "#8E44AD"),
         _tool_row("🛡️", "防詐騙辨識",   "辨識可疑訊息、連結、電話號碼",
                   "防詐辨識", "#C0392B"),
         _tool_row("⚖️", "法律小常識",   "租屋、勞資、消費糾紛怎麼辦",
@@ -7504,6 +7512,35 @@ def handle_text_message(text: str, user_id: str = "") -> list:
                                 "顯卡升級", "要升級嗎", "電腦效能分析", "電腦瓶頸",
                                 "RAM夠嗎", "RAM 夠嗎", "記憶體夠嗎", "電腦太慢"]):
         return build_upgrade_message(text)
+
+    # ── 4.11 防詐+法律 合併入口（rich menu 按鈕）──────────
+    if text.strip() in ["防詐法律", "防詐&法律", "防詐與法律"]:
+        return [{
+            "type": "flex", "altText": "防詐騙 ＆ 法律常識",
+            "contents": {
+                "type": "bubble", "size": "mega",
+                "header": {
+                    "type": "box", "layout": "vertical",
+                    "backgroundColor": "#1A1F3A", "paddingAll": "16px",
+                    "contents": [
+                        {"type": "text", "text": "🛡️⚖️ 防詐騙 ＆ 法律常識",
+                         "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                        {"type": "text", "text": "選擇你需要的功能",
+                         "color": "#8892B0", "size": "xs", "margin": "xs"},
+                    ]
+                },
+                "body": {
+                    "type": "box", "layout": "vertical",
+                    "spacing": "md", "paddingAll": "14px",
+                    "contents": [
+                        {"type": "button", "style": "primary", "color": "#C0392B",
+                         "action": {"type": "message", "label": "🛡️ 防詐騙辨識 — 貼上可疑訊息讓我分析", "text": "防詐辨識"}},
+                        {"type": "button", "style": "primary", "color": "#3949AB",
+                         "action": {"type": "message", "label": "⚖️ 法律常識 — 租屋/勞資/消費糾紛", "text": "法律常識"}},
+                    ]
+                }
+            }
+        }]
 
     # ── 5. 防詐辨識 ──────────────────────────────────
     if any(w in text for w in ["防詐", "詐騙", "可疑", "165", "是詐騙嗎", "防詐辨識",
