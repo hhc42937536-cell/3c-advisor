@@ -7526,7 +7526,6 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     # ── 1.3 早安摘要（在打招呼前優先攔截）──────────────
     _morning_kw = ["早安", "早上好", "早啊", "早哦", "morning", "good morning", "早起了", "早安安"]
     if any(w in text_lower for w in _morning_kw):
-        log_usage(user_id, "morning_summary")
         return build_morning_summary(text, user_id=user_id)
 
     # ── 1. 打招呼 / 幫助 ────────────────────────────
