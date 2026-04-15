@@ -454,12 +454,18 @@ async function shareBot() {
 }
 
 async function send(message) {
+  const timeout = new Promise((_, rej) =>
+    setTimeout(() => rej(new Error('timeout')), 3000)
+  );
   try {
-    await liff.sendMessages([{ type: 'text', text: message }]);
+    await Promise.race([
+      liff.sendMessages([{ type: 'text', text: message }]),
+      timeout
+    ]);
   } catch (e) {
-    console.warn('sendMessages failed:', e.message);
+    console.warn('sendMessages:', e.message);
   }
-  // 不管成功或失敗，一定關閉 LIFF 回到 Bot
+  // 不管成功/失敗/逾時，一定關閉 LIFF 回到 Bot
   try { liff.closeWindow(); } catch (e) {}
 }
 
