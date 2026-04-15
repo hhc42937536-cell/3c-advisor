@@ -3211,7 +3211,7 @@ def build_food_restaurant_flex(area: str, food_type: str = "") -> list:
 def build_live_food_events(area: str) -> list:
     """從 Accupass 快取拉吃喝玩樂即時活動（給「本週美食活動」用）"""
     area2 = area[:2] if area else ""
-    city_cache = _ACCUPASS_CACHE.get(area, _ACCUPASS_CACHE.get(area2, {}))
+    city_cache = _get_accupass_cache().get(area, _get_accupass_cache().get(area2, {}))
     events = city_cache.get("吃喝玩樂", [])
     if not events:
         return []
@@ -3925,7 +3925,13 @@ def _load_accupass_cache() -> dict:
     except Exception:
         return {}
 
-_ACCUPASS_CACHE = _load_accupass_cache()
+_ACCUPASS_CACHE = None  # lazy-loaded on first use（省冷啟動時間）
+
+def _get_accupass_cache() -> dict:
+    global _ACCUPASS_CACHE
+    if _ACCUPASS_CACHE is None:
+        _ACCUPASS_CACHE = _load_accupass_cache()
+    return _ACCUPASS_CACHE
 
 
 _ACTIVITY_DB = {
@@ -4224,8 +4230,9 @@ def build_activity_flex(category: str, area: str = "") -> list:
     import datetime as _dt
     live_events = []
     skipped_past = 0
-    if _ACCUPASS_CACHE and area2:
-        city_cache = _ACCUPASS_CACHE.get(area, _ACCUPASS_CACHE.get(area2, {}))
+    _ac = _get_accupass_cache()
+    if _ac and area2:
+        city_cache = _ac.get(area, _ac.get(area2, {}))
         live_raw = city_cache.get(category, [])
         for e in live_raw:
             date_str = e.get("date", "")
@@ -5715,8 +5722,9 @@ def _get_city_local_deal(city: str, user_id: str = "") -> tuple:
     doy = today.timetuple().tm_yday
 
     # Accupass 當地活動（如有爬蟲資料）
-    if _ACCUPASS_CACHE:
-        city_data = _ACCUPASS_CACHE.get(city, {})
+    _ac = _get_accupass_cache()
+    if _ac:
+        city_data = _ac.get(city, {})
         city_events = []
         for cat, events in city_data.items():
             if isinstance(events, list):
@@ -5826,66 +5834,55 @@ def _set_user_city(user_id: str, city: str):
 
 
 def _build_morning_city_picker() -> list:
-    """第一次說早安時，讓用戶選城市"""
-    # 常用 6 大城市快速選擇 + 更多選項
-    quick_cities = ["台北", "新北", "桃園", "台中", "台南", "高雄"]
-    buttons = [
-        {"type": "button", "style": "primary", "color": "#1A1F3A", "height": "sm",
-         "action": {"type": "message", "label": c, "text": f"早安 {c}"}}
-        for c in quick_cities
-    ]
-    # 其他城市用兩排小按鈕
-    other_cities = [c for c in _ALL_CITIES if c not in quick_cities]
-    other_rows = []
-    for i in range(0, len(other_cities), 4):
-        chunk = other_cities[i:i+4]
-        other_rows.append({
-            "type": "box", "layout": "horizontal", "spacing": "sm",
-            "contents": [
-                {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                 "action": {"type": "message", "label": c, "text": f"早安 {c}"}}
-                for c in chunk
-            ] + [{"type": "filler"}] * (4 - len(chunk))
-        })
-    return [{
-        "type": "flex",
-        "altText": "早安！請選擇你的所在城市",
-        "contents": {
-            "type": "bubble", "size": "mega",
-            "header": {
-                "type": "box", "layout": "vertical",
-                "backgroundColor": "#1A1F3A", "paddingAll": "16px",
-                "contents": [
-                    {"type": "text", "text": "☀️ 早安！", "color": "#FFFFFF",
-                     "size": "xl", "weight": "bold"},
-                    {"type": "text", "text": "選擇你的城市，之後每天自動顯示當地資訊",
-                     "color": "#8892B0", "size": "xs", "wrap": True, "margin": "sm"},
-                ]
-            },
-            "body": {
-                "type": "box", "layout": "vertical",
-                "spacing": "sm", "paddingAll": "14px",
-                "contents": [
-                    {"type": "separator", "margin": "sm"},
-                    {"type": "text", "text": "🏙️ 請選擇你的城市", "size": "sm",
-                     "weight": "bold", "color": "#37474F", "margin": "sm"},
-                    *buttons,
-                    {"type": "separator", "margin": "md"},
-                    {"type": "text", "text": "📍 其他縣市", "size": "xs",
-                     "color": "#90A4AE", "margin": "md"},
-                    *other_rows,
-                ]
-            }
-        }
-    }]
+    """早安城市選擇（分北中南東離島）"""
+    ACCENT = "#1A1F3A"
+
+    def _btn(c, primary=False):
+        btn = {"type": "button", "style": "primary" if primary else "secondary",
+               "height": "sm", "flex": 1,
+               "action": {"type": "message", "label": c, "text": f"早安 {c}"}}
+        if primary:
+            btn["color"] = ACCENT
+        return btn
+
+    def _rows(cities, primary=False):
+        btns = [_btn(c, primary) for c in cities]
+        return [{"type": "box", "layout": "horizontal", "spacing": "sm",
+                 "contents": btns[i:i+3]}
+                for i in range(0, len(btns), 3)]
+
+    def _section(label, cities, primary=False):
+        return [{"type": "text", "text": label, "size": "xs",
+                 "color": "#8892B0", "margin": "md"}] + _rows(cities, primary)
+
+    body = []
+    body += _section("🏙️ 北部", ["台北", "新北", "基隆", "桃園", "新竹", "苗栗"], True)
+    body += _section("🌾 中部", ["台中", "彰化", "南投", "雲林"])
+    body += _section("☀️ 南部", ["嘉義", "台南", "高雄", "屏東"])
+    body += _section("🏔️ 東部 ＋ 離島", ["宜蘭", "花蓮", "台東", "澎湖", "金門", "連江"])
+
+    return [{"type": "flex", "altText": "早安！請選擇你的城市",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {"type": "box", "layout": "vertical",
+                            "backgroundColor": ACCENT, "paddingAll": "16px",
+                            "contents": [
+                                {"type": "text", "text": "☀️ 早安！",
+                                 "color": "#FFFFFF", "size": "xl", "weight": "bold"},
+                                {"type": "text", "text": "選擇城市，之後每天自動顯示當地資訊",
+                                 "color": "#8892B0", "size": "xs", "wrap": True, "margin": "sm"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                          "paddingAll": "12px", "contents": body},
+             }}]
 
 
 def build_morning_summary(text: str, user_id: str = "") -> list:
-    """早安摘要：天氣 + 匯率 + 每日健康 tip"""
+    """早安摘要：天氣 + 穿搭 + 匯率 + 油價 + 今日好康"""
     import threading as _thr
     import datetime as _dt
 
-    # 城市偵測：文字指定 > Redis 記憶 > 問用戶
+    # 城市偵測：文字指定 > Redis 記憶 > 問城市
     all_cities_pat = "|".join(_ALL_CITIES)
     city_m = re.search(rf"({all_cities_pat})", text)
     if city_m:
@@ -5898,49 +5895,27 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         else:
             return _build_morning_city_picker()
 
-    # 並行抓：天氣 + 匯率 + 油價（加速早安反應時間）
-    wx_result = {}
-    rates = {}
-    oil = {}
+    # 並行抓：天氣 + 匯率 + 油價（共享 3 秒 deadline，有 Redis cache 則幾乎 0ms）
+    wx_result = {}; rates = {}; oil = {}
     def _wx():
-        nonlocal wx_result
-        wx_result = _fetch_cwa_weather(city)
+        nonlocal wx_result; wx_result = _fetch_cwa_weather(city)
     def _rt():
-        nonlocal rates
-        rates = _fetch_quick_rates()
-    def _oil():
-        nonlocal oil
-        oil = _fetch_quick_oil()
-    _t1 = _thr.Thread(target=_wx); _t2 = _thr.Thread(target=_rt); _t3 = _thr.Thread(target=_oil)
+        nonlocal rates; rates = _fetch_quick_rates()
+    def _oil_fn():
+        nonlocal oil; oil = _fetch_quick_oil()
+    _t1 = _thr.Thread(target=_wx, daemon=True)
+    _t2 = _thr.Thread(target=_rt, daemon=True)
+    _t3 = _thr.Thread(target=_oil_fn, daemon=True)
     _t1.start(); _t2.start(); _t3.start()
-    # 共享 deadline：三個 API 一起跑，總等待不超過 2 秒（有 Redis cache 則 0ms，沒 cache 最多 2s）
     import time as _time
-    _deadline = _time.time() + 2
-    _t1.join(timeout=max(0, _deadline - _time.time()))
-    _t2.join(timeout=max(0, _deadline - _time.time()))
-    _t3.join(timeout=max(0, _deadline - _time.time()))
+    _dl = _time.time() + 3
+    _t1.join(timeout=max(0, _dl - _time.time()))
+    _t2.join(timeout=max(0, _dl - _time.time()))
+    _t3.join(timeout=max(0, _dl - _time.time()))
 
-    # 今日好康：全台通用一則 + 當地在地一則（user_id 決定每人不同）
-    nat_icon, nat_title, nat_body = _get_national_deal(city, user_id)
-    loc_icon, loc_title, loc_body = _get_city_local_deal(city, user_id)
-
-    # 今日網友熱推 PTT 好康（3 筆輪播）
-    ptt_deals = _get_ptt_deals_list(3, city)
-    ptt_deal_items = []
-    for d in ptt_deals:
-        title = (d.get("title") or "").strip()
-        if not title:
-            continue
-        item = {"type": "text",
-                "text": f"• {title[:40]}",
-                "size": "xs", "color": "#1976D2", "wrap": True}
-        if d.get("url"):
-            item["action"] = {"type": "uri", "label": "看原文", "uri": d["url"]}
-        ptt_deal_items.append(item)
-
-    _WEEKDAYS = ["一", "二", "三", "四", "五", "六", "日"]
     today = _dt.date.today()
-    doy = today.timetuple().tm_yday
+    doy   = today.timetuple().tm_yday
+    _WEEKDAYS = ["一", "二", "三", "四", "五", "六", "日"]
     today_str = f"{today.month}月{today.day}日（星期{_WEEKDAYS[today.weekday()]}）"
 
     # ── 天氣 + 穿搭 ──
@@ -5948,234 +5923,140 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         wx = wx_result
         wx_icon = _wx_icon(wx["wx"])
         pop = wx["pop"]
-        diff = wx["max_t"] - wx["min_t"]
-        # 天氣描述
         wx_main = f"{wx_icon} {wx['wx']}　{wx['min_t']}–{wx['max_t']}°C"
-        # 溫差/降雨提示
         if pop >= 70:
             wx_hint = "☂️ 降雨機率高，記得帶傘！"
         elif pop >= 40:
             wx_hint = "🌂 可能有雨，建議帶傘備用"
-        elif diff >= 10:
+        elif wx["max_t"] - wx["min_t"] >= 10:
             wx_hint = "早晚溫差大，注意保暖"
         elif wx["max_t"] >= 32:
             wx_hint = "中午很熱，注意防曬補水"
         else:
             wx_hint = "氣溫舒適，適合外出走走"
-        # 穿搭行動建議
-        outfit, _, umbrella = _outfit_advice(wx["max_t"], wx["min_t"], pop)
-        action_parts = [outfit]
+        outfit, _, _ = _outfit_advice(wx["max_t"], wx["min_t"], pop)
+        parts = [outfit]
         if pop >= 40:
-            action_parts.append("帶傘")
+            parts.append("帶傘")
         if wx["max_t"] >= 28:
-            action_parts.append("防曬必備")
-        wx_action = f"👔 行動建議：{'＋'.join(action_parts)}"
+            parts.append("防曬必備")
+        wx_outfit = "👔 " + "＋".join(parts)
+        wx_night_icon = _wx_icon(wx.get("wx_night", ""))
+        wx_night = f"今晚 {wx_night_icon} 雨{wx.get('pop_night', 0)}%"
+        wx_tom_icon = _wx_icon(wx.get("wx_tom", ""))
+        wx_tomorrow = f"明天 {wx_tom_icon} {wx.get('min_tom','?')}-{wx.get('max_tom','?')}°C 雨{wx.get('pop_tom',0)}%"
+        wx_items = [
+            {"type": "text", "text": wx_main,    "size": "md", "weight": "bold", "color": "#1A2D50"},
+            {"type": "text", "text": wx_hint,    "size": "xs", "color": "#E65100", "wrap": True},
+            {"type": "text", "text": wx_outfit,  "size": "xs", "color": "#37474F", "wrap": True, "margin": "sm"},
+            {"type": "text", "text": wx_night,   "size": "xs", "color": "#607D8B", "margin": "xs"},
+            {"type": "text", "text": wx_tomorrow,"size": "xs", "color": "#607D8B"},
+        ]
     else:
-        wx_main = "☁️ 天氣資料暫時無法取得"
-        wx_hint = f"可以說「{city}天氣」查詳細"
-        wx_action = "👔 建議穿著舒適出門"
+        wx_main = "天氣資料暫時無法取得"
+        wx_items = [
+            {"type": "text", "text": "☁️ 天氣資料暫時無法取得", "size": "sm", "color": "#888"},
+            {"type": "text", "text": f"可說「{city}天氣」查詢",  "size": "xs", "color": "#AAA"},
+        ]
 
-    # ── 今日實用資訊：匯率 + 油價（附便宜/貴提示）──
+    # ── 匯率 + 油價 ──
     info_items = []
     usd = rates.get("USD", {}) if rates else {}
     jpy = rates.get("JPY", {}) if rates else {}
-
-    # 匯率判讀（近 3 年區間參考）
-    def _usd_tip(rate):
-        if rate <= 29.5: return ("🎉", "偏便宜！適合換美金/去美國", "#2E7D32")
-        if rate <= 31.0: return ("⚖️", "價位普通", "#555555")
-        if rate <= 32.0: return ("⚠️", "略偏高，再等等", "#E65100")
-        return ("💸", "近期高點，換匯不划算", "#C62828")
-
-    def _jpy_tip(rate):
-        if rate <= 0.215: return ("🎉", "日幣超便宜！衝日本", "#2E7D32")
-        if rate <= 0.225: return ("😊", "不錯的換匯點", "#2E7D32")
-        if rate <= 0.240: return ("⚖️", "價位普通", "#555555")
-        return ("💸", "日幣偏貴，再觀望", "#C62828")
-
-    def _oil_tip(p92):
-        try:
-            p = float(p92)
-        except (ValueError, TypeError):
-            return None
-        if p <= 28.5: return ("🎉", "油價便宜，該加滿了！", "#2E7D32")
-        if p <= 30.5: return ("⚖️", "價位普通", "#555555")
-        if p <= 32.0: return ("⚠️", "略偏高，非必要緩一緩", "#E65100")
-        return ("💸", "油價高點，省油駕駛", "#C62828")
-
-    # USD 匯率
     if usd.get("spot_sell"):
-        icon, tip, color = _usd_tip(usd["spot_sell"])
-        info_items.append({"type": "text",
-            "text": f"💵 美金 {usd['spot_sell']:.2f}　{icon} {tip}",
-            "size": "xs", "color": color, "wrap": True})
-    # JPY 匯率
+        r = usd["spot_sell"]
+        tip = "🎉便宜" if r <= 29.5 else "⚖️普通" if r <= 31.0 else "⚠️偏高" if r <= 32.0 else "💸高點"
+        info_items.append({"type": "text", "text": f"💵 美金 {r:.2f}　{tip}",
+                           "size": "xs", "color": "#37474F", "wrap": True})
     if jpy.get("spot_sell"):
-        icon, tip, color = _jpy_tip(jpy["spot_sell"])
-        info_items.append({"type": "text",
-            "text": f"💴 日幣 {jpy['spot_sell']:.4f}　{icon} {tip}",
-            "size": "xs", "color": color, "wrap": True})
-    # 油價
-    if oil.get("92") and oil.get("92") != "?":
-        oil_tip_result = _oil_tip(oil["92"])
-        oil_suffix = ""
-        oil_color = "#37474F"
-        if oil_tip_result:
-            icon, tip, oil_color = oil_tip_result
-            oil_suffix = f"　{icon} {tip}"
-        info_items.append({"type": "text",
-            "text": f"⛽ 92/{oil['92']}　95/{oil['95']}　98/{oil['98']}{oil_suffix}",
-            "size": "xs", "color": oil_color, "wrap": True})
-
+        r = jpy["spot_sell"]
+        tip = "🎉超便宜" if r <= 0.215 else "😊不錯" if r <= 0.225 else "⚖️普通" if r <= 0.240 else "💸偏貴"
+        info_items.append({"type": "text", "text": f"💴 日幣 {r:.4f}　{tip}",
+                           "size": "xs", "color": "#37474F", "wrap": True})
+    if oil and oil.get("92") and oil["92"] != "?":
+        try:
+            p = float(oil["92"])
+            tip = "🎉便宜加滿" if p <= 28.5 else "⚖️普通" if p <= 30.5 else "⚠️略高" if p <= 32.0 else "💸高點"
+            info_items.append({"type": "text",
+                               "text": f"⛽ 92/{oil['92']}　95/{oil['95']}　98/{oil['98']}　{tip}",
+                               "size": "xs", "color": "#37474F", "wrap": True})
+        except Exception:
+            pass
     if not info_items:
-        info_items = [{"type": "text",
-            "text": "即時資訊暫時抓不到，請稍後再試 🙏",
-            "size": "xs", "color": "#888888"}]
+        info_items = [{"type": "text", "text": "匯率/油價暫時無法取得", "size": "xs", "color": "#AAA"}]
 
-    # ── 分享文字（傳給朋友/另一半/同事）──
+    # ── 今日好康 ──
+    nat_icon, nat_title, nat_body = _get_national_deal(city, user_id)
+    loc_icon, loc_title, loc_body = _get_city_local_deal(city, user_id)
+
+    # ── 健康 tip ──
+    tip = _MORNING_ACTIONS[doy % len(_MORNING_ACTIONS)]
+
+    # ── 分享連結 ──
     _bot_invite = f"https://line.me/R/ti/p/{LINE_BOT_ID}" if LINE_BOT_ID else "https://line.me/R/"
     _share_text = (
         f"☀️ 早安！{city} {today_str}\n\n"
-        f"🌤 {wx_main}\n{wx_hint}\n\n"
-        f"{nat_icon} 全台好康：{nat_title}\n{nat_body}\n\n"
-        f"{loc_icon} {city}在地：{loc_title}\n{loc_body}\n\n"
+        f"🌤 {wx_main}\n\n"
+        f"{nat_icon} {nat_title}：{nat_body}\n\n"
         f"👉 加「生活優轉」每天收到專屬好康：\n{_bot_invite}"
     )
-    _share_url = "https://line.me/R/share?text=" + urllib.parse.quote(_share_text)
+    import urllib.parse as _up
+    _share_url = f"https://social-plugins.line.me/lineit/share?url={_up.quote(_share_text)}"
 
-    return [{
-        "type": "flex",
-        "altText": f"☀️ 早安！{city} {today_str}",
-        "contents": {
-            "type": "bubble",
-            "size": "mega",
-            "header": {
-                "type": "box", "layout": "vertical",
-                "backgroundColor": "#1A1F3A",
-                "paddingAll": "16px",
-                "contents": [
-                    {"type": "text", "text": f"☀️ 早安！{city}",
-                     "color": "#FFFFFF", "size": "xl", "weight": "bold"},
-                    {"type": "text", "text": today_str,
-                     "color": "#8892B0", "size": "sm", "margin": "xs"},
-                ]
-            },
-            "body": {
-                "type": "box", "layout": "vertical",
-                "spacing": "md", "paddingAll": "14px",
-                "contents": [
-                    # ── 天氣穿搭區塊 ──
-                    {
-                        "type": "box", "layout": "vertical",
-                        "backgroundColor": "#EBF5FB",
-                        "cornerRadius": "10px", "paddingAll": "12px", "spacing": "sm",
-                        "contents": [
-                            {"type": "text", "text": "🌤 今日天氣與穿搭",
-                             "size": "xs", "color": "#1565C0", "weight": "bold"},
-                            {"type": "text", "text": wx_main,
-                             "size": "md", "color": "#1A1F3A", "weight": "bold"},
-                            {"type": "text", "text": wx_hint,
-                             "size": "xs", "color": "#546E7A", "wrap": True},
-                            {"type": "text", "text": wx_action,
-                             "size": "xs", "color": "#37474F", "wrap": True},
-                        ]
-                    },
-                    # ── 今日實用資訊（匯率＋油價）──
-                    {
-                        "type": "box", "layout": "vertical",
-                        "backgroundColor": "#E8F5E9",
-                        "cornerRadius": "10px", "paddingAll": "12px", "spacing": "xs",
-                        "contents": [
-                            {"type": "text", "text": "💡 今日實用資訊",
-                             "size": "xs", "color": "#2E7D32", "weight": "bold"},
-                            *info_items,
-                        ]
-                    },
-                    # ── 今日好康（全台一則 + 在地一則）──
-                    {
-                        "type": "box", "layout": "vertical",
-                        "backgroundColor": "#FFF8E1",
-                        "cornerRadius": "10px", "paddingAll": "12px", "spacing": "sm",
-                        "contents": [
-                            {"type": "text", "text": "🎁 今日好康",
-                             "size": "xs", "color": "#E65100", "weight": "bold"},
-                            # 全台通用好康
-                            {
-                                "type": "box", "layout": "vertical", "spacing": "xs",
-                                "backgroundColor": "#FFFFFF", "cornerRadius": "8px",
-                                "paddingAll": "8px",
-                                "contents": [
-                                    {"type": "box", "layout": "horizontal", "spacing": "sm",
-                                     "contents": [
-                                         {"type": "text", "text": "🌐 全台",
-                                          "size": "xxs", "color": "#F57C00", "weight": "bold",
-                                          "flex": 0},
-                                         {"type": "text", "text": nat_title,
-                                          "size": "xs", "color": "#BF360C", "weight": "bold",
-                                          "flex": 1, "wrap": True},
-                                     ]},
-                                    {"type": "text", "text": nat_body,
-                                     "size": "xs", "color": "#37474F", "wrap": True},
-                                ]
-                            },
-                            {"type": "separator", "color": "#FFCC80"},
-                            # 當地在地優惠
-                            {
-                                "type": "box", "layout": "vertical", "spacing": "xs",
-                                "backgroundColor": "#EDE7F6", "cornerRadius": "8px",
-                                "paddingAll": "8px",
-                                "contents": [
-                                    {"type": "box", "layout": "horizontal", "spacing": "sm",
-                                     "contents": [
-                                         {"type": "text", "text": f"📍 {city}",
-                                          "size": "xxs", "color": "#6A1B9A", "weight": "bold",
-                                          "flex": 0},
-                                         {"type": "text", "text": loc_title,
-                                          "size": "xs", "color": "#4A148C", "weight": "bold",
-                                          "flex": 1, "wrap": True},
-                                     ]},
-                                    {"type": "text", "text": loc_body,
-                                     "size": "xs", "color": "#37474F", "wrap": True},
-                                ]
-                            },
-                            # 網友熱推（如有 PTT/Threads 好康）
-                            *([{"type": "separator", "margin": "sm", "color": "#FFCC80"},
-                               {"type": "text", "text": "🔥 網友熱推",
-                                "size": "xxs", "color": "#C62828", "weight": "bold",
-                                "margin": "sm"},
-                               *ptt_deal_items] if ptt_deal_items else []),
-                        ]
-                    },
-                ]
-            },
-            "footer": {
-                "type": "box", "layout": "vertical",
-                "spacing": "xs", "paddingAll": "10px",
-                "contents": [
-                    {"type": "box", "layout": "horizontal", "spacing": "sm",
-                     "contents": [
-                         {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                          "action": {"type": "message", "label": "吃什麼",
-                                     "text": "今天吃什麼"}},
-                         {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                          "action": {"type": "message", "label": "查活動",
-                                     "text": "近期活動"}},
-                         {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                          "action": {"type": "message", "label": "健康",
-                                     "text": "健康小幫手"}},
-                     ]},
-                    {"type": "button", "style": "primary", "color": "#E65100",
-                     "height": "sm",
-                     "action": {"type": "uri", "label": "📤 分享給朋友/另一半/同事",
-                                "uri": _share_url}},
-                    {"type": "button", "style": "secondary", "height": "sm",
-                     "color": "#ECEFF1",
-                     "action": {"type": "message", "label": f"📍 換城市（現在：{city}）",
-                                "text": "換城市"}},
-                ]
-            }
-        }
-    }]
+    return [{"type": "flex", "altText": f"☀️ 早安！{city} {today_str}",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {"type": "box", "layout": "vertical",
+                            "backgroundColor": "#1A1F3A", "paddingAll": "16px",
+                            "contents": [
+                                {"type": "text", "text": f"☀️ 早安！{city}",
+                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                                {"type": "text", "text": today_str,
+                                 "color": "#8892B0", "size": "xs", "margin": "xs"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                          "paddingAll": "14px", "contents": [
+                     {"type": "text", "text": "🌤 今日天氣", "size": "xs",
+                      "weight": "bold", "color": "#5C6BC0"},
+                     *wx_items,
+                     {"type": "separator", "margin": "md"},
+                     {"type": "text", "text": "💹 今日匯率＋油價", "size": "xs",
+                      "weight": "bold", "color": "#5C6BC0", "margin": "md"},
+                     *info_items,
+                     {"type": "separator", "margin": "md"},
+                     {"type": "text", "text": f"{nat_icon} {nat_title}", "size": "xs",
+                      "weight": "bold", "color": "#5C6BC0", "margin": "md"},
+                     {"type": "text", "text": nat_body, "size": "xs",
+                      "color": "#37474F", "wrap": True},
+                     {"type": "text", "text": f"{loc_icon} {loc_title}", "size": "xs",
+                      "weight": "bold", "color": "#5C6BC0", "margin": "sm"},
+                     {"type": "text", "text": loc_body, "size": "xs",
+                      "color": "#37474F", "wrap": True},
+                     {"type": "separator", "margin": "md"},
+                     {"type": "text", "text": "💡 今日健康提醒", "size": "xs",
+                      "weight": "bold", "color": "#5C6BC0", "margin": "md"},
+                     {"type": "text", "text": tip, "size": "xs",
+                      "color": "#37474F", "wrap": True},
+                 ]},
+                 "footer": {"type": "box", "layout": "vertical",
+                            "spacing": "xs", "paddingAll": "10px",
+                            "contents": [
+                     {"type": "box", "layout": "horizontal", "spacing": "sm",
+                      "contents": [
+                          {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                           "action": {"type": "message", "label": "吃什麼", "text": "今天吃什麼"}},
+                          {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                           "action": {"type": "message", "label": "查活動", "text": "近期活動"}},
+                          {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                           "action": {"type": "message", "label": "健康", "text": "健康小幫手"}},
+                      ]},
+                     {"type": "button", "style": "primary", "color": "#E65100", "height": "sm",
+                      "action": {"type": "uri", "label": "📤 分享給朋友", "uri": _share_url}},
+                     {"type": "button", "style": "secondary", "height": "sm",
+                      "action": {"type": "message", "label": f"📍 換城市（{city}）",
+                                 "text": "換城市"}},
+                 ]},
+             }}]
 
 
 def build_weather_message(text: str, user_id: str = "") -> list:
