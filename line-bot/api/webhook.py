@@ -5856,12 +5856,8 @@ def _build_morning_city_picker() -> list:
                 "type": "box", "layout": "vertical",
                 "spacing": "sm", "paddingAll": "14px",
                 "contents": [
-                    {"type": "button", "style": "primary", "height": "sm",
-                     "color": "#2E7D32",
-                     "action": {"type": "uri", "label": "📍 自動定位（出差/旅遊適用）",
-                                "uri": "https://liff.line.me/2009774625-KwBrQAbV?action=morning"}},
                     {"type": "separator", "margin": "sm"},
-                    {"type": "text", "text": "🏙️ 或手動選擇城市", "size": "sm",
+                    {"type": "text", "text": "🏙️ 請選擇你的城市", "size": "sm",
                      "weight": "bold", "color": "#37474F", "margin": "sm"},
                     *buttons,
                     {"type": "separator", "margin": "md"},
@@ -5907,7 +5903,12 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         oil = _fetch_quick_oil()
     _t1 = _thr.Thread(target=_wx); _t2 = _thr.Thread(target=_rt); _t3 = _thr.Thread(target=_oil)
     _t1.start(); _t2.start(); _t3.start()
-    _t1.join(timeout=6); _t2.join(timeout=5); _t3.join(timeout=5)
+    # 共享 deadline：三個 API 一起跑，總等待不超過 5 秒（Vercel 免費版 10 秒限制）
+    import time as _time
+    _deadline = _time.time() + 5
+    _t1.join(timeout=max(0, _deadline - _time.time()))
+    _t2.join(timeout=max(0, _deadline - _time.time()))
+    _t3.join(timeout=max(0, _deadline - _time.time()))
 
     # 今日好康：全台通用一則 + 當地在地一則（user_id 決定每人不同）
     nat_icon, nat_title, nat_body = _get_national_deal(city, user_id)
@@ -6159,8 +6160,8 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                                 "uri": _share_url}},
                     {"type": "button", "style": "secondary", "height": "sm",
                      "color": "#ECEFF1",
-                     "action": {"type": "uri", "label": f"📍 換城市（現在：{city}）",
-                                "uri": "https://liff.line.me/2009774625-KwBrQAbV?action=morning"}},
+                     "action": {"type": "message", "label": f"📍 換城市（現在：{city}）",
+                                "text": "換城市"}},
                 ]
             }
         }
@@ -8758,7 +8759,7 @@ def build_parking_flex(lat: float, lon: float) -> list:
         city_park_url = f"https://www.cityparking.com.tw/"
         times_url     = f"https://www.timespark.com.tw/tw/ParkingSearch?lat={lat}&lng={lon}"
         ipark_url     = f"https://www.iparking.com.tw/"
-        liff_url      = "https://liff.line.me/2009774625-KwBrQAbV?action=parking"
+        liff_url      = f"https://www.google.com/maps/search/%E5%81%9C%E8%BB%8A%E5%A0%B4/@{lat},{lon},16z"
 
         bubble_public = {
             "type": "bubble", "size": "kilo",

@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "LIFF 靜態頁面",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "3000", "--directory", "line-bot/liff"],
+      "port": 3000
+    },
+    {
+      "name": "Webhook (vercel dev)",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vercel", "dev", "--cwd", "line-bot", "--listen", "5000"],
+      "port": 5000
+    }
+  ]
+}
