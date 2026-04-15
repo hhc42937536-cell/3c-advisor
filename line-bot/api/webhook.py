@@ -7404,11 +7404,6 @@ def handle_text_message(text: str, user_id: str = "") -> list:
             # 只有裝置 → 問使用者（理論上不會到這裡）
             return build_wizard_who(device_name)
 
-    # ── 1.3 早安摘要（在打招呼前優先攔截）──────────────
-    _morning_kw = ["早安", "早上好", "早啊", "早哦", "morning", "good morning", "早起了", "早安安"]
-    if any(w in text_lower for w in _morning_kw):
-        return build_morning_summary(text, user_id=user_id)
-
     # ── 1. 打招呼 / 幫助 ────────────────────────────
     greetings = ["你好", "嗨", "hi", "hello", "哈囉", "安安", "開始", "幫助", "help", "選單", "功能"]
     if any(text_lower == g or text_lower.startswith(g) for g in greetings):
@@ -9692,6 +9687,19 @@ class handler(BaseHTTPRequestHandler):
                             import traceback; traceback.print_exc()
                             push_message(user_id, [{"type": "text", "text": "定位失敗，請稍後再試 🙏"}])
                         continue
+
+                    # ── 早安（直接在 do_POST 處理，不經 handle_text_message）──
+                    _morning_kw = ["早安", "早上好", "早啊", "早哦", "morning", "good morning", "早起了", "早安安"]
+                    if any(w in user_text.lower() for w in _morning_kw):
+                        try:
+                            msgs = build_morning_summary(user_text, user_id=user_id)
+                            reply_message(reply_token, msgs)
+                            log_usage(user_id, "morning_summary")
+                        except Exception as _me:
+                            import traceback; traceback.print_exc()
+                            reply_message(reply_token, [{"type": "text", "text": "早安！系統忙碌中，請稍後再試 🙏"}])
+                        continue
+
                     # 判斷功能類別（用於 log，不影響路由）
                     _feature, _sub = _detect_feature(user_text)
 
