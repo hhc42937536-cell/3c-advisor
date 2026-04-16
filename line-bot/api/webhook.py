@@ -862,6 +862,164 @@ def build_diet_advice() -> list:
     }}]
 
 
+def build_mood_support(text: str = "") -> list:
+    """情緒觸發 → 溫暖陪伴式回應，給具體出口"""
+    import random as _r
+
+    # 判斷情緒類型
+    _crisis_kws = ["不想活", "不想活了", "活不下去", "去死", "想死",
+                   "結束生命", "消失就好", "消失算了", "不如死掉"]
+    _lost_kws = ["沒目標", "沒有目標", "人生沒目標", "什麼都不想做", "甚麼都不想做",
+                 "什麼都不想", "甚麼都不想", "活著沒意思", "沒意思", "沒意義",
+                 "人生無聊", "迷茫", "迷失", "不知道目標"]
+    _conflict_kws = ["被罵", "被念", "被嗆", "被兇", "被罵慘", "被罵死",
+                     "吵架", "吵起來", "跟他吵", "跟她吵", "又吵", "大吵",
+                     "被說", "被批評", "被否定", "被嫌", "被討厭"]
+    _student_kws = ["被欺負", "被霸凌", "被排擠", "被孤立", "沒有朋友",
+                    "考不好", "考差了", "成績差", "成績不好", "考砸了", "被當掉",
+                    "被老師罵", "老師罵我", "作業寫不完", "功課好難", "不想上學",
+                    "讀書好累", "唸書好累", "考試壓力"]
+    is_crisis = any(w in text for w in _crisis_kws)
+    is_lost = any(w in text for w in _lost_kws)
+    is_conflict = any(w in text for w in _conflict_kws)
+    is_student = any(w in text for w in _student_kws)
+
+    if is_crisis:
+        return [
+            {"type": "text",
+             "text": "聽到你說這些，我有點擔心你 🫂\n\n你現在還好嗎？\n\n如果情緒很難受，可以打這支電話，有人會陪你說話 👇\n\n📞 安心專線：1925（24小時免費，不用說名字）"},
+        ]
+
+    if is_student:
+        openers = [
+            "這種事不好受，但你願意說出來就很勇敢 🌱",
+            "考不好或被欺負，都不代表你不好，真的 ✨",
+            "學生時期這種感受特別重，我知道 🌿",
+            "遇到這種事，會想逃很正常，先讓自己喘口氣就好 🍃",
+        ]
+        header_text = "🌱 你說的，我都聽到了"
+        header_sub = "學校的事，不用一個人扛"
+        body_ack = "不管是被欺負、考不好，還是不想上學，這些感受都是真的，不用假裝沒事。"
+        body_hint = "等你準備好了，如果想做點什麼讓自己好過一點 👇"
+        buttons = [
+            {"type": "button", "style": "secondary", "height": "sm",
+             "action": {"type": "message",
+                        "label": "🍜 吃點好的，先犒賞自己",
+                        "text": "今天吃什麼"}},
+            {"type": "button", "style": "secondary", "height": "sm",
+             "action": {"type": "message",
+                        "label": "🎪 出去走走，換個空氣",
+                        "text": "活動推薦"}},
+            {"type": "button", "style": "secondary", "height": "sm",
+             "action": {"type": "message",
+                        "label": "☕ 找個地方靜一靜",
+                        "text": "今天吃什麼 咖啡廳"}},
+        ]
+
+    elif is_conflict:
+        openers = [
+            "這種事真的很消耗，說出來就好 🌬️",
+            "被罵或吵架完，情緒需要時間，不用急著沒事 🌿",
+            "發生這種事，會難受很正常 ✨",
+            "先讓自己緩一下，不用馬上想對還是錯 🚶",
+        ]
+        header_text = "🌬️ 情緒還在，沒關係"
+        header_sub = "不用急著好起來"
+        body_ack = "剛剛發生的事還在心裡，這很正常。先讓自己的情緒有個地方放，不用硬撐。"
+        body_hint = "如果想做點什麼換換狀態的話 👇"
+        buttons = [
+            {"type": "button", "style": "secondary", "height": "sm",
+             "action": {"type": "message",
+                        "label": "🍜 吃點讓自己舒服的",
+                        "text": "今天吃什麼"}},
+            {"type": "button", "style": "secondary", "height": "sm",
+             "action": {"type": "message",
+                        "label": "🎪 出去散散心",
+                        "text": "活動推薦"}},
+            {"type": "button", "style": "secondary", "height": "sm",
+             "action": {"type": "message",
+                        "label": "☕ 找個安靜的地方坐坐",
+                        "text": "今天吃什麼 咖啡廳"}},
+        ]
+    elif is_lost:
+        openers = [
+            "沒有方向的感覺很煎熬，但這個時期很多人都走過 🌱",
+            "不知道目標在哪，不代表你有問題，只是還沒找到 ✨",
+            "迷茫的時候不用硬逼自己想清楚，先讓自己好好喘口氣 🍃",
+            "人生不是每個時候都要有答案，先照顧好現在就夠了 🌿",
+        ]
+        header_text = "🌱 不知道方向，也沒關係"
+        header_sub = "先照顧好現在的自己就夠了"
+        body_ack = "沒有目標的感覺很重，但這不是你的錯，也不是永遠的狀態。先讓自己休息一下。"
+        body_hint = "如果想走出去動一動，或只是換個環境 👇"
+        buttons = [
+            {"type": "button", "style": "secondary", "height": "sm",
+             "action": {"type": "message",
+                        "label": "🎪 出去找點新體驗",
+                        "text": "活動推薦"}},
+            {"type": "button", "style": "secondary", "height": "sm",
+             "action": {"type": "message",
+                        "label": "🚶 附近隨便走走",
+                        "text": "在地景點"}},
+            {"type": "button", "style": "secondary", "height": "sm",
+             "action": {"type": "message",
+                        "label": "🍜 先吃頓好的",
+                        "text": "今天吃什麼"}},
+        ]
+    else:
+        openers = [
+            "今天不太順對嗎，說出來就好 🌿",
+            "聽起來很累，先喘口氣 ✨",
+            "這種感覺很真實，不用假裝沒事 🍃",
+            "有時候就是會這樣，沒關係的 🌱",
+        ]
+        header_text = "🌿 今天辛苦了"
+        header_sub = "不用急著好起來"
+        body_ack = "不管是累、煩、還是說不上來的低落，這些感受都值得被好好對待。先讓自己休息一下。"
+        body_hint = "如果想做點什麼讓自己好過一點 👇"
+        buttons = [
+            {"type": "button", "style": "secondary", "height": "sm",
+             "action": {"type": "message",
+                        "label": "🍜 吃點讓自己開心的",
+                        "text": "今天吃什麼"}},
+            {"type": "button", "style": "secondary", "height": "sm",
+             "action": {"type": "message",
+                        "label": "🎪 附近有什麼活動",
+                        "text": "活動推薦"}},
+            {"type": "button", "style": "secondary", "height": "sm",
+             "action": {"type": "message",
+                        "label": "☕ 找家咖啡廳坐坐",
+                        "text": "今天吃什麼 咖啡廳"}},
+        ]
+
+    return [
+        {"type": "text", "text": _r.choice(openers)},
+        {"type": "flex", "altText": header_text,
+         "contents": {
+             "type": "bubble", "size": "mega",
+             "header": {"type": "box", "layout": "vertical",
+                        "backgroundColor": "#37474F", "paddingAll": "16px",
+                        "contents": [
+                            {"type": "text", "text": header_text,
+                             "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                            {"type": "text", "text": header_sub,
+                             "color": "#B0BEC5", "size": "xs", "margin": "xs"},
+                        ]},
+             "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                      "paddingAll": "16px",
+                      "contents": [
+                          {"type": "text", "text": body_ack,
+                           "size": "sm", "color": "#333333", "wrap": True},
+                          {"type": "text", "text": body_hint,
+                           "size": "xs", "color": "#888888",
+                           "wrap": True, "margin": "md"},
+                      ]},
+             "footer": {"type": "box", "layout": "vertical", "spacing": "sm",
+                        "paddingAll": "12px", "contents": buttons},
+         }}
+    ]
+
+
 def build_stress_advice() -> list:
     return [{"type":"flex","altText":"壓力紓解指南","contents":{
         "type":"bubble",
@@ -2154,14 +2312,14 @@ _GROUP_DINING_TYPES = {
 }
 
 _GROUP_SEARCH_TEMPLATES = {
-    "火鍋":     "{city} 火鍋 包廂 聚餐 評分高",
-    "燒肉":     "{city} 燒肉 聚餐 包廂 評分高",
-    "日式":     "{city} 日式料理 聚餐 包廂",
-    "合菜台菜": "{city} 台菜 合菜 聚餐 大圓桌",
-    "西式":     "{city} 西餐 排餐 聚餐 包廂",
-    "熱炒":     "{city} 熱炒 海鮮 聚餐 評分高",
-    "鍋物":     "{city} 薑母鴨 羊肉爐 聚餐",
-    "不限":     "{city} 聚餐 包廂 評分高 必吃",
+    "火鍋":     "{city} 火鍋 聚餐 推薦 包廂 高評價",
+    "燒肉":     "{city} 燒肉 聚餐 推薦 包廂 高評價",
+    "日式":     "{city} 日式料理 聚餐 推薦 包廂",
+    "合菜台菜": "{city} 台菜 合菜 聚餐 推薦 大圓桌",
+    "西式":     "{city} 西餐 排餐 聚餐 推薦 包廂",
+    "熱炒":     "{city} 熱炒 海鮮 聚餐 推薦 高評價",
+    "鍋物":     "{city} 薑母鴨 羊肉爐 聚餐 推薦",
+    "不限":     "{city} 聚餐 推薦 包廂 高評價 必吃",
 }
 
 
@@ -2270,19 +2428,25 @@ def _build_group_type_picker(city: str) -> list:
 
 
 def _build_group_result(city: str, dining_type: str) -> list:
-    """城市 + 類型 → 搜尋建議卡 + 常見品牌/關鍵字"""
+    """城市 + 類型 → 必比登精選卡 + 搜尋建議卡"""
     import urllib.parse as _up
 
     info = _GROUP_DINING_TYPES.get(dining_type, _GROUP_DINING_TYPES["不限"])
     color = info["color"]
     emoji = info["emoji"]
 
+    # ── 必比登精選（同城市隨機 3 家）──
+    bib_pool = _BIB_GOURMAND.get(city[:2], [])
+    bib_picks = _random.sample(bib_pool, min(3, len(bib_pool))) if bib_pool else []
+
     # Google Maps 搜尋（聚餐包廂）
     query_str = _GROUP_SEARCH_TEMPLATES.get(dining_type, "{city} 聚餐").format(city=city)
     gmap_url = "https://www.google.com/maps/search/" + _up.quote(query_str)
     gmap_url_pkg = ("https://maps.google.com/?q=" + _up.quote(f"{city} {dining_type} 聚餐 包廂"))
 
-    # 食評網站
+    # 食評 / 排名網站
+    google_rank_url = f"https://www.google.com/search?q={_up.quote(f'{city} {dining_type} 聚餐 推薦 排名 必吃')}"
+    walker_url  = f"https://www.walkerland.com.tw/search?keyword={_up.quote(f'{city} {dining_type} 聚餐')}&sort=rating"
     ipeen_url   = f"https://www.ipeen.com.tw/search/all/{_up.quote(city)}/0-0-0-0/1?q={_up.quote(dining_type + ' 聚餐')}"
     eztable_url = f"https://www.eztable.com.tw/restaurants/?q={_up.quote(city + ' ' + dining_type)}"
 
@@ -2319,21 +2483,42 @@ def _build_group_result(city: str, dining_type: str) -> list:
                              ]},
                  "body": {"type": "box", "layout": "vertical", "spacing": "md",
                           "paddingAll": "16px",
-                          "contents": [
+                          "contents": (
+                              ([
+                                  {"type": "text", "text": "🏅 必比登精選（米其林認證）",
+                                   "weight": "bold", "size": "sm", "color": "#B71C1C"},
+                                  {"type": "text", "text": "品質有保證，可作為聚餐起點",
+                                   "size": "xs", "color": "#888888", "margin": "xs"},
+                              ] + [
+                                  {"type": "button", "style": "secondary",
+                                   "height": "sm", "margin": "sm",
+                                   "action": {"type": "uri",
+                                              "label": f"🏅 {r['name']}",
+                                              "uri": r["url"]}}
+                                  for r in bib_picks
+                              ] + [{"type": "separator", "margin": "md"}])
+                              if bib_picks else []
+                          ) + [
                               {"type": "text", "text": "📋 訂位前確認",
-                               "weight": "bold", "size": "sm", "color": "#333333"},
+                               "weight": "bold", "size": "sm", "color": "#333333",
+                               "margin": "md" if bib_picks else "none"},
                           ] + tip_items + [
                               {"type": "separator", "margin": "md"},
-                              {"type": "text", "text": "🔍 直接搜尋餐廳",
+                              {"type": "text", "text": "🔍 依評價找更多餐廳",
                                "weight": "bold", "size": "sm",
                                "color": "#333333", "margin": "md"},
                               {"type": "text",
-                               "text": "以下平台都有真實評價 + 線上訂位",
+                               "text": "按評價排序，快速鎖定高分店家",
                                "size": "xs", "color": "#888888"},
                           ]},
                  "footer": {"type": "box", "layout": "vertical", "spacing": "sm",
                              "paddingAll": "12px",
                              "contents": [
+                                 {"type": "button", "style": "primary",
+                                  "color": color, "height": "sm",
+                                  "action": {"type": "uri",
+                                             "label": f"⭐ 網友推薦排行",
+                                             "uri": google_rank_url}},
                                  {"type": "button", "style": "primary",
                                   "color": color, "height": "sm",
                                   "action": {"type": "uri",
@@ -2344,13 +2529,21 @@ def _build_group_result(city: str, dining_type: str) -> list:
                                       {"type": "button", "style": "secondary",
                                        "flex": 1, "height": "sm",
                                        "action": {"type": "uri",
-                                                  "label": "🍽️ 愛評網",
-                                                  "uri": ipeen_url}},
+                                                  "label": "📝 窩客島評價",
+                                                  "uri": walker_url}},
                                       {"type": "button", "style": "secondary",
                                        "flex": 1, "height": "sm",
                                        "action": {"type": "uri",
-                                                  "label": "📅 EZTABLE",
+                                                  "label": "📅 EZTABLE訂位",
                                                   "uri": eztable_url}},
+                                  ]},
+                                 {"type": "box", "layout": "horizontal",
+                                  "spacing": "sm", "contents": [
+                                      {"type": "button", "style": "secondary",
+                                       "flex": 1, "height": "sm",
+                                       "action": {"type": "uri",
+                                                  "label": "🍽️ 愛評網",
+                                                  "uri": ipeen_url}},
                                   ]},
                                  {"type": "box", "layout": "horizontal",
                                   "spacing": "sm", "contents": [
@@ -3254,25 +3447,26 @@ def build_live_food_events(area: str) -> list:
              }}]
 
 
-def build_food_menu() -> list:
+def build_food_menu(city: str = "") -> list:
     """今天吃什麼 — 主選單（依時段動態調整按鈕順序）"""
     period, meal_label = _tw_meal_period()
 
+    suf = f" {city}" if city else ""
     _all_btns = {
-        "便當":    ("便當",    "吃什麼 便當"),
-        "麵食":    ("麵食",    "吃什麼 麵食"),
-        "小吃":    ("小吃",    "吃什麼 小吃"),
-        "火鍋":    ("火鍋",    "吃什麼 火鍋"),
-        "日韓":    ("日韓",    "吃什麼 日韓"),
-        "早午餐":  ("早午餐",  "吃什麼 早午餐"),
-        "飲料甜點":("飲料甜點","吃什麼 飲料甜點"),
-        "輕食":    ("輕食",    "吃什麼 輕食"),
+        "便當":    ("便當",    f"吃什麼 便當{suf}"),
+        "麵食":    ("麵食",    f"吃什麼 麵食{suf}"),
+        "小吃":    ("小吃",    f"吃什麼 小吃{suf}"),
+        "火鍋":    ("火鍋",    f"吃什麼 火鍋{suf}"),
+        "日韓":    ("日韓",    f"吃什麼 日韓{suf}"),
+        "早午餐":  ("早午餐",  f"吃什麼 早午餐{suf}"),
+        "飲料甜點":("飲料甜點",f"吃什麼 飲料甜點{suf}"),
+        "輕食":    ("輕食",    f"吃什麼 輕食{suf}"),
     }
     _period_order = {
-        # 飲料甜點固定放 index 6（第三排 2 格列），避免 3 格列截字
         "M": ["早午餐", "輕食",  "便當", "麵食", "小吃", "日韓", "飲料甜點", "火鍋"],
         "D": ["便當",   "麵食",  "小吃", "日韓", "輕食", "早午餐", "飲料甜點", "火鍋"],
-        "N": ["火鍋",   "日韓",  "麵食", "便當", "小吃", "輕食",  "飲料甜點", "早午餐"],
+        "N": ["火鍋",   "日韓",  "麵食", "便當", "小吃", "輕食",  "飲料甜點"],
+        # 消夜/晚餐不顯示早午餐
     }
     order = _period_order.get(period, _period_order["D"])
 
@@ -3286,7 +3480,7 @@ def build_food_menu() -> list:
 
     row1 = [_btn(k) for k in order[0:3]]
     row2 = [_btn(k) for k in order[3:6]]
-    row3 = [_btn(k) for k in order[6:8]]
+    row3 = [_btn(k) for k in order[6:]]   # M/D 有 2 個，N 只剩 1 個（飲料甜點滿寬）
 
     header_hints = {
         "M": "☀️ 早餐 / 早午餐時間",
@@ -3697,6 +3891,61 @@ def build_upgrade_message(text: str) -> list:
     return build_upgrade_menu()
 
 
+def _build_food_entry_region_picker() -> list:
+    """今天吃什麼（無城市）— 第一步：選地區"""
+    buttons = [
+        {"type": "button", "style": "primary", "color": "#E65100", "height": "sm",
+         "action": {"type": "message", "label": f"📍 {r}", "text": f"今天吃什麼 選城市 {r}"}}
+        for r in _AREA_REGIONS.keys()
+    ]
+    return [{"type": "flex", "altText": "你在哪個地區？",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {"type": "box", "layout": "vertical", "backgroundColor": "#E65100",
+                            "paddingAll": "16px",
+                            "contents": [
+                                {"type": "text", "text": "🍽️ 你在哪個地區？",
+                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                                {"type": "text", "text": "選完地區再選城市，馬上推薦！",
+                                 "color": "#FFCCAA", "size": "xs", "margin": "xs"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                          "paddingAll": "12px", "contents": buttons},
+             }}]
+
+
+def _build_food_entry_city_picker(region: str) -> list:
+    """今天吃什麼（無城市）— 第二步：選城市"""
+    areas = _AREA_REGIONS.get(region, _ALL_CITIES)
+    rows = []
+    for i in range(0, len(areas), 3):
+        row = areas[i:i+3]
+        rows.append({
+            "type": "box", "layout": "horizontal", "spacing": "sm",
+            "contents": [
+                {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                 "action": {"type": "message", "label": a, "text": f"今天吃什麼 {a}"}}
+                for a in row
+            ]
+        })
+    rows.append(
+        {"type": "button", "style": "link", "height": "sm",
+         "action": {"type": "message", "label": "← 重選地區", "text": "今天吃什麼"}}
+    )
+    return [{"type": "flex", "altText": f"{region} — 選擇城市",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {"type": "box", "layout": "vertical", "backgroundColor": "#E65100",
+                            "paddingAll": "16px",
+                            "contents": [
+                                {"type": "text", "text": f"🍽️ {region} — 選擇城市",
+                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                          "paddingAll": "12px", "contents": rows},
+             }}]
+
+
 def build_food_region_picker(style: str) -> list:
     """今天吃什麼 — 選擇地區（第一步）"""
     colors = {"便當": "#C62828", "麵食": "#E65100", "小吃": "#F57C00", "火鍋": "#D32F2F",
@@ -3765,7 +4014,7 @@ def build_food_area_picker(style: str, region: str = "") -> list:
              }}]
 
 
-def build_food_message(text: str) -> list:
+def build_food_message(text: str, user_id: str = None) -> list:
     """今天吃什麼 — 主路由"""
     text_s = text.strip()
 
@@ -3775,6 +4024,7 @@ def build_food_message(text: str) -> list:
     area_match = re.search(rf'({all_cities_pat})\S{{0,6}}', text_s)
     if area_match:
         area = area_match.group(0)
+        _set_user_city(user_id, area[:2])  # 記住用戶明確指定的城市
     area_city = area[:2] if area else ""  # 取前兩字作為城市名
 
     # ── 解析地區（北部/中部/南部/東部離島）──
@@ -3890,8 +4140,17 @@ def build_food_message(text: str) -> list:
                  }}]
 
     # ── 純呼叫主選單 ──
-    if text_s in ["今天吃什麼", "晚餐吃什麼", "午餐吃什麼", "吃什麼", "晚餐推薦", "午餐推薦"]:
-        return build_food_menu()
+    _food_bare = ["今天吃什麼", "晚餐吃什麼", "午餐吃什麼", "吃什麼", "晚餐推薦", "午餐推薦"]
+    if any(text_s == b or text_s.startswith(b + " ") or text_s.startswith(b + "\n") for b in _food_bare):
+        # 「今天吃什麼 選城市 北部」→ 城市選擇器
+        _sel_match = re.search(r'選城市\s+(' + '|'.join(_AREA_REGIONS.keys()) + r')', text_s)
+        if _sel_match:
+            return _build_food_entry_city_picker(_sel_match.group(1))
+        # 有城市 → 直接到食物類型選單
+        if area_city:
+            return build_food_menu(city=area_city)
+        # 沒城市 → 先選地區
+        return _build_food_entry_region_picker()
 
     # ── 有風格 + 有城市 → 直接推薦 ──
     if area:
@@ -4445,9 +4704,11 @@ def build_activity_flex(category: str, area: str = "") -> list:
              "contents": {"type": "carousel", "contents": bubbles}}]
 
 
-def build_activity_menu() -> list:
+def build_activity_menu(city: str = "") -> list:
     """近期活動 — 主選單"""
     ACCENT = "#5C6BC0"
+    suf = f" {city}" if city else ""
+    city_hint = f"📍 {city} — 選一個你想玩的類型 👇" if city else "選一個你想玩的類型 👇"
     return [{"type": "flex", "altText": "近期活動",
              "contents": {
                  "type": "bubble", "size": "mega",
@@ -4465,8 +4726,8 @@ def build_activity_menu() -> list:
                             ]},
                  "body": {"type": "box", "layout": "vertical", "backgroundColor": "#FFFFFF",
                           "contents": [
-                     {"type": "text", "text": "選一個你想玩的類型 👇",
-                      "size": "sm", "color": "#1A1F3A", "weight": "bold"},
+                     {"type": "text", "text": city_hint,
+                      "size": "sm", "color": "#1A1F3A", "weight": "bold", "wrap": True},
                      {"type": "text", "text": "也可以說「台南 戶外踏青」「台北 文青咖啡」",
                       "size": "xs", "color": "#8892B0", "wrap": True, "margin": "sm"},
                  ]},
@@ -4475,24 +4736,24 @@ def build_activity_menu() -> list:
                             "contents": [
                      {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
                          {"type": "button", "style": "primary", "color": ACCENT, "flex": 1,
-                          "height": "sm", "action": {"type": "message", "label": "🌿 戶外踏青", "text": "周末 戶外踏青"}},
+                          "height": "sm", "action": {"type": "message", "label": "🌿 戶外踏青", "text": f"周末 戶外踏青{suf}"}},
                          {"type": "button", "style": "primary", "color": ACCENT, "flex": 1,
-                          "height": "sm", "action": {"type": "message", "label": "☕ 文青咖啡", "text": "周末 文青咖啡"}},
+                          "height": "sm", "action": {"type": "message", "label": "☕ 文青咖啡", "text": f"周末 文青咖啡{suf}"}},
                      ]},
                      {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
                          {"type": "button", "style": "primary", "color": ACCENT, "flex": 1,
-                          "height": "sm", "action": {"type": "message", "label": "👶 親子同樂", "text": "周末 親子同樂"}},
+                          "height": "sm", "action": {"type": "message", "label": "👶 親子同樂", "text": f"周末 親子同樂{suf}"}},
                          {"type": "button", "style": "primary", "color": ACCENT, "flex": 1,
-                          "height": "sm", "action": {"type": "message", "label": "🏃 運動健身", "text": "周末 運動健身"}},
+                          "height": "sm", "action": {"type": "message", "label": "🏃 運動健身", "text": f"周末 運動健身{suf}"}},
                      ]},
                      {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
                          {"type": "button", "style": "primary", "color": ACCENT, "flex": 1,
-                          "height": "sm", "action": {"type": "message", "label": "🍜 吃喝玩樂", "text": "周末 吃喝玩樂"}},
+                          "height": "sm", "action": {"type": "message", "label": "🍜 吃喝玩樂", "text": f"周末 吃喝玩樂{suf}"}},
                          {"type": "button", "style": "primary", "color": ACCENT, "flex": 1,
-                          "height": "sm", "action": {"type": "message", "label": "🎨 市集展覽", "text": "周末 市集展覽"}},
+                          "height": "sm", "action": {"type": "message", "label": "🎨 市集展覽", "text": f"周末 市集展覽{suf}"}},
                      ]},
                      {"type": "button", "style": "primary", "color": "#1A1F3A", "height": "sm",
-                      "action": {"type": "message", "label": "🎵 表演音樂", "text": "周末 表演音樂"}},
+                      "action": {"type": "message", "label": "🎵 表演音樂", "text": f"周末 表演音樂{suf}"}},
                  ]},
              }}]
 
@@ -4626,7 +4887,7 @@ def build_activity_city_picker(category: str = "") -> list:
              }}]
 
 
-def build_activity_message(text: str) -> list:
+def build_activity_message(text: str, user_id: str = None) -> list:
     """近期活動 — 主路由"""
     text_s = text.strip()
 
@@ -4658,6 +4919,7 @@ def build_activity_message(text: str) -> list:
     area_match = re.search(rf'({all_cities_pattern})', text_s)
     if area_match:
         area = area_match.group(0)
+        _set_user_city(user_id, area[:2])  # 記住用戶明確指定的城市
 
     # 解析地區（北部/中部/南部/東部離島）
     region = ""
@@ -6108,7 +6370,7 @@ def build_welcome_message() -> list:
 
     return [{
         "type": "flex",
-        "altText": "✨ 嗨！我是你的生活優轉",
+        "altText": "嗨！我是你的生活優轉，你的日常心靈小夥伴",
         "contents": {
             "type": "bubble",
             "size": "mega",
@@ -6130,7 +6392,7 @@ def build_welcome_message() -> list:
                                 "contents": [
                                     {"type": "text", "text": "生活優轉",
                                      "color": "#FFFFFF", "size": "xl", "weight": "bold"},
-                                    {"type": "text", "text": "讓每天的選擇更簡單 🎯",
+                                    {"type": "text", "text": "想輕鬆、想吃好、想出去玩，都可以找我 🌱",
                                      "color": "#8892B0", "size": "xs", "margin": "xs"},
                                 ]
                             }
@@ -6156,8 +6418,16 @@ def build_welcome_message() -> list:
                             {"type": "box", "layout": "vertical", "flex": 1,
                              "backgroundColor": "#43A04730", "cornerRadius": "6px",
                              "paddingAll": "5px",
-                             "contents": [{"type": "text", "text": "💪 健康管理",
+                             "contents": [{"type": "text", "text": "🌱 心情小站",
                                            "size": "xxs", "color": "#A5D6A7",
+                                           "align": "center"}]},
+                            {"type": "box", "layout": "vertical", "flex": 1,
+                             "backgroundColor": "#FFF8E130", "cornerRadius": "6px",
+                             "paddingAll": "5px",
+                             "action": {"type": "message", "label": "今天想輕鬆一下",
+                                        "text": "今天想輕鬆一下"},
+                             "contents": [{"type": "text", "text": "💛 輕鬆一下",
+                                           "size": "xxs", "color": "#FFD54F",
                                            "align": "center"}]},
                         ]
                     }
@@ -6210,6 +6480,38 @@ def build_welcome_message() -> list:
                             {"type": "text",
                              "text": " 打「早安」→ 天氣＋今日小驚喜，每天一個好梗跟朋友聊",
                              "size": "xxs", "color": "#B45309", "flex": 1,
+                             "gravity": "center", "wrap": True},
+                        ]
+                    },
+                    {
+                        "type": "box", "layout": "horizontal",
+                        "backgroundColor": "#F0F4FF",
+                        "cornerRadius": "8px",
+                        "paddingAll": "8px",
+                        "margin": "sm",
+                        "action": {"type": "message", "label": "好累", "text": "好累"},
+                        "contents": [
+                            {"type": "text", "text": "🌿",
+                             "size": "sm", "flex": 0, "gravity": "center"},
+                            {"type": "text",
+                             "text": " 好累、不知道幹嘛、心情不太對，都可以找我說說 🌱",
+                             "size": "xxs", "color": "#3949AB", "flex": 1,
+                             "gravity": "center", "wrap": True},
+                        ]
+                    },
+                    {
+                        "type": "box", "layout": "horizontal",
+                        "backgroundColor": "#F5F5F5",
+                        "cornerRadius": "8px",
+                        "paddingAll": "8px",
+                        "margin": "sm",
+                        "action": {"type": "message", "label": "其他工具", "text": "其他工具"},
+                        "contents": [
+                            {"type": "text", "text": "🛠️",
+                             "size": "sm", "flex": 0, "gravity": "center"},
+                            {"type": "text",
+                             "text": " 下方選單 →「所有工具」有防詐騙、法律常識、勞工權益等更多功能",
+                             "size": "xxs", "color": "#555555", "flex": 1,
                              "gravity": "center", "wrap": True},
                         ]
                     },
@@ -7132,79 +7434,169 @@ def build_legal_answer(topic: str) -> list:
 
 
 def build_tools_menu() -> list:
-    """生活工具箱選單（進階工具：3C選購、防詐、法律）"""
-    ACCENT = "#546E7A"
+    """生活工具箱選單 — 分類版 + 工具描述風格"""
 
-    def _tool_row(icon, title, desc, trigger, color):
+    def _section_label(icon, title):
         return {
-            "type": "box", "layout": "horizontal", "spacing": "md",
-            "paddingAll": "md",
-            "backgroundColor": "#F8F9FB",
-            "cornerRadius": "10px",
-            "action": {"type": "message", "label": title, "text": trigger},
-            "contents": [
-                # 左：色條
-                {"type": "box", "layout": "vertical", "width": "4px",
-                 "backgroundColor": color, "cornerRadius": "4px", "contents": []},
-                # 中：文字
-                {"type": "box", "layout": "vertical", "flex": 1, "spacing": "xs",
-                 "contents": [
-                     {"type": "text", "text": f"{icon} {title}",
-                      "size": "md", "weight": "bold", "color": "#1A1F3A"},
-                     {"type": "text", "text": desc, "size": "xs",
-                      "color": "#8892B0", "wrap": True},
-                 ]},
-                # 右：箭頭
-                {"type": "text", "text": "›", "size": "xl",
-                 "color": color, "align": "end", "gravity": "center"},
+            "type": "box", "layout": "horizontal", "margin": "md",
+            "spacing": "sm", "contents": [
+                {"type": "text", "text": icon, "size": "xs", "flex": 0,
+                 "gravity": "center"},
+                {"type": "text", "text": title, "size": "xs",
+                 "weight": "bold", "color": "#555555"},
             ]
         }
 
-    tools = [
-        _tool_row("📱", "3C 選購小幫手", "推薦最適合你的手機、筆電、平板",
-                  "推薦手機", "#FF8C42"),
-        _tool_row("🍻", "聚餐找餐廳",   "多人聚餐、包廂、生日餐廳一鍵找",
-                  "聚餐", "#E67E22"),
-        _tool_row("💰", "比價查詢",     "輸入商品名稱，直接開 BigGo/飛比比價",
-                  "幫我比價", "#27AE60"),
-        _tool_row("🤔", "消費決策",     "「這支手機 2 萬划算嗎？」幫你判斷",
-                  "消費決策", "#8E44AD"),
-        _tool_row("🛡️", "防詐騙辨識",   "辨識可疑訊息、連結、電話號碼",
-                  "防詐辨識", "#C0392B"),
-        _tool_row("⚖️", "法律小常識",   "租屋、勞資、消費糾紛怎麼辦",
-                  "法律常識", "#3949AB"),
-        _tool_row("🔧", "硬體升級諮詢", "舊電腦要怎麼升級？問我就對了",
-                  "硬體升級", "#546E7A"),
-    ]
-    # 在工具列之間加間距
-    body_contents = []
-    for i, t in enumerate(tools):
-        if i > 0:
-            body_contents.append({"type": "box", "layout": "vertical",
-                                  "height": "8px", "contents": []})
-        body_contents.append(t)
+    def _tool_row(icon, title, desc, trigger, bar_color):
+        return {
+            "type": "box", "layout": "horizontal", "spacing": "md",
+            "paddingAll": "md", "backgroundColor": "#F8F9FB",
+            "cornerRadius": "10px", "margin": "sm",
+            "action": {"type": "message", "label": title, "text": trigger},
+            "contents": [
+                {"type": "box", "layout": "vertical", "width": "4px",
+                 "backgroundColor": bar_color, "cornerRadius": "4px",
+                 "contents": []},
+                {"type": "box", "layout": "vertical", "flex": 1, "spacing": "xs",
+                 "contents": [
+                     {"type": "text", "text": f"{icon} {title}",
+                      "size": "sm", "weight": "bold", "color": "#1A1F3A"},
+                     {"type": "text", "text": desc, "size": "xs",
+                      "color": "#8892B0", "wrap": True},
+                 ]},
+                {"type": "text", "text": "›", "size": "xl",
+                 "color": bar_color, "align": "end", "gravity": "center"},
+            ]
+        }
 
     return [{
-        "type": "flex", "altText": "生活工具箱",
+        "type": "flex", "altText": "🗃️ 生活工具箱 — 所有功能",
         "contents": {
             "type": "bubble", "size": "mega",
             "header": {
                 "type": "box", "layout": "vertical",
                 "backgroundColor": "#1A1F3A", "paddingAll": "16px",
                 "contents": [
-                    {"type": "box", "layout": "vertical", "flex": 1,
-                     "paddingStart": "12px", "contents": [
-                         {"type": "text", "text": "🗃️ 生活工具箱",
-                          "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                         {"type": "text", "text": "點選需要的工具，馬上幫你",
-                          "color": "#8892B0", "size": "xs", "margin": "xs"},
+                    {"type": "text", "text": "🗃️ 所有功能",
+                     "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                    {"type": "text",
+                     "text": "點按鈕，或直接打字告訴我你需要什麼",
+                     "color": "#8892B0", "size": "xs", "margin": "xs"},
+                    # 使用範例 tag 列
+                    {"type": "box", "layout": "horizontal", "spacing": "sm",
+                     "margin": "md", "contents": [
+                         {"type": "box", "layout": "vertical", "flex": 1,
+                          "backgroundColor": "#FFFFFF18", "cornerRadius": "6px",
+                          "paddingAll": "5px",
+                          "contents": [{"type": "text", "text": "打「天氣」",
+                                        "size": "xxs", "color": "#FFFFFFCC",
+                                        "align": "center"}]},
+                         {"type": "box", "layout": "vertical", "flex": 1,
+                          "backgroundColor": "#FFFFFF18", "cornerRadius": "6px",
+                          "paddingAll": "5px",
+                          "contents": [{"type": "text", "text": "打「好累」",
+                                        "size": "xxs", "color": "#FFFFFFCC",
+                                        "align": "center"}]},
+                         {"type": "box", "layout": "vertical", "flex": 1,
+                          "backgroundColor": "#FFFFFF18", "cornerRadius": "6px",
+                          "paddingAll": "5px",
+                          "contents": [{"type": "text", "text": "打「吃什麼」",
+                                        "size": "xxs", "color": "#FFFFFFCC",
+                                        "align": "center"}]},
                      ]},
                 ]
             },
             "body": {
                 "type": "box", "layout": "vertical",
-                "backgroundColor": "#FFFFFF",
-                "paddingAll": "md", "contents": body_contents
+                "paddingAll": "12px", "spacing": "none",
+                "contents": [
+                    # ── 怎麼用 ──
+                    {"type": "box", "layout": "vertical",
+                     "backgroundColor": "#F0F4FF", "cornerRadius": "10px",
+                     "paddingAll": "12px",
+                     "contents": [
+                         {"type": "text", "text": "💡 怎麼使用生活優轉？",
+                          "size": "sm", "weight": "bold", "color": "#3949AB"},
+                         {"type": "text",
+                          "text": "下方按鈕可以點，也可以直接打字，說白話就好，不用記格式。",
+                          "size": "xs", "color": "#555555", "wrap": True,
+                          "margin": "sm"},
+                         {"type": "separator", "margin": "sm"},
+                         {"type": "text", "text": "📲 打字就能用的功能",
+                          "size": "xs", "weight": "bold", "color": "#3949AB",
+                          "margin": "sm"},
+                         {"type": "text",
+                          "text": (
+                              "☀️ 「早安」→ 天氣 + 每日提醒\n"
+                              "🌿 「好累」「沒目標」「被罵了」→ 情緒支援\n"
+                              "🛡️ 「防詐 + 可疑訊息內容」→ 幫你辨識\n"
+                              "💰 「比價 iPhone 16」→ 開比價網站\n"
+                              "🤔 「這支手機2萬划算嗎」→ 消費決策\n"
+                              "🏅 「必比登 台北」→ 米其林推薦餐廳\n"
+                              "💡 「許願」→ 許願新功能\n"
+                              "📋 「回報 + 問題描述」→ 回報問題"
+                          ),
+                          "size": "xs", "color": "#555555", "wrap": True,
+                          "margin": "xs"},
+                     ]},
+                    {"type": "separator", "margin": "md"},
+                    # ── 生活日常 ──
+                    _section_label("🍽️", "生活日常"),
+                    _tool_row("🍽️", "今天吃什麼",
+                              "不知道吃啥？告訴我你現在的狀態，幫你選",
+                              "今天吃什麼", "#FF6B35"),
+                    _tool_row("🌤️", "天氣 & 穿搭",
+                              "出門前問一下，不用再猜要不要帶傘",
+                              "天氣", "#0288D1"),
+                    _tool_row("🗓️", "近期活動",
+                              "週末不知道幹嘛？我幫你找附近有什麼好玩的",
+                              "活動推薦", "#3949AB"),
+                    _tool_row("🍻", "聚餐地點",
+                              "朋友要聚餐，選地點最難？跟我說城市跟人數",
+                              "聚餐", "#E65100"),
+                    {"type": "separator", "margin": "md"},
+                    # ── 心情 & 狀態 ──
+                    _section_label("🌿", "心情 & 狀態"),
+                    _tool_row("🌿", "情緒支援",
+                              "好累、沒目標、被罵了、不知道幹嘛，說出來就好",
+                              "好累", "#37474F"),
+                    {"type": "separator", "margin": "md"},
+                    # ── 生活自保 ──
+                    _section_label("🛡️", "生活自保"),
+                    _tool_row("🛡️", "防詐騙辨識",
+                              "收到奇怪訊息或電話，貼過來幫你判斷",
+                              "防詐辨識", "#C0392B"),
+                    _tool_row("⚖️", "法律小常識",
+                              "被房東刁難、薪水被扣，告訴你怎麼應對",
+                              "法律常識", "#3949AB"),
+                    {"type": "separator", "margin": "md"},
+                    # ── 購買諮詢 ──
+                    _section_label("📱", "購買諮詢"),
+                    _tool_row("📱", "3C 選購小幫手",
+                              "不知道買哪支手機？告訴我預算，幫你挑",
+                              "推薦手機", "#FF8C42"),
+                    _tool_row("💰", "比價查詢",
+                              "想買東西先比價，別花冤枉錢",
+                              "比價", "#00897B"),
+                    _tool_row("🤔", "消費決策",
+                              "猶豫要不要買？告訴我金額，幫你想清楚",
+                              "消費決策", "#7B1FA2"),
+                    _tool_row("🔧", "硬體升級諮詢",
+                              "電腦變慢了？升 RAM 還是換 SSD，問我",
+                              "硬體升級", "#546E7A"),
+                    {"type": "separator", "margin": "md"},
+                    # ── 你可能不知道的功能 ──
+                    _section_label("✨", "你可能不知道的功能"),
+                    _tool_row("☀️", "早安摘要",
+                              "每天早上打「早安」→ 天氣 + 今日健康小提醒，固定開啟一天",
+                              "早安", "#F57F17"),
+                    _tool_row("💡", "許願 & 回報",
+                              "想要新功能、發現問題，都可以告訴我，我會認真看",
+                              "許願", "#6C5CE7"),
+                    _tool_row("📋", "回報問題",
+                              "功能壞了？餐廳關了？直接說「回報 + 問題描述」",
+                              "回報", "#546E7A"),
+                ]
             },
         }
     }]
@@ -7419,6 +7811,27 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     if any(text_lower == g or text_lower.startswith(g) for g in greetings):
         return build_welcome_message()
 
+    # ── 1.5 情緒觸發（比功能路由早，讓日常抱怨被接住）──────────
+    _mood_kws = ["心情不好", "心情差", "好煩", "煩死", "煩透了", "超煩",
+                 "好累", "累死", "累透了", "超累", "好疲憊", "疲憊",
+                 "難過", "不開心", "很鬱悶", "鬱悶", "低落", "很喪",
+                 "不想出門", "不想動", "沒動力", "提不起勁",
+                 "無聊死", "好無聊", "超無聊", "不知道幹嘛", "沒事幹",
+                 "焦慮", "壓力大", "壓力好大", "很有壓力", "喘不過氣",
+                 "沒目標", "沒有目標", "人生沒目標", "不知道目標",
+                 "什麼都不想做", "甚麼都不想做", "什麼都不想", "甚麼都不想",
+                 "活著沒意思", "沒意思", "沒意義", "人生無聊", "迷茫", "迷失",
+                 "被罵", "被念", "被嗆", "被兇", "被罵慘", "被罵死",
+                 "吵架", "吵起來", "跟他吵", "跟她吵", "又吵", "大吵",
+                 "被說", "被批評", "被否定", "被嫌", "被討厭",
+                 "被欺負", "被霸凌", "被排擠", "被孤立", "沒有朋友",
+                 "考不好", "考差了", "成績差", "成績不好", "考砸了", "被當掉",
+                 "被老師罵", "老師罵我", "作業寫不完", "功課好難", "不想上學",
+                 "讀書好累", "唸書好累", "考試壓力"]
+    if any(w in text for w in _mood_kws):
+        log_usage(user_id, "mood_support")
+        return build_mood_support(text)
+
     # ── 2. 情境推薦 ──────────────────────────────────
     if any(w in text for w in ["情境推薦", "不知道", "幫我選", "給誰用", "哪種適合"]):
         return build_scenario_menu()
@@ -7468,7 +7881,7 @@ def handle_text_message(text: str, user_id: str = "") -> list:
                                 "吃什麼好", "要吃什麼", "本週美食", "美食活動",
                                 "在地餐廳", "餐廳", "必比登", "米其林"]) or \
        any(w in text for w in _ALL_FOOD_KEYWORDS):
-        return build_food_message(text)
+        return build_food_message(text, user_id=user_id)
 
     # ── 4.7 健康小幫手（移除裸字「健康」，避免誤觸）──────
     if any(w in text for w in ["健康小幫手", "BMI", "bmi", "身高", "體重", "減肥", "瘦身",
@@ -7496,6 +7909,7 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     # ── 4.9 近期活動 ────────────────────────────────
     if any(w in text for w in ["近期活動", "周末", "週末", "假日", "出去玩", "去哪玩",
                                 "活動推薦", "景點推薦", "玩什麼", "去哪裡",
+                                "今天想輕鬆一下", "想輕鬆一下", "想放鬆", "今天想放鬆",
                                 "踏青", "咖啡廳", "親子", "週末活動",
                                 "美術館", "博物館", "市集", "展覽活動", "藝文",
                                 "文化中心", "藝術特區", "文創", "文創園區",
@@ -7503,7 +7917,7 @@ def handle_text_message(text: str, user_id: str = "") -> list:
                                 "表演音樂", "戶外踏青", "文青咖啡", "親子同樂",
                                 "運動健身", "吃喝玩樂", "市集展覽"]) or \
        (text.startswith("活動") and len(text) > 2):
-        return build_activity_message(text)
+        return build_activity_message(text, user_id=user_id)
 
     # ── 4.10 硬體升級諮詢 ───────────────────────────
     if any(w in text for w in ["硬體升級", "電腦升級", "升級建議", "升級 RAM", "升級 SSD",
@@ -7631,68 +8045,19 @@ def handle_text_message(text: str, user_id: str = "") -> list:
 
     # ── 找車位 ──────────────────────────────────────────
     if any(w in text for w in ["找車位", "車位", "停車", "停車場", "哪裡停車", "附近停車"]):
-        return [{"type": "flex", "altText": "🅿️ 找附近停車位",
-                 "contents": {
-                     "type": "bubble", "size": "mega",
-                     "body": {
-                         "type": "box", "layout": "vertical",
-                         "backgroundColor": "#0D1B35",
-                         "paddingAll": "24px", "spacing": "lg",
-                         "contents": [
-                             {"type": "text", "text": "🅿️ 找附近停車場",
-                              "color": "#FFFFFF", "size": "xxl", "weight": "bold",
-                              "align": "center"},
-                             {"type": "text",
-                              "text": "顯示即時剩餘車位，幫你省去繞圈時間",
-                              "color": "#7A9CC0", "size": "sm", "wrap": True,
-                              "align": "center"},
-                             {"type": "separator", "margin": "lg", "color": "#ffffff20"},
-                             {"type": "box", "layout": "vertical", "margin": "lg",
-                              "spacing": "md", "contents": [
-                                 {"type": "box", "layout": "horizontal", "spacing": "sm",
-                                  "contents": [
-                                     {"type": "text", "text": "①", "color": "#26A69A",
-                                      "size": "md", "weight": "bold", "flex": 0},
-                                     {"type": "text", "wrap": True, "size": "sm",
-                                      "color": "#CCD6F6",
-                                      "text": "點聊天室下方的  ➕"},
-                                 ]},
-                                 {"type": "box", "layout": "horizontal", "spacing": "sm",
-                                  "contents": [
-                                     {"type": "text", "text": "②", "color": "#26A69A",
-                                      "size": "md", "weight": "bold", "flex": 0},
-                                     {"type": "text", "wrap": True, "size": "sm",
-                                      "color": "#CCD6F6",
-                                      "text": "選「位置」"},
-                                 ]},
-                                 {"type": "box", "layout": "horizontal", "spacing": "sm",
-                                  "contents": [
-                                     {"type": "text", "text": "③", "color": "#26A69A",
-                                      "size": "md", "weight": "bold", "flex": 0},
-                                     {"type": "text", "wrap": True, "size": "sm",
-                                      "color": "#CCD6F6",
-                                      "text": "確認位置後送出，Bot 立刻顯示附近停車場與空位"},
-                                 ]},
-                             ]},
-                         ]
-                     },
-                     "footer": {
-                         "type": "box", "layout": "vertical",
-                         "backgroundColor": "#0D1B35",
-                         "paddingAll": "16px",
-                         "contents": [
-                             {"type": "button",
-                              "action": {
-                                  "type": "uri",
-                                  "label": "📍 分享我的位置",
-                                  "uri": "line://nv/location"
-                              },
-                              "style": "primary",
-                              "color": "#26A69A",
-                              "height": "sm"}
-                         ]
-                     }
-                 }}]
+        return [{
+            "type": "text",
+            "text": "🅿️ 點下方「📍 分享位置」，我立刻幫你找附近停車場！",
+            "quickReply": {
+                "items": [{
+                    "type": "action",
+                    "action": {
+                        "type": "location",
+                        "label": "📍 分享我的位置"
+                    }
+                }]
+            }
+        }]
 
     # ── 8. 頁籤切換訊息（點到已啟用頁籤 → 顯示對應選單）──────
     if text.startswith("tab:"):

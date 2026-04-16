@@ -2,8 +2,8 @@ name: 生活優轉 暖機（每5分鐘）
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
-  workflow_dispatch:
+    - cron: '*/5 * * * *'   # 每 5 分鐘
+  workflow_dispatch:          # 手動觸發
 
 jobs:
   warm:
