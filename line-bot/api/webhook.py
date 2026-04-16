@@ -6374,10 +6374,10 @@ def build_welcome_message() -> list:
         "contents": {
             "type": "bubble",
             "size": "mega",
-            # ── Header：品牌深色漸層風 ──────────────────────────
+            # ── Header：溫暖明亮風格 ──────────────────────────
             "header": {
                 "type": "box", "layout": "vertical",
-                "backgroundColor": "#1A1F3A",
+                "backgroundColor": "#FFFDE7",
                 "paddingTop": "20px", "paddingBottom": "14px",
                 "paddingStart": "16px", "paddingEnd": "16px",
                 "contents": [
@@ -6385,15 +6385,15 @@ def build_welcome_message() -> list:
                     {
                         "type": "box", "layout": "horizontal", "spacing": "md",
                         "contents": [
-                            {"type": "text", "text": "✨", "size": "xxl",
+                            {"type": "text", "text": "🌟", "size": "xxl",
                              "flex": 0, "gravity": "center"},
                             {
                                 "type": "box", "layout": "vertical", "flex": 1,
                                 "contents": [
                                     {"type": "text", "text": "生活優轉",
-                                     "color": "#FFFFFF", "size": "xl", "weight": "bold"},
+                                     "color": "#E65100", "size": "xl", "weight": "bold"},
                                     {"type": "text", "text": "想輕鬆、想吃好、想出去玩，都可以找我 🌱",
-                                     "color": "#8892B0", "size": "xs", "margin": "xs"},
+                                     "color": "#8D6E63", "size": "xs", "margin": "xs"},
                                 ]
                             }
                         ]
@@ -6404,30 +6404,30 @@ def build_welcome_message() -> list:
                         "margin": "md",
                         "contents": [
                             {"type": "box", "layout": "vertical", "flex": 1,
-                             "backgroundColor": "#FF6B3530", "cornerRadius": "6px",
+                             "backgroundColor": "#FFCCBC", "cornerRadius": "6px",
                              "paddingAll": "5px",
                              "contents": [{"type": "text", "text": "🍽️ 吃什麼",
-                                           "size": "xxs", "color": "#FF9A7A",
+                                           "size": "xxs", "color": "#BF360C",
                                            "align": "center"}]},
                             {"type": "box", "layout": "vertical", "flex": 1,
-                             "backgroundColor": "#5C6BC030", "cornerRadius": "6px",
+                             "backgroundColor": "#C5CAE9", "cornerRadius": "6px",
                              "paddingAll": "5px",
                              "contents": [{"type": "text", "text": "🗓️ 週末活動",
-                                           "size": "xxs", "color": "#9FA8DA",
+                                           "size": "xxs", "color": "#283593",
                                            "align": "center"}]},
                             {"type": "box", "layout": "vertical", "flex": 1,
-                             "backgroundColor": "#43A04730", "cornerRadius": "6px",
+                             "backgroundColor": "#C8E6C9", "cornerRadius": "6px",
                              "paddingAll": "5px",
                              "contents": [{"type": "text", "text": "🌱 心情小站",
-                                           "size": "xxs", "color": "#A5D6A7",
+                                           "size": "xxs", "color": "#1B5E20",
                                            "align": "center"}]},
                             {"type": "box", "layout": "vertical", "flex": 1,
-                             "backgroundColor": "#FFF8E130", "cornerRadius": "6px",
+                             "backgroundColor": "#FFF9C4", "cornerRadius": "6px",
                              "paddingAll": "5px",
                              "action": {"type": "message", "label": "今天想輕鬆一下",
                                         "text": "今天想輕鬆一下"},
                              "contents": [{"type": "text", "text": "💛 輕鬆一下",
-                                           "size": "xxs", "color": "#FFD54F",
+                                           "size": "xxs", "color": "#F57F17",
                                            "align": "center"}]},
                         ]
                     }
