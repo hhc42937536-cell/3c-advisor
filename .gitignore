@@ -1,0 +1,10 @@
+# Claude Code local settings (may contain secrets)
+.claude/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Local dev tools
+*.bak
