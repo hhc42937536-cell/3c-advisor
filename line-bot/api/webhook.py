@@ -3898,8 +3898,12 @@ def build_upgrade_message(text: str) -> list:
     return build_upgrade_menu()
 
 
-def _build_food_entry_region_picker() -> list:
-    """今天吃什麼（無城市）— 第一步：選地區"""
+def _build_food_entry_region_picker(user_id: str = "") -> list:
+    """今天吃什麼（無城市）— 優先用位置分享，備用地區選擇"""
+    # 存食物定位意圖（3分鐘TTL），讓 location handler 走食物流程
+    if user_id:
+        _redis_set(f"food_locate:{user_id}", "1", ttl=180)
+
     buttons = [
         {"type": "button", "style": "primary", "color": "#E65100", "height": "sm",
          "action": {"type": "message", "label": f"📍 {r}", "text": f"今天吃什麼 選城市 {r}"}}
@@ -3911,14 +3915,22 @@ def _build_food_entry_region_picker() -> list:
                  "header": {"type": "box", "layout": "vertical", "backgroundColor": "#E65100",
                             "paddingAll": "16px",
                             "contents": [
-                                {"type": "text", "text": "🍽️ 你在哪個地區？",
+                                {"type": "text", "text": "🍽️ 你在哪裡？",
                                  "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                                {"type": "text", "text": "選完地區再選城市，馬上推薦！",
+                                {"type": "text", "text": "📍 分享位置，3秒推薦附近美食！",
                                  "color": "#FFCCAA", "size": "xs", "margin": "xs"},
                             ]},
                  "body": {"type": "box", "layout": "vertical", "spacing": "sm",
                           "paddingAll": "12px", "contents": buttons},
-             }}]
+             }},
+             {"type": "text", "text": "或點下方「📍 分享位置」直接定位 👇",
+              "quickReply": {"items": [
+                  {"type": "action", "action": {"type": "location", "label": "📍 分享我的位置"}},
+                  {"type": "action", "action": {"type": "message", "label": "📍 北部", "text": "今天吃什麼 選城市 北部"}},
+                  {"type": "action", "action": {"type": "message", "label": "📍 中部", "text": "今天吃什麼 選城市 中部"}},
+                  {"type": "action", "action": {"type": "message", "label": "📍 南部", "text": "今天吃什麼 選城市 南部"}},
+                  {"type": "action", "action": {"type": "message", "label": "🏝️ 東部離島", "text": "今天吃什麼 選城市 東部離島"}},
+              ]}}]
 
 
 def _build_food_entry_city_picker(region: str) -> list:
@@ -4172,8 +4184,8 @@ def build_food_message(text: str, user_id: str = None) -> list:
         # 有城市 → 直接到食物類型選單
         if area_city:
             return build_food_menu(city=area_city)
-        # 沒城市 → 先選地區
-        return _build_food_entry_region_picker()
+        # 沒城市 → 先選地區（附位置分享 Quick Reply）
+        return _build_food_entry_region_picker(user_id or "")
 
     # ── 有風格 + 有城市 → 直接推薦 ──
     if area:
@@ -10108,9 +10120,7 @@ class handler(BaseHTTPRequestHandler):
                     log_usage(user_id, "follow")
                     continue
 
-                # 位置訊息 → 找車位
-                # ① 立刻 reply → webhook 快速結束（< 2 秒）
-                # ② fire-and-forget → parking_worker 自己有 10 秒額度
+                # 位置訊息 → 食物定位 or 找車位
                 if event.get("type") == "message" and event.get("message", {}).get("type") == "location":
                     reply_token = event.get("replyToken", "")
                     lat = float(event["message"].get("latitude", 0))
@@ -10127,6 +10137,14 @@ class handler(BaseHTTPRequestHandler):
                         _parking_city = _city_from_coords(lat, lon)
                     if _parking_city:
                         _set_user_city(user_id, _parking_city)
+
+                    # ── 食物定位意圖（來自「吃什麼」Quick Reply）──
+                    _food_flag = _redis_get(f"food_locate:{user_id}")
+                    if _food_flag and _parking_city:
+                        _redis_set(f"food_locate:{user_id}", "", ttl=1)  # 清除 flag
+                        reply_message(reply_token, _build_post_parking_food(_parking_city))
+                        log_usage(user_id, "food", sub_action="位置定位", city=_parking_city)
+                        continue
                     print(f"[webhook] location: {lat},{lon} city={_parking_city}")
                     # 快速路徑：快取命中 → 直接 reply 卡片（不需 push）
                     cached = _peek_parking_cache(lat, lon)
