@@ -3522,13 +3522,8 @@ def build_food_menu(city: str = "") -> list:
                      ]},
                      {"type": "button", "style": "primary", "color": "#E67E22", "height": "sm",
                       "action": {"type": "message", "label": "🍻 3人以上聚餐地點", "text": "聚餐"}},
-                     {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
-                         {"type": "button", "style": "primary", "color": "#1A1F3A", "flex": 1,
-                          "height": "sm", "action": {"type": "message", "label": "美食活動", "text": "本週美食活動"}},
-                         {"type": "button", "style": "link", "flex": 1, "height": "sm",
-                          "action": {"type": "uri", "label": "📍 Google Maps",
-                                     "uri": f"https://www.google.com/maps/search/{urllib.parse.quote((city or '') + ' 餐廳')}"}},
-                     ]},
+                     {"type": "button", "style": "primary", "color": "#1A1F3A", "height": "sm",
+                      "action": {"type": "message", "label": "美食活動", "text": "本週美食活動"}},
                  ]},
              }}]
 
