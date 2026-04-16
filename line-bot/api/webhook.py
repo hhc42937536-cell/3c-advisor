@@ -3909,6 +3909,13 @@ def _build_food_entry_region_picker(user_id: str = "") -> list:
          "action": {"type": "message", "label": f"📍 {r}", "text": f"今天吃什麼 選城市 {r}"}}
         for r in _AREA_REGIONS.keys()
     ]
+    _quick_items = [
+        {"type": "action", "action": {"type": "location", "label": "📍 分享我的位置"}},
+        {"type": "action", "action": {"type": "message", "label": "北部", "text": "今天吃什麼 選城市 北部"}},
+        {"type": "action", "action": {"type": "message", "label": "中部", "text": "今天吃什麼 選城市 中部"}},
+        {"type": "action", "action": {"type": "message", "label": "南部", "text": "今天吃什麼 選城市 南部"}},
+        {"type": "action", "action": {"type": "message", "label": "東部離島", "text": "今天吃什麼 選城市 東部離島"}},
+    ]
     return [{"type": "flex", "altText": "你在哪個地區？",
              "contents": {
                  "type": "bubble", "size": "mega",
@@ -3917,20 +3924,13 @@ def _build_food_entry_region_picker(user_id: str = "") -> list:
                             "contents": [
                                 {"type": "text", "text": "🍽️ 你在哪裡？",
                                  "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                                {"type": "text", "text": "📍 分享位置，3秒推薦附近美食！",
+                                {"type": "text", "text": "👇 分享位置直接推薦，或選地區",
                                  "color": "#FFCCAA", "size": "xs", "margin": "xs"},
                             ]},
                  "body": {"type": "box", "layout": "vertical", "spacing": "sm",
                           "paddingAll": "12px", "contents": buttons},
-             }},
-             {"type": "text", "text": "或點下方「📍 分享位置」直接定位 👇",
-              "quickReply": {"items": [
-                  {"type": "action", "action": {"type": "location", "label": "📍 分享我的位置"}},
-                  {"type": "action", "action": {"type": "message", "label": "📍 北部", "text": "今天吃什麼 選城市 北部"}},
-                  {"type": "action", "action": {"type": "message", "label": "📍 中部", "text": "今天吃什麼 選城市 中部"}},
-                  {"type": "action", "action": {"type": "message", "label": "📍 南部", "text": "今天吃什麼 選城市 南部"}},
-                  {"type": "action", "action": {"type": "message", "label": "🏝️ 東部離島", "text": "今天吃什麼 選城市 東部離島"}},
-              ]}}]
+             },
+             "quickReply": {"items": _quick_items}}]
 
 
 def _build_food_entry_city_picker(region: str) -> list:
@@ -10145,13 +10145,23 @@ class handler(BaseHTTPRequestHandler):
                         reply_message(reply_token, _build_post_parking_food(_parking_city))
                         log_usage(user_id, "food", sub_action="位置定位", city=_parking_city)
                         continue
-                    print(f"[webhook] location: {lat},{lon} city={_parking_city}")
+                    print(f"[webhook] location: {lat},{lon} city={_parking_city} addr={_addr_raw[:20]!r}")
+
+                    def _push_food_safe(uid, city):
+                        try:
+                            msgs = _build_post_parking_food(city)
+                            print(f"[food_push] city={city} msgs={len(msgs)}")
+                            push_message(uid, msgs)
+                        except Exception as _fe:
+                            import traceback; traceback.print_exc()
+                            print(f"[food_push] FAILED city={city} err={_fe}")
+
                     # 快速路徑：快取命中 → 直接 reply 卡片（不需 push）
                     cached = _peek_parking_cache(lat, lon)
                     if cached:
                         reply_message(reply_token, cached)
                         if _parking_city:
-                            push_message(user_id, _build_post_parking_food(_parking_city))
+                            _push_food_safe(user_id, _parking_city)
                         log_usage(user_id, "parking", sub_action="傳位置_cached", city=city_hint)
                     else:
                         reply_message(reply_token, [{"type": "text",
@@ -10159,9 +10169,8 @@ class handler(BaseHTTPRequestHandler):
                         try:
                             messages = build_parking_flex(lat, lon, city=_parking_city)
                             push_message(user_id, messages)
-                            # 停車結果推完，立刻推附近美食（爬蟲資料 + 必比登）
                             if _parking_city:
-                                push_message(user_id, _build_post_parking_food(_parking_city))
+                                _push_food_safe(user_id, _parking_city)
                             log_usage(user_id, "parking", sub_action="傳位置", city=city_hint)
                         except Exception as pe:
                             import traceback; traceback.print_exc()
