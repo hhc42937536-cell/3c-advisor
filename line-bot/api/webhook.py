@@ -6104,6 +6104,36 @@ def _fetch_quick_rates() -> dict:
         return {}
 
 
+def _city_from_coords(lat: float, lon: float) -> str:
+    """用 GPS 座標反查台灣城市（address 欄位空白時的 fallback）"""
+    _BOXES = [
+        ("台北", 25.00, 25.21, 121.44, 121.67),
+        ("新北", 24.75, 25.30, 121.25, 122.05),
+        ("基隆", 25.08, 25.22, 121.60, 121.82),
+        ("桃園", 24.78, 25.08, 120.93, 121.40),
+        ("新竹", 24.67, 24.92, 120.85, 121.25),
+        ("苗栗", 24.28, 24.72, 120.60, 121.07),
+        ("台中", 23.95, 24.45, 120.45, 121.15),
+        ("彰化", 23.82, 24.15, 120.35, 120.78),
+        ("南投", 23.50, 24.20, 120.53, 121.35),
+        ("雲林", 23.50, 23.87, 120.10, 120.73),
+        ("嘉義", 23.20, 23.62, 120.22, 120.70),
+        ("台南", 22.78, 23.35, 119.95, 120.52),
+        ("高雄", 22.38, 23.00, 120.15, 120.85),
+        ("屏東", 21.90, 22.78, 120.35, 120.90),
+        ("宜蘭", 24.52, 24.90, 121.47, 122.03),
+        ("花蓮", 23.20, 24.55, 121.32, 121.87),
+        ("台東", 22.18, 23.30, 120.87, 121.60),
+        ("澎湖", 23.20, 23.80, 119.30, 119.75),
+        ("金門", 24.36, 24.52, 118.20, 118.48),
+        ("連江", 26.12, 26.22, 119.90, 120.05),
+    ]
+    for city, lat_min, lat_max, lon_min, lon_max in _BOXES:
+        if lat_min <= lat <= lat_max and lon_min <= lon <= lon_max:
+            return city
+    return ""
+
+
 def _get_user_city(user_id: str) -> str:
     """從 Redis 取得用戶上次使用的城市"""
     if not user_id:
@@ -10087,13 +10117,16 @@ class handler(BaseHTTPRequestHandler):
                     lon = float(event["message"].get("longitude", 0))
                     _addr_raw = event["message"].get("address", "")
                     city_hint = _addr_raw[:6]
-                    # 從地址解析城市並記住
+                    # 從地址解析城市，address 空白時用座標反查
                     _parking_city = ""
                     for _c in _ALL_CITIES:
                         if _c in _addr_raw:
                             _parking_city = _c[:2]
-                            _set_user_city(user_id, _parking_city)
                             break
+                    if not _parking_city:
+                        _parking_city = _city_from_coords(lat, lon)
+                    if _parking_city:
+                        _set_user_city(user_id, _parking_city)
                     print(f"[webhook] location: {lat},{lon} city={_parking_city}")
                     # 快速路徑：快取命中 → 直接 reply 卡片（不需 push）
                     cached = _peek_parking_cache(lat, lon)
@@ -10152,7 +10185,7 @@ class handler(BaseHTTPRequestHandler):
                             print(f"[webhook] LIFF parking: {lat},{lon}")
                             # 快速路徑：快取命中 → 直接 reply 卡片
                             cached = _peek_parking_cache(lat, lon)
-                            _liff_city = _get_user_city(user_id)
+                            _liff_city = _get_user_city(user_id) or _city_from_coords(lat, lon)
                             if cached:
                                 reply_message(reply_token, cached)
                                 if _liff_city:
