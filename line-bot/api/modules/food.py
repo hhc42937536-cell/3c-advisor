@@ -69,8 +69,22 @@ _GROUP_SEARCH_TEMPLATES = {
 
 # ─── 今天吃什麼 ──────────────────────────────────────
 
+_DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+
+
+def _load_json(filename: str, default):
+    """從 data/ 目錄讀取 JSON，失敗時回傳 default。"""
+    try:
+        with open(os.path.join(_DATA_DIR, filename), encoding="utf-8") as _f:
+            return json.load(_f)
+    except Exception:
+        return default
+
+
 # ── 食物關鍵字分類（入口觸發 + 分類解析共用）──
-_STYLE_KEYWORDS = {
+_STYLE_KEYWORDS: dict = _load_json("style_keywords.json", {})
+if not _STYLE_KEYWORDS:
+    _STYLE_KEYWORDS = {
     "便當": ["便當", "排骨", "雞腿", "控肉", "滷肉飯", "自助餐",
              "燒臘", "豬腳", "雞肉飯", "焢肉", "魯肉飯", "飯", "燒肉飯", "咖哩飯"],
     "麵食": ["麵", "拉麵", "牛肉麵", "乾麵", "河粉", "義大利",
@@ -94,7 +108,7 @@ _STYLE_KEYWORDS = {
                  "鬆餅", "銅鑼燒", "甜湯", "紅豆湯", "花生湯", "湯圓"],
     "輕食": ["輕食", "沙拉", "健康", "低卡", "減脂", "清爽", "優格", "燕麥",
              "水煮餐", "蔬食", "素食", "無糖", "蛋白質", "健身餐", "貝果"],
-}
+}  # fallback
 # 扁平化所有食物關鍵字（供入口觸發用）
 # 排除太通用的短詞，避免誤觸（這些詞仍用於分類解析）
 _FOOD_TRIGGER_SKIP = {"麵", "飯", "冰", "茶", "粥", "健康", "早餐", "清爽"}
@@ -102,9 +116,10 @@ _ALL_FOOD_KEYWORDS: set = set()
 for _kws in _STYLE_KEYWORDS.values():
     _ALL_FOOD_KEYWORDS.update(w for w in _kws if w not in _FOOD_TRIGGER_SKIP)
 
-# 食物推薦庫（食物類型分類，像 foodpanda 的直覺式選擇）
-# m: "M"=早餐限定  "D"=午餐以後  "N"=晚餐消夜限定  ""=全天
-_FOOD_DB = {
+_FOOD_DB: dict = _load_json("food_db.json", {})
+if not _FOOD_DB:
+    # m: "M"=早餐限定  "D"=午餐以後  "N"=晚餐消夜限定  ""=全天
+    _FOOD_DB = {
     "便當": [
         {"name": "排骨便當", "desc": "炸得香脆大排骨，台式便當之王", "price": "~100–140元", "key": "排骨便當", "m": "D"},
         {"name": "雞腿便當", "desc": "滷雞腿或炸雞腿，便當店人氣王", "price": "~100–140元", "key": "雞腿便當", "m": "D"},
@@ -243,10 +258,12 @@ _FOOD_DB = {
         {"name": "雞胸肉便當", "desc": "低脂高蛋白，健身族外食首選", "price": "~100–150元", "key": "健身餐", "m": "D"},
         {"name": "豆腐料理", "desc": "涼拌豆腐或紅燒豆腐，高蛋白低熱量", "price": "~60–100元", "key": "豆腐料理", "m": "D"},
     ],
-}
+}  # fallback
 
 # ── 米其林必比登推介（由 update_bib_in_webhook.py 自動更新）──
-_BIB_GOURMAND = {
+_BIB_GOURMAND: dict = _load_json("bib_gourmand.json", {})
+if not _BIB_GOURMAND:
+    _BIB_GOURMAND = {
     "台北": [
         {"name": "胖塔可", "type": "", "desc": "米其林必比登推介", "url": "https://guide.michelin.com/tw/zh_TW/taipei-region/taipei/restaurant/pang"},
         {"name": "Tableau by Craig Yang", "type": "", "desc": "米其林必比登推介", "url": "https://guide.michelin.com/tw/zh_TW/taipei-region/taipei/restaurant/tableau-by-craig-yang"},
@@ -381,10 +398,12 @@ _BIB_GOURMAND = {
         {"name": "舊市羊肉 (岡山)", "type": "", "desc": "米其林必比登推介", "url": "https://guide.michelin.com/tw/zh_TW/kaohsiung-region/kaohsiung/restaurant/joes-gangshan"},
         {"name": "湖東牛肉館", "type": "", "desc": "米其林必比登推介", "url": "https://guide.michelin.com/tw/zh_TW/kaohsiung-region/kaohsiung/restaurant/hu-dong-beef"},
     ],
-}
+}  # fallback
 
 # ─── 城市特色食物（觀光客/外地人必吃）──────────────────────
-_CITY_SPECIALTIES = {
+_CITY_SPECIALTIES: dict = _load_json("city_specialties.json", {})
+if not _CITY_SPECIALTIES:
+    _CITY_SPECIALTIES = {
     "台北": [
         {"name": "臭豆腐", "desc": "士林夜市必吃，外酥內嫩配泡菜，越臭越香", "key": "台北 臭豆腐", "s": ""},
         {"name": "蚵仔煎", "desc": "飽滿蚵仔加米漿皮，夜市人氣王", "key": "台北 蚵仔煎", "s": ""},
@@ -552,7 +571,7 @@ _CITY_SPECIALTIES = {
         {"name": "魚麵", "desc": "馬祖傳統魚漿製成的魚麵，Q彈有嚼勁", "key": "馬祖 魚麵", "s": ""},
         {"name": "芙蓉酥", "desc": "馬祖傳統糕點，鬆軟香甜帶花香", "key": "馬祖 芙蓉酥", "s": ""},
     ],
-}
+}  # fallback
 
 # ── 餐廳資料庫（觀光署開放資料）──
 _RESTAURANT_CACHE: dict = {}
