@@ -6,9 +6,9 @@
       "use": "@vercel/python",
       "config": {
         "includeFiles": [
-          "api/modules/**",
-          "api/utils/**",
-          "api/data/**"
+          "modules/**",
+          "utils/**",
+          "data/**"
         ]
       }
     }
