@@ -5,6 +5,7 @@ Vercel Serverless Function (Python)
 處理所有 LINE 訊息，根據內容路由到不同模組。
 """
 
+import sys
 import json
 import os
 import re
@@ -13,6 +14,9 @@ import hmac
 import urllib.request
 import urllib.parse
 from http.server import BaseHTTPRequestHandler
+
+# 確保 Vercel 能找到 modules/ 與 utils/（api/ 目錄加入 sys.path）
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # ─── LINE 設定 ─────────────────────────────────────────────
 CHANNEL_SECRET        = os.environ.get("LINE_CHANNEL_SECRET", "")
