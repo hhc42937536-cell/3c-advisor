@@ -221,14 +221,92 @@ line-bot/
 
 **觸發關鍵字**：吃什麼、吃甚麼、吃啥、午餐、晚餐、早餐、吃飯、推薦餐廳、必比登、米其林，以及 `_ALL_FOOD_KEYWORDS` 內所有食物詞彙。
 
-**主路由函式**：`build_food_message(text, user_id)`
+**主路由函式**：`build_food_message(text, user_id)`（`modules/food.py`）
 
-**主流程**：
-1. 解析城市（全台 22 縣市）→ `_set_user_city()` 寫入 Redis
-2. 無城市 → 讀 Redis 城市記憶；仍無 → 顯示地區 / 城市選擇器
-3. 依關鍵字分支：必比登 / 隨機 / 在地餐廳 / 位置分享 / 食物分類推薦
+---
 
-**8 大食物分類**（含時段過濾）：
+#### 完整分支邏輯（依優先順序）
+
+```
+build_food_message(text, user_id)
+│
+├─ 1. 解析城市（全台 22 縣市正則）→ _set_user_city() 寫 Redis
+├─ 2. 無城市 → 讀 Redis city 記憶（user_city:{uid_hash}）
+│
+├─ 3. 必比登 / 米其林 關鍵字
+│      → build_bib_gourmand_flex(area)
+│
+├─ 4. 餐廳 / 在地餐廳 關鍵字
+│      有城市 → build_food_restaurant_flex(city, food_type)
+│      有地區 → build_food_area_picker("餐廳", region)
+│      無     → build_food_region_picker("餐廳")
+│
+├─ 5. 隨機 / 幫我決定 / 隨便吃 / 不知道吃什麼
+│      → 依時段隨機選類型 → build_food_flex(style, city)
+│
+├─ 6. 本週美食 / 美食活動 關鍵字
+│      有城市 → build_live_food_events(city)（Accupass 快取）
+│      有地區 → 城市選擇器（inline）
+│      無     → 地區選擇器（inline）
+│
+├─ 7. 我要分享位置找美食（Quick Reply 觸發）
+│      → 寫 food_locate:{user_id}（TTL 180s）← 寫入點①
+│      → 回傳位置分享 Quick Reply
+│
+├─ 8. 純主選單（吃什麼 / 今天吃什麼 / 午餐 / 晚餐，且無修飾詞）
+│      內含子指令：
+│      ├─ 選城市 {地區} → _build_food_entry_city_picker(region)
+│      ├─ 選類型       → build_food_type_picker(city)
+│      ├─ 特殊需求     → build_food_special_picker(city)
+│      ├─ 地方特色     → build_city_specialties(city) 或 build_food_special_picker()
+│      ├─ 有風格+有城市 → build_food_flex(style, city)
+│      ├─ 有城市       → build_food_menu(city, user_id)
+│      │                  → 寫 food_locate:{user_id} ← 寫入點②
+│      └─ 無城市       → _build_food_entry_region_picker(user_id)
+│                         → 寫 food_locate:{user_id} ← 寫入點③
+│
+├─ 9. 有風格 + 有城市 → build_food_flex(style, city)
+├─ 10. 有風格 + 有地區 → build_food_area_picker(style, region)
+├─ 11. 有風格但無城市（且非內部指令）→ build_food_region_picker(style)
+└─ 12. fallback → build_food_flex(style, city)
+```
+
+---
+
+#### 三層選擇流程（無城市用戶）
+
+```
+用戶輸入「吃什麼」（無城市）
+  │
+  └─ _build_food_entry_region_picker()     ← 寫 food_locate flag
+       顯示：北部 / 中部 / 南部 / 東部離島
+         │
+         └─ 用戶點選地區（如「北部」）
+              → _build_food_entry_city_picker("北部")
+                顯示：台北 / 新北 / 基隆 / 桃園 / 新竹 / 苗栗
+                  │
+                  └─ 用戶點選城市（如「台北」）
+                       → build_food_menu("台北", user_id)   ← 再寫 food_locate flag
+                            顯示：食物分類選單
+                              │
+                              └─ 用戶點選類型 / 分享位置
+```
+
+---
+
+#### `food_locate` 三個寫入入口
+
+| 入口 | 位置 | 觸發條件 |
+|---|---|---|
+| ① `build_food_message` 內 | `modules/food.py:2058` | 用戶傳送「我要分享位置找美食」|
+| ② `build_food_menu` 內 | `modules/food.py:1570` | 用戶選定城市後進入食物主選單 |
+| ③ `_build_food_entry_region_picker` 內 | `modules/food.py:1771` | 用戶進入吃什麼但無城市，顯示地區選擇器時 |
+
+flag 寫入後 TTL 180 秒；用戶分享位置時讀取並立即清除（ttl=1），觸發 `_build_post_parking_food()`（`modules/parking.py`）。
+
+---
+
+#### 8 大食物分類（含時段過濾）
 
 | 分類 | 有效時段 | 代表品項 |
 |---|---|---|
@@ -237,13 +315,38 @@ line-bot/
 | 小吃 | 午 / 消夜 | 蚵仔煎、臭豆腐、鹽酥雞 |
 | 火鍋 | 午 / 消夜 | 麻辣鍋、薑母鴨、個人小火鍋 |
 | 日韓 | 午 / 消夜 | 壽司、炸豬排、韓式炸雞 |
-| 早午餐 | 早餐限定 | 蛋餅+豆漿、燒餅油條、鬆餅 |
+| 早午餐 | 早餐限定（5–10時）| 蛋餅+豆漿、燒餅油條、鬆餅 |
 | 飲料甜點 | 全天（含季節限定）| 珍奶（全年）、剉冰（夏）、燒仙草（冬）|
 | 輕食 | 全天 | 沙拉、御飯糰、水煮餐 |
 
-**位置分享流程**：進入吃什麼任一入口時自動寫入 `food_locate:{user_id}`（TTL 180 秒）。用戶分享位置後，呼叫 Google Places Nearby Search（1.5km），過濾 7 天內吃過的店，依評分排序取前 5 家，回傳含照片的 Flex 卡片。每張卡有「✅ 吃過了」Postback 按鈕寫入 Supabase。
+時段由 `_tw_meal_period()` 依台灣時間（UTC+8）判斷：M=5–10時、D=10–17時、N=17–22時、L=22–5時。季節由 `_tw_season()` 依氣象署最高溫判斷（≥27°C→夏、≤22°C→冬）。
 
-**其他子功能**：必比登推介（`build_bib_gourmand_flex`）、城市地方特色（`build_city_specialties`）、Accupass 美食活動（`build_live_food_events`）。
+---
+
+#### 位置分享流程
+
+```
+用戶分享位置（且 food_locate flag 存在）
+  │
+  ├─ webhook.py 讀取 food_locate:{user_id}
+  ├─ 清除 flag（ttl=1）
+  └─ _build_post_parking_food(city, lat, lon, user_id)（modules/parking.py）
+       → Google Places Nearby Search（半徑 1.5km）
+       → 排除 7 天內吃過的店（Supabase user_eaten_restaurants）
+       → 依評分排序，取前 5 家
+       → 回傳含照片 Flex 卡片
+           每張卡含「✅ 吃過了」Postback → 寫入 Supabase
+```
+
+---
+
+#### 子功能觸發條件
+
+| 子功能 | 觸發關鍵字 | 函式 | 備注 |
+|---|---|---|---|
+| 必比登推介 | 必比登、米其林 | `build_bib_gourmand_flex(area)` | 最高優先，有城市則直接顯示該城市清單 |
+| 城市地方特色 | 地方特色 + 城市名 | `build_city_specialties(city)` | 在 webhook.py 路由層直接攔截，不進 build_food_message |
+| Accupass 美食活動 | 本週美食、美食活動 | `build_live_food_events(city)` | 在 build_food_message 內部分支，優先於食物分類推薦；資料來自 accupass_cache.json |
 
 ---
 
