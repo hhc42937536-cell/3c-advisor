@@ -8488,16 +8488,16 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     if any(w in text for w in ["比價", "最便宜", "哪裡買便宜", "價格比較", "biggo", "飛比"]):
         return build_compare_price_message(text)
 
-    # ── 4.5 天氣＋穿搭建議 ──────────────────────────────
+    # ── 精確格式先判斷（不進評分，避免破壞特殊流程）──────
+
     if text in ("換城市",):
         return build_weather_region_picker()
 
-    if any(w in text for w in ["天氣", "穿什麼", "穿搭", "氣溫", "幾度", "下雨嗎",
-                                "要帶傘", "帶傘", "氣象", "預報", "今天冷", "今天熱"]):
-        return build_weather_message(text, user_id=user_id)
+    # 活動＋城市前綴（如「活動台南」）
+    if text.startswith("活動") and len(text) > 2:
+        return build_activity_message(text, user_id=user_id)
 
-    # ── 4.6 今天吃什麼（比健康小幫手更早，避免「吃什麼 健康」被誤判）──
-    # ── 4.61 聚餐推薦（比一般吃什麼更早攔截）──────────
+    # 聚餐子功能
     if any(w in text for w in ["聚餐", "約飯", "朋友聚", "家庭聚", "公司聚", "同學聚",
                                 "包廂", "圍爐", "尾牙", "春酒", "生日餐廳",
                                 "辦桌", "大桌", "多人聚餐", "找餐廳"]):
@@ -8512,60 +8512,10 @@ def handle_text_message(text: str, user_id: str = "") -> list:
         city_match = next((c for c in _ALL_CITIES if c in text), "")
         return build_city_specialties(city_match)
 
-    if "我要分享位置找美食" in text or \
-       any(w in text for w in ["吃什麼", "吃甚麼", "吃啥", "晚餐", "午餐", "早餐",
-                                "吃飯", "外食", "今天吃", "推薦餐廳", "餐廳推薦",
-                                "吃什麼好", "要吃什麼", "本週美食", "美食活動",
-                                "在地餐廳", "餐廳", "必比登", "米其林"]) or \
-       any(w in text for w in _ALL_FOOD_KEYWORDS):
+    if "我要分享位置找美食" in text:
         return build_food_message(text, user_id=user_id)
 
-    # ── 4.7 健康小幫手（移除裸字「健康」，避免誤觸）──────
-    if any(w in text for w in ["健康小幫手", "BMI", "bmi", "身高", "體重", "減肥", "瘦身",
-                                "失眠", "睡不著", "睡眠", "睡不好", "壓力大", "焦慮",
-                                "減重", "肥胖", "運動建議", "睡眠改善", "壓力紓解",
-                                "幫我算BMI", "熱量", "卡路里", "幾卡", "食物熱量",
-                                "運動消耗", "運動熱量", "喝水量", "喝水"]) \
-            or (lambda h, w: bool(h and w))(* parse_height_weight(text)):
-        return build_health_message(text)
-
-    # ── 4.8 花太多了（在金錢小幫手前）─────────────────
-    if any(w in text for w in ["花太多", "超支", "這週花", "本週花", "花太兇",
-                                "錢不夠了", "省錢建議", "省錢小技巧", "怎麼省錢"]):
-        return _spend_overspent()
-
-    # ── 4.8 金錢小幫手 ───────────────────────────────
-    if any(w in text for w in ["金錢小幫手", "存錢", "理財", "月薪", "薪水", "薪資", "預算規劃",
-                                "信用卡", "循環利息", "保險", "醫療險", "儲蓄",
-                                "怎麼存", "信用卡使用", "保險建議", "金錢",
-                                "匯率", "換匯", "外幣", "美金", "日圓", "日幣",
-                                "歐元", "英鎊", "韓元", "韓幣", "人民幣", "泰銖",
-                                "信用卡比較", "信用卡推薦", "哪張卡", "回饋",
-                                "油價", "加油", "汽油", "柴油"]):
-        return build_money_message(text)
-
-    # ── 4.9 近期活動 ────────────────────────────────
-    if any(w in text for w in ["近期活動", "周末", "週末", "假日", "出去玩", "去哪玩",
-                                "活動推薦", "景點推薦", "玩什麼", "去哪裡",
-                                "今天想輕鬆一下", "想輕鬆一下", "想放鬆", "今天想放鬆",
-                                "踏青", "咖啡廳", "親子", "週末活動",
-                                "美術館", "博物館", "市集", "展覽活動", "藝文",
-                                "文化中心", "藝術特區", "文創", "文創園區",
-                                "藝術館", "展演", "音樂祭", "藝文活動",
-                                "表演音樂", "戶外踏青", "文青咖啡", "親子同樂",
-                                "運動健身", "吃喝玩樂", "市集展覽"]) or \
-       (text.startswith("活動") and len(text) > 2):
-        return build_activity_message(text, user_id=user_id)
-
-    # ── 4.10 硬體升級諮詢 ───────────────────────────
-    if any(w in text for w in ["硬體升級", "電腦升級", "升級建議", "升級 RAM", "升級 SSD",
-                                "升級 GPU", "升級RAM", "升級SSD", "升級GPU",
-                                "加RAM", "加 RAM", "加記憶體", "換SSD", "換 SSD", "換硬碟",
-                                "顯卡升級", "要升級嗎", "電腦效能分析", "電腦瓶頸",
-                                "RAM夠嗎", "RAM 夠嗎", "記憶體夠嗎", "電腦太慢"]):
-        return build_upgrade_message(text)
-
-    # ── 4.11 防詐+法律 合併入口（rich menu 按鈕）──────────
+    # 防詐+法律合併入口（Rich Menu 按鈕，精確指令）
     if text.strip() in ["防詐法律", "防詐&法律", "防詐與法律"]:
         return [{
             "type": "flex", "altText": "防詐騙 ＆ 法律常識",
@@ -8594,36 +8544,62 @@ def handle_text_message(text: str, user_id: str = "") -> list:
             }
         }]
 
-    # ── 5. 防詐辨識 ──────────────────────────────────
-    if any(w in text for w in ["防詐", "詐騙", "可疑", "是詐騙嗎", "防詐辨識",
-                                "最新詐騙", "詐騙手法"]):
-        # 最新詐騙手法
+    # 功能建議 / 許願池（精確指令）
+    if text in ("回報", "許願", "許願池", "功能建議", "功能回報", "意見回報"):
+        return build_feedback_intro()
+
+    if any(w in text for w in ["我想要功能", "希望有功能"]) or \
+       (text.startswith("建議") and len(text) >= 4):
+        _fb_name = ""
+        try:
+            _fb_profile_req = urllib.request.Request(
+                f"https://api.line.me/v2/bot/profile/{user_id}",
+                headers={"Authorization": f"Bearer {CHANNEL_ACCESS_TOKEN}"},
+            )
+            _fb_profile = json.loads(urllib.request.urlopen(_fb_profile_req, timeout=5).read())
+            _fb_name = _fb_profile.get("displayName", "")
+        except Exception:
+            pass
+        return handle_user_suggestion(text, user_id, _fb_name)
+
+    # ══ 評分制意圖分類 ════════════════════════════════════
+    # 每個關鍵字帶權重（3/2/1），分數最高者獲勝。
+    # 「165 55」→ health+5（身高體重信號），不再被 safety 搶走。
+    # 新功能只需在 utils/intent.py 加關鍵字，不用管順序。
+    from utils.intent import classify_intent
+    _intent = classify_intent(text, parse_height_weight, list(_ALL_FOOD_KEYWORDS))
+
+    if _intent == "weather":
+        return build_weather_message(text, user_id=user_id)
+    if _intent == "food":
+        return build_food_message(text, user_id=user_id)
+    if _intent == "health":
+        return build_health_message(text)
+    if _intent == "overspent":
+        return _spend_overspent()
+    if _intent == "money":
+        return build_money_message(text)
+    if _intent == "activity":
+        return build_activity_message(text, user_id=user_id)
+    if _intent == "tech":
+        return build_upgrade_message(text)
+    if _intent == "safety":
         if "最新" in text or "手法" in text or "排行" in text:
             return build_fraud_trends()
-        # 如果只說關鍵字 → 顯示說明；若帶有內容 → 直接分析
         stripped = text
         for kw in ["防詐辨識", "幫我看", "這是詐騙嗎", "防詐", "詐騙"]:
             stripped = stripped.replace(kw, "").strip()
-        if len(stripped) >= 10:
-            return build_fraud_result(stripped)
-        return build_fraud_intro()
-
-    # ── 6. 法律常識 ──────────────────────────────────
-    if any(w in text for w in ["法律", "法律常識", "法律問題", "權益"]):
-        # 偵測特定主題
+        return build_fraud_result(stripped) if len(stripped) >= 10 else build_fraud_intro()
+    if _intent == "legal":
         for topic in LEGAL_QA.keys():
             if topic in text:
                 return build_legal_answer(topic)
         return build_legal_guide_intro()
-
-    # ── 7. 生活自保頁籤按鈕 ──────────────────────────
-    if any(w in text for w in ["消費保護", "消費者保護", "消費糾紛", "退貨", "消保"]):
+    if _intent == "consumer":
         return build_legal_answer("消費者保護")
-
-    if any(w in text for w in ["職場求助", "勞資", "職場", "被資遣", "加班費", "欠薪"]):
+    if _intent == "labor":
         return build_legal_answer("勞資糾紛")
-
-    if any(w in text for w in ["緊急求助", "緊急", "急救", "求助"]):
+    if _intent == "emergency":
         return [{
             "type": "flex", "altText": "緊急求助管道",
             "contents": {
@@ -8658,31 +8634,7 @@ def handle_text_message(text: str, user_id: str = "") -> list:
                 }
             }
         }]
-
-    # ── 功能建議 / 許願池 / 問題回報 ──────────────────────
-    if text in ("回報", "許願", "許願池", "功能建議", "功能回報", "意見回報"):
-        return build_feedback_intro()
-
-    if any(w in text for w in ["我想要功能", "希望有功能"]) or \
-       (text.startswith("建議") and len(text) >= 4):
-        # 取得使用者名稱（若有）
-        _fb_name = ""
-        try:
-            _fb_profile_req = urllib.request.Request(
-                f"https://api.line.me/v2/bot/profile/{user_id}",
-                headers={"Authorization": f"Bearer {CHANNEL_ACCESS_TOKEN}"},
-            )
-            _fb_profile = json.loads(urllib.request.urlopen(_fb_profile_req, timeout=5).read())
-            _fb_name = _fb_profile.get("displayName", "")
-        except Exception:
-            pass
-        return handle_user_suggestion(text, user_id, _fb_name)
-
-    if any(w in text for w in ["更多功能", "其他工具", "還有什麼", "其他功能", "工具箱", "所有工具", "生活工具"]):
-        return build_tools_menu()
-
-    # ── 找車位 ──────────────────────────────────────────
-    if any(w in text for w in ["找車位", "車位", "停車", "停車場", "哪裡停車", "附近停車"]):
+    if _intent == "parking":
         return [{
             "type": "text",
             "text": "🅿️ 點下方「📍 分享位置」，我立刻幫你找附近停車場！",
@@ -8696,6 +8648,8 @@ def handle_text_message(text: str, user_id: str = "") -> list:
                 }]
             }
         }]
+    if _intent == "tools":
+        return build_tools_menu()
 
     # ── 8. 頁籤切換訊息（點到已啟用頁籤 → 顯示對應選單）──────
     if text.startswith("tab:"):
