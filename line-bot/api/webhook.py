@@ -28,6 +28,7 @@ PRODUCTS_URL = os.environ.get("PRODUCTS_URL", "https://hhc42937536-cell.github.i
 # LINE Bot ID（用於分享邀請連結，格式：@xxxxxxxx，可在 LINE Developers 查到）
 LINE_BOT_ID = os.environ.get("LINE_BOT_ID", "")
 ADMIN_USER_ID = os.environ.get("ADMIN_USER_ID", "")  # 開發者 LINE userId，用於接收回饋通知
+GOOGLE_PLACES_API_KEY = os.environ.get("GOOGLE_PLACES_API_KEY", "")
 
 # ─── Supabase 數據記錄 ────────────────────────────
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
@@ -65,6 +66,153 @@ def _bot_invite_text() -> str:
     if LINE_BOT_ID:
         return f"\n\n➡️ 加「生活優轉」\nhttps://line.me/ti/p/{LINE_BOT_ID}"
     return "\n\n👉 搜尋「生活優轉」加好友一起用！"
+
+
+# ─── Google Places API ────────────────────────────
+
+def _nearby_places_google(lat: float, lng: float, radius: int = 1500,
+                           keyword: str = "餐廳 小吃 美食") -> list:
+    """Google Places Nearby Search — 即時查詢附近餐廳，有照片和評分"""
+    if not GOOGLE_PLACES_API_KEY:
+        return []
+    try:
+        url = (
+            "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+            f"?location={lat},{lng}&radius={radius}"
+            f"&keyword={urllib.parse.quote(keyword)}"
+            "&language=zh-TW"
+            f"&key={GOOGLE_PLACES_API_KEY}"
+        )
+        req = urllib.request.Request(url, headers={"User-Agent": "LineBot/1.0"})
+        with urllib.request.urlopen(req, timeout=8) as r:
+            data = json.loads(r.read().decode("utf-8"))
+        results = []
+        for p in data.get("results", []):
+            photo_ref = (p.get("photos") or [{}])[0].get("photo_reference", "")
+            plat = p["geometry"]["location"]["lat"]
+            plng = p["geometry"]["location"]["lng"]
+            results.append({
+                "name": p.get("name", ""),
+                "addr": p.get("vicinity", ""),
+                "rating": p.get("rating", 0),
+                "user_ratings_total": p.get("user_ratings_total", 0),
+                "lat": plat,
+                "lng": plng,
+                "place_id": p.get("place_id", ""),
+                "photo_ref": photo_ref,
+                "open_now": (p.get("opening_hours") or {}).get("open_now"),
+                "_source": "google",
+            })
+        print(f"[places] got {len(results)} results within {radius}m")
+        return results
+    except Exception as e:
+        print(f"[places] error: {e}")
+        return []
+
+
+def _text_search_places(query: str, max_results: int = 5) -> list:
+    """Google Places Text Search — 用關鍵字搜名店（不需座標）
+    例：query="彰化肉圓" → 回傳評分最高的名店清單
+    """
+    if not GOOGLE_PLACES_API_KEY:
+        return []
+    try:
+        url = (
+            "https://maps.googleapis.com/maps/api/place/textsearch/json"
+            f"?query={urllib.parse.quote(query)}"
+            "&language=zh-TW"
+            f"&key={GOOGLE_PLACES_API_KEY}"
+        )
+        req = urllib.request.Request(url, headers={"User-Agent": "LineBot/1.0"})
+        with urllib.request.urlopen(req, timeout=8) as r:
+            data = json.loads(r.read().decode("utf-8"))
+        results = []
+        for p in data.get("results", [])[:max_results]:
+            photo_ref = (p.get("photos") or [{}])[0].get("photo_reference", "")
+            loc = p.get("geometry", {}).get("location", {})
+            results.append({
+                "name":               p.get("name", ""),
+                "addr":               p.get("formatted_address", ""),
+                "rating":             p.get("rating", 0),
+                "user_ratings_total": p.get("user_ratings_total", 0),
+                "lat":                loc.get("lat"),
+                "lng":                loc.get("lng"),
+                "place_id":           p.get("place_id", ""),
+                "photo_ref":          photo_ref,
+                "open_now":           (p.get("opening_hours") or {}).get("open_now"),
+                "_source":            "text_search",
+            })
+        print(f"[text_search] '{query}' → {len(results)} results")
+        return results
+    except Exception as e:
+        print(f"[text_search] error: {e}")
+        return []
+
+
+def _places_photo_url(photo_ref: str, max_width: int = 400) -> str:
+    if not photo_ref or not GOOGLE_PLACES_API_KEY:
+        return ""
+    return (
+        f"https://maps.googleapis.com/maps/api/place/photo"
+        f"?maxwidth={max_width}&photo_reference={photo_ref}"
+        f"&key={GOOGLE_PLACES_API_KEY}"
+    )
+
+
+# ─── 個人化記憶：吃過哪些餐廳 ─────────────────────────
+
+def _record_eaten(user_id: str, restaurant_name: str, city: str = ""):
+    """記錄用戶吃過的餐廳到 Supabase"""
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        return
+    try:
+        uid_hash = hashlib.sha256(user_id.encode()).hexdigest()[:16]
+        body = json.dumps({
+            "uid_hash": uid_hash,
+            "restaurant_name": restaurant_name[:80],
+            "city": city[:10],
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            f"{SUPABASE_URL}/rest/v1/user_eaten_restaurants",
+            data=body,
+            headers={
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+                "Content-Type": "application/json",
+                "Prefer": "return=minimal",
+            },
+            method="POST",
+        )
+        urllib.request.urlopen(req, timeout=3)
+    except Exception as e:
+        print(f"[eaten] record error: {e}")
+
+
+def _get_eaten(user_id: str) -> set:
+    """取得用戶近 90 天吃過的餐廳名稱集合"""
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        return set()
+    try:
+        import time
+        uid_hash = hashlib.sha256(user_id.encode()).hexdigest()[:16]
+        cutoff = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() - 7 * 86400))
+        url = (
+            f"{SUPABASE_URL}/rest/v1/user_eaten_restaurants"
+            f"?select=restaurant_name&uid_hash=eq.{uid_hash}&created_at=gte.{cutoff}"
+        )
+        req = urllib.request.Request(
+            url,
+            headers={
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=3) as r:
+            rows = json.loads(r.read().decode("utf-8"))
+        return {row["restaurant_name"] for row in rows}
+    except Exception as e:
+        print(f"[eaten] fetch error: {e}")
+        return set()
 
 # ─── 產品資料快取 ─────────────────────────────────
 _products_cache = {"data": None, "ts": 0}
@@ -2704,22 +2852,30 @@ _FOOD_DB = {
         {"name": "法式吐司", "desc": "蛋液浸吐司煎到金黃，淋蜂蜜楓糖", "price": "~100–180元", "key": "法式吐司", "m": "M"},
     ],
     "飲料甜點": [
-        {"name": "珍珠奶茶", "desc": "台灣國飲，心情不好來一杯就解決", "price": "~50–80元", "key": "珍珠奶茶", "m": ""},
-        {"name": "咖啡", "desc": "美式拿鐵卡布，提神醒腦必備", "price": "~50–150元", "key": "咖啡廳", "m": ""},
-        {"name": "蛋糕甜點", "desc": "蛋糕配咖啡犒賞自己，超療癒", "price": "~100–200元", "key": "蛋糕店", "m": ""},
-        {"name": "豆花", "desc": "綿密豆花加花生粉圓，古早味甜品", "price": "~40–60元", "key": "豆花", "m": "D"},
-        {"name": "剉冰", "desc": "芒果冰紅豆冰，夏天消暑必吃", "price": "~50–100元", "key": "剉冰", "m": "D"},
-        {"name": "鮮奶茶", "desc": "用鮮奶不用奶精，喝起來就是不一樣", "price": "~55–80元", "key": "鮮奶茶", "m": ""},
-        {"name": "果汁", "desc": "現打果汁補充維他命，健康解渴", "price": "~50–80元", "key": "現打果汁", "m": ""},
-        {"name": "仙草凍飲", "desc": "仙草加鮮奶，清涼退火好選擇", "price": "~45–65元", "key": "仙草", "m": ""},
-        {"name": "芋圓燒仙草", "desc": "加了芋圓地瓜圓，每口都是幸福感", "price": "~60–90元", "key": "燒仙草 芋圓", "m": "D"},
-        {"name": "愛玉檸檬", "desc": "現搖愛玉配新鮮檸檬汁，夏日必喝", "price": "~40–65元", "key": "愛玉", "m": "D"},
-        {"name": "楊枝甘露", "desc": "芒果椰汁西米露，港式甜品經典", "price": "~80–150元", "key": "港式甜品", "m": "D"},
-        {"name": "抹茶拿鐵", "desc": "日本宇治抹茶配鮮奶，苦甜平衡剛好", "price": "~80–130元", "key": "抹茶拿鐵", "m": ""},
-        {"name": "冰淇淋", "desc": "義式濃縮口味多樣，隨心情換口味", "price": "~80–180元", "key": "冰淇淋", "m": "D"},
-        {"name": "紅豆湯＋湯圓", "desc": "冬天暖呼呼甜湯，加湯圓超滿足", "price": "~40–70元", "key": "紅豆湯 湯圓", "m": "D"},
-        {"name": "花生湯", "desc": "綿密花生甜湯，古早味暖胃甜品", "price": "~40–60元", "key": "花生湯", "m": "D"},
-        {"name": "手搖飲", "desc": "四季春烏龍鮮奶茶，下午三點必來一杯", "price": "~40–70元", "key": "手搖飲", "m": ""},
+        # 全年
+        {"name": "珍珠奶茶", "desc": "台灣國飲，心情不好來一杯就解決", "price": "~50–80元", "key": "珍珠奶茶", "m": "", "s": ""},
+        {"name": "咖啡", "desc": "美式拿鐵卡布，提神醒腦必備", "price": "~50–150元", "key": "咖啡廳", "m": "", "s": ""},
+        {"name": "蛋糕甜點", "desc": "蛋糕配咖啡犒賞自己，超療癒", "price": "~100–200元", "key": "蛋糕店", "m": "", "s": ""},
+        {"name": "豆花", "desc": "綿密豆花加花生粉圓，古早味甜品", "price": "~40–60元", "key": "豆花", "m": "D", "s": ""},
+        {"name": "鮮奶茶", "desc": "用鮮奶不用奶精，喝起來就是不一樣", "price": "~55–80元", "key": "鮮奶茶", "m": "", "s": ""},
+        {"name": "果汁", "desc": "現打果汁補充維他命，健康解渴", "price": "~50–80元", "key": "現打果汁", "m": "", "s": ""},
+        {"name": "抹茶拿鐵", "desc": "日本宇治抹茶配鮮奶，苦甜平衡剛好", "price": "~80–130元", "key": "抹茶拿鐵", "m": "", "s": ""},
+        {"name": "楊枝甘露", "desc": "芒果椰汁西米露，港式甜品經典", "price": "~80–150元", "key": "港式甜品", "m": "D", "s": ""},
+        {"name": "手搖飲", "desc": "四季春烏龍鮮奶茶，下午三點必來一杯", "price": "~40–70元", "key": "手搖飲", "m": "", "s": ""},
+        # 夏天限定 (5-10月)
+        {"name": "剉冰", "desc": "芒果冰紅豆冰，台灣夏天消暑第一名", "price": "~50–100元", "key": "剉冰", "m": "D", "s": "hot"},
+        {"name": "愛玉檸檬", "desc": "現搖愛玉配新鮮檸檬汁，夏日必喝", "price": "~40–65元", "key": "愛玉", "m": "D", "s": "hot"},
+        {"name": "仙草凍飲", "desc": "仙草加鮮奶清涼退火，夏天消暑聖品", "price": "~45–65元", "key": "仙草", "m": "", "s": "hot"},
+        {"name": "冰淇淋", "desc": "義式濃縮口味多樣，夏日隨心情換口味", "price": "~80–180元", "key": "冰淇淋", "m": "D", "s": "hot"},
+        {"name": "楊桃汁", "desc": "古早味鹹楊桃汁，台南夏日傳統飲料", "price": "~30–50元", "key": "楊桃汁", "m": "D", "s": "hot"},
+        {"name": "粉粿冰", "desc": "台南古早粉粿加黑糖，消暑又扎實", "price": "~40–70元", "key": "粉粿冰", "m": "D", "s": "hot"},
+        # 冬天限定 (11-4月)
+        {"name": "燒仙草", "desc": "熱燒仙草配芋圓湯圓，冬天最暖心", "price": "~50–80元", "key": "燒仙草", "m": "D", "s": "cold"},
+        {"name": "紅豆湯＋湯圓", "desc": "冬至必吃，暖呼呼甜湯補充元氣", "price": "~40–70元", "key": "紅豆湯 湯圓", "m": "D", "s": "cold"},
+        {"name": "花生湯", "desc": "綿密花生甜湯，古早味暖胃甜品", "price": "~40–60元", "key": "花生湯", "m": "D", "s": "cold"},
+        {"name": "薑母茶", "desc": "老薑麻油糖，手腳冰冷喝了馬上暖", "price": "~50–80元", "key": "薑母茶", "m": "D", "s": "cold"},
+        {"name": "熱可可", "desc": "濃郁巧克力配棉花糖，冬天療癒聖品", "price": "~80–150元", "key": "熱可可 巧克力", "m": "", "s": "cold"},
+        {"name": "地瓜湯圓", "desc": "薑汁地瓜配小湯圓，甜蜜蜜暖意滿滿", "price": "~40–65元", "key": "地瓜湯圓", "m": "D", "s": "cold"},
     ],
     "輕食": [
         {"name": "沙拉", "desc": "雞胸肉沙拉，超商或輕食店都有", "price": "~80–150元", "key": "沙拉 輕食", "m": ""},
@@ -3156,6 +3312,204 @@ except Exception:
     _RESTAURANT_CACHE = {}
 
 
+def _tw_season(city: str = "") -> str:
+    """依實際氣溫判斷季節（優先查天氣 API，fallback 月份）
+    max_t >= 27°C → hot；<= 22°C → cold；23-26 → 依月份（4-10 hot）
+    """
+    import datetime
+    if city:
+        try:
+            w = _fetch_cwa_weather(city)
+            max_t = w.get("max_t")
+            if max_t is not None:
+                if max_t >= 27:
+                    return "hot"
+                if max_t <= 22:
+                    return "cold"
+        except Exception:
+            pass
+    m = (datetime.datetime.utcnow() + datetime.timedelta(hours=8)).month
+    return "hot" if 4 <= m <= 10 else "cold"
+
+
+# ─── 城市特色食物（觀光客/外地人必吃）──────────────────────
+_CITY_SPECIALTIES = {
+    # ── 北部 ──────────────────────────────────────────
+    "台北": [
+        {"name": "臭豆腐", "desc": "士林夜市必吃，外酥內嫩配泡菜，越臭越香", "key": "台北 臭豆腐", "s": ""},
+        {"name": "蚵仔煎", "desc": "飽滿蚵仔加米漿皮，夜市人氣王", "key": "台北 蚵仔煎", "s": ""},
+        {"name": "刈包", "desc": "台灣虎咬豬，軟饅頭夾控肉酸菜花生", "key": "台北 刈包", "s": ""},
+        {"name": "豬血糕", "desc": "士林夜市限定體驗，花生粉香菜大爆發", "key": "台北 豬血糕", "s": ""},
+        {"name": "滷肉飯", "desc": "台北靈魂飯，油蔥香氣一口就上癮", "key": "台北 滷肉飯", "s": ""},
+        {"name": "公館粉圓", "desc": "師大夜市周邊古早味粉圓冰，消暑必吃", "key": "台北 粉圓冰", "s": "hot"},
+        {"name": "紅豆餅", "desc": "街頭現烤車輪餅，紅豆奶油口味各有擁護者", "key": "台北 車輪餅", "s": ""},
+    ],
+    "新北": [
+        {"name": "三峽金牛角", "desc": "三峽老街必買，酥脆牛角麵包香甜不膩", "key": "三峽 金牛角", "s": ""},
+        {"name": "深坑臭豆腐", "desc": "深坑老街名物，炸臭豆腐外酥內嫩全台聞名", "key": "深坑 臭豆腐", "s": ""},
+        {"name": "淡水魚丸", "desc": "淡水老街必吃，魚漿包肉餡Q彈有嚼勁", "key": "淡水 魚丸", "s": ""},
+        {"name": "淡水阿給", "desc": "油豆腐填冬粉加魚漿封口，淡水獨有名點", "key": "淡水 阿給", "s": ""},
+        {"name": "九份芋圓", "desc": "九份老街海景配芋圓，暖熱冰涼都好吃", "key": "九份 芋圓", "s": ""},
+        {"name": "鶯歌陶瓷碗公冰", "desc": "鶯歌陶博館周邊，陶瓷碗盛裝復古剉冰", "key": "鶯歌 冰", "s": "hot"},
+    ],
+    "基隆": [
+        {"name": "鼎邊銼", "desc": "基隆廟口第一名，米漿刮鍋邊煮成的獨特小吃", "key": "基隆 鼎邊銼", "s": ""},
+        {"name": "天婦羅", "desc": "基隆港邊魚漿炸物，沾甜辣醬超對味", "key": "基隆 天婦羅", "s": ""},
+        {"name": "泡泡冰", "desc": "基隆獨有冰品，轉出泡泡造型，花生芋頭口味人氣高", "key": "基隆 泡泡冰", "s": "hot"},
+        {"name": "三明治（基隆式）", "desc": "基隆夜市古早味三明治，蛋沙拉夾吐司超厚實", "key": "基隆 三明治", "s": ""},
+        {"name": "豆簽羹", "desc": "廟口名物，豆粉做成豆簽配海鮮羹，古早又暖胃", "key": "基隆 豆簽羹", "s": ""},
+        {"name": "營養三明治", "desc": "炸麵包夾蛋沙拉番茄，基隆人的早餐記憶", "key": "基隆 營養三明治", "s": ""},
+    ],
+    "桃園": [
+        {"name": "大溪豆干", "desc": "大溪老街百年豆干，滷得入味帶勁香", "key": "大溪 豆干", "s": ""},
+        {"name": "客家粄條", "desc": "龍潭、楊梅客家粄條，米香軟Q配豬油蔥", "key": "桃園 客家粄條", "s": ""},
+        {"name": "復興山豬肉", "desc": "復興鄉原住民風味，山豬肉香辣下飯", "key": "復興 山豬肉 原住民", "s": ""},
+        {"name": "石門活魚", "desc": "石門水庫旁現撈活魚，三吃吃法各有風味", "key": "石門水庫 活魚", "s": ""},
+        {"name": "龍潭花生糖", "desc": "客家傳統花生糖，香甜不黏牙伴手禮首選", "key": "龍潭 花生糖", "s": ""},
+        {"name": "蘆竹米干", "desc": "緬甸風味米干，桃園東南亞移民帶來的滋味", "key": "桃園 米干", "s": ""},
+    ],
+    "新竹": [
+        {"name": "貢丸湯", "desc": "新竹貢丸Q彈有嚼勁，湯底清甜暖胃", "key": "新竹 貢丸湯", "s": ""},
+        {"name": "新竹米粉", "desc": "新竹九降風吹出細如絲的米粉，炒或煮都香", "key": "新竹 米粉", "s": ""},
+        {"name": "柿餅", "desc": "新竹九降風吹出的古早味，秋冬最甜最香", "key": "新竹 柿餅", "s": "cold"},
+        {"name": "潤餅", "desc": "新竹傳統潤餅捲，花生糖粉＋蛋＋豆芽料多實在", "key": "新竹 潤餅", "s": ""},
+        {"name": "城隍廟廟口小吃", "desc": "新竹城隍廟周邊肉燥飯、湯圓、貢丸一條街", "key": "新竹城隍廟 小吃", "s": ""},
+        {"name": "仙草雞", "desc": "關西仙草產地直送，仙草燉雞清潤去火", "key": "關西 仙草雞", "s": ""},
+    ],
+    # ── 中部 ──────────────────────────────────────────
+    "苗栗": [
+        {"name": "客家湯圓", "desc": "苗栗客家湯圓包豬肉，油蔥拌炒香氣滿滿", "key": "苗栗 客家湯圓", "s": "cold"},
+        {"name": "梅干扣肉", "desc": "客家媽媽的味道，梅干菜吸飽豬油滷汁超下飯", "key": "苗栗 梅干扣肉", "s": ""},
+        {"name": "薑絲大腸", "desc": "客家名菜，嫩大腸配嫩薑絲酸辣開胃", "key": "苗栗 薑絲大腸", "s": ""},
+        {"name": "銅鑼杭菊茶", "desc": "銅鑼杭菊產地，秋冬菊花茶清香退火", "key": "銅鑼 杭菊茶", "s": "cold"},
+        {"name": "大湖草莓", "desc": "大湖草莓園採摘體驗，冬季限定最甜", "key": "大湖 草莓", "s": "cold"},
+        {"name": "南庄桂花釀", "desc": "南庄老街桂花系列飲品甜點，香氣迷人", "key": "南庄 桂花", "s": ""},
+    ],
+    "台中": [
+        {"name": "太陽餅", "desc": "台中伴手禮一號，酥皮麥芽糖內餡香甜", "key": "台中 太陽餅", "s": ""},
+        {"name": "珍珠奶茶（發源地）", "desc": "珍珠奶茶在台中春水堂發明，原汁原味", "key": "台中 春水堂 珍珠奶茶", "s": ""},
+        {"name": "逢甲夜市鹹酥雞", "desc": "逢甲夜市必逛，現炸鹹酥雞配九層塔", "key": "逢甲夜市 鹹酥雞", "s": ""},
+        {"name": "草莓大福", "desc": "新社草莓季必吃，新鮮草莓包白玉麻糬", "key": "台中 草莓大福", "s": "cold"},
+        {"name": "肉蛋吐司", "desc": "台中早餐象徵，鐵板蛋＋貢丸＋吐司超滿足", "key": "台中 肉蛋吐司", "s": ""},
+        {"name": "宮原眼科冰淇淋", "desc": "台中網紅景點，古典建築配義式冰淇淋塔", "key": "台中 宮原眼科 冰淇淋", "s": "hot"},
+        {"name": "三時茶房鳳梨酥", "desc": "宮原集團出品，台中土鳳梨酥送禮超體面", "key": "台中 鳳梨酥", "s": ""},
+    ],
+    "彰化": [
+        {"name": "彰化肉圓", "desc": "彰化名物，蒸熟軟Q外皮包筍丁豬肉，醬汁甘甜", "key": "彰化 肉圓", "s": ""},
+        {"name": "爌肉飯", "desc": "彰化老字號，整塊控肉滷到入骨超下飯", "key": "彰化 爌肉飯", "s": ""},
+        {"name": "貓鼠麵", "desc": "彰化百年老店，意麵配豬雜湯獨特古早味", "key": "彰化 貓鼠麵", "s": ""},
+        {"name": "王功蚵仔", "desc": "王功漁港現撈蚵仔，鮮甜肥美直接吃最過癮", "key": "王功 蚵仔 海鮮", "s": ""},
+        {"name": "溪湖羊肉", "desc": "溪湖羊肉爐聞名全台，冬季進補必來", "key": "溪湖 羊肉爐", "s": "cold"},
+        {"name": "鹿港蚵仔煎", "desc": "鹿港老街必吃，蚵仔新鮮肥大，米漿外皮香脆", "key": "鹿港 蚵仔煎", "s": ""},
+        {"name": "鹿港鳳眼糕", "desc": "鹿港傳統糕點，米粉製成細緻香甜", "key": "鹿港 鳳眼糕", "s": ""},
+    ],
+    "南投": [
+        {"name": "竹筒飯", "desc": "信義鄉原住民竹筒飯，現烤竹香滲入米飯", "key": "南投 竹筒飯 原住民", "s": ""},
+        {"name": "紹興酒蛋", "desc": "埔里紹興酒廠名物，酒香濃郁滷蛋入味", "key": "埔里 紹興酒蛋", "s": ""},
+        {"name": "日月潭紅茶", "desc": "日月潭阿薩姆紅茶，茶色艷紅滋味甘醇", "key": "日月潭 紅茶", "s": ""},
+        {"name": "埔里米粉", "desc": "埔里盆地好水製成米粉，煮炒皆宜", "key": "埔里 米粉", "s": ""},
+        {"name": "廬山溫泉烤玉米", "desc": "廬山路邊現烤玉米，甜脆噴香", "key": "南投 烤玉米", "s": ""},
+        {"name": "水里蛇窯陶藝餐", "desc": "水里特色體驗，陶甕料理視覺味覺雙享受", "key": "水里 陶藝 料理", "s": ""},
+    ],
+    "雲林": [
+        {"name": "斗六意麵", "desc": "雲林特色麵食，鹼水意麵配肉燥湯頭鮮甜", "key": "斗六 意麵", "s": ""},
+        {"name": "虎尾毛巾蛋糕", "desc": "虎尾毛巾工廠轉型，毛巾造型蛋糕超可愛", "key": "虎尾 毛巾蛋糕", "s": ""},
+        {"name": "北港花生", "desc": "北港農產直銷花生糖、花生酥，香氣四溢", "key": "北港 花生糖", "s": ""},
+        {"name": "口湖烏魚子", "desc": "口湖漁港鮮製烏魚子，送禮自用兩相宜", "key": "口湖 烏魚子", "s": "cold"},
+        {"name": "古坑咖啡", "desc": "古坑台灣咖啡產地，現烤咖啡豆香氣迷人", "key": "古坑 台灣咖啡", "s": ""},
+        {"name": "西螺醬油", "desc": "西螺百年醬油文化，原釀醬油拌飯超香", "key": "西螺 醬油 小吃", "s": ""},
+    ],
+    # ── 南部 ──────────────────────────────────────────
+    "嘉義": [
+        {"name": "火雞肉飯", "desc": "嘉義市標誌美食，火雞腿絲淋滷汁超香", "key": "嘉義 火雞肉飯", "s": ""},
+        {"name": "方塊酥", "desc": "嘉義特色零食，酥脆鹹甜一口接一口停不下來", "key": "嘉義 方塊酥", "s": ""},
+        {"name": "阿里山愛玉", "desc": "阿里山天然愛玉自己搓，配蜂蜜檸檬超純淨", "key": "阿里山 愛玉", "s": "hot"},
+        {"name": "奮起湖便當", "desc": "阿里山鐵路便當，竹製餐盒古早香名聞全台", "key": "奮起湖便當", "s": ""},
+        {"name": "東石蚵仔", "desc": "東石漁港現撈蚵仔，蚵仔麵線蚵仔煎都鮮", "key": "東石 蚵仔", "s": ""},
+        {"name": "嘉義布丁", "desc": "嘉義特色古早味布丁，雞蛋奶香焦糖濃郁", "key": "嘉義 布丁", "s": ""},
+    ],
+    "台南": [
+        {"name": "紅磚布丁", "desc": "台南排隊名物，古早味雞蛋布丁冷吃最香", "key": "台南 紅磚布丁", "s": ""},
+        {"name": "虱目魚粥", "desc": "台南早餐靈魂，鮮甜虱目魚配清粥無腥味", "key": "台南 虱目魚粥", "s": ""},
+        {"name": "擔仔麵", "desc": "台南百年老味道，度小月湯頭鮮甜不膩", "key": "台南 擔仔麵", "s": ""},
+        {"name": "鱔魚意麵", "desc": "台南獨有大火炒法，鑊氣十足滑嫩入味", "key": "台南 鱔魚意麵", "s": ""},
+        {"name": "碗粿", "desc": "軟Q米食加肉燥蒸熟，沾蒜蓉醬超下飯", "key": "台南 碗粿", "s": ""},
+        {"name": "土魠魚羹", "desc": "台灣鯧魚炸酥後加羹，鮮甜濃郁台南招牌", "key": "台南 土魠魚羹", "s": ""},
+        {"name": "粉粿", "desc": "古早粉粿加黑糖水，夏天消暑必吃", "key": "台南 粉粿", "s": "hot"},
+        {"name": "棺材板", "desc": "延平街名物，厚吐司挖空填濃郁白醬海鮮", "key": "台南 棺材板", "s": ""},
+    ],
+    "高雄": [
+        {"name": "木瓜牛奶", "desc": "高雄鹽埕傳統木瓜牛奶，甜而不膩消暑聖品", "key": "高雄 木瓜牛奶", "s": ""},
+        {"name": "旗魚黑輪", "desc": "旗津海邊必吃，現炸旗魚黑輪卡卡脆", "key": "高雄 旗魚黑輪", "s": ""},
+        {"name": "鹽埕肉圓", "desc": "高雄老城區古早味，外皮Q彈肉餡飽滿", "key": "高雄 鹽埕 肉圓", "s": ""},
+        {"name": "岡山羊肉爐", "desc": "岡山三寶之一，羊肉爐配蒜苗冬季必補", "key": "岡山 羊肉爐", "s": "cold"},
+        {"name": "美濃板條", "desc": "美濃客家粄條，豬油蔥拌炒米香撲鼻", "key": "美濃 板條 粄條", "s": ""},
+        {"name": "旗山香蕉", "desc": "旗山香蕉之鄉，香蕉冰淇淋香蕉蛋糕超值得買", "key": "旗山 香蕉 冰淇淋", "s": ""},
+        {"name": "六合夜市海鮮", "desc": "高雄夜市全覽，生猛海鮮炒飯烤肉一條街", "key": "高雄 六合夜市 海鮮", "s": ""},
+    ],
+    "屏東": [
+        {"name": "潮州燒冷冰", "desc": "屏東潮州名物，熱湯澆剉冰獨特吃法超特別", "key": "屏東 潮州 燒冷冰", "s": "hot"},
+        {"name": "萬巒豬腳", "desc": "萬巒豬腳全台聞名，皮Q肉嫩滷汁入骨", "key": "萬巒 豬腳", "s": ""},
+        {"name": "東港黑鮪魚", "desc": "東港黑鮪魚季（4-6月）生魚片最鮮最肥", "key": "東港 黑鮪魚", "s": "hot"},
+        {"name": "屏東起司蛋糕", "desc": "屏東牧場直送鮮奶，起司蛋糕濃郁香滑", "key": "屏東 起司蛋糕", "s": ""},
+        {"name": "恆春洋蔥", "desc": "恆春半島特產，洋蔥甜脆多汁，各式料理皆宜", "key": "恆春 洋蔥料理", "s": ""},
+        {"name": "小琉球烤小卷", "desc": "小琉球海邊烤小卷，現烤鮮甜配蒜蓉醬", "key": "小琉球 烤小卷 海鮮", "s": ""},
+    ],
+    # ── 東部 & 離島 ──────────────────────────────────
+    "宜蘭": [
+        {"name": "鴨賞", "desc": "宜蘭三星特產，煙燻鴨肉切薄片超下酒", "key": "宜蘭 鴨賞", "s": ""},
+        {"name": "牛舌餅", "desc": "宜蘭形狀像牛舌的甜餅，酥脆香甜伴手禮", "key": "宜蘭 牛舌餅", "s": ""},
+        {"name": "糕渣", "desc": "外脆內燙的宜蘭名點，雞肉濃湯凝固炸酥", "key": "宜蘭 糕渣", "s": ""},
+        {"name": "卜肉", "desc": "里肌裹地瓜粉油炸，外酥內嫩宜蘭獨有", "key": "宜蘭 卜肉", "s": ""},
+        {"name": "三星蔥餅", "desc": "宜蘭三星蔥現烤蔥餅，香氣撲鼻超誘人", "key": "宜蘭 三星蔥餅", "s": ""},
+        {"name": "羅東夜市小吃", "desc": "羅東夜市炭烤、肉羹、蒜味肉排，夜晚必訪", "key": "羅東夜市 小吃", "s": ""},
+        {"name": "蘇澳冷泉蝦", "desc": "蘇澳天然冷泉養殖蝦，鮮甜清甜口感細嫩", "key": "蘇澳 冷泉蝦", "s": ""},
+    ],
+    "花蓮": [
+        {"name": "麻糬", "desc": "花蓮必帶伴手禮，芝麻花生口味人氣最高", "key": "花蓮 麻糬", "s": ""},
+        {"name": "奶油酥條", "desc": "花蓮特產，奶香濃厚酥脆不油膩", "key": "花蓮 奶油酥條", "s": ""},
+        {"name": "原住民風味餐", "desc": "小米酒、烤山豬肉、吉拿富，體驗阿美族文化", "key": "花蓮 原住民料理", "s": ""},
+        {"name": "東坡肉便當", "desc": "花蓮名產控肉便當，軟爛入味超下飯", "key": "花蓮 東坡肉便當", "s": ""},
+        {"name": "芋頭冰淇淋", "desc": "花蓮芋頭細緻甜香，冰淇淋口感迷人", "key": "花蓮 芋頭冰淇淋", "s": "hot"},
+        {"name": "公正包子", "desc": "花蓮老字號，大顆肉包皮薄餡多排隊必吃", "key": "花蓮 公正包子", "s": ""},
+        {"name": "壽豐鮭魚料理", "desc": "壽豐鮭魚產地，生魚片握壽司鮮甜肥美", "key": "壽豐 鮭魚 生魚片", "s": ""},
+    ],
+    "台東": [
+        {"name": "釋迦", "desc": "台東最出名水果，果肉甜如蜜，產季必吃", "key": "台東 釋迦", "s": ""},
+        {"name": "黑糖麻糬", "desc": "池上黑糖麻糬，現做Q彈甜蜜蜜", "key": "台東 黑糖麻糬", "s": ""},
+        {"name": "關山便當", "desc": "台東縱谷米飯超香，關山火車便當排隊名物", "key": "關山便當", "s": ""},
+        {"name": "旗魚米苔目", "desc": "台東在地早餐，旗魚湯頭加Q彈米苔目", "key": "台東 米苔目", "s": ""},
+        {"name": "卑南豬血湯", "desc": "台東特色早餐，豬血鮮嫩湯底清甜暖胃", "key": "台東 豬血湯", "s": ""},
+        {"name": "都蘭薯餅", "desc": "都蘭部落風味薯餅，地瓜香甜嚼勁十足", "key": "台東 都蘭 薯餅", "s": ""},
+        {"name": "成功旗魚飯糰", "desc": "成功漁港新鮮旗魚製成旗魚飯糰，海味十足", "key": "成功 旗魚飯糰", "s": ""},
+    ],
+    # ── 離島 ──────────────────────────────────────────
+    "澎湖": [
+        {"name": "仙人掌冰", "desc": "澎湖夏季限定！天然仙人掌汁製成紫紅冰棒", "key": "澎湖 仙人掌冰", "s": "hot"},
+        {"name": "現撈海鮮", "desc": "小管、龍蝦、九孔現撈直送，新鮮無比", "key": "澎湖 海鮮", "s": ""},
+        {"name": "花生糖", "desc": "澎湖傳統花生糖，香甜不黏牙代代相傳", "key": "澎湖 花生糖", "s": ""},
+        {"name": "黑糖糕", "desc": "澎湖名產Q彈黑糖麻糬口感，送禮首選", "key": "澎湖 黑糖糕", "s": ""},
+        {"name": "丁香魚飯", "desc": "澎湖丁香魚炸酥配白飯，鮮鹹下飯超獨特", "key": "澎湖 丁香魚", "s": ""},
+        {"name": "澎湖文蛤", "desc": "澎湖養殖文蛤肉厚鮮甜，蒸或煮都一絕", "key": "澎湖 文蛤 海鮮", "s": ""},
+    ],
+    "金門": [
+        {"name": "貢糖", "desc": "金門必帶伴手禮，花生芝麻酥脆香甜", "key": "金門 貢糖", "s": ""},
+        {"name": "高粱酒料理", "desc": "金門高粱酒入菜，醉雞醉蝦風味獨特", "key": "金門 高粱 料理", "s": ""},
+        {"name": "金門麵線", "desc": "金門傳統曬麵線，湯頭鮮甜麵條細緻", "key": "金門 麵線", "s": ""},
+        {"name": "蚵仔麵線", "desc": "金門蚵仔肥美配細麵線，鮮甜濃郁", "key": "金門 蚵仔麵線", "s": ""},
+        {"name": "廣東粥", "desc": "金門早餐文化，食材豐富粥底綿密", "key": "金門 廣東粥", "s": ""},
+        {"name": "金門菜刀紀念品＋用餐", "desc": "金門特色，用炮彈鋼鐵打造的菜刀配當地料理", "key": "金門 老街 小吃", "s": ""},
+    ],
+    "馬祖": [
+        {"name": "老酒麵線", "desc": "馬祖紅糟老酒入麵線，酒香濃郁暖胃", "key": "馬祖 老酒麵線", "s": "cold"},
+        {"name": "繼光餅", "desc": "馬祖傳統硬餅，夾蛋夾肉都好吃", "key": "馬祖 繼光餅", "s": ""},
+        {"name": "淡菜", "desc": "馬祖海域現撈淡菜，肉質肥美鮮甜", "key": "馬祖 淡菜 海鮮", "s": ""},
+        {"name": "魚麵", "desc": "馬祖傳統魚漿製成的魚麵，Q彈有嚼勁", "key": "馬祖 魚麵", "s": ""},
+        {"name": "芙蓉酥", "desc": "馬祖傳統糕點，鬆軟香甜帶花香", "key": "馬祖 芙蓉酥", "s": ""},
+    ],
+}
+
+
 def _maps_url(keyword: str, area: str = "", **_kw) -> str:
     """產生 Google Maps 搜尋連結"""
     if area:
@@ -3166,7 +3520,9 @@ def _maps_url(keyword: str, area: str = "", **_kw) -> str:
 
 
 def _tw_meal_period() -> tuple:
-    """回傳 (時段代碼, 中文標籤)，依台灣時間（UTC+8）"""
+    """回傳 (時段代碼, 中文標籤)，依台灣時間（UTC+8）
+    M=早餐(5-10)  D=午餐/下午(10-17)  N=晚餐(17-22)  L=消夜(22-5)
+    """
     import datetime
     h = (datetime.datetime.utcnow() + datetime.timedelta(hours=8)).hour
     if 5 <= h < 10:
@@ -3178,25 +3534,27 @@ def _tw_meal_period() -> tuple:
     elif 17 <= h < 22:
         return "N", "晚餐推薦"
     else:
-        return "N", "消夜推薦"
+        return "L", "消夜推薦"
 
 
-def _filter_food_by_time(pool: list, period: str) -> list:
-    """依時段過濾食物；若剩不足3筆則 fallback 全部
-    M=早餐(5-10): 只選全天+早餐限定
-    D=午餐/下午(10-17): 選全天+午餐以後
-    N=晚餐/消夜(17-5): 選全天+午餐以後+晚上限定（午餐品項晚上也能吃）
+def _filter_food_by_time(pool: list, period: str, city: str = "") -> list:
+    """依時段 + 季節過濾食物；若剩不足3筆則 fallback 全部
+    M=早餐  D=午餐/下午  N=晚餐  L=消夜
+    s=hot(實際氣溫>=27°C)  s=cold(<=22°C)  s=""(全年)
     """
+    season = _tw_season(city)
+    # 先依時段過濾
     if period == "M":
         ok = [p for p in pool if p.get("m", "") in ("", "M")]
     elif period == "D":
-        # 午餐：優先全天+午餐，不足3筆就也納入晚餐品項（火鍋/薑母鴨白天也能吃）
         ok = [p for p in pool if p.get("m", "") in ("", "D")]
         if len(ok) < 3:
             ok = [p for p in pool if p.get("m", "") in ("", "D", "N")]
-    else:  # N (晚上/消夜) — 午餐品項晚上也開
+    else:  # N/L
         ok = [p for p in pool if p.get("m", "") in ("", "D", "N")]
-    return ok if len(ok) >= 1 else pool
+    # 再依季節：移除不合時宜的品項（有標季節的必須吻合當季）
+    seasonal = [p for p in ok if p.get("s", "") in ("", season)]
+    return seasonal if len(seasonal) >= 1 else ok if len(ok) >= 1 else pool
 
 
 # 記住最近推薦過的品項，避免連續重複
@@ -3207,7 +3565,7 @@ def build_food_flex(style: str, area: str = "") -> list:
     """隨機挑 3 道推薦，依時段過濾，避免與上次重複"""
     pool = _FOOD_DB.get(style, _FOOD_DB["便當"])
     period, meal_label = _tw_meal_period()
-    filtered = _filter_food_by_time(pool, period)
+    filtered = _filter_food_by_time(pool, period, city=area[:2] if area else "")
 
     # 排除上次推薦過的品項
     last = set(_food_recent.get(style, []))
@@ -3411,8 +3769,23 @@ def build_live_food_events(area: str) -> list:
 
     picks = events[:4]  # 最多顯示 4 筆
     color = "#D84315"
+    # 官方來源網域：有這些就不顯示來源標注
+    _OFFICIAL_DOMAINS = (
+        "accupass.com", "kktix.com", "kktix.cc",
+        "huashan1914.com", "pier2.org", "tnam.museum",
+        ".gov.tw", "travel.taipei", "culture.tw",
+    )
+
+    def _is_official_url(url: str) -> bool:
+        return any(d in url for d in _OFFICIAL_DOMAINS)
+
     items = []
     for i, e in enumerate(picks):
+        url = e.get("url", "")
+        source_label = e.get("source", "")
+        # 有官方 URL → 不標來源；沒有或是部落格/Threads → 標出處
+        show_source = source_label and (not url or not _is_official_url(url))
+        link_uri = url if url else "https://www.accupass.com"
         items += [
             {"type": "box", "layout": "horizontal", "contents": [
                 {"type": "text", "text": f"{i+1}. {e.get('name','')}", "weight": "bold",
@@ -3421,9 +3794,11 @@ def build_live_food_events(area: str) -> list:
             ]},
             {"type": "text", "text": e.get("desc", ""), "size": "xs",
              "color": "#555555", "wrap": True, "margin": "xs"},
+            *([ {"type": "text", "text": f"來源：{source_label}", "size": "xxs",
+                 "color": "#AAAAAA", "margin": "xs"} ] if show_source else []),
             {"type": "button", "style": "link", "height": "sm",
              "action": {"type": "uri", "label": "📅 查看活動詳情",
-                        "uri": e.get("url", "https://www.accupass.com")}},
+                        "uri": link_uri}},
         ]
         if i < len(picks) - 1:
             items.append({"type": "separator", "margin": "sm"})
@@ -3447,85 +3822,256 @@ def build_live_food_events(area: str) -> list:
              }}]
 
 
-def build_food_menu(city: str = "") -> list:
-    """今天吃什麼 — 主選單（依時段動態調整按鈕順序）"""
+def _btn3d(label: str, text: str, main_c: str, shadow_c: str,
+           txt_c: str = "#FFFFFF", flex: int = None) -> dict:
+    """3D 凸起按鈕：外層陰影色 + 內層主色，paddingBottom 露出陰影造成立體感"""
+    inner = {
+        "type": "box", "layout": "vertical",
+        "backgroundColor": main_c,
+        "cornerRadius": "8px",
+        "paddingTop": "13px", "paddingBottom": "13px",
+        "paddingStart": "8px", "paddingEnd": "8px",
+        "contents": [{"type": "text", "text": label,
+                       "color": txt_c, "align": "center",
+                       "weight": "bold", "size": "sm", "wrap": False}],
+    }
+    outer = {
+        "type": "box", "layout": "vertical",
+        "backgroundColor": shadow_c,
+        "cornerRadius": "10px",
+        "paddingBottom": "5px",
+        "action": {"type": "message", "label": label[:20], "text": text},
+        "contents": [inner],
+    }
+    if flex is not None:
+        outer["flex"] = flex
+    return outer
+
+
+def build_food_menu(city: str = "", user_id: str = "") -> list:
+    """今天吃什麼 — 主選單（精簡 4 按鈕版）"""
+    if user_id:
+        _redis_set(f"food_locate:{user_id}", "1", ttl=180)
     period, meal_label = _tw_meal_period()
 
     suf = f" {city}" if city else ""
-    _all_btns = {
-        "便當":    ("便當",    f"吃什麼 便當{suf}"),
-        "麵食":    ("麵食",    f"吃什麼 麵食{suf}"),
-        "小吃":    ("小吃",    f"吃什麼 小吃{suf}"),
-        "火鍋":    ("火鍋",    f"吃什麼 火鍋{suf}"),
-        "日韓":    ("日韓",    f"吃什麼 日韓{suf}"),
-        "早午餐":  ("早午餐",  f"吃什麼 早午餐{suf}"),
-        "飲料甜點":("飲料甜點",f"吃什麼 飲料甜點{suf}"),
-        "輕食":    ("輕食",    f"吃什麼 輕食{suf}"),
+    city2 = city[:2] if city else ""
+    meal_hints = {
+        "M": "輕一點最美味 ☕",
+        "D": "飽足感第一 🍱",
+        "N": "好好犒賞自己 🎉",
+        "L": "消夜就要簡單吃 🌙",
     }
-    _period_order = {
-        "M": ["早午餐", "輕食",  "便當", "麵食", "小吃", "日韓", "飲料甜點", "火鍋"],
-        "D": ["便當",   "麵食",  "小吃", "日韓", "輕食", "早午餐", "飲料甜點", "火鍋"],
-        "N": ["火鍋",   "日韓",  "麵食", "便當", "小吃", "輕食",  "飲料甜點"],
-        # 消夜/晚餐不顯示早午餐
-    }
-    order = _period_order.get(period, _period_order["D"])
-
-    ACCENT = "#FF6B35"
-
-    def _btn(key):
-        label, msg_text = _all_btns[key]
-        return {"type": "button", "style": "primary", "color": ACCENT, "flex": 1,
-                "height": "sm", "action": {"type": "message", "label": label, "text": msg_text}}
-
-    row1 = [_btn(k) for k in order[0:3]]
-    row2 = [_btn(k) for k in order[3:6]]
-    row3 = [_btn(k) for k in order[6:]]   # M/D 有 2 個，N 只剩 1 個（飲料甜點滿寬）
-
-    header_hints = {
-        "M": "☀️ 早餐 / 早午餐時間",
-        "D": "🌞 午餐時間，快速決定！",
-        "N": "🌙 晚餐時間，好好犒賞自己",
-    }
-    hint = header_hints.get(period, "幫你快速決定，外食族救星！")
+    hint = meal_hints.get(period, "外食族救星！")
+    header_sub = f"{city2} · {hint}" if city2 else hint
 
     return [{"type": "flex", "altText": "今天吃什麼？",
              "contents": {
                  "type": "bubble", "size": "mega",
-                 "header": {"type": "box", "layout": "vertical",
-                            "backgroundColor": "#1A1F3A",
-                            "paddingAll": "16px",
-                            "contents": [
-                                {"type": "text", "text": f"🍽️ {meal_label}",
-                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                                {"type": "text", "text": hint,
-                                 "color": "#8892B0", "size": "xs", "margin": "xs"},
-                            ]},
-                 "body": {"type": "box", "layout": "vertical", "backgroundColor": "#FFFFFF",
-                          "contents": [
-                     {"type": "text", "text": "選類型 Bot 幫你推薦，或直接讓我決定 👇",
-                      "size": "sm", "color": "#1A1F3A", "weight": "bold", "wrap": True},
-                 ]},
-                 "footer": {"type": "box", "layout": "vertical", "spacing": "sm",
-                            "backgroundColor": "#FFFFFF",
-                            "contents": [
-                     {"type": "button", "style": "primary", "color": "#27AE60", "height": "sm",
-                      "action": {"type": "message", "label": "🎲 幫我決定！（隨機推薦）",
-                                 "text": f"吃什麼 隨機{suf}"}},
-                     {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": row1},
-                     {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": row2},
-                     {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": row3},
-                     {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
-                         {"type": "button", "style": "primary", "color": "#1A1F3A", "flex": 1,
-                          "height": "sm", "action": {"type": "message", "label": "必比登", "text": "必比登"}},
-                         {"type": "button", "style": "primary", "color": "#1A1F3A", "flex": 1,
-                          "height": "sm", "action": {"type": "message", "label": "在地餐廳", "text": "在地餐廳"}},
+                 "hero": {
+                     "type": "box", "layout": "vertical",
+                     "backgroundColor": "#E65100",
+                     "paddingTop": "22px", "paddingBottom": "18px",
+                     "paddingAll": "20px",
+                     "contents": [
+                         {"type": "text", "text": "🍜 今天吃什麼？",
+                          "color": "#FFFFFF", "size": "xl", "weight": "bold"},
+                         {"type": "text", "text": f"{meal_label} · {header_sub}",
+                          "color": "#FFD0B0", "size": "sm", "margin": "sm", "wrap": True},
                      ]},
-                     {"type": "button", "style": "primary", "color": "#E67E22", "height": "sm",
-                      "action": {"type": "message", "label": "🍻 3人以上聚餐地點", "text": "聚餐"}},
-                     {"type": "button", "style": "primary", "color": "#1A1F3A", "height": "sm",
-                      "action": {"type": "message", "label": "美食活動", "text": "本週美食活動"}},
-                 ]},
+                 "body": {
+                     "type": "box", "layout": "vertical",
+                     "paddingAll": "16px", "spacing": "md",
+                     "contents": [
+                         _btn3d("🎲 幫我決定！（隨機推薦）",
+                                f"吃什麼 隨機{suf}", "#27AE60", "#1A6E35"),
+                         _btn3d("📍 分享位置，推薦附近美食",
+                                "📍 我要分享位置找美食", "#1565C0", "#0A3D8A"),
+                         {"type": "separator", "margin": "md", "color": "#E0E0E0"},
+                         {"type": "box", "layout": "horizontal", "spacing": "sm",
+                          "contents": [
+                              _btn3d("🍽️ 選類型", f"吃什麼 選類型{suf}",
+                                     "#BF360C", "#7A1F05", flex=1),
+                              _btn3d("🏅 評鑑推薦", f"吃什麼 特殊需求{suf}",
+                                     "#6A1B9A", "#3E0B6B", flex=1),
+                          ]},
+                     ]},
              }}]
+
+
+def build_food_type_picker(city: str = "") -> list:
+    """第二層：選類型（依早/午/晚/消夜四時段調整順序與標題）"""
+    period, meal_label = _tw_meal_period()
+    suf = f" {city}" if city else ""
+    _period_cfg = {
+        "M": (["早午餐", "輕食",  "飲料甜點", "便當", "麵食", "小吃", "日韓"],
+              "☀️ 早上推薦輕一點的選項"),
+        "D": (["便當",   "麵食",  "小吃", "日韓", "輕食", "飲料甜點", "火鍋"],
+              "🌞 午餐時間，飽足感優先"),
+        "N": (["火鍋",   "日韓",  "麵食", "便當", "小吃", "輕食", "飲料甜點"],
+              "🌙 晚餐時間，好好犒賞自己"),
+        "L": (["小吃",   "麵食",  "火鍋", "日韓", "便當", "輕食", "飲料甜點"],
+              "🌃 消夜時間，簡單吃就好"),
+    }
+    order, hint = _period_cfg.get(period, _period_cfg["D"])
+
+    # 每類型用稍微不同的暖色系，增加視覺豐富度
+    _row_colors = [
+        ("#D84315", "#8A2400"),   # 第一排：深橘紅
+        ("#6D4C41", "#3E2723"),   # 第二排：深棕
+        ("#37474F", "#1C3039"),   # 第三排：藍灰
+    ]
+
+    rows = []
+    for ri, i in enumerate(range(0, len(order), 3)):
+        chunk = order[i:i+3]
+        mc, sc = _row_colors[min(ri, len(_row_colors) - 1)]
+        rows.append({"type": "box", "layout": "horizontal", "spacing": "sm",
+                     "contents": [_btn3d(k, f"吃什麼 {k}{suf}", mc, sc, flex=1)
+                                   for k in chunk]})
+
+    return [{"type": "flex", "altText": "選類型推薦",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "hero": {
+                     "type": "box", "layout": "vertical",
+                     "backgroundColor": "#BF360C",
+                     "paddingAll": "16px", "paddingTop": "18px",
+                     "contents": [
+                         {"type": "text", "text": f"🍽️ {meal_label} — 選類型",
+                          "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                         {"type": "text", "text": hint,
+                          "color": "#FFCCBC", "size": "xs", "margin": "xs"},
+                     ]},
+                 "body": {
+                     "type": "box", "layout": "vertical",
+                     "paddingAll": "12px", "spacing": "sm",
+                     "contents": rows + [
+                         {"type": "button", "style": "link", "height": "sm",
+                          "action": {"type": "message", "label": "← 回主選單",
+                                     "text": f"今天吃什麼{suf}"}},
+                     ]},
+             }}]
+
+
+def build_food_special_picker(city: str = "") -> list:
+    """第二層：精選評鑑（必比登 / 在地餐廳 / 聚餐 / 美食活動）"""
+    suf = f" {city}" if city else ""
+    return [{"type": "flex", "altText": "精選評鑑推薦",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "hero": {
+                     "type": "box", "layout": "vertical",
+                     "backgroundColor": "#4A148C",
+                     "paddingAll": "16px", "paddingTop": "18px",
+                     "contents": [
+                         {"type": "text", "text": "🏅 精選評鑑推薦",
+                          "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                         {"type": "text", "text": "評鑑認可 / 多人聚餐 / 近期美食活動",
+                          "color": "#CE93D8", "size": "xs", "margin": "xs"},
+                     ]},
+                 "body": {
+                     "type": "box", "layout": "vertical",
+                     "paddingAll": "12px", "spacing": "sm",
+                     "contents": [
+                         {"type": "box", "layout": "horizontal", "spacing": "sm",
+                          "contents": [
+                              _btn3d("⭐ 必比登", f"必比登{suf}",
+                                     "#E65100", "#8A3000", flex=1),
+                              _btn3d("🏠 在地餐廳", f"在地餐廳{suf}",
+                                     "#1565C0", "#0A3D8A", flex=1),
+                          ]},
+                         {"type": "box", "layout": "horizontal", "spacing": "sm",
+                          "contents": [
+                              _btn3d("🍻 多人聚餐", "聚餐",
+                                     "#C62828", "#7B1515", flex=1),
+                              _btn3d("🎪 美食活動", "本週美食活動",
+                                     "#6A1B9A", "#3E0B6B", flex=1),
+                          ]},
+                         _btn3d("🌏 地方特色小吃", f"地方特色{suf}",
+                                "#00695C", "#003D36"),
+                         {"type": "button", "style": "link", "height": "sm",
+                          "action": {"type": "message", "label": "← 回主選單",
+                                     "text": f"今天吃什麼{suf}"}},
+                     ]},
+             }}]
+
+
+def build_city_specialties(city: str) -> list:
+    """第一步：城市特色清單（點按後搜名店）"""
+    city2 = city[:2] if city else ""
+    season = _tw_season(city2)
+    pool = _CITY_SPECIALTIES.get(city, _CITY_SPECIALTIES.get(city2, []))
+    if not pool:
+        return build_food_restaurant_flex(city)
+
+    items = [p for p in pool if p.get("s", "") in ("", season)]
+    if not items:
+        items = pool
+
+    season_label = "🌞 夏季推薦" if season == "hot" else "🗺️ 在地特色"
+
+    def _bubble(item):
+        tag = "🌞 夏季限定" if item.get("s") == "hot" else ("🧥 冬季限定" if item.get("s") == "cold" else "🗺️ 在地特色")
+        return {
+            "type": "bubble", "size": "kilo",
+            "header": {
+                "type": "box", "layout": "vertical",
+                "backgroundColor": "#1A1F3A", "paddingAll": "10px",
+                "contents": [
+                    {"type": "text", "text": item["name"],
+                     "color": "#FFFFFF", "size": "md", "weight": "bold", "wrap": True},
+                    {"type": "text", "text": tag,
+                     "color": "#8892B0", "size": "xxs", "margin": "xs"},
+                ]},
+            "body": {
+                "type": "box", "layout": "vertical", "paddingAll": "12px",
+                "contents": [
+                    {"type": "text", "text": item["desc"],
+                     "size": "sm", "color": "#444444", "wrap": True},
+                ]},
+            "footer": {
+                "type": "box", "layout": "vertical", "paddingAll": "10px",
+                "contents": [
+                    # 點按後搜這個城市的這項食物名店
+                    {"type": "button", "style": "primary", "color": "#FF6B35",
+                     "height": "sm",
+                     "action": {"type": "message",
+                                "label": "🏆 找名店推薦",
+                                "text": f"特色名店 {city2} {item['name']}"}},
+                ]},
+        }
+
+    bubbles = [_bubble(item) for item in items[:8]]
+    return [{"type": "flex",
+             "altText": f"{city2} 特色美食",
+             "contents": {"type": "carousel", "contents": bubbles}}]
+
+
+def build_specialty_shops(city: str, food_name: str) -> list:
+    """第二步：用 Google Places Text Search 搜該城市的食物名店"""
+    city2 = city[:2] if city else ""
+    query = f"{city2} {food_name}"
+    shops = _text_search_places(query, max_results=5)
+
+    if not shops:
+        # fallback: Google Maps 搜尋連結
+        gmap_uri = f"https://www.google.com/maps/search/{urllib.parse.quote(query)}/"
+        return [{"type": "text",
+                 "text": f"搜尋「{query}」名店中...\n目前無法取得即時資料，點下方連結用 Google Maps 搜尋 👇\n{gmap_uri}"}]
+
+    # 用 _build_restaurant_bubble 統一卡片樣式（有照片、評分、導航）
+    eaten_set: set = set()
+    bubbles = []
+    for r in shops:
+        r["dist"] = None  # 沒有座標，不顯示距離
+        b = _build_restaurant_bubble(r, None, None, city2, eaten_set,
+                                     subtitle=f"🏆 {city2}{food_name}名店")
+        bubbles.append(b)
+
+    return [{"type": "flex",
+             "altText": f"{query} 名店推薦",
+             "contents": {"type": "carousel", "contents": bubbles}}]
 
 
 # ─── 硬體升級諮詢 ─────────────────────────────────────
@@ -3894,16 +4440,27 @@ def build_upgrade_message(text: str) -> list:
 
 
 def _build_food_entry_region_picker(user_id: str = "") -> list:
-    """今天吃什麼（無城市）— 優先用位置分享，備用地區選擇"""
-    # 存食物定位意圖（3分鐘TTL），讓 location handler 走食物流程
+    """今天吃什麼 — 分享位置優先，備用地區選擇"""
     if user_id:
         _redis_set(f"food_locate:{user_id}", "1", ttl=180)
 
-    buttons = [
-        {"type": "button", "style": "primary", "color": "#E65100", "height": "sm",
-         "action": {"type": "message", "label": f"📍 {r}", "text": f"今天吃什麼 選城市 {r}"}}
+    region_buttons = [
+        {"type": "button", "style": "secondary", "height": "sm",
+         "action": {"type": "message", "label": r, "text": f"今天吃什麼 選城市 {r}"}}
         for r in _AREA_REGIONS.keys()
     ]
+    # 分成兩排 (每排 3 個)
+    region_rows = []
+    keys = list(_AREA_REGIONS.keys())
+    for i in range(0, len(keys), 3):
+        row_btns = [
+            {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+             "action": {"type": "message", "label": r, "text": f"今天吃什麼 選城市 {r}"}}
+            for r in keys[i:i+3]
+        ]
+        region_rows.append({"type": "box", "layout": "horizontal",
+                             "spacing": "sm", "contents": row_btns})
+
     _quick_items = [
         {"type": "action", "action": {"type": "location", "label": "📍 分享我的位置"}},
         {"type": "action", "action": {"type": "message", "label": "北部", "text": "今天吃什麼 選城市 北部"}},
@@ -3911,19 +4468,28 @@ def _build_food_entry_region_picker(user_id: str = "") -> list:
         {"type": "action", "action": {"type": "message", "label": "南部", "text": "今天吃什麼 選城市 南部"}},
         {"type": "action", "action": {"type": "message", "label": "東部離島", "text": "今天吃什麼 選城市 東部離島"}},
     ]
-    return [{"type": "flex", "altText": "你在哪個地區？",
+    return [{"type": "flex", "altText": "今天吃什麼？",
              "contents": {
                  "type": "bubble", "size": "mega",
                  "header": {"type": "box", "layout": "vertical", "backgroundColor": "#E65100",
                             "paddingAll": "16px",
                             "contents": [
-                                {"type": "text", "text": "🍽️ 你在哪裡？",
-                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                                {"type": "text", "text": "👇 分享位置直接推薦，或選地區",
+                                {"type": "text", "text": "🍽️ 今天吃什麼？",
+                                 "color": "#FFFFFF", "size": "xl", "weight": "bold"},
+                                {"type": "text", "text": "分享位置，秒推 1.5km 內美食地圖",
                                  "color": "#FFCCAA", "size": "xs", "margin": "xs"},
                             ]},
-                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
-                          "paddingAll": "12px", "contents": buttons},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "md",
+                          "paddingAll": "14px",
+                          "contents": [
+                              {"type": "button", "style": "primary", "color": "#E65100",
+                               "action": {"type": "message", "label": "📍 分享位置，立即推薦附近美食",
+                                          "text": "📍 我要分享位置找美食"}},
+                              {"type": "separator"},
+                              {"type": "text", "text": "或選擇地區", "size": "xs",
+                               "color": "#AAAAAA", "align": "center"},
+                              *region_rows,
+                          ]},
              },
              "quickReply": {"items": _quick_items}}]
 
@@ -4169,6 +4735,20 @@ def build_food_message(text: str, user_id: str = None) -> list:
                      ]},
                  }}]
 
+    # ── 分享位置快捷（簡單 text + quickReply，確保 location 按鈕正常顯示）──
+    if "我要分享位置找美食" in text_s:
+        if user_id:
+            _redis_set(f"food_locate:{user_id}", "1", ttl=180)
+        return [{
+            "type": "text",
+            "text": "好的！請分享你的位置，我馬上幫你找附近美食 📍",
+            "quickReply": {
+                "items": [
+                    {"type": "action", "action": {"type": "location", "label": "📍 分享我的位置"}},
+                ]
+            }
+        }]
+
     # ── 純呼叫主選單 ──
     _food_bare = ["今天吃什麼", "晚餐吃什麼", "午餐吃什麼", "吃什麼", "晚餐推薦", "午餐推薦"]
     if any(text_s == b or text_s.startswith(b + " ") or text_s.startswith(b + "\n") for b in _food_bare):
@@ -4176,9 +4756,22 @@ def build_food_message(text: str, user_id: str = None) -> list:
         _sel_match = re.search(r'選城市\s+(' + '|'.join(_AREA_REGIONS.keys()) + r')', text_s)
         if _sel_match:
             return _build_food_entry_city_picker(_sel_match.group(1))
-        # 有城市 → 直接到食物類型選單
+        # 第二層：選類型 / 特殊需求 / 地方特色
+        if "選類型" in text_s:
+            return build_food_type_picker(area_city)
+        if "特殊需求" in text_s:
+            return build_food_special_picker(area_city)
+        if "地方特色" in text_s:
+            if area_city:
+                return build_city_specialties(area_city)
+            return build_food_special_picker("")  # 沒城市先顯示精選
+        # 有風格 + 有城市 → 直接推薦（例如「吃什麼 火鍋 台南」「吃什麼 便當 台南」）
+        explicit_style = style and (style != "便當" or "便當" in text_s)
+        if explicit_style and area_city:
+            return build_food_flex(style, area_city)
+        # 只有城市 → 食物主選單（精簡 4 按鈕）
         if area_city:
-            return build_food_menu(city=area_city)
+            return build_food_menu(city=area_city, user_id=user_id or "")
         # 沒城市 → 先選地區（附位置分享 Quick Reply）
         return _build_food_entry_region_picker(user_id or "")
 
@@ -4680,24 +5273,37 @@ def build_activity_flex(category: str, area: str = "") -> list:
         _invite = f"\nhttps://line.me/ti/p/{LINE_BOT_ID}" if LINE_BOT_ID else "\n👉 搜「生活優轉」"
         _share_text = f"🗓️ {area_label}好去處！\n{_share_names}{_invite}"
         _act_share_url = "https://line.me/R/share?text=" + urllib.parse.quote(_share_text)
+        _cat_icons = {
+            "戶外踏青": "🌿", "文青咖啡": "☕", "親子同樂": "👶",
+            "運動健身": "🏃", "吃喝玩樂": "🍜", "市集展覽": "🎨", "表演音樂": "🎵",
+        }
+        _other_cats = [c for c in cats if c != category]
+        _area_suf = f" {area}" if area else ""
+        # 每3個一排
+        _cat_rows = []
+        for i in range(0, len(_other_cats), 3):
+            chunk = _other_cats[i:i+3]
+            _cat_rows.append({
+                "type": "box", "layout": "horizontal", "spacing": "xs",
+                "contents": [
+                    {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
+                     "action": {"type": "message",
+                                "label": f"{_cat_icons.get(c,'')} {c}",
+                                "text": f"周末 {c}{_area_suf}"}}
+                    for c in chunk
+                ]
+            })
         bubbles[-1]["footer"] = {
             "type": "box", "layout": "vertical", "spacing": "sm", "contents": [
-                {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
-                    {"type": "button", "style": "primary", "color": color, "flex": 1,
-                     "height": "sm", "action": {"type": "message",
-                                                 "label": f"👉 {next_cat}",
-                                                 "text": f"周末 {next_cat} {area}"}},
-                    {"type": "button", "style": "primary", "color": "#1A1F3A", "flex": 1,
-                     "height": "sm", "action": {"type": "message",
-                                                 "label": "← 回選單",
-                                                 "text": "周末去哪"}},
-                ]},
+                {"type": "text", "text": "換個類型看看 👇",
+                 "size": "xs", "color": "#888888", "margin": "sm"},
+                *_cat_rows,
                 {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
                     {"type": "button", "style": "link", "flex": 1, "height": "sm",
-                     "action": {"type": "message", "label": "🌤️ 今日天氣",
-                                "text": f"{area[:2] if area else '台北'}天氣"}},
+                     "action": {"type": "message", "label": "← 回選單",
+                                "text": "周末去哪"}},
                     {"type": "button", "style": "link", "flex": 1, "height": "sm",
-                     "action": {"type": "uri", "label": "📤 分享活動",
+                     "action": {"type": "uri", "label": "📤 分享",
                                 "uri": _act_share_url}},
                 ]},
             ]}
@@ -4959,9 +5565,9 @@ def build_activity_message(text: str, user_id: str = None) -> list:
             break
 
     if not category:
-        # 沒指定類別 → 先問城市，選完城市再推薦
+        # 沒指定類別 → 有城市先選類型，沒城市先選城市
         if area:
-            return build_activity_flex("吃喝玩樂", area)
+            return build_activity_menu(area)
         return build_activity_city_picker()
     # 有類別 + 有城市 → 直接顯示活動
     if area:
@@ -7897,7 +8503,17 @@ def handle_text_message(text: str, user_id: str = "") -> list:
                                 "辦桌", "大桌", "多人聚餐", "找餐廳"]):
         return build_group_dining_message(text)
 
-    if any(w in text for w in ["吃什麼", "吃甚麼", "吃啥", "晚餐", "午餐", "早餐",
+    if text.startswith("特色名店 "):
+        parts = text[5:].strip().split(" ", 1)
+        if len(parts) == 2:
+            return build_specialty_shops(parts[0], parts[1])
+
+    if "地方特色" in text and any(c in text for c in _ALL_CITIES):
+        city_match = next((c for c in _ALL_CITIES if c in text), "")
+        return build_city_specialties(city_match)
+
+    if "我要分享位置找美食" in text or \
+       any(w in text for w in ["吃什麼", "吃甚麼", "吃啥", "晚餐", "午餐", "早餐",
                                 "吃飯", "外食", "今天吃", "推薦餐廳", "餐廳推薦",
                                 "吃什麼好", "要吃什麼", "本週美食", "美食活動",
                                 "在地餐廳", "餐廳", "必比登", "米其林"]) or \
@@ -7909,7 +8525,8 @@ def handle_text_message(text: str, user_id: str = "") -> list:
                                 "失眠", "睡不著", "睡眠", "睡不好", "壓力大", "焦慮",
                                 "減重", "肥胖", "運動建議", "睡眠改善", "壓力紓解",
                                 "幫我算BMI", "熱量", "卡路里", "幾卡", "食物熱量",
-                                "運動消耗", "運動熱量", "喝水量", "喝水"]):
+                                "運動消耗", "運動熱量", "喝水量", "喝水"]) \
+            or (lambda h, w: bool(h and w))(* parse_height_weight(text)):
         return build_health_message(text)
 
     # ── 4.8 花太多了（在金錢小幫手前）─────────────────
@@ -7978,7 +8595,7 @@ def handle_text_message(text: str, user_id: str = "") -> list:
         }]
 
     # ── 5. 防詐辨識 ──────────────────────────────────
-    if any(w in text for w in ["防詐", "詐騙", "可疑", "165", "是詐騙嗎", "防詐辨識",
+    if any(w in text for w in ["防詐", "詐騙", "可疑", "是詐騙嗎", "防詐辨識",
                                 "最新詐騙", "詐騙手法"]):
         # 最新詐騙手法
         if "最新" in text or "手法" in text or "排行" in text:
@@ -9009,79 +9626,251 @@ def _get_nearby_parking(lat: float, lon: float, radius: int = 1500) -> dict:
     }
 
 
-def _build_post_parking_food(city: str) -> list:
-    """停車後自動推送：爬蟲在地餐廳 + 必比登精選合併成一則"""
+def _build_restaurant_bubble(r: dict, lat: float, lon: float, city: str,
+                              eaten_set: set, subtitle: str = "") -> dict:
+    """單間餐廳 Flex Bubble（含照片 hero、評分、導航、吃過了按鈕）"""
+    name = r.get("name", "")
+    rtype = r.get("type") or ""
+    addr = r.get("addr", "") or r.get("town", "")
+    rating = r.get("rating", 0)
+    reviews = r.get("user_ratings_total", 0)
+    eaten = name in eaten_set
+
+    # 距離（換算步行分鐘，80m/min）
+    dist_str = ""
+    dist_m = r.get("dist")  # 已在 _build_post_parking_food 算好
+    if dist_m is None and lat and lon and r.get("lat") and r.get("lng"):
+        dist_m = _haversine(lat, lon, r["lat"], r["lng"])
+    if dist_m is not None:
+        walk_min = max(1, round(dist_m / 80))
+        if dist_m < 1000:
+            dist_str = f"步行約{walk_min}分鐘（{int(dist_m)}m）"
+        else:
+            dist_str = f"步行約{walk_min}分鐘（{dist_m/1000:.1f}km）"
+
+    # 導航連結
+    if r.get("lat") and r.get("lng"):
+        gmap_uri = (f"https://maps.google.com/?q={r['lat']},{r['lng']}"
+                    f"&query={urllib.parse.quote(name)}")
+    elif r.get("place_id"):
+        gmap_uri = f"https://maps.google.com/?q=place_id:{r['place_id']}"
+    else:
+        gmap_uri = (f"https://www.google.com/maps/search/"
+                    f"{urllib.parse.quote(name + ' ' + city)}")
+
+    # 推薦理由標籤
+    tag = subtitle  # 傳入的強制標籤（如米其林）
+    if not tag:
+        if rating >= 4.5 and reviews >= 100:
+            tag = "🔥 Google 高評分"
+        elif rating >= 4.3:
+            tag = "⭐ 評價優良"
+        else:
+            tag = "👥 在地人推薦"
+
+    # Postback data for eaten
+    eaten_data = f"ate:{name}:{city[:5]}"
+
+    # 評分標章文字
+    if rating >= 4.5 and reviews >= 100:
+        rating_color = "#E53935"
+        rating_str = f"★{rating}  ({reviews}則)"
+    elif rating >= 4.0:
+        rating_color = "#F57C00"
+        rating_str = f"★{rating}  ({reviews}則)" if reviews else f"★{rating}"
+    elif rating:
+        rating_color = "#888888"
+        rating_str = f"★{rating}"
+    else:
+        rating_color = "#888888"
+        rating_str = ""
+
+    safe_name = name or "未命名餐廳"
+    safe_tag  = tag  or "👥 在地推薦"
+    safe_dist = dist_str or (addr[:20] if addr else (city[:2] if city else "附近美食"))
+    safe_addr = addr[:28] if addr else ""
+
+    body_contents = [
+        # 推薦理由標籤
+        {"type": "text", "text": safe_tag, "size": "xxs", "weight": "bold",
+         "color": "#B8860B" if "必比登" in safe_tag else "#E65100",
+         "margin": "none"},
+        # 餐廳名稱
+        {"type": "text", "text": safe_name, "size": "md", "weight": "bold",
+         "wrap": True, "maxLines": 2,
+         "color": "#3D2B1F" if not eaten else "#AAAAAA",
+         "margin": "xs"},
+        # 距離（步行分鐘）
+        {"type": "text", "text": safe_dist, "size": "xs",
+         "color": "#1565C0", "wrap": False, "margin": "xs"},
+    ]
+    # 評分（有才顯示）
+    if rating_str:
+        body_contents.append(
+            {"type": "text", "text": rating_str, "size": "xs",
+             "color": rating_color, "margin": "xxs"}
+        )
+    # 地址（有才顯示）
+    if safe_addr:
+        body_contents.append(
+            {"type": "text", "text": safe_addr, "size": "xxs",
+             "color": "#AAAAAA", "wrap": True, "maxLines": 1, "margin": "xxs"}
+        )
+
+    # Postback data for eaten
+    eaten_data = f"ate:{name}:{city[:5]}"
+
+    bubble: dict = {
+        "type": "bubble",
+        "size": "kilo",
+        "body": {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "none",
+            "paddingAll": "14px",
+            "contents": body_contents,
+        },
+        "footer": {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "xs",
+            "paddingAll": "10px",
+            "contents": [
+                {"type": "button", "style": "primary", "height": "sm",
+                 "color": "#FF6B35",
+                 "action": {"type": "uri", "label": "📍 導航前往", "uri": gmap_uri}},
+                {"type": "button", "style": "secondary", "height": "sm",
+                 "action": {"type": "postback",
+                            "label": "🍽 吃過這間" if not eaten else "📅 7天內去過",
+                            "data": eaten_data,
+                            "displayText": f"記住！{name} 吃過了"}},
+            ],
+        },
+    }
+
+    # 有照片 → 加 hero image
+    photo_url = ""
+    if r.get("photo_ref"):
+        photo_url = _places_photo_url(r["photo_ref"])
+    if photo_url:
+        bubble["hero"] = {
+            "type": "image",
+            "url": photo_url,
+            "size": "full",
+            "aspectRatio": "20:13",
+            "aspectMode": "cover",
+        }
+
+    return bubble
+
+
+def _build_post_parking_food(city: str, lat: float = None, lon: float = None,
+                              user_id: str = "") -> list:
+    """停車後 / 吃什麼 → 附近美食推薦
+    優先使用 Google Places Nearby Search（即時、有照片）；
+    無 API key 時 fallback 到靜態爬蟲資料，半徑 500m→1km→2km→3km 漸進放寬。
+    套用個人化記憶：90 天內吃過的餐廳排到最後。
+    """
     city2 = city[:2] if city else ""
+    eaten_set = _get_eaten(user_id) if user_id else set()
 
-    # ── 從爬蟲資料庫隨機抽 3 家 ──
-    pool = _RESTAURANT_CACHE.get(city, _RESTAURANT_CACHE.get(city2, []))
-    rest_picks = _random.sample(pool, min(3, len(pool))) if pool else []
+    # ── 優先：Google Places Nearby Search ──
+    picks = []
+    if lat and lon and GOOGLE_PLACES_API_KEY:
+        gp = _nearby_places_google(lat, lon, radius=1500)
+        # 補充距離並由近到遠排序
+        for r in gp:
+            if r.get("lat") and r.get("lng"):
+                r["dist"] = _haversine(lat, lon, r["lat"], r["lng"])
+            else:
+                r["dist"] = 9999
+        gp.sort(key=lambda x: x["dist"])
+        # 吃過的排後面
+        fresh = [r for r in gp if r["name"] not in eaten_set]
+        stale = [r for r in gp if r["name"] in eaten_set]
+        picks = (fresh + stale)[:8]
 
-    # ── 必比登精選（若有）隨機抽 2 家 ──
+    # ── Fallback：靜態爬蟲資料（漸進放寬半徑）──
+    if not picks:
+        pool = _RESTAURANT_CACHE.get(city, _RESTAURANT_CACHE.get(city2, []))
+        if lat and lon and pool:
+            for radius in (500, 1000, 2000, 3000):
+                candidates = []
+                for r in pool:
+                    if r.get("lat") and r.get("lng"):
+                        d = _haversine(lat, lon, r["lat"], r["lng"])
+                        if d <= radius:
+                            candidates.append((d, r))
+                if len(candidates) >= 3:
+                    candidates.sort(key=lambda x: x[0])
+                    flat = [r for _, r in candidates[:8]]
+                    fresh = [r for r in flat if r["name"] not in eaten_set]
+                    stale = [r for r in flat if r["name"] in eaten_set]
+                    picks = fresh + stale
+                    break
+        if not picks and pool:
+            picks = _random.sample(pool, min(5, len(pool)))
+
+    # ── 必比登精選：最多 2 家，有座標時只取 3km 內、由近到遠 ──
     bib_pool = _BIB_GOURMAND.get(city2, [])
-    bib_picks = _random.sample(bib_pool, min(2, len(bib_pool))) if bib_pool else []
+    if lat and lon and bib_pool:
+        bib_with_dist = []
+        for b in bib_pool:
+            if b.get("lat") and b.get("lng"):
+                d = _haversine(lat, lon, float(b["lat"]), float(b["lng"]))
+                if d <= 3000:
+                    bib_with_dist.append((d, b))
+        bib_with_dist.sort(key=lambda x: x[0])
+        bib_pool_near = [b for _, b in bib_with_dist]
+    else:
+        bib_pool_near = bib_pool
+    bib_picks = bib_pool_near[:2] if bib_pool_near else []
+    for b in bib_picks:
+        b.setdefault("_source", "bib")
 
-    type_icons = {"中式": "🍚", "日式": "🍣", "西式": "🍝", "素食": "🥬",
-                  "海鮮": "🦐", "小吃": "🧆", "火鍋": "🍲", "地方特產": "⭐", "其他": "🍴"}
+    all_picks = bib_picks + picks
 
-    items = []
-
-    # 必比登區塊
-    if bib_picks:
-        items.append({"type": "text", "text": "⭐ 米其林必比登推介",
-                      "size": "xs", "weight": "bold", "color": "#B8860B"})
-        for b in bib_picks:
-            burl = b.get("url", f"https://www.google.com/maps/search/{urllib.parse.quote(b['name'])}")
-            items += [
-                {"type": "box", "layout": "horizontal", "contents": [
-                    {"type": "text", "text": f"• {b['name']}", "size": "sm",
-                     "weight": "bold", "color": "#B8860B", "flex": 3, "wrap": True},
-                    {"type": "button", "style": "link", "height": "sm", "flex": 1,
-                     "action": {"type": "uri", "label": "📍", "uri": burl}},
-                ]},
-            ]
-        items.append({"type": "separator", "margin": "sm"})
-
-    # 在地爬蟲餐廳區塊
-    if rest_picks:
-        items.append({"type": "text", "text": "🗺️ 在地餐廳推薦",
-                      "size": "xs", "weight": "bold", "color": "#4A4A4A"})
-        for r in rest_picks:
-            icon = type_icons.get(r.get("type", ""), "🍴")
-            town = r.get("town", "")
-            sub = f"{icon}{r.get('type','')}" + (f" · {town}" if town else "")
-            items += [
-                {"type": "box", "layout": "horizontal", "contents": [
-                    {"type": "text", "text": f"• {r['name']}", "size": "sm",
-                     "weight": "bold", "color": "#6D4C41", "flex": 3, "wrap": True},
-                    {"type": "button", "style": "link", "height": "sm", "flex": 1,
-                     "action": {"type": "uri", "label": "📍",
-                                "uri": _maps_url(r["name"], city2, open_now=True)}},
-                ]},
-                {"type": "text", "text": sub, "size": "xxs", "color": "#888888", "margin": "xs"},
-            ]
-
-    if not items:
+    if not all_picks:
         return build_food_restaurant_flex(city)
 
-    items.append({"type": "button", "style": "secondary", "height": "sm", "margin": "md",
-                  "action": {"type": "message", "label": "🍜 看更多在地餐廳",
-                             "text": f"在地餐廳 {city2}"}})
+    # ── 組 carousel 卡片（最多 5 張 + 1 張更多）──
+    bubbles = []
+    for r in all_picks[:5]:
+        sub = "⭐ 米其林必比登" if r.get("_source") == "bib" else ""
+        bubbles.append(_build_restaurant_bubble(r, lat, lon, city, eaten_set, sub))
 
-    return [{"type": "flex", "altText": f"🍜 {city2} 附近美食推薦",
+    # 最後加一張「看更多」卡
+    more_bubble = {
+        "type": "bubble",
+        "size": "kilo",
+        "body": {
+            "type": "box",
+            "layout": "vertical",
+            "justifyContent": "center",
+            "paddingAll": "16px",
+            "contents": [
+                {"type": "text", "text": "還想看更多？", "size": "sm",
+                 "weight": "bold", "align": "center", "color": "#666666"},
+                {"type": "text", "text": "重新分享位置可抽不同餐廳",
+                 "size": "xxs", "align": "center", "color": "#AAAAAA", "margin": "xs"},
+                {"type": "button", "style": "primary", "color": "#FF6B35",
+                 "margin": "md",
+                 "action": {"type": "message", "label": "📍 換一組（重新定位）",
+                            "text": "📍 我要分享位置找美食"}},
+                {"type": "button", "style": "secondary", "margin": "sm",
+                 "action": {"type": "message", "label": "🍜 在地餐廳全覽",
+                            "text": f"在地餐廳 {city2}"}},
+            ],
+        },
+    }
+    bubbles.append(more_bubble)
+
+    count_str = f"找到 {len(all_picks)} 間" if all_picks else ""
+    alt = f"{city2}附近美食推薦 🍜  {count_str}"
+    return [{"type": "flex", "altText": alt,
              "contents": {
-                 "type": "bubble", "size": "mega",
-                 "header": {"type": "box", "layout": "vertical",
-                            "backgroundColor": "#FF6B35", "paddingAll": "14px",
-                            "contents": [
-                                {"type": "text", "text": f"🍜 {city2} 附近美食",
-                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                                {"type": "text", "text": "停好車，吃什麼由我來推薦！",
-                                 "color": "#FFD5C2", "size": "xs", "margin": "xs"},
-                            ]},
-                 "body": {"type": "box", "layout": "vertical",
-                          "spacing": "sm", "paddingAll": "14px",
-                          "contents": items},
+                 "type": "carousel",
+                 "contents": bubbles,
              }}]
 
 
@@ -9322,83 +10111,7 @@ def build_parking_flex(lat: float, lon: float, city: str = "") -> list:
     }
     bubbles.append(bubble_private)
 
-    # ── 最後一張：融入主選單風格的生活助理推薦卡
-    def _tile(icon, label, action_text, bg, fg):
-        return {
-            "type": "box", "layout": "vertical", "flex": 1,
-            "backgroundColor": bg, "cornerRadius": "12px",
-            "paddingAll": "10px", "spacing": "xs",
-            "action": {"type": "message", "label": label, "text": action_text},
-            "contents": [
-                {"type": "text", "text": icon, "size": "xl", "align": "center"},
-                {"type": "text", "text": label, "size": "xxs", "weight": "bold",
-                 "color": fg, "align": "center", "margin": "xs", "wrap": True},
-            ]
-        }
-
-    bubbles.append({
-        "type": "bubble", "size": "kilo",
-        "header": {
-            "type": "box", "layout": "vertical",
-            "backgroundColor": "#1A1F3A",
-            "paddingTop": "16px", "paddingBottom": "12px",
-            "paddingStart": "16px", "paddingEnd": "16px",
-            "contents": [
-                {"type": "box", "layout": "horizontal", "spacing": "sm",
-                 "contents": [
-                     {"type": "text", "text": "✨", "size": "xl",
-                      "flex": 0, "gravity": "center"},
-                     {"type": "box", "layout": "vertical", "flex": 1,
-                      "contents": [
-                          {"type": "text", "text": "已幫你找到車位 🅿️",
-                           "color": "#FFFFFF", "size": "sm", "weight": "bold"},
-                          {"type": "text", "text": summary_text,
-                           "color": "#8892B0", "size": "xxs", "margin": "xs",
-                           "wrap": True},
-                      ]}
-                 ]},
-                {"type": "text",
-                 "text": "順便幫你安排接下來的行程 👇",
-                 "color": "#8892B0", "size": "xxs", "margin": "sm"},
-            ]
-        },
-        "body": {
-            "type": "box", "layout": "vertical",
-            "paddingAll": "12px", "spacing": "sm",
-            "contents": [
-                # 第一排磚塊：吃什麼（走爬蟲在地餐廳）+ 週末活動
-                {"type": "box", "layout": "horizontal", "spacing": "sm",
-                 "contents": [
-                     _tile("🍜", "附近吃什麼",
-                           f"在地餐廳 {city}" if city else "今天吃什麼",
-                           "#FF6B3520", "#FF9A7A"),
-                     _tile("🎨", "週末活動", "周末活動",
-                           "#6A1B9A20", "#CE93D8"),
-                 ]},
-                # 第二排磚塊：健康提醒 + Google Maps
-                {"type": "box", "layout": "horizontal", "spacing": "sm",
-                 "contents": [
-                     _tile("💪", "健康小幫手", "健康小幫手",
-                           "#43A04720", "#A5D6A7"),
-                     {"type": "box", "layout": "vertical", "flex": 1,
-                      "backgroundColor": "#1565C020", "cornerRadius": "12px",
-                      "paddingAll": "10px", "spacing": "xs",
-                      "action": {"type": "uri", "label": "Google Maps",
-                                 "uri": f"https://www.google.com/maps/search/%E9%99%84%E8%BF%91/@{lat},{lon},16z"},
-                      "contents": [
-                          {"type": "text", "text": "🗺️", "size": "xl", "align": "center"},
-                          {"type": "text", "text": "搜尋附近", "size": "xxs",
-                           "weight": "bold", "color": "#90CAF9",
-                           "align": "center", "margin": "xs"},
-                      ]},
-                 ]},
-                # 小提醒
-                {"type": "text",
-                 "text": "💡 開車超過 2 小時記得休息，注意安全！",
-                 "size": "xxs", "color": "#8892B0", "margin": "sm", "wrap": True},
-            ]
-        }
-    })
+    # life card 已移除 — 美食卡片改由 inline push 緊接在停車結果後送出
 
     alt = f"已找到 {len(street)} 條路邊路段、{len(lots)} 個停車場"
     result_msgs = [{"type": "flex", "altText": alt,
@@ -9857,6 +10570,38 @@ class handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps(diag, ensure_ascii=False).encode("utf-8"))
 
+        elif parsed.path == "/api/food_test":
+            # 診斷美食推薦：?lat=22.9876&lon=120.2131&city=台南
+            from urllib.parse import parse_qs
+            qs = parse_qs(parsed.query or "")
+            _lat = float(qs.get("lat", ["22.9876"])[0])
+            _lon = float(qs.get("lon", ["120.2131"])[0])
+            _city = qs.get("city", ["台南"])[0]
+            result = {"lat": _lat, "lon": _lon, "city": _city,
+                      "GOOGLE_KEY_SET": bool(GOOGLE_PLACES_API_KEY)}
+            # 測 Google Places
+            try:
+                places = _nearby_places_google(_lat, _lon, radius=1500)
+                result["places_count"] = len(places)
+                result["places_sample"] = [p.get("name") for p in places[:3]]
+            except Exception as e:
+                result["places_error"] = str(e)
+            # 測 build_post_parking_food
+            try:
+                msgs = _build_post_parking_food(_city, _lat, _lon)
+                result["msgs_count"] = len(msgs)
+                result["msg_type"] = msgs[0].get("type") if msgs else None
+                if msgs and msgs[0].get("contents", {}).get("type") == "carousel":
+                    result["bubbles"] = len(msgs[0]["contents"]["contents"])
+            except Exception as e:
+                import traceback
+                result["food_error"] = str(e)
+                result["food_traceback"] = traceback.format_exc()[-500:]
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(json.dumps(result, ensure_ascii=False).encode("utf-8"))
+
         elif parsed.path == "/api/morning_test":
             # 測試早安摘要（debug 用）
             from urllib.parse import parse_qs
@@ -10115,6 +10860,20 @@ class handler(BaseHTTPRequestHandler):
                     log_usage(user_id, "follow")
                     continue
 
+                # Postback → 吃過了記錄
+                if event.get("type") == "postback":
+                    reply_token = event.get("replyToken", "")
+                    pdata = event.get("postback", {}).get("data", "")
+                    if pdata.startswith("ate:"):
+                        parts = pdata[4:].split(":", 1)
+                        rname = parts[0]
+                        rcity = parts[1] if len(parts) > 1 else ""
+                        _record_eaten(user_id, rname, rcity)
+                        reply_message(reply_token, [{"type": "text",
+                            "text": f"✅ 記住了！\n下次不再推薦「{rname}」給你 😊"}])
+                        log_usage(user_id, "food", sub_action="吃過了", city=rcity)
+                    continue
+
                 # 位置訊息 → 食物定位 or 找車位
                 if event.get("type") == "message" and event.get("message", {}).get("type") == "location":
                     reply_token = event.get("replyToken", "")
@@ -10135,37 +10894,49 @@ class handler(BaseHTTPRequestHandler):
 
                     # ── 食物定位意圖（來自「吃什麼」Quick Reply）──
                     _food_flag = _redis_get(f"food_locate:{user_id}")
-                    if _food_flag and _parking_city:
+                    print(f"[food_locate] flag={_food_flag!r} city={_parking_city} lat={lat:.4f} lon={lon:.4f}")
+                    if _food_flag:
                         _redis_set(f"food_locate:{user_id}", "", ttl=1)  # 清除 flag
-                        reply_message(reply_token, _build_post_parking_food(_parking_city))
+                        try:
+                            food_cards = _build_post_parking_food(
+                                _parking_city or "", lat, lon, user_id=user_id)
+                            if not food_cards:
+                                food_cards = [{"type": "text",
+                                    "text": f"📍 已定位！輸入「吃什麼 {_parking_city or ''}」查看附近美食 🍜"}]
+                            reply_message(reply_token, food_cards)
+                        except Exception as _fe:
+                            import traceback; traceback.print_exc()
+                            print(f"[food_locate] build failed: {_fe}")
+                            reply_message(reply_token, [{"type": "text",
+                                "text": f"📍 已定位到{_parking_city or '附近'}！\n輸入「吃什麼」查看附近美食 🍜"}])
                         log_usage(user_id, "food", sub_action="位置定位", city=_parking_city)
                         continue
                     print(f"[webhook] location: {lat},{lon} city={_parking_city} addr={_addr_raw[:20]!r}")
 
-                    def _push_food_safe(uid, city):
+                    def _build_food_inline(_city, _lat, _lon, _uid):
                         try:
-                            msgs = _build_post_parking_food(city)
-                            print(f"[food_push] city={city} msgs={len(msgs)}")
-                            push_message(uid, msgs)
+                            return _build_post_parking_food(_city, _lat, _lon, user_id=_uid)
                         except Exception as _fe:
                             import traceback; traceback.print_exc()
-                            print(f"[food_push] FAILED city={city} err={_fe}")
+                            print(f"[food_inline] FAILED: {_fe}")
+                            return []
 
-                    # 快速路徑：快取命中 → 直接 reply 卡片（不需 push）
+                    # 快速路徑：快取命中 → reply 停車 + push 美食（緊接在後）
                     cached = _peek_parking_cache(lat, lon)
                     if cached:
                         reply_message(reply_token, cached)
                         if _parking_city:
-                            _push_food_safe(user_id, _parking_city)
+                            food_msgs = _build_food_inline(_parking_city, lat, lon, user_id)
+                            if food_msgs:
+                                push_message(user_id, food_msgs)
                         log_usage(user_id, "parking", sub_action="傳位置_cached", city=city_hint)
                     else:
                         reply_message(reply_token, [{"type": "text",
-                            "text": "📍 定位成功！\n🔍 正在搜尋附近車位..."}])
+                            "text": "📍 定位成功！\n🔍 正在搜尋附近車位與美食..."}])
                         try:
                             messages = build_parking_flex(lat, lon, city=_parking_city)
-                            push_message(user_id, messages)
-                            if _parking_city:
-                                _push_food_safe(user_id, _parking_city)
+                            food_msgs = _build_food_inline(_parking_city or "", lat, lon, user_id)
+                            push_message(user_id, messages + food_msgs)
                             log_usage(user_id, "parking", sub_action="傳位置", city=city_hint)
                         except Exception as pe:
                             import traceback; traceback.print_exc()
