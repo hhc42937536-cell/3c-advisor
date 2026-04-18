@@ -1297,21 +1297,21 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     today_str = f"{today.month}月{today.day}日（星期{_WEEKDAYS[today.weekday()]}）"
     _seq_key = f"morning_seq:{user_id}:{today_date}"
 
-    # ── 所有 I/O 並行（天氣 + city + pref + seq），總 deadline 2.5s ──
+    # ── 城市判斷（純文字，不需 I/O）──────────────────────────
+    all_cities_pat = "|".join(_ALL_CITIES)
+    city_m = re.search(rf"({all_cities_pat})", text)
+    city_in_text = city_m.group(1) if city_m else None
+
+    # ── 所有 I/O 並行（天氣 + city + pref + seq），總 deadline 2.0s ──
     wx_result: dict = {}
     _saved_city: list = [""]
     _pref_box:   list = [{}]
     _seq_box:    list = [0]
 
-    all_cities_pat = "|".join(_ALL_CITIES)
-    city_m = re.search(rf"({all_cities_pat})", text)
-    city_in_text = city_m.group(1) if city_m else None
-
     def _t_wx() -> None:
-        if city_in_text:
-            wx_result.update(_fetch_cwa_weather(city_in_text))
-        elif _saved_city[0]:
-            wx_result.update(_fetch_cwa_weather(_saved_city[0]))
+        c = city_in_text or _saved_city[0]
+        if c:
+            wx_result.update(_fetch_cwa_weather(c))
 
     def _t_city() -> None:
         if not city_in_text and user_id:
@@ -1324,11 +1324,25 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     def _t_seq() -> None:
         _seq_box[0] = int(_redis_get(_seq_key) or 0)
 
-    threads = [_thr.Thread(target=f, daemon=True) for f in (_t_city, _t_pref, _t_seq)]
-    for t in threads:
-        t.start()
-    for t in threads:
-        t.join(timeout=1.5)
+    if city_in_text:
+        # 城市已知 → 4 個 I/O 全並行
+        all_threads = [_thr.Thread(target=f, daemon=True)
+                       for f in (_t_wx, _t_pref, _t_seq)]
+        for t in all_threads:
+            t.start()
+        for t in all_threads:
+            t.join(timeout=2.0)
+    else:
+        # 需先取城市，再查天氣
+        prep = [_thr.Thread(target=f, daemon=True) for f in (_t_city, _t_pref, _t_seq)]
+        for t in prep:
+            t.start()
+        for t in prep:
+            t.join(timeout=1.5)
+        if _saved_city[0]:
+            tw = _thr.Thread(target=_t_wx, daemon=True)
+            tw.start()
+            tw.join(timeout=2.0)
 
     city = city_in_text or _saved_city[0]
     if not city:
@@ -1336,11 +1350,6 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
 
     if city_in_text:
         _thr.Thread(target=lambda: _set_user_city(user_id, city_in_text), daemon=True).start()
-
-    # 天氣在城市確認後才能查
-    _tw = _thr.Thread(target=_t_wx, daemon=True)
-    _tw.start()
-    _tw.join(timeout=2.0)
 
     _pref = _pref_box[0]
     _seq  = _seq_box[0]
