@@ -45,3 +45,16 @@ def redis_set(key: str, value, ttl: int = 300):
             pass
     except Exception as e:
         print(f"[Redis] SET {key} 失敗: {e}")
+
+
+def get_user_pref(user_id: str) -> dict:
+    """取使用者個人偏好（streak、visited_count 等）"""
+    return redis_get(f"user_pref:{user_id}") or {}
+
+
+def update_user_pref(user_id: str, **kwargs) -> None:
+    """Merge 更新使用者偏好，TTL 90 天"""
+    key = f"user_pref:{user_id}"
+    pref = redis_get(key) or {}
+    pref.update(kwargs)
+    redis_set(key, pref, ttl=7_776_000)

@@ -17,6 +17,7 @@ import urllib.parse
 import urllib.request
 
 from utils.redis import redis_get as _redis_get, redis_set as _redis_set
+from utils.redis import get_user_pref as _get_user_pref, update_user_pref as _update_user_pref
 
 # ─── 環境變數 ──────────────────────────────────────────────
 _CWA_KEY = os.environ.get("CWA_API_KEY", "")
@@ -78,6 +79,59 @@ _MORNING_ACTIONS = [
     "🌿 找一個綠色植物看 30 秒，舒緩眼睛疲勞",
     "🎯 今天設一個小目標，完成後獎勵自己",
 ]
+
+# ─── 今日微挑戰（依星期設計，生活探索導向）──────────────────
+_DAILY_CHALLENGES: dict[int, list[str]] = {
+    0: [  # 星期一：新開始
+        "🗺️ 去一個從來沒走過的巷子，哪怕只是繞路回家",
+        "☕ 選一家從來沒進去過的咖啡店坐 15 分鐘",
+        "📞 傳訊息給一個很久沒聯絡的朋友，就「最近好嗎」",
+        "📝 設一個本週最想做到的事，貼在顯眼的地方",
+        "🎵 上班路上聽一首從來沒聽過的新歌",
+    ],
+    1: [  # 星期二：深化
+        "🍜 中午試一個平常從來不點的菜",
+        "🌿 找一個你一直想去但沒去的公園散步 10 分鐘",
+        "📚 花 15 分鐘學一件很小的新事（YouTube 就好）",
+        "🛒 買東西時問老闆「你們最推薦什麼？」",
+        "🚶 換一條不同的路線走走，看看有什麼新發現",
+    ],
+    2: [  # 星期三：週中充電
+        "💬 今天主動跟同事說一句跟工作無關的話",
+        "🌮 不點外送，親自去附近一家沒去過的店",
+        "🎨 拍一張今天覺得有美感的照片存起來",
+        "🧘 午休時閉眼放空 5 分鐘，什麼都不想",
+        "🎁 做一件讓別人意外開心的小事",
+    ],
+    3: [  # 星期四：蓄力
+        "🏙️ 找出城市裡一個「想去但一直沒去」的地方，安排週末去",
+        "📖 今晚少滑 30 分鐘手機，換成任何一件你喜歡的事",
+        "🍳 今晚自己煮一道最簡單的食物（泡麵加蛋也算）",
+        "🎬 找一部評分 8 分以上的電影列入片單",
+        "💌 傳一個你欣賞的人你欣賞他的理由",
+    ],
+    4: [  # 星期五：放電
+        "🎉 今晚犒勞自己！去那家「等週末再去」的餐廳",
+        "🌆 下班走不同的路回家，順便看看哪裡好吃好玩",
+        "🎵 今晚安排一件只為了讓自己開心的事，不管多小",
+        "🍻 找一個朋友敘舊，不用目的",
+        "🛋️ 今晚完全不加班，把工作留給下週的自己",
+    ],
+    5: [  # 星期六：探索
+        "🗺️ 去一個你沒去過的景點，就算只有附近也算",
+        "🍱 找一家在地人才知道的老店吃飯",
+        "🎭 參加任何形式的活動（市集、展覽、表演都好）",
+        "📷 帶著「觀光客眼光」走你熟悉的地方，看有什麼沒注意到的",
+        "🌊 去一個有自然環境的地方待 30 分鐘，不用做什麼",
+    ],
+    6: [  # 星期日：沉澱
+        "✍️ 花 5 分鐘寫下這週最讓你有感覺的一件事",
+        "🌿 今天什麼計畫都不排，讓自己純粹休息",
+        "☎️ 打電話給家人，就聊聊近況",
+        "🎒 整理一樣放很久的東西，送人或回收",
+        "🍵 泡一杯茶，靜靜坐著 10 分鐘，什麼都不想",
+    ],
+}
 
 _WEEKLY_DEALS = {
     0: [  # 星期一
@@ -1282,6 +1336,15 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     _seq = int(_redis_get(_seq_key) or 0)
     _redis_set(_seq_key, str(_seq + 1), ttl=86400)
 
+    # 使用者連續打卡 streak 追蹤
+    _pref = _get_user_pref(user_id) if user_id else {}
+    _last_doy = _pref.get("last_checkin_doy", 0)
+    _streak = _pref.get("streak", 0)
+    _visited = _pref.get("visited_count", 0)
+    if user_id and _last_doy != doy:
+        _streak = (_streak + 1) if _last_doy == doy - 1 else 1
+        _update_user_pref(user_id, last_checkin_doy=doy, streak=_streak, visited_count=_visited)
+
     if wx_result.get("ok"):
         wx = wx_result
         wx_icon = _wx_icon(wx["wx"])
@@ -1359,12 +1422,14 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     loc_link  = _link(loc_url,  f"{loc_title} {city}")
 
     tip = _MORNING_ACTIONS[doy % len(_MORNING_ACTIONS)]
+    _challenge_pool = _DAILY_CHALLENGES[today.weekday()]
+    _challenge = _challenge_pool[_seq % len(_challenge_pool)]
 
     _bot_invite = f"https://line.me/R/ti/p/{LINE_BOT_ID}" if LINE_BOT_ID else "https://line.me/R/"
     _share_text = (
         f"☀️ 早安！{city} {today_str}\n\n"
         f"🌤 {wx_main}\n\n"
-        f"{nat_icon} {nat_title}：{nat_body}\n\n"
+        f"{loc_icon} {loc_title}：{loc_body}\n\n"
         f"👉 加「生活優轉」每天收到專屬好康：\n{_bot_invite}"
     )
     import urllib.parse as _up
@@ -1380,6 +1445,10 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                                  "color": "#FFFFFF", "size": "lg", "weight": "bold"},
                                 {"type": "text", "text": today_str,
                                  "color": "#8892B0", "size": "xs", "margin": "xs"},
+                                *([{"type": "text",
+                                    "text": f"🔥 連續 {_streak} 天打卡｜探索了 {_visited} 家餐廳",
+                                    "color": "#FFD54F", "size": "xs", "margin": "xs"}]
+                                  if _streak >= 2 else []),
                             ]},
                  "body": {"type": "box", "layout": "vertical", "spacing": "sm",
                           "paddingAll": "14px", "contents": [
@@ -1407,7 +1476,12 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                                         "wrap": True, "decoration": "underline"}]},
                      ]],
                      {"type": "separator", "margin": "md"},
-                     {"type": "text", "text": "💡 今日健康提醒", "size": "xs",
+                     {"type": "text", "text": "🎯 今日微挑戰", "size": "xs",
+                      "weight": "bold", "color": "#2E7D32", "margin": "md"},
+                     {"type": "text", "text": _challenge, "size": "xs",
+                      "color": "#37474F", "wrap": True},
+                     {"type": "separator", "margin": "md"},
+                     {"type": "text", "text": "💡 健康一提", "size": "xs",
                       "weight": "bold", "color": "#5C6BC0", "margin": "md"},
                      {"type": "text", "text": tip, "size": "xs",
                       "color": "#37474F", "wrap": True},

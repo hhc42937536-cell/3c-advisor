@@ -718,6 +718,26 @@ def handle_text_message(text: str, user_id: str = "") -> list:
 
     # ── 精確格式先判斷（不進評分，避免破壞特殊流程）──────
 
+    if any(k in text for k in ["我的記錄", "我的統計", "打卡天數", "我的成就", "探索記錄"]):
+        pref = _redis_get(f"user_pref:{user_id}") or {}
+        streak  = pref.get("streak", 0)
+        visited = pref.get("visited_count", 0)
+        city    = _get_user_city(user_id) or "未設定"
+        streak_msg  = f"🔥 連續打卡：{streak} 天" if streak else "🔥 還沒開始打卡，明天說「早安」試試！"
+        visited_msg = f"🍽️ 已探索餐廳：{visited} 家" if visited else "🍽️ 還沒記錄，下次吃完按「吃過了」！"
+        lines = [
+            "📊 你的生活優轉記錄",
+            "",
+            streak_msg,
+            visited_msg,
+            f"📍 常用城市：{city}",
+        ]
+        if streak >= 7:
+            lines.append("\n🏆 連續一週！你的生活在優轉中 💪")
+        elif streak >= 3:
+            lines.append("\n👏 很棒！保持下去")
+        return [{"type": "text", "text": "\n".join(lines)}]
+
     if text in ("換城市", "切換城市", "設定城市", "更換城市"):
         current = _get_user_city(user_id) if user_id else ""
         return build_switch_city_picker(current)
@@ -1948,8 +1968,13 @@ class handler(BaseHTTPRequestHandler):
                         rname = parts[0]
                         rcity = parts[1] if len(parts) > 1 else ""
                         _record_eaten(user_id, rname, rcity)
+                        _pref = _redis_get(f"user_pref:{user_id}") or {}
+                        _new_visited = _pref.get("visited_count", 0) + 1
+                        _redis_set(f"user_pref:{user_id}",
+                                   {**_pref, "visited_count": _new_visited},
+                                   ttl=7_776_000)
                         reply_message(reply_token, [{"type": "text",
-                            "text": f"✅ 記住了！\n下次不再推薦「{rname}」給你 😊"}])
+                            "text": f"✅ 記住了！\n下次不再推薦「{rname}」給你 😊\n\n累計探索：{_new_visited} 家餐廳 🍽️"}])
                         log_usage(user_id, "food", sub_action="吃過了", city=rcity)
                     continue
 
