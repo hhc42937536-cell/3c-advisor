@@ -849,12 +849,12 @@ def _build_restaurant_bubble(r: dict, lat, lon, city: str,
     if rating_str:
         body_contents.append(
             {"type": "text", "text": rating_str, "size": "xs",
-             "color": rating_color, "margin": "xxs"}
+             "color": rating_color, "margin": "xs"}
         )
     if safe_addr:
         body_contents.append(
             {"type": "text", "text": safe_addr, "size": "xxs",
-             "color": "#AAAAAA", "wrap": True, "maxLines": 1, "margin": "xxs"}
+             "color": "#AAAAAA", "wrap": True, "maxLines": 1, "margin": "xs"}
         )
 
     eaten_data = f"ate:{name}:{city[:5]}"
