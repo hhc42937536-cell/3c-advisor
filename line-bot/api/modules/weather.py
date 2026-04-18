@@ -1274,6 +1274,11 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     doy   = today.timetuple().tm_yday
     _WEEKDAYS = ["一", "二", "三", "四", "五", "六", "日"]
     today_str = f"{today.month}月{today.day}日（星期{_WEEKDAYS[today.weekday()]}）"
+    # 每次呼叫累加計數，讓同一天多次查詢顯示不同小驚喜
+    _seq_key = f"morning_seq:{user_id}:{doy}"
+    _seq = int(_redis_get(_seq_key) or 0)
+    _redis_set(_seq_key, str(_seq + 1), ttl=86400)
+    doy = doy + _seq * 97  # 錯開 hash 空間
 
     if wx_result.get("ok"):
         wx = wx_result
