@@ -1285,7 +1285,7 @@ def build_switch_city_picker(current_city: str = "") -> list:
 
 
 def build_morning_summary(text: str, user_id: str = "") -> list:
-    """早安摘要：天氣 + 穿搭 + 匯率 + 油價 + 今日好康"""
+    """早安摘要：主卡（天氣+穿搭+微挑戰+streak）＋今日小驚喜 Carousel"""
     import threading as _thr
     import datetime as _dt
 
@@ -1416,97 +1416,131 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     song_icon, song_title, song_body, song_url  = _get_today_song(seq=_seq)
     loc_icon,  loc_title,  loc_body,  loc_url   = _get_city_local_deal(city, user_id, seq=_seq)
 
-    def _link(url: str, query: str) -> str:
-        return url or "https://www.google.com/search?q=" + urllib.parse.quote(query)
-
-    deal_link = _link(deal_url, deal_title)
-    song_link = _link(song_url, song_body)
-    loc_link  = _link(loc_url,  f"{loc_title} {city}")
-
-    tip = _MORNING_ACTIONS[doy % len(_MORNING_ACTIONS)]
     _challenge_pool = _DAILY_CHALLENGES[today.weekday()]
     _challenge = _challenge_pool[_seq % len(_challenge_pool)]
 
-    _bot_invite = f"https://line.me/R/ti/p/{LINE_BOT_ID}" if LINE_BOT_ID else "https://line.me/R/"
+    # 熱話題
+    _topic_icon, _topic_q, _topic_tip = _DAILY_TOPICS[(today.toordinal() + _seq) % len(_DAILY_TOPICS)]
+
+    # 新發現（冷知識輪播）
+    _find_icon, _find_title, _find_body = _NEW_FINDS[(today.toordinal() + _seq * 3) % len(_NEW_FINDS)]
+
+    def _link(url: str, query: str) -> str:
+        return url or "https://www.google.com/search?q=" + urllib.parse.quote(query)
+
+    import urllib.parse as _up
+
     _share_text = (
         f"☀️ 早安！{city} {today_str}\n\n"
         f"🌤 {wx_main}\n\n"
-        f"{loc_icon} {loc_title}：{loc_body}\n\n"
-        f"👉 加「生活優轉」每天收到專屬好康：\n{_bot_invite}"
+        f"👉 加「生活優轉」每天收到專屬好康：\n"
+        f"https://line.me/R/ti/p/{LINE_BOT_ID}" if LINE_BOT_ID else "https://line.me/R/"
     )
-    import urllib.parse as _up
     _share_url = f"https://social-plugins.line.me/lineit/share?url={_up.quote(_share_text)}"
 
-    return [{"type": "flex", "altText": f"☀️ 早安！{city} {today_str}",
-             "contents": {
-                 "type": "bubble", "size": "mega",
-                 "header": {"type": "box", "layout": "vertical",
-                            "backgroundColor": "#1A1F3A", "paddingAll": "16px",
-                            "contents": [
-                                {"type": "text", "text": f"☀️ 早安！{city}",
-                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                                {"type": "text", "text": today_str,
-                                 "color": "#8892B0", "size": "xs", "margin": "xs"},
-                                *([{"type": "text",
-                                    "text": f"🔥 連續 {_streak} 天打卡｜探索了 {_visited} 家餐廳",
-                                    "color": "#FFD54F", "size": "xs", "margin": "xs"}]
-                                  if _streak >= 2 else []),
-                            ]},
-                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
-                          "paddingAll": "14px", "contents": [
-                     {"type": "text", "text": "🌤 今日天氣", "size": "xs",
-                      "weight": "bold", "color": "#5C6BC0"},
-                     *wx_items,
-                     {"type": "separator", "margin": "md"},
-                     {"type": "text", "text": "💹 今日匯率＋油價", "size": "xs",
-                      "weight": "bold", "color": "#5C6BC0", "margin": "md"},
-                     *info_items,
-                     {"type": "separator", "margin": "md"},
-                     {"type": "text", "text": "🎁 今日小驚喜", "size": "xs",
-                      "weight": "bold", "color": "#E65100", "margin": "md"},
-                     *[item for icon, title, body, link in [
-                         (loc_icon,  loc_title,  loc_body,  loc_link),
-                         (deal_icon, deal_title, deal_body, deal_link),
-                         (song_icon, song_title, song_body, song_link),
-                       ] for item in [
-                         {"type": "text", "text": f"{icon} {title}", "size": "xs",
-                          "weight": "bold", "color": "#5C6BC0", "margin": "sm"},
-                         {"type": "box", "layout": "vertical", "margin": "xs",
-                          "action": {"type": "uri", "label": body[:40], "uri": link},
-                          "contents": [{"type": "text", "text": body + "  🔍",
-                                        "size": "xs", "color": "#1565C0",
-                                        "wrap": True, "decoration": "underline"}]},
-                     ]],
-                     {"type": "separator", "margin": "md"},
-                     {"type": "text", "text": "🎯 今日微挑戰", "size": "xs",
-                      "weight": "bold", "color": "#2E7D32", "margin": "md"},
-                     {"type": "text", "text": _challenge, "size": "xs",
-                      "color": "#37474F", "wrap": True},
-                     {"type": "separator", "margin": "md"},
-                     {"type": "text", "text": "💡 健康一提", "size": "xs",
-                      "weight": "bold", "color": "#5C6BC0", "margin": "md"},
-                     {"type": "text", "text": tip, "size": "xs",
-                      "color": "#37474F", "wrap": True},
+    # ── Message 1：主卡（天氣 + 穿搭 + 微挑戰 + streak）─────────
+    main_card = {"type": "flex", "altText": f"☀️ 早安！{city} {today_str}",
+        "contents": {
+            "type": "bubble", "size": "mega",
+            "header": {"type": "box", "layout": "vertical",
+                       "backgroundColor": "#1A1F3A", "paddingAll": "16px",
+                       "contents": [
+                           {"type": "text", "text": f"☀️ 早安！{city}",
+                            "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                           {"type": "text", "text": today_str,
+                            "color": "#8892B0", "size": "xs", "margin": "xs"},
+                           *([{"type": "text",
+                               "text": f"🔥 連續 {_streak} 天打卡！",
+                               "color": "#FFD54F", "size": "xs", "margin": "xs"}]
+                             if _streak >= 2 else []),
+                       ]},
+            "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                     "paddingAll": "14px", "contents": [
+                {"type": "text", "text": "🌤 今日天氣＋穿搭", "size": "xs",
+                 "weight": "bold", "color": "#5C6BC0"},
+                *wx_items,
+                {"type": "separator", "margin": "md"},
+                {"type": "text", "text": "🎯 今日微挑戰", "size": "xs",
+                 "weight": "bold", "color": "#2E7D32", "margin": "md"},
+                {"type": "text", "text": _challenge, "size": "xs",
+                 "color": "#37474F", "wrap": True},
+            ]},
+            "footer": {"type": "box", "layout": "vertical",
+                       "spacing": "xs", "paddingAll": "10px",
+                       "contents": [
+                {"type": "box", "layout": "horizontal", "spacing": "sm",
+                 "contents": [
+                     {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                      "action": {"type": "message", "label": "吃什麼", "text": "今天吃什麼"}},
+                     {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                      "action": {"type": "message", "label": "今日話題", "text": "今日話題"}},
+                     {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                      "action": {"type": "message", "label": "放鬆一下", "text": "放鬆一下"}},
                  ]},
-                 "footer": {"type": "box", "layout": "vertical",
-                            "spacing": "xs", "paddingAll": "10px",
-                            "contents": [
-                     {"type": "box", "layout": "horizontal", "spacing": "sm",
-                      "contents": [
-                          {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                           "action": {"type": "message", "label": "吃什麼", "text": "今天吃什麼"}},
-                          {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                           "action": {"type": "message", "label": "今日話題", "text": "今日話題"}},
-                          {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                           "action": {"type": "message", "label": "放鬆一下", "text": "放鬆一下"}},
-                      ]},
-                     {"type": "button", "style": "primary", "color": "#E65100", "height": "sm",
-                      "action": {"type": "uri", "label": "📤 分享給朋友", "uri": _share_url}},
-                     {"type": "button", "style": "secondary", "height": "sm",
-                      "action": {"type": "message", "label": f"📍 換城市（{city}）",
-                                 "text": "換城市"}},
-                 ]},
-             }}]
+                {"type": "button", "style": "secondary", "height": "sm",
+                 "action": {"type": "message", "label": f"📍 換城市（{city}）",
+                            "text": "換城市"}},
+            ]},
+        }}
+
+    # ── Message 2：今日小驚喜 Carousel ──────────────────────────
+    def _surprise_bubble(
+        bg: str, label: str, icon: str, title: str, body_text: str,
+        btn_label: str, btn_uri: str,
+    ) -> dict:
+        return {
+            "type": "bubble", "size": "kilo",
+            "header": {"type": "box", "layout": "vertical",
+                       "backgroundColor": bg, "paddingAll": "12px",
+                       "contents": [
+                           {"type": "text", "text": label, "color": "#FFFFFF",
+                            "size": "xxs", "weight": "bold"},
+                           {"type": "text", "text": f"{icon} {title}",
+                            "color": "#FFFFFF", "size": "sm", "weight": "bold",
+                            "wrap": True, "margin": "xs"},
+                       ]},
+            "body": {"type": "box", "layout": "vertical", "paddingAll": "12px",
+                     "contents": [
+                         {"type": "text", "text": body_text, "size": "xs",
+                          "color": "#37474F", "wrap": True, "lineSpacing": "4px"},
+                     ]},
+            "footer": {"type": "box", "layout": "vertical", "paddingAll": "8px",
+                       "contents": [
+                           {"type": "button", "style": "primary", "height": "sm",
+                            "color": bg,
+                            "action": {"type": "uri", "label": btn_label, "uri": btn_uri}},
+                       ]},
+        }
+
+    carousel_bubbles = [
+        _surprise_bubble(
+            "#E65100", "🏷️ 今日優惠", deal_icon, deal_title, deal_body,
+            "查看優惠", _link(deal_url, deal_title),
+        ),
+        _surprise_bubble(
+            "#5C6BC0", "💬 熱話題", _topic_icon, "今天聊這個", _topic_q,
+            "分享話題",
+            "https://social-plugins.line.me/lineit/share?url=" + _up.quote(_topic_q),
+        ),
+        _surprise_bubble(
+            "#2E7D32", "🎉 近期活動", loc_icon, loc_title, loc_body,
+            "查看活動", _link(loc_url, f"{loc_title} {city}"),
+        ),
+        _surprise_bubble(
+            "#1565C0", "🎵 新歌推薦", song_icon, song_title, song_body,
+            "去聽聽", _link(song_url, song_body),
+        ),
+        _surprise_bubble(
+            "#00695C", "🔍 新發現", _find_icon, _find_title, _find_body,
+            "了解更多",
+            "https://www.google.com/search?q=" + _up.quote(_find_title),
+        ),
+    ]
+
+    carousel_msg = {"type": "flex", "altText": "🎁 今日小驚喜",
+                    "contents": {"type": "carousel", "contents": carousel_bubbles}}
+
+    return [main_card, carousel_msg]
 
 
 # ─── 放鬆建議（低壓力、無義務）──────────────────────────────
@@ -1555,6 +1589,30 @@ _DAILY_TOPICS = [
     ("🍳", "你最近有沒有在家試做什麼食物？成功還是翻車？", "翻車的故事比成功的更好笑更好聊。"),
     ("🎪", "你記得上一次真心大笑是什麼時候嗎？什麼原因？", "讓對方回憶快樂，這個話題本身就讓人心情好。"),
     ("🌱", "如果你有三天假期，你會怎麼規劃？", "夢想假期話題，沒有答案的對錯，人人都能說一說。"),
+]
+
+# ─── 新發現（冷知識 + 生活小發現）────────────────────────────
+_NEW_FINDS: list[tuple[str, str, str]] = [
+    ("🧠", "台灣有全球密度最高的便利商店", "平均每 2,300 人就有一間，全台超過 12,000 家。"),
+    ("🌊", "台灣是世界上少數同時有珊瑚礁與高山的地方", "從海岸到玉山，不到 100 公里就有 3,952 公尺落差。"),
+    ("🦋", "台灣有 400 多種蝴蝶，佔全球約 10%", "曾被稱為「蝴蝶王國」，屏東每年還有遷徙盛況。"),
+    ("🍵", "台灣的珍珠奶茶在 1980 年代台中誕生", "當時是把粉圓加進奶茶的意外實驗，沒想到成了國民飲料。"),
+    ("📱", "台灣人平均每天滑手機超過 4 小時", "光是社群媒體就佔了一半以上，你今天滑了多久？"),
+    ("🌺", "台灣原生蘭花有 300 多種", "其中蝴蝶蘭佔全球出口量六成，「蘭花王國」實至名歸。"),
+    ("🏍️", "台灣機車密度是全球最高之一", "每千人超過 600 輛，光台北市就超過 80 萬輛。"),
+    ("🌋", "台灣坐落在歐亞板塊與菲律賓板塊交界", "每年平均地震超過 2 萬次，但大多數人感受不到。"),
+    ("🫧", "台灣的臭豆腐曾登上《時代》雜誌最難吃食物榜", "不過台灣人反而當成驕傲——外地人怕，本地人愛。"),
+    ("🦜", "台灣黑熊只剩約 200–600 隻", "主要分布在中央山脈，是台灣唯一的原生熊種。"),
+    ("🌸", "阿里山的雲海與日出並列台灣七大奇景", "每年春天還有吉野櫻盛開，讓它成為最多人許願要去的山。"),
+    ("🍱", "台灣便當文化源自日治時代", "火車便當至今仍是旅途儀式，池上便當更是名聲遠播。"),
+    ("🏊", "台灣東部有全球少數的「黑潮」流過", "讓花東一帶海水清澈湛藍，也帶來豐富的漁業資源。"),
+    ("🎋", "台灣曾是全球最大的樟腦出口國", "19 世紀末至 20 世紀初幾乎壟斷全球市場，做成藥品和香料。"),
+    ("☁️", "台灣一年平均有 100 天以上是陰天", "雨量充沛是蔬果豐盛的原因之一，也是台灣氣候的特色。"),
+    ("🌿", "台灣有超過 4,000 種維管束植物", "其中近 30% 是台灣特有種，生物多樣性密度驚人。"),
+    ("🍊", "台灣的茂谷柑是本土育種的成果", "由農試所培育，皮薄多汁，是台灣柑橘品種裡的後起之秀。"),
+    ("🔭", "台灣的鹿林天文台是亞洲重要的彗星觀測站", "海拔 2,862 公尺，多次發現新彗星，以台灣命名。"),
+    ("🎯", "台灣是全球前十大半導體出口國", "台積電一家公司的市值，曾超過台灣 GDP 的一半。"),
+    ("🌏", "台灣護照在全球免簽或落地簽超過 140 個國家", "是亞洲護照通行能力最強的之一。"),
 ]
 
 
