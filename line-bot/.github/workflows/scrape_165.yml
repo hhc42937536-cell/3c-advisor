@@ -1,16 +1,16 @@
-name: Scrape Accupass Activities
+name: Scrape 165 Fraud Patterns
 
 on:
   schedule:
-    - cron: '0 14 * * 1,3,5'   # 週一三五 22:00 台灣時間（UTC 14:00）
-  workflow_dispatch:         # 允許手動觸發
+    - cron: '0 22 1 * *'   # 每月 1 日 06:00 台灣時間（UTC 22:00 前一天）
+  workflow_dispatch:
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     permissions:
-      contents: write        # 允許 push 回 repo
+      contents: write
 
     steps:
       - name: Checkout repo
@@ -24,25 +24,19 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Chrome
-        uses: browser-actions/setup-chrome@v1
-
-      - name: Install Python dependencies
-        run: pip install selenium requests
-
       - name: Run scraper
         working-directory: line-bot
-        run: python scrape_all.py
+        run: python scrape_165.py
 
-      - name: Commit and push updated cache
+      - name: Commit and push
         working-directory: line-bot
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add accupass_cache.json
+          git add api/data/fraud_patterns.json
           if git diff --cached --quiet; then
-            echo "accupass_cache.json 無變化，略過 commit"
+            echo "fraud_patterns.json 無變化，略過 commit"
           else
-            git commit -m "chore: 自動更新 accupass_cache.json [skip ci]"
+            git commit -m "chore: 自動更新 fraud_patterns.json [skip ci]"
             git push origin HEAD:refactor/modularize
           fi
