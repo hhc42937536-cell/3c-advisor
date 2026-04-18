@@ -9,7 +9,9 @@
           "api/modules/**",
           "api/utils/**",
           "api/data/**",
-          "accupass_cache.json"
+          "accupass_cache.json",
+          "restaurant_cache.json",
+          "surprise_cache.json"
         ]
       }
     }
