@@ -689,7 +689,7 @@ def _fetch_cwa_weather(city: str) -> dict:
             "min_tom": int(_get("MinT", 2, "20")), "max_tom": int(_get("MaxT", 2, "25")),
         }
         try:
-            _redis_set(f"cwa_wx:{city}", json.dumps(result), ttl=900)
+            _redis_set(f"cwa_wx:{city}", json.dumps(result), ttl=3600)
         except Exception:
             pass
         return result
@@ -1302,6 +1302,13 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     city_m = re.search(rf"({all_cities_pat})", text)
     city_in_text = city_m.group(1) if city_m else None
 
+    # ── 快取命中直接返回（跳過所有 I/O）──────────────────────
+    if user_id and not city_in_text:
+        _card_key = f"morning_card:{user_id}:{today_date}"
+        _cached = _redis_get(_card_key)
+        if _cached:
+            return _cached
+
     # ── 所有 I/O 並行（天氣 + city + pref + seq），總 deadline 2.0s ──
     wx_result: dict = {}
     _saved_city: list = [""]
@@ -1456,7 +1463,7 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         if _streak >= 2 else []
     )
 
-    return [{"type": "flex", "altText": f"☀️ 早安！{city} {today_str}",
+    result = [{"type": "flex", "altText": f"☀️ 早安！{city} {today_str}",
              "contents": {
                  "type": "bubble", "size": "mega",
                  "header": {"type": "box", "layout": "vertical",
@@ -1511,6 +1518,14 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                       ]},
                  ]},
              }}]
+
+    # fire-and-forget 寫快取（不含城市切換的請求才快取，避免記錯城市）
+    if user_id and not city_in_text:
+        _thr.Thread(
+            target=lambda: _redis_set(f"morning_card:{user_id}:{today_date}", result, ttl=14400),
+            daemon=True,
+        ).start()
+    return result
 
 
 # ─── 放鬆建議（低壓力、無義務）──────────────────────────────
