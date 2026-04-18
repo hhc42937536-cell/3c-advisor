@@ -2,7 +2,7 @@ name: Scrape Accupass Activities
 
 on:
   schedule:
-    - cron: '0 14 * * 5'   # 每週五 22:00 台灣時間（UTC 14:00）
+    - cron: '0 14 * * 1,3,5'   # 週一三五 22:00 台灣時間（UTC 14:00）
   workflow_dispatch:         # 允許手動觸發
 
 jobs:
