@@ -1342,6 +1342,11 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
 
     nat_icon, nat_title, nat_body, nat_url = _get_national_deal(city, user_id)
     loc_icon, loc_title, loc_body, loc_url = _get_city_local_deal(city, user_id)
+    # 沒有精確 URL 時產生 Google 搜尋連結，讓每筆都可點擊
+    nat_link = nat_url or ("https://www.google.com/search?q="
+                           + urllib.parse.quote(nat_title))
+    loc_link = loc_url or ("https://www.google.com/search?q="
+                           + urllib.parse.quote(f"{loc_title} {city}"))
 
     tip = _MORNING_ACTIONS[doy % len(_MORNING_ACTIONS)]
 
@@ -1380,24 +1385,20 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                       "weight": "bold", "color": "#E65100", "margin": "md"},
                      {"type": "text", "text": f"{nat_icon} {nat_title}", "size": "xs",
                       "weight": "bold", "color": "#5C6BC0", "margin": "sm"},
-                     *([{"type": "box", "layout": "vertical", "margin": "xs",
-                         "action": {"type": "uri", "label": nat_body, "uri": nat_url},
-                         "contents": [{"type": "text", "text": f"▶ {nat_body}  👆 點我看詳情",
-                                       "size": "xs", "color": "#1565C0", "wrap": True,
-                                       "decoration": "underline"}]}]
-                       if nat_url else
-                       [{"type": "text", "text": nat_body, "size": "xs",
-                         "color": "#37474F", "wrap": True}]),
+                     {"type": "box", "layout": "vertical", "margin": "xs",
+                      "action": {"type": "uri", "label": nat_body, "uri": nat_link},
+                      "contents": [{"type": "text",
+                                    "text": nat_body + ("" if nat_url else "  🔍"),
+                                    "size": "xs", "color": "#1565C0", "wrap": True,
+                                    "decoration": "underline"}]},
                      {"type": "text", "text": f"{loc_icon} {loc_title}", "size": "xs",
                       "weight": "bold", "color": "#5C6BC0", "margin": "sm"},
-                     *([{"type": "box", "layout": "vertical", "margin": "xs",
-                         "action": {"type": "uri", "label": loc_body, "uri": loc_url},
-                         "contents": [{"type": "text", "text": f"▶ {loc_body}  👆 點我看詳情",
-                                       "size": "xs", "color": "#1565C0", "wrap": True,
-                                       "decoration": "underline"}]}]
-                       if loc_url else
-                       [{"type": "text", "text": loc_body, "size": "xs",
-                         "color": "#37474F", "wrap": True}]),
+                     {"type": "box", "layout": "vertical", "margin": "xs",
+                      "action": {"type": "uri", "label": loc_body, "uri": loc_link},
+                      "contents": [{"type": "text",
+                                    "text": loc_body + ("" if loc_url else "  🔍"),
+                                    "size": "xs", "color": "#1565C0", "wrap": True,
+                                    "decoration": "underline"}]},
                      {"type": "separator", "margin": "md"},
                      {"type": "text", "text": "💡 今日健康提醒", "size": "xs",
                       "weight": "bold", "color": "#5C6BC0", "margin": "md"},
