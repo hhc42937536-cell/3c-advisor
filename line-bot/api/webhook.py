@@ -55,6 +55,7 @@ from modules.weather  import (
     _fetch_quick_oil, _fetch_quick_rates,
     _set_user_city, _get_user_city, _build_morning_city_picker,
     build_switch_city_picker,
+    build_relax_message, build_daily_topic,
 )
 from modules.health   import build_health_message, build_mood_support, parse_height_weight
 from modules.money    import (
@@ -717,6 +718,92 @@ def handle_text_message(text: str, user_id: str = "") -> list:
         return build_compare_price_message(text)
 
     # ── 精確格式先判斷（不進評分，避免破壞特殊流程）──────
+
+    # ── 今日話題 ──────────────────────────────────────
+    if any(k in text for k in ["今日話題", "話題", "跟朋友聊什麼", "聊什麼好", "聊天話題"]):
+        log_usage(user_id, "daily_topic")
+        return build_daily_topic(user_id)
+
+    # ── 放鬆一下 ──────────────────────────────────────
+    if any(k in text for k in ["放鬆一下", "放鬆", "我要放鬆", "放空", "休息一下"]):
+        log_usage(user_id, "relax")
+        return build_relax_message(user_id)
+
+    # ── 生活工具選單 ───────────────────────────────────
+    if any(k in text for k in ["生活工具", "工具選單", "查工具"]):
+        return [{"type": "flex", "altText": "生活工具",
+                 "contents": {
+                     "type": "bubble",
+                     "header": {"type": "box", "layout": "vertical",
+                                "backgroundColor": "#37474F", "paddingAll": "14px",
+                                "contents": [
+                                    {"type": "text", "text": "🛠️ 生活工具",
+                                     "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                                    {"type": "text", "text": "健康・金錢・3C・法律",
+                                     "color": "#B0BEC5", "size": "xs", "margin": "xs"},
+                                ]},
+                     "body": {"type": "box", "layout": "vertical",
+                              "spacing": "sm", "paddingAll": "12px",
+                              "contents": [
+                         {"type": "box", "layout": "horizontal", "spacing": "sm",
+                          "contents": [
+                              {"type": "button", "style": "secondary", "flex": 1,
+                               "action": {"type": "message", "label": "💚 健康", "text": "健康小幫手"}},
+                              {"type": "button", "style": "secondary", "flex": 1,
+                               "action": {"type": "message", "label": "💰 金錢", "text": "金錢小幫手"}},
+                         ]},
+                         {"type": "box", "layout": "horizontal", "spacing": "sm", "margin": "sm",
+                          "contents": [
+                              {"type": "button", "style": "secondary", "flex": 1,
+                               "action": {"type": "message", "label": "📱 3C", "text": "推薦手機"}},
+                              {"type": "button", "style": "secondary", "flex": 1,
+                               "action": {"type": "message", "label": "⚖️ 法律", "text": "法律常識"}},
+                         ]},
+                     ]},
+                 }}]
+
+    # ── 更多功能選單 ───────────────────────────────────
+    if any(k in text for k in ["更多功能", "所有功能", "功能列表", "其他功能"]):
+        return [{"type": "flex", "altText": "更多功能",
+                 "contents": {
+                     "type": "bubble",
+                     "header": {"type": "box", "layout": "vertical",
+                                "backgroundColor": "#1A1F3A", "paddingAll": "14px",
+                                "contents": [
+                                    {"type": "text", "text": "✨ 更多功能",
+                                     "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                                    {"type": "text", "text": "所有功能一覽",
+                                     "color": "#8892B0", "size": "xs", "margin": "xs"},
+                                ]},
+                     "body": {"type": "box", "layout": "vertical",
+                              "spacing": "sm", "paddingAll": "12px",
+                              "contents": [
+                         {"type": "text", "text": "🌈 每日陪伴",
+                          "size": "xs", "weight": "bold", "color": "#5C6BC0"},
+                         {"type": "box", "layout": "horizontal", "spacing": "sm", "margin": "xs",
+                          "contents": [
+                              {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
+                               "action": {"type": "message", "label": "今日話題", "text": "今日話題"}},
+                              {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
+                               "action": {"type": "message", "label": "放鬆一下", "text": "放鬆一下"}},
+                         ]},
+                         {"type": "separator", "margin": "md"},
+                         {"type": "text", "text": "🛡️ 防護工具",
+                          "size": "xs", "weight": "bold", "color": "#5C6BC0", "margin": "md"},
+                         {"type": "box", "layout": "horizontal", "spacing": "sm", "margin": "xs",
+                          "contents": [
+                              {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
+                               "action": {"type": "message", "label": "防詐辨識", "text": "防詐辨識"}},
+                              {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
+                               "action": {"type": "message", "label": "防詐趨勢", "text": "防詐趨勢"}},
+                         ]},
+                         {"type": "separator", "margin": "md"},
+                         {"type": "text", "text": "📊 我的記錄",
+                          "size": "xs", "weight": "bold", "color": "#5C6BC0", "margin": "md"},
+                         {"type": "button", "style": "secondary", "height": "sm", "margin": "xs",
+                          "action": {"type": "message", "label": "我的記錄", "text": "我的記錄"}},
+                     ]},
+                 }}]
 
     if any(k in text for k in ["我的記錄", "我的統計", "打卡天數", "我的成就", "探索記錄"]):
         pref = _redis_get(f"user_pref:{user_id}") or {}
@@ -1770,31 +1857,27 @@ class handler(BaseHTTPRequestHandler):
                 old_id = menus[0]["richMenuId"] if menus else None
                 log.append(f"old_id={old_id}")
 
-                # 2. 建新 Rich Menu（同版型，前三個改 message）
+                # 2. 建新 Rich Menu（6 格 2 排，上排=每日、下排=工具）
                 new_menu = {
                     "size": {"width": 2500, "height": 1686},
                     "selected": True,
-                    "name": "生活優轉選單（無LIFF版）",
+                    "name": "生活優轉選單 v2",
                     "chatBarText": "✨ 點我開啟功能選單",
                     "areas": [
-                        {"bounds": {"x": 0,    "y": 0,    "width": 833,  "height": 562},
+                        # 上排：每天都會來
+                        {"bounds": {"x": 0,    "y": 0, "width": 833,  "height": 843},
+                         "action": {"type": "message", "label": "早安・今日好料", "text": "早安"}},
+                        {"bounds": {"x": 833,  "y": 0, "width": 834,  "height": 843},
                          "action": {"type": "message", "label": "今天吃什麼", "text": "今天吃什麼"}},
-                        {"bounds": {"x": 833,  "y": 0,    "width": 834,  "height": 562},
-                         "action": {"type": "message", "label": "近期活動",  "text": "近期活動"}},
-                        {"bounds": {"x": 1667, "y": 0,    "width": 833,  "height": 562},
-                         "action": {"type": "message", "label": "天氣+穿搭", "text": "天氣"}},
-                        {"bounds": {"x": 0,    "y": 562,  "width": 833,  "height": 562},
-                         "action": {"type": "message", "label": "健康小幫手", "text": "健康小幫手"}},
-                        {"bounds": {"x": 833,  "y": 562,  "width": 834,  "height": 562},
-                         "action": {"type": "message", "label": "金錢小幫手", "text": "金錢小幫手"}},
-                        {"bounds": {"x": 1667, "y": 562,  "width": 833,  "height": 562},
-                         "action": {"type": "message", "label": "找車位",    "text": "找車位"}},
-                        {"bounds": {"x": 0,    "y": 1124, "width": 833,  "height": 562},
-                         "action": {"type": "message", "label": "3C 推薦",   "text": "推薦手機"}},
-                        {"bounds": {"x": 833,  "y": 1124, "width": 834,  "height": 562},
-                         "action": {"type": "message", "label": "防詐騙",    "text": "防詐辨識"}},
-                        {"bounds": {"x": 1667, "y": 1124, "width": 833,  "height": 562},
-                         "action": {"type": "message", "label": "法律常識",  "text": "法律常識"}},
+                        {"bounds": {"x": 1667, "y": 0, "width": 833,  "height": 843},
+                         "action": {"type": "message", "label": "近期活動", "text": "近期活動"}},
+                        # 下排：有需要才找
+                        {"bounds": {"x": 0,    "y": 843, "width": 833,  "height": 843},
+                         "action": {"type": "message", "label": "找車位", "text": "找車位"}},
+                        {"bounds": {"x": 833,  "y": 843, "width": 834,  "height": 843},
+                         "action": {"type": "message", "label": "生活工具", "text": "生活工具"}},
+                        {"bounds": {"x": 1667, "y": 843, "width": 833,  "height": 843},
+                         "action": {"type": "message", "label": "更多功能", "text": "更多功能"}},
                     ]
                 }
                 body = json.dumps(new_menu, ensure_ascii=False).encode("utf-8")

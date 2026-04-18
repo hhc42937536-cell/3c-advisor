@@ -1496,15 +1496,147 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                           {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
                            "action": {"type": "message", "label": "吃什麼", "text": "今天吃什麼"}},
                           {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                           "action": {"type": "message", "label": "查活動", "text": "近期活動"}},
+                           "action": {"type": "message", "label": "今日話題", "text": "今日話題"}},
                           {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                           "action": {"type": "message", "label": "健康", "text": "健康小幫手"}},
+                           "action": {"type": "message", "label": "放鬆一下", "text": "放鬆一下"}},
                       ]},
                      {"type": "button", "style": "primary", "color": "#E65100", "height": "sm",
                       "action": {"type": "uri", "label": "📤 分享給朋友", "uri": _share_url}},
                      {"type": "button", "style": "secondary", "height": "sm",
                       "action": {"type": "message", "label": f"📍 換城市（{city}）",
                                  "text": "換城市"}},
+                 ]},
+             }}]
+
+
+# ─── 放鬆建議（低壓力、無義務）──────────────────────────────
+_RELAX_SUGGESTIONS = [
+    "☕ 泡一杯你最喜歡的飲料，就這樣坐著，不急著做任何事",
+    "🎵 閉上眼睛聽完一首喜歡的歌，什麼都不想",
+    "🛁 今晚洗個比平常更久的澡，讓熱水沖走今天的壓力",
+    "📖 翻翻一本書或雜誌，不用從頭讀，哪頁都好",
+    "🌙 把燈調暗一點，讓自己進入「今天結束了」的模式",
+    "🍫 允許自己吃一個喜歡的小零食，今天不計卡路里",
+    "📺 找一個已經看過的影片重溫，舒適圈偶爾可以待",
+    "🌃 出去走 10 分鐘，不帶目的，就呼吸外面的空氣",
+    "📱 翻翻手機裡的舊照片，看看過去的好時光",
+    "🐱 搜尋「可愛動物」，什麼都不用想，就看",
+    "💌 翻翻跟好朋友的聊天記錄，回憶一段讓你笑出來的對話",
+    "🌿 幫植物澆個水，或整理一個小角落，讓空間喘口氣",
+    "🌅 找一個窗邊靜靜看外面 5 分鐘，什麼都不用想",
+    "🎨 隨手塗鴉，不用畫得好，讓手亂動就好",
+    "🍵 泡一壺茶，慢慢喝，每一口都不要想別的事",
+    "🛒 去便利商店買一個平常不會買的小東西犒勞自己",
+    "🎮 玩一局你最熟悉的遊戲，不挑戰，就享受",
+    "✍️ 寫下今天一件讓你有感覺的事，寫完就放下",
+    "🎶 開一個從來沒聽過的 playlist，讓音樂帶著你漫步",
+    "🌸 訂一個這週末小小犒勞自己的計畫，哪怕只是一杯咖啡",
+]
+
+# ─── 今日話題（聊天話頭）────────────────────────────────────
+_DAILY_TOPICS = [
+    ("🍜", "你上次吃到讓你念念不忘的食物是什麼？", "好吃的東西值得一說再說，問完還可能拿到美食推薦。"),
+    ("🌡️", "最近天氣這麼不穩定，你有沒有什麼應對方式？", "台灣的天氣是最好的開場白，人人都有感。"),
+    ("🎬", "你最近看了什麼讓你印象深刻的影片或劇嗎？", "推薦給朋友，他推薦回來，這輩子不缺片看。"),
+    ("🧋", "你最近在喝什麼飲料？有新發現嗎？", "台灣手搖飲是國民話題，幾乎人人有答案。"),
+    ("🚶", "你上次在城市裡亂走發現什麼有趣的地方嗎？", "本地人的發現往往比旅遊書更真實。"),
+    ("📱", "你手機裡最近最常開的 app 是什麼？為什麼？", "數位習慣透露生活狀態，答案通常很有趣。"),
+    ("🏖️", "如果這個週末可以去任何地方，你會去哪？", "天馬行空也好，就是讓人想一下出去走走。"),
+    ("🎵", "最近有沒有什麼歌一直在你腦海裡轉？", "洗腦歌是跨世代共同記憶，很好聊。"),
+    ("🌿", "你最近有沒有在試著建立什麼新習慣？", "不用分享成敗，聊過程就夠有趣了。"),
+    ("🍕", "你能接受的最奇葩的食物組合是什麼？", "食物話題永遠有人答，而且答案出乎意料。"),
+    ("🗺️", "台灣有沒有哪個地方你一直說要去但還沒去的？", "很多人的答案一樣，容易引發共鳴。"),
+    ("☕", "你有沒有每天的儀式感小習慣？", "早餐、咖啡、音樂，每個人都有不同的版本。"),
+    ("🎒", "你最近買過最值得的東西是什麼？", "買到好東西想分享是人之常情，話匣子就開了。"),
+    ("😂", "最近有沒有發生讓你又氣又好笑的事？", "倒倒苦水，笑一笑，這種話題很療癒。"),
+    ("🏙️", "你住的地方附近有沒有什麼你很驕傲的特色？", "對自己生活圈的認同感，比想像中更多人有。"),
+    ("🌙", "你最近睡眠品質怎麼樣？有沒有什麼助眠方式？", "現代人的共同痛點，很容易引發共鳴。"),
+    ("🎯", "你今年有沒有設什麼目標？現在進行到哪了？", "不用是大目標，小事也算，聊起來很自然。"),
+    ("🍳", "你最近有沒有在家試做什麼食物？成功還是翻車？", "翻車的故事比成功的更好笑更好聊。"),
+    ("🎪", "你記得上一次真心大笑是什麼時候嗎？什麼原因？", "讓對方回憶快樂，這個話題本身就讓人心情好。"),
+    ("🌱", "如果你有三天假期，你會怎麼規劃？", "夢想假期話題，沒有答案的對錯，人人都能說一說。"),
+]
+
+
+def build_relax_message(user_id: str = "") -> list:
+    """今日放鬆建議（低壓力、無義務）"""
+    import datetime as _dt
+    _TW_TZ = _dt.timezone(_dt.timedelta(hours=8))
+    today = _dt.datetime.now(_TW_TZ).date()
+    today_date = today.isoformat()
+    _seq_key = f"relax_seq:{user_id}:{today_date}"
+    _seq = int(_redis_get(_seq_key) or 0)
+    _redis_set(_seq_key, str(_seq + 1), ttl=86400)
+    suggestion = _RELAX_SUGGESTIONS[(today.toordinal() + _seq) % len(_RELAX_SUGGESTIONS)]
+    return [{"type": "flex", "altText": "今日放鬆建議",
+             "contents": {
+                 "type": "bubble", "size": "kilo",
+                 "header": {"type": "box", "layout": "vertical",
+                            "backgroundColor": "#2C3E50", "paddingAll": "14px",
+                            "contents": [
+                                {"type": "text", "text": "🌙 放鬆一下",
+                                 "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                                {"type": "text", "text": "今天辛苦了，不用做任何事",
+                                 "color": "#8892B0", "size": "xs", "margin": "xs"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "paddingAll": "16px",
+                          "contents": [
+                     {"type": "text", "text": suggestion,
+                      "size": "sm", "color": "#ECEFF1", "wrap": True, "lineSpacing": "6px"},
+                 ]},
+                 "footer": {"type": "box", "layout": "horizontal",
+                            "spacing": "sm", "paddingAll": "10px",
+                            "contents": [
+                     {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
+                      "action": {"type": "message", "label": "換一個", "text": "放鬆一下"}},
+                     {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
+                      "action": {"type": "message", "label": "今日話題", "text": "今日話題"}},
+                 ]},
+             }}]
+
+
+def build_daily_topic(user_id: str = "") -> list:
+    """今日話題：一個可以跟朋友開聊的問題"""
+    import datetime as _dt
+    _TW_TZ = _dt.timezone(_dt.timedelta(hours=8))
+    today = _dt.datetime.now(_TW_TZ).date()
+    today_date = today.isoformat()
+    _seq_key = f"topic_seq:{user_id}:{today_date}"
+    _seq = int(_redis_get(_seq_key) or 0)
+    _redis_set(_seq_key, str(_seq + 1), ttl=86400)
+    icon, question, tip = _DAILY_TOPICS[(today.toordinal() + _seq) % len(_DAILY_TOPICS)]
+    share_text = f"{icon} 今天的話題：{question}"
+    share_url = (
+        "https://social-plugins.line.me/lineit/share?url="
+        + urllib.parse.quote(share_text)
+    )
+    return [{"type": "flex", "altText": f"{icon} 今日話題",
+             "contents": {
+                 "type": "bubble", "size": "kilo",
+                 "header": {"type": "box", "layout": "vertical",
+                            "backgroundColor": "#1565C0", "paddingAll": "14px",
+                            "contents": [
+                                {"type": "text", "text": f"{icon} 今日話題",
+                                 "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                                {"type": "text", "text": "找個話頭，跟朋友聊聊",
+                                 "color": "#BBDEFB", "size": "xs", "margin": "xs"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical",
+                          "paddingAll": "16px", "spacing": "sm",
+                          "contents": [
+                     {"type": "text", "text": question, "size": "sm",
+                      "weight": "bold", "color": "#1A237E", "wrap": True},
+                     {"type": "text", "text": tip, "size": "xs",
+                      "color": "#607D8B", "wrap": True, "margin": "sm"},
+                 ]},
+                 "footer": {"type": "box", "layout": "horizontal",
+                            "spacing": "sm", "paddingAll": "10px",
+                            "contents": [
+                     {"type": "button", "style": "primary", "flex": 1, "height": "sm",
+                      "color": "#1565C0",
+                      "action": {"type": "uri", "label": "📤 分享給朋友", "uri": share_url}},
+                     {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
+                      "action": {"type": "message", "label": "換一個", "text": "今日話題"}},
                  ]},
              }}]
 
