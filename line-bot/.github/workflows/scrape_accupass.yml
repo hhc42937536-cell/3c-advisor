@@ -1,0 +1,41 @@
+name: Scrape Accupass Activities
+
+on:
+  schedule:
+    - cron: '0 14 * * 5'   # 每週五 22:00 台灣時間（UTC+8 = UTC 14:00）
+  workflow_dispatch:         # 允許手動觸發
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install Python dependencies
+        run: pip install selenium requests
+
+      - name: Run scraper
+        working-directory: line-bot
+        run: python scrape_all.py
+
+      - name: Commit updated cache
+        working-directory: line-bot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add accupass_cache.json
+          git diff --cached --quiet && echo "No changes" || git commit -m "chore: 自動更新 accupass_cache.json [skip ci]"
+          git push
