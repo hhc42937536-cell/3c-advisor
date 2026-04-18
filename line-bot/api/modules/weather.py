@@ -825,7 +825,7 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
 
     # ── 快取命中直接返回（跳過所有 I/O）──────────────────────
     if user_id and not city_in_text:
-        _card_key = f"morning_card:v2:{user_id}:{today_date}"
+        _card_key = f"morning_card:v3:{user_id}:{today_date}"
         _cached = _redis_get(_card_key)
         if _cached:
             return _cached
@@ -835,6 +835,8 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     _saved_city: list = [""]
     _pref_box:   list = [{}]
     _seq_box:    list = [0]
+    _oil_box:    list = [{}]
+    _is_friday = (today.weekday() == 4)
 
     def _t_wx() -> None:
         c = city_in_text or _saved_city[0]
@@ -852,17 +854,21 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     def _t_seq() -> None:
         _seq_box[0] = int(_redis_get(_seq_key) or 0)
 
+    def _t_oil() -> None:
+        if _is_friday:
+            _oil_box[0] = _fetch_quick_oil()
+
     if city_in_text:
-        # 城市已知 → 4 個 I/O 全並行
+        # 城市已知 → 全並行
         all_threads = [_thr.Thread(target=f, daemon=True)
-                       for f in (_t_wx, _t_pref, _t_seq)]
+                       for f in (_t_wx, _t_pref, _t_seq, _t_oil)]
         for t in all_threads:
             t.start()
         for t in all_threads:
             t.join(timeout=2.0)
     else:
-        # 需先取城市，再查天氣
-        prep = [_thr.Thread(target=f, daemon=True) for f in (_t_city, _t_pref, _t_seq)]
+        # 需先取城市，再查天氣；油價與城市查詢並行
+        prep = [_thr.Thread(target=f, daemon=True) for f in (_t_city, _t_pref, _t_seq, _t_oil)]
         for t in prep:
             t.start()
         for t in prep:
@@ -1009,9 +1015,13 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                      {"type": "text", "text": _challenge, "size": "sm",
                       "color": "#37474F", "wrap": True, "margin": "sm"},
                      {"type": "separator", "margin": "xl"},
-                     # 今日小驚喜（5行，每行可點）
+                     # 今日小驚喜（週五加油價，其餘 5 行）
                      {"type": "text", "text": "🎁 今日小驚喜", "size": "sm",
                       "weight": "bold", "color": "#E65100", "margin": "lg"},
+                     *([_row("⛽", f"週五加油提醒｜92無鉛 {_oil_box[0]['92']}元",
+                            f"95：{_oil_box[0]['95']}元 ／ 98：{_oil_box[0]['98']}元，週末前加油省荷包",
+                            "https://www.cpc.com.tw/")]
+                       if _is_friday and _oil_box[0].get("92") else []),
                      _row("🏷️", f"{deal_title}｜{deal_body}",
                           deal_body, _link(deal_url, deal_title)),
                      _row(_topic_icon, f"話題：{_topic_q[:30]}",
@@ -1043,7 +1053,7 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     # fire-and-forget 寫快取（不含城市切換的請求才快取，避免記錯城市）
     if user_id and not city_in_text:
         _thr.Thread(
-            target=lambda: _redis_set(f"morning_card:v2:{user_id}:{today_date}", result, ttl=14400),
+            target=lambda: _redis_set(f"morning_card:v3:{user_id}:{today_date}", result, ttl=14400),
             daemon=True,
         ).start()
     return result
