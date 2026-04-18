@@ -1964,16 +1964,18 @@ class handler(BaseHTTPRequestHandler):
                             food_cards = _build_post_parking_food(
                                 _parking_city or "", lat, lon, user_id=user_id)
                             if not food_cards and _parking_city:
+                                # fallback: 直接顯示城市餐廳卡（"餐廳 台南" 不觸發主選單路由）
                                 food_cards = build_food_message(
-                                    f"吃什麼 {_parking_city}", user_id=user_id)
+                                    f"餐廳 {_parking_city}", user_id=user_id)
                             if not food_cards:
-                                food_cards = build_food_message("今天吃什麼", user_id=user_id)
+                                food_cards = build_food_message("餐廳", user_id=user_id)
                             reply_message(reply_token, food_cards)
                         except Exception as _fe:
                             import traceback; traceback.print_exc()
                             print(f"[food_locate] build failed: {_fe}")
+                            _fb_city = _parking_city or ""
                             reply_message(reply_token,
-                                build_food_message(f"吃什麼 {_parking_city}" if _parking_city else "今天吃什麼",
+                                build_food_message(f"餐廳 {_fb_city}" if _fb_city else "餐廳",
                                                    user_id=user_id))
                         log_usage(user_id, "food", sub_action="位置定位", city=_parking_city)
                         continue
