@@ -16,7 +16,7 @@ def redis_get(key: str):
             f"{UPSTASH_REDIS_URL}/get/{urllib.parse.quote(key, safe='')}",
             headers={"Authorization": f"Bearer {UPSTASH_REDIS_TOKEN}"}
         )
-        with urllib.request.urlopen(req, timeout=2) as r:
+        with urllib.request.urlopen(req, timeout=1) as r:
             result = json.loads(r.read()).get("result")
             return json.loads(result) if result else None
     except Exception as e:
@@ -41,7 +41,7 @@ def redis_set(key: str, value, ttl: int = 300):
             },
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=2):
+        with urllib.request.urlopen(req, timeout=1):
             pass
     except Exception as e:
         print(f"[Redis] SET {key} 失敗: {e}")
