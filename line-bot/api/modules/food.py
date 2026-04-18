@@ -1040,13 +1040,35 @@ def _build_group_type_picker(city: str) -> list:
              }}]
 
 
+_GROUP_TYPE_KEYWORDS: dict[str, list[str]] = {
+    "火鍋":     ["火鍋", "鍋"],
+    "燒肉":     ["燒肉", "烤肉"],
+    "日式":     ["日式", "壽司", "拉麵", "日本", "居酒屋", "丼"],
+    "合菜台菜": ["台菜", "合菜", "客家", "熱炒"],
+    "西式":     ["西式", "義大利", "法式", "美式", "西餐"],
+    "熱炒":     ["熱炒", "海鮮", "快炒"],
+    "鍋物":     ["薑母鴨", "羊肉爐", "藥膳", "鍋物"],
+    "不限":     [],
+}
+
+
 def _build_group_result(city: str, dining_type: str) -> list:
-    """城市 + 類型 → 必比登精選卡 + 搜尋建議卡"""
+    """城市 + 類型 → 必比登精選卡（依類型過濾）+ Google 高評分 + 搜尋建議卡"""
     info = _GROUP_DINING_TYPES.get(dining_type, _GROUP_DINING_TYPES["不限"])
     color = info["color"]
     emoji = info["emoji"]
     bib_pool = _BIB_GOURMAND.get(city[:2], [])
+    # 依類型關鍵字過濾必比登
+    kws = _GROUP_TYPE_KEYWORDS.get(dining_type, [])
+    if kws and bib_pool:
+        typed = [r for r in bib_pool if any(k in r.get("type", "") for k in kws)]
+        bib_pool = typed if len(typed) >= 2 else bib_pool
     bib_picks = _random.sample(bib_pool, min(3, len(bib_pool))) if bib_pool else []
+    # Google Places 高評分
+    gp_picks: list[dict] = []
+    if GOOGLE_PLACES_API_KEY:
+        raw = _text_search_places(f"{city} {dining_type} 聚餐", max_results=6)
+        gp_picks = [p for p in raw if (p.get("rating") or 0) >= 4.0][:3]
     query_str = _GROUP_SEARCH_TEMPLATES.get(dining_type, "{city} 聚餐").format(city=city)
     gmap_url = "https://www.google.com/maps/search/" + urllib.parse.quote(query_str)
     gmap_url_pkg = "https://maps.google.com/?q=" + urllib.parse.quote(f"{city} {dining_type} 聚餐 包廂")
@@ -1094,10 +1116,34 @@ def _build_group_result(city: str, dining_type: str) -> list:
                                   for r in bib_picks
                               ] + [{"type": "separator", "margin": "md"}])
                               if bib_picks else []
+                          ) + (
+                              [
+                                  {"type": "separator", "margin": "md"} if bib_picks else {},
+                                  {"type": "text", "text": "⭐ Google 高評分餐廳",
+                                   "weight": "bold", "size": "sm", "color": "#E65100",
+                                   "margin": "md"},
+                                  {"type": "text", "text": "評分 4.0 以上，真實評價最可信",
+                                   "size": "xs", "color": "#888888", "margin": "xs"},
+                              ] + [
+                                  {"type": "box", "layout": "horizontal", "spacing": "sm",
+                                   "margin": "sm",
+                                   "action": {"type": "uri", "label": p["name"],
+                                              "uri": "https://www.google.com/maps/search/"
+                                                     + urllib.parse.quote(f"{p['name']} {p.get('addr','')}")},
+                                   "contents": [
+                                       {"type": "text", "text": p["name"], "size": "sm",
+                                        "flex": 1, "wrap": True, "color": "#1A1F3A"},
+                                       {"type": "text",
+                                        "text": f"⭐{p['rating']}（{p.get('user_ratings_total',0)}則）",
+                                        "size": "xs", "color": "#FF9800", "flex": 0, "align": "end"},
+                                   ]}
+                                  for p in gp_picks
+                              ] + [{"type": "separator", "margin": "md"}]
+                              if gp_picks else []
                           ) + [
                               {"type": "text", "text": "📋 訂位前確認",
                                "weight": "bold", "size": "sm", "color": "#333333",
-                               "margin": "md" if bib_picks else "none"},
+                               "margin": "md" if (bib_picks or gp_picks) else "none"},
                           ] + tip_items + [
                               {"type": "separator", "margin": "md"},
                               {"type": "text", "text": "🔍 依評價找更多餐廳",
