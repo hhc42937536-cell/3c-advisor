@@ -11,7 +11,7 @@
   BOT_URL=https://your-project.vercel.app  （預設讀 vercel.json 的 url）
 """
 
-import sys, io, os, json, hmac, hashlib, time, urllib.request, urllib.error
+import sys, io, os, json, hmac, hashlib, base64, time, urllib.request, urllib.error
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 # ── 設定 ─────────────────────────────────────────────────────
@@ -41,7 +41,7 @@ def make_event(text: str, user_id: str = "Utest0000000000000000000000000001") ->
     }
 
 def sign(body: bytes) -> str:
-    return hmac.new(CHANNEL_SECRET.encode(), body, hashlib.sha256).digest().hex()
+    return base64.b64encode(hmac.new(CHANNEL_SECRET.encode(), body, hashlib.sha256).digest()).decode()
 
 def send(text: str, user_id: str = "Utest0000000000000000000000000001") -> tuple:
     """送出訊息，回傳 (status, elapsed_ms, response_body)"""
