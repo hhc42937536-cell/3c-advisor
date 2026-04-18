@@ -972,7 +972,7 @@ def _build_restaurant_bubble(r: dict, lat: float, lon: float, city: str,
 
 
 def _build_post_parking_food(city: str, lat: float = None, lon: float = None,
-                              user_id: str = "") -> list:
+                              user_id: str = "", addr: str = "") -> list:
     """停車後 / 吃什麼 → 附近美食推薦
     優先使用 Google Places Nearby Search（即時、有照片）；
     無 API key 時 fallback 到靜態爬蟲資料，半徑 500m→1km→2km→3km 漸進放寬。
@@ -986,15 +986,16 @@ def _build_post_parking_food(city: str, lat: float = None, lon: float = None,
     try:
         import webhook as _wh
         _get_eaten = _wh._get_eaten
-        build_food_restaurant_flex = _wh.build_food_restaurant_flex
-        _RESTAURANT_CACHE = _wh._RESTAURANT_CACHE
-        _BIB_GOURMAND     = _wh._BIB_GOURMAND
-        _random           = _wh._random
     except Exception:
-        # 獨立測試時 fallback：回傳空清單
         return []
-
-    import random as _random_mod
+    try:
+        from modules.food import (
+            build_food_restaurant_flex,
+            _RESTAURANT_CACHE, _BIB_GOURMAND,
+        )
+        import random as _random
+    except Exception:
+        return []
 
     city2 = city[:2] if city else ""
     eaten_set = _get_eaten(user_id) if user_id else set()
@@ -1034,6 +1035,14 @@ def _build_post_parking_food(city: str, lat: float = None, lon: float = None,
                     picks = fresh + stale
                     break
         if not picks and pool:
+            # 從地址萃取行政區（東區、中西區…），優先推同區餐廳
+            import re as _re
+            district_match = _re.search(r'[\u4e00-\u9fff]{1,3}[區鎮鄉市]', addr)
+            district = district_match.group(0) if district_match else ""
+            if district:
+                district_pool = [r for r in pool if r.get("town", "") == district]
+                if len(district_pool) >= 3:
+                    pool = district_pool
             picks = _random.sample(pool, min(5, len(pool)))
 
     # ── 必比登精選：最多 2 家，有座標時只取 3km 內、由近到遠 ──

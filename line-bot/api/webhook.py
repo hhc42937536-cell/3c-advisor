@@ -45,6 +45,7 @@ from utils.intent      import classify_intent
 from modules.food     import (
     build_food_message, build_group_dining_message,
     build_specialty_shops, build_city_specialties,
+    build_food_restaurant_flex,
     _ALL_CITIES, _STYLE_KEYWORDS, _ALL_FOOD_KEYWORDS,
 )
 from modules.weather  import (
@@ -1964,7 +1965,7 @@ class handler(BaseHTTPRequestHandler):
                         _redis_set(f"food_locate:{user_id}", "", ttl=1)  # 清除 flag
                         try:
                             food_cards = _build_post_parking_food(
-                                _parking_city or "", lat, lon, user_id=user_id)
+                                _parking_city or "", lat, lon, user_id=user_id, addr=_addr_raw)
                             if not food_cards and _parking_city:
                                 # fallback: 直接顯示城市餐廳卡（"餐廳 台南" 不觸發主選單路由）
                                 food_cards = build_food_message(
@@ -1985,7 +1986,7 @@ class handler(BaseHTTPRequestHandler):
 
                     def _build_food_inline(_city, _lat, _lon, _uid):
                         try:
-                            return _build_post_parking_food(_city, _lat, _lon, user_id=_uid)
+                            return _build_post_parking_food(_city, _lat, _lon, user_id=_uid, addr=_addr_raw)
                         except Exception as _fe:
                             import traceback; traceback.print_exc()
                             print(f"[food_inline] FAILED: {_fe}")
