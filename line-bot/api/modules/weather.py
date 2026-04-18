@@ -449,15 +449,19 @@ def _get_city_local_deal(city: str, user_id: str = "", seq: int = 0) -> tuple:
     """當地在地優惠（Accupass 活動 + 靜態優惠輪播）：(icon, title, body, url)"""
     pool: list[tuple] = []
 
-    # Accupass 活動
+    # Accupass 活動（過濾冷門古典表演）
+    _NICHE_KW = {"獨奏", "交響", "古典", "協奏", "弦樂", "管弦", "室內樂", "歌劇", "聲樂"}
     _ac = _get_accupass_cache()
     if _ac:
         city_data = _ac.get("events", _ac).get(city, {})
         for cat, evs in city_data.items():
             if isinstance(evs, list):
                 for ev in evs:
+                    name = ev.get("name", "")
+                    if any(k in name for k in _NICHE_KW):
+                        continue
                     pool.append(("🎉", f"{city}近期活動",
-                                 ev.get("name", "精彩活動"), ev.get("url", "")))
+                                 name or "精彩活動", ev.get("url", "")))
 
     # 靜態城市優惠 + tips
     for t in _CITY_LOCAL_DEALS.get(city, _GENERIC_LOCAL_DEALS):
