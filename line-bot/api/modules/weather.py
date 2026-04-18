@@ -1425,7 +1425,8 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
 
     def _row(icon: str, label: str, text: str, url: str) -> dict:
         """單行可點連結列"""
-        return {"type": "box", "layout": "horizontal", "margin": "sm",
+        return {"type": "box", "layout": "horizontal", "margin": "lg",
+                "paddingTop": "8px",
                 "action": {"type": "uri", "label": label, "uri": url},
                 "contents": [
                     {"type": "text", "text": icon, "size": "sm", "flex": 0,
@@ -1433,9 +1434,10 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                     {"type": "box", "layout": "vertical", "flex": 1, "margin": "sm",
                      "contents": [
                          {"type": "text", "text": label, "size": "xs",
-                          "weight": "bold", "color": "#555555"},
+                          "weight": "bold", "color": "#777777"},
                          {"type": "text", "text": text, "size": "sm",
-                          "color": "#1565C0", "wrap": True, "decoration": "underline"},
+                          "color": "#1565C0", "wrap": True, "decoration": "underline",
+                          "margin": "xs"},
                      ]},
                 ]}
 
@@ -1457,22 +1459,22 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                                  "color": "#8892B0", "size": "xs", "margin": "xs"},
                                 *streak_header,
                             ]},
-                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
-                          "paddingAll": "14px", "contents": [
+                 "body": {"type": "box", "layout": "vertical", "spacing": "md",
+                          "paddingAll": "18px", "contents": [
                      # 天氣
                      {"type": "text", "text": "🌤 今日天氣＋穿搭", "size": "sm",
                       "weight": "bold", "color": "#5C6BC0"},
                      *wx_items,
-                     {"type": "separator", "margin": "md"},
+                     {"type": "separator", "margin": "xl"},
                      # 微挑戰
                      {"type": "text", "text": "🎯 今日微挑戰", "size": "sm",
-                      "weight": "bold", "color": "#2E7D32", "margin": "md"},
+                      "weight": "bold", "color": "#2E7D32", "margin": "lg"},
                      {"type": "text", "text": _challenge, "size": "sm",
-                      "color": "#37474F", "wrap": True},
-                     {"type": "separator", "margin": "md"},
+                      "color": "#37474F", "wrap": True, "margin": "sm"},
+                     {"type": "separator", "margin": "xl"},
                      # 今日小驚喜（5行，每行可點）
                      {"type": "text", "text": "🎁 今日小驚喜", "size": "sm",
-                      "weight": "bold", "color": "#E65100", "margin": "md"},
+                      "weight": "bold", "color": "#E65100", "margin": "lg"},
                      _row("🏷️", f"{deal_title}｜{deal_body}",
                           deal_body, _link(deal_url, deal_title)),
                      _row(_topic_icon, f"話題：{_topic_q[:30]}",
