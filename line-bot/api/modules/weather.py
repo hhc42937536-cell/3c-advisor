@@ -1289,47 +1289,81 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     import threading as _thr
     import datetime as _dt
 
-    all_cities_pat = "|".join(_ALL_CITIES)
-    city_m = re.search(rf"({all_cities_pat})", text)
-    if city_m:
-        city = city_m.group(1)
-        _set_user_city(user_id, city)
-    else:
-        saved = _get_user_city(user_id)
-        if saved:
-            city = saved
-        else:
-            return _build_morning_city_picker()
-
-    wx_result: dict = {}
-
-    def _wx() -> None:
-        nonlocal wx_result
-        wx_result = _fetch_cwa_weather(city)
-
-    _t1 = _thr.Thread(target=_wx, daemon=True)
-    _t1.start()
-    _t1.join(timeout=2.5)
-
     _TW_TZ = _dt.timezone(_dt.timedelta(hours=8))
     today = _dt.datetime.now(_TW_TZ).date()
-    today_date = today.isoformat()          # "2026-04-18"
+    today_date = today.isoformat()
     yesterday_date = (today - _dt.timedelta(days=1)).isoformat()
     _WEEKDAYS = ["一", "二", "三", "四", "五", "六", "日"]
     today_str = f"{today.month}月{today.day}日（星期{_WEEKDAYS[today.weekday()]}）"
-    # 每次呼叫累加計數，讓同一天多次查詢顯示不同小驚喜（key 用台灣日期，避免跨年問題）
     _seq_key = f"morning_seq:{user_id}:{today_date}"
-    _seq = int(_redis_get(_seq_key) or 0)
-    _redis_set(_seq_key, str(_seq + 1), ttl=86400)
 
-    # 使用者連續打卡 streak 追蹤（以台灣曆法日期為單位）
-    _pref = _get_user_pref(user_id) if user_id else {}
+    # ── 所有 I/O 並行（天氣 + city + pref + seq），總 deadline 2.5s ──
+    wx_result: dict = {}
+    _saved_city: list = [""]
+    _pref_box:   list = [{}]
+    _seq_box:    list = [0]
+
+    all_cities_pat = "|".join(_ALL_CITIES)
+    city_m = re.search(rf"({all_cities_pat})", text)
+    city_in_text = city_m.group(1) if city_m else None
+
+    def _t_wx() -> None:
+        if city_in_text:
+            wx_result.update(_fetch_cwa_weather(city_in_text))
+        elif _saved_city[0]:
+            wx_result.update(_fetch_cwa_weather(_saved_city[0]))
+
+    def _t_city() -> None:
+        if not city_in_text and user_id:
+            _saved_city[0] = _get_user_city(user_id) or ""
+
+    def _t_pref() -> None:
+        if user_id:
+            _pref_box[0] = _get_user_pref(user_id) or {}
+
+    def _t_seq() -> None:
+        _seq_box[0] = int(_redis_get(_seq_key) or 0)
+
+    threads = [_thr.Thread(target=f, daemon=True) for f in (_t_city, _t_pref, _t_seq)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join(timeout=1.5)
+
+    city = city_in_text or _saved_city[0]
+    if not city:
+        return _build_morning_city_picker()
+
+    if city_in_text:
+        _thr.Thread(target=lambda: _set_user_city(user_id, city_in_text), daemon=True).start()
+
+    # 天氣在城市確認後才能查
+    _tw = _thr.Thread(target=_t_wx, daemon=True)
+    _tw.start()
+    _tw.join(timeout=2.0)
+
+    _pref = _pref_box[0]
+    _seq  = _seq_box[0]
+
+    # streak 計算
     _last_date = _pref.get("last_checkin_date", "")
-    _streak = _pref.get("streak", 0)
-    _visited = _pref.get("visited_count", 0)
+    _streak    = _pref.get("streak", 0)
+    _visited   = _pref.get("visited_count", 0)
     if user_id and _last_date != today_date:
         _streak = (_streak + 1) if _last_date == yesterday_date else 1
-        _update_user_pref(user_id, last_checkin_date=today_date, streak=_streak, visited_count=_visited)
+        # 寫回 fire-and-forget
+        _new_pref = {**_pref, "last_checkin_date": today_date,
+                     "streak": _streak, "visited_count": _visited}
+        _thr.Thread(
+            target=lambda: (_redis_set(f"user_pref:{user_id}", _new_pref, ttl=0),
+                            _redis_set(_seq_key, str(_seq + 1), ttl=86400)),
+            daemon=True,
+        ).start()
+    else:
+        _thr.Thread(
+            target=lambda: _redis_set(_seq_key, str(_seq + 1), ttl=86400),
+            daemon=True,
+        ).start()
 
     if wx_result.get("ok"):
         wx = wx_result
