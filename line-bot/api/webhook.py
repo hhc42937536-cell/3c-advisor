@@ -1992,22 +1992,44 @@ class handler(BaseHTTPRequestHandler):
                             print(f"[food_inline] FAILED: {_fe}")
                             return []
 
-                    # 快速路徑：快取命中 → reply 停車 + push 美食（緊接在後）
+                    # 停車後問候卡片（附近美食 / 活動 選一）
+                    _city2 = _parking_city[:2] if _parking_city else ""
+                    _after_parking_card = {"type": "flex", "altText": "需要推薦附近美食或活動嗎？",
+                        "contents": {"type": "bubble", "size": "kilo",
+                            "body": {"type": "box", "layout": "vertical",
+                                "paddingAll": "16px", "spacing": "sm",
+                                "contents": [
+                                    {"type": "text", "text": "需要順便幫你推薦嗎？ 😊",
+                                     "weight": "bold", "size": "sm", "color": "#1A1F3A"},
+                                    {"type": "text", "text": "選一個，馬上幫你找",
+                                     "size": "xs", "color": "#888888", "margin": "xs"},
+                                ]},
+                            "footer": {"type": "box", "layout": "vertical",
+                                "spacing": "sm", "paddingAll": "12px",
+                                "contents": [
+                                    {"type": "button", "style": "primary", "color": "#FF6B35",
+                                     "height": "sm",
+                                     "action": {"type": "message",
+                                                "label": "🍜 附近美食推薦",
+                                                "text": "📍 我要分享位置找美食"}},
+                                    {"type": "button", "style": "secondary", "height": "sm",
+                                     "action": {"type": "message",
+                                                "label": "🎉 附近活動",
+                                                "text": f"近期活動 {_city2}" if _city2 else "近期活動"}},
+                                ]}}}
+
+                    # 快速路徑：快取命中
                     cached = _peek_parking_cache(lat, lon)
                     if cached:
                         reply_message(reply_token, cached)
-                        if _parking_city:
-                            food_msgs = _build_food_inline(_parking_city, lat, lon, user_id)
-                            if food_msgs:
-                                push_message(user_id, food_msgs)
+                        push_message(user_id, [_after_parking_card])
                         log_usage(user_id, "parking", sub_action="傳位置_cached", city=city_hint)
                     else:
                         reply_message(reply_token, [{"type": "text",
-                            "text": "📍 定位成功！\n🔍 正在搜尋附近車位與美食..."}])
+                            "text": "📍 定位成功！\n🔍 正在搜尋附近車位..."}])
                         try:
                             messages = build_parking_flex(lat, lon, city=_parking_city)
-                            food_msgs = _build_food_inline(_parking_city or "", lat, lon, user_id)
-                            push_message(user_id, messages + food_msgs)
+                            push_message(user_id, messages + [_after_parking_card])
                             log_usage(user_id, "parking", sub_action="傳位置", city=city_hint)
                         except Exception as pe:
                             import traceback; traceback.print_exc()
@@ -2050,18 +2072,39 @@ class handler(BaseHTTPRequestHandler):
                             # 快速路徑：快取命中 → 直接 reply 卡片
                             cached = _peek_parking_cache(lat, lon)
                             _liff_city = _get_user_city(user_id) or _city_from_coords(lat, lon)
+                            _liff_city2 = _liff_city[:2] if _liff_city else ""
+                            _liff_after_card = {"type": "flex", "altText": "需要推薦附近美食或活動嗎？",
+                                "contents": {"type": "bubble", "size": "kilo",
+                                    "body": {"type": "box", "layout": "vertical",
+                                        "paddingAll": "16px", "spacing": "sm",
+                                        "contents": [
+                                            {"type": "text", "text": "需要順便幫你推薦嗎？ 😊",
+                                             "weight": "bold", "size": "sm", "color": "#1A1F3A"},
+                                            {"type": "text", "text": "選一個，馬上幫你找",
+                                             "size": "xs", "color": "#888888", "margin": "xs"},
+                                        ]},
+                                    "footer": {"type": "box", "layout": "vertical",
+                                        "spacing": "sm", "paddingAll": "12px",
+                                        "contents": [
+                                            {"type": "button", "style": "primary", "color": "#FF6B35",
+                                             "height": "sm",
+                                             "action": {"type": "message",
+                                                        "label": "🍜 附近美食推薦",
+                                                        "text": "📍 我要分享位置找美食"}},
+                                            {"type": "button", "style": "secondary", "height": "sm",
+                                             "action": {"type": "message",
+                                                        "label": "🎉 附近活動",
+                                                        "text": f"近期活動 {_liff_city2}" if _liff_city2 else "近期活動"}},
+                                        ]}}}
                             if cached:
                                 reply_message(reply_token, cached)
-                                if _liff_city:
-                                    push_message(user_id, _build_post_parking_food(_liff_city))
+                                push_message(user_id, [_liff_after_card])
                                 log_usage(user_id, "parking", sub_action="liff_cached")
                             else:
                                 reply_message(reply_token, [{"type": "text",
                                     "text": "📍 定位成功！\n🔍 正在搜尋附近車位..."}])
                                 messages = build_parking_flex(lat, lon, city=_liff_city)
-                                push_message(user_id, messages)
-                                if _liff_city:
-                                    push_message(user_id, _build_post_parking_food(_liff_city))
+                                push_message(user_id, messages + [_liff_after_card])
                                 log_usage(user_id, "parking", sub_action="liff_auto")
                         except Exception as pe:
                             import traceback; traceback.print_exc()
