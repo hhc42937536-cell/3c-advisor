@@ -869,6 +869,8 @@ def handle_text_message(text: str, user_id: str = "") -> list:
             }
         }]
     if _intent == "parking":
+        if user_id:
+            _redis_set(f"food_locate:{user_id}", "", ttl=1)  # 清除食物定位 flag，避免互相干擾
         return [{
             "type": "text",
             "text": "🅿️ 點下方「📍 分享位置」，我立刻幫你找附近停車場！",
