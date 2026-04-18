@@ -24,7 +24,9 @@ SEP_ROW1_W = 8
 
 FONT    = "C:/Windows/Fonts/NotoSansTC-VF.ttf"
 f_label = ImageFont.truetype(FONT, 108)
-f_sub   = ImageFont.truetype(FONT, 76)
+f_label.set_variation_by_name("Black")
+f_sub = ImageFont.truetype(FONT, 76)
+f_sub.set_variation_by_name("Bold")
 
 CELLS = [
     ("sun",      "早安・今日好料", "每日晨間補給"),
@@ -170,7 +172,7 @@ def upload(img_path: Path) -> None:
             data=b"", method="POST", headers=h,
         ), timeout=10
     ).close()
-    print("set as default ✓")
+    print("set as default OK")
 
     # 4. 刪舊的
     with urllib.request.urlopen(
