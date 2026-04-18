@@ -828,69 +828,73 @@ def _fetch_quick_rates() -> dict:
         return {}
 
 
-def _get_national_deal(city: str, user_id: str = "") -> tuple:
-    """全台通用好康：(icon, title, body)"""
+def _normalize4(t: tuple) -> tuple:
+    return t if len(t) == 4 else (*t, "")
+
+
+def _get_national_deal(city: str, user_id: str = "", seq: int = 0) -> tuple:
+    """全台通用好康（在地優惠/當日好康/歌單輪播）：(icon, title, body, url)"""
     import datetime as _dt
     today = _dt.date.today()
-    doy = today.timetuple().tm_yday
     weekday = today.weekday()
 
     special = _SPECIAL_DEALS.get((today.month, today.day))
     if special:
-        return special
+        return _normalize4(special)
 
-    surprise_cache = _get_surprise_cache()
-    candidates = []
+    pool: list[tuple] = []
 
-    weekly = _WEEKLY_DEALS.get(weekday, [])
-    if weekly:
-        pick = weekly[_day_user_city_hash(doy, city, user_id, 1) % len(weekly)]
-        candidates.append(("deal", pick))
+    # 當日優惠（週間全部加入，不只挑一個）
+    for t in _WEEKLY_DEALS.get(weekday, []):
+        pool.append(_normalize4(t))
 
-    deals = surprise_cache.get("deals", []) if surprise_cache else []
-    if deals:
-        deal = deals[_day_user_city_hash(doy, city, user_id, 3) % len(deals)]
+    # 熱門話題 / PTT 好康
+    sc = _get_surprise_cache()
+    for deal in (sc.get("deals", []) if sc else []):
         tag = deal.get("tag", "PTT")
-        candidates.append(("ptt", ("🔥", f"網友好康（{tag}）", deal.get("title", ""),
-                                   deal.get("url", ""))))
+        pool.append(("🔥", f"網友熱門話題（{tag}）", deal.get("title", ""), deal.get("url", "")))
 
-    songs = surprise_cache.get("songs", []) if surprise_cache else []
-    if songs:
-        song = songs[_day_user_city_hash(doy, city, user_id, 2) % len(songs)]
-        candidates.append(("song", ("🎵", "今日推薦新歌",
-            f"《{song.get('name','')}》— {song.get('artist','')}")))
+    # 歌單
+    for song in (sc.get("songs", []) if sc else []):
+        url = song.get("url", "")
+        if not url:
+            url = ("https://www.youtube.com/results?search_query="
+                   + urllib.parse.quote(f"{song.get('name','')} {song.get('artist','')}"))
+        pool.append(("🎵", "今日推薦歌單",
+                     f"《{song.get('name','')}》— {song.get('artist','')}",
+                     url))
 
-    if candidates:
-        pick = candidates[_day_user_city_hash(doy, city, user_id, 0) % len(candidates)]
-        t = pick[1]
-        return t if len(t) == 4 else (*t, "")
+    # fallback
+    for t in _SURPRISES_FALLBACK:
+        pool.append(_normalize4(t))
 
-    t = _SURPRISES_FALLBACK[_day_user_city_hash(doy, city, user_id, 9) % len(_SURPRISES_FALLBACK)]
-    return t if len(t) == 4 else (*t, "")
+    return pool[seq % len(pool)] if pool else _normalize4(_SURPRISES_FALLBACK[0])
 
 
-def _get_city_local_deal(city: str, user_id: str = "") -> tuple:
-    """當地在地優惠：(icon, title, body)"""
-    import datetime as _dt
-    today = _dt.date.today()
-    doy = today.timetuple().tm_yday
+def _get_city_local_deal(city: str, user_id: str = "", seq: int = 0) -> tuple:
+    """當地在地優惠（Accupass 活動 + 靜態優惠輪播）：(icon, title, body, url)"""
+    pool: list[tuple] = []
 
+    # Accupass 活動
     _ac = _get_accupass_cache()
     if _ac:
         city_data = _ac.get("events", _ac).get(city, {})
-        city_events = []
         for cat, evs in city_data.items():
             if isinstance(evs, list):
-                city_events.extend(evs)
-        if city_events:
-            ev = city_events[_day_user_city_hash(doy, city, user_id, 4) % len(city_events)]
-            return ("🎉", f"{city}近期活動", ev.get("name", "精彩活動"), ev.get("url", ""))
+                for ev in evs:
+                    pool.append(("🎉", f"{city}近期活動",
+                                 ev.get("name", "精彩活動"), ev.get("url", "")))
 
-    deal_pool = _CITY_LOCAL_DEALS.get(city, _GENERIC_LOCAL_DEALS)
-    tip_pool = _CITY_LOCAL_TIPS.get(city, _GENERIC_LOCAL_TIPS)
-    combined = deal_pool + tip_pool
-    t = combined[_day_user_city_hash(doy, city, user_id, 5) % len(combined)]
-    return t if len(t) == 4 else (*t, "")
+    # 靜態城市優惠 + tips
+    for t in _CITY_LOCAL_DEALS.get(city, _GENERIC_LOCAL_DEALS):
+        pool.append(_normalize4(t))
+    for t in _CITY_LOCAL_TIPS.get(city, _GENERIC_LOCAL_TIPS):
+        pool.append(_normalize4(t))
+
+    if not pool:
+        pool = [_normalize4(t) for t in _GENERIC_LOCAL_DEALS + _GENERIC_LOCAL_TIPS]
+
+    return pool[seq % len(pool)]
 
 
 def _get_morning_actions() -> list:
@@ -1278,7 +1282,6 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     _seq_key = f"morning_seq:{user_id}:{doy}"
     _seq = int(_redis_get(_seq_key) or 0)
     _redis_set(_seq_key, str(_seq + 1), ttl=86400)
-    doy = doy + _seq * 97  # 錯開 hash 空間
 
     if wx_result.get("ok"):
         wx = wx_result
@@ -1345,8 +1348,8 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     if not info_items:
         info_items = [{"type": "text", "text": "匯率/油價暫時無法取得", "size": "xs", "color": "#AAA"}]
 
-    nat_icon, nat_title, nat_body, nat_url = _get_national_deal(city, user_id)
-    loc_icon, loc_title, loc_body, loc_url = _get_city_local_deal(city, user_id)
+    nat_icon, nat_title, nat_body, nat_url = _get_national_deal(city, user_id, seq=_seq)
+    loc_icon, loc_title, loc_body, loc_url = _get_city_local_deal(city, user_id, seq=_seq + 1)
     # 沒有精確 URL 時產生 Google 搜尋連結，讓每筆都可點擊
     nat_link = nat_url or ("https://www.google.com/search?q="
                            + urllib.parse.quote(nat_title))
