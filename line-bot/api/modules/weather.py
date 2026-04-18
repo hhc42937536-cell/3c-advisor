@@ -832,43 +832,42 @@ def _normalize4(t: tuple) -> tuple:
     return t if len(t) == 4 else (*t, "")
 
 
-def _get_national_deal(city: str, user_id: str = "", seq: int = 0) -> tuple:
-    """全台通用好康（在地優惠/當日好康/歌單輪播）：(icon, title, body, url)"""
+def _get_daily_deal(city: str, seq: int = 0) -> tuple:
+    """當日好康（週間優惠 + PTT 熱門話題）：(icon, title, body, url)"""
     import datetime as _dt
     today = _dt.date.today()
-    weekday = today.weekday()
-
     special = _SPECIAL_DEALS.get((today.month, today.day))
     if special:
         return _normalize4(special)
-
     pool: list[tuple] = []
-
-    # 當日優惠（週間全部加入，不只挑一個）
-    for t in _WEEKLY_DEALS.get(weekday, []):
+    for t in _WEEKLY_DEALS.get(today.weekday(), []):
         pool.append(_normalize4(t))
-
-    # 熱門話題 / PTT 好康
     sc = _get_surprise_cache()
     for deal in (sc.get("deals", []) if sc else []):
         tag = deal.get("tag", "PTT")
-        pool.append(("🔥", f"網友熱門話題（{tag}）", deal.get("title", ""), deal.get("url", "")))
-
-    # 歌單
-    for song in (sc.get("songs", []) if sc else []):
-        url = song.get("url", "")
-        if not url:
-            url = ("https://www.youtube.com/results?search_query="
-                   + urllib.parse.quote(f"{song.get('name','')} {song.get('artist','')}"))
-        pool.append(("🎵", "今日推薦歌單",
-                     f"《{song.get('name','')}》— {song.get('artist','')}",
-                     url))
-
-    # fallback
+        pool.append(("🔥", f"網友熱門（{tag}）", deal.get("title", ""), deal.get("url", "")))
     for t in _SURPRISES_FALLBACK:
         pool.append(_normalize4(t))
+    return pool[seq % len(pool)]
 
-    return pool[seq % len(pool)] if pool else _normalize4(_SURPRISES_FALLBACK[0])
+
+def _get_today_song(seq: int = 0) -> tuple:
+    """今日歌單：(icon, title, body, url)"""
+    sc = _get_surprise_cache()
+    songs = sc.get("songs", []) if sc else []
+    if not songs:
+        return ("🎵", "今日推薦歌單", "搜尋你喜歡的歌手，找首今天的心情歌",
+                "https://www.youtube.com/")
+    song = songs[seq % len(songs)]
+    url = song.get("url", "") or (
+        "https://www.youtube.com/results?search_query="
+        + urllib.parse.quote(f"{song.get('name','')} {song.get('artist','')} official"))
+    return ("🎵", "今日推薦歌單", f"《{song.get('name','')}》— {song.get('artist','')}", url)
+
+
+def _get_national_deal(city: str, user_id: str = "", seq: int = 0) -> tuple:
+    """保留向後相容，實際由 _get_daily_deal 取代"""
+    return _get_daily_deal(city, seq)
 
 
 def _get_city_local_deal(city: str, user_id: str = "", seq: int = 0) -> tuple:
@@ -1348,13 +1347,16 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     if not info_items:
         info_items = [{"type": "text", "text": "匯率/油價暫時無法取得", "size": "xs", "color": "#AAA"}]
 
-    nat_icon, nat_title, nat_body, nat_url = _get_national_deal(city, user_id, seq=_seq)
-    loc_icon, loc_title, loc_body, loc_url = _get_city_local_deal(city, user_id, seq=_seq + 1)
-    # 沒有精確 URL 時產生 Google 搜尋連結，讓每筆都可點擊
-    nat_link = nat_url or ("https://www.google.com/search?q="
-                           + urllib.parse.quote(nat_title))
-    loc_link = loc_url or ("https://www.google.com/search?q="
-                           + urllib.parse.quote(f"{loc_title} {city}"))
+    deal_icon, deal_title, deal_body, deal_url = _get_daily_deal(city, seq=_seq)
+    song_icon, song_title, song_body, song_url  = _get_today_song(seq=_seq)
+    loc_icon,  loc_title,  loc_body,  loc_url   = _get_city_local_deal(city, user_id, seq=_seq)
+
+    def _link(url: str, query: str) -> str:
+        return url or "https://www.google.com/search?q=" + urllib.parse.quote(query)
+
+    deal_link = _link(deal_url, deal_title)
+    song_link = _link(song_url, song_body)
+    loc_link  = _link(loc_url,  f"{loc_title} {city}")
 
     tip = _MORNING_ACTIONS[doy % len(_MORNING_ACTIONS)]
 
@@ -1391,22 +1393,19 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                      {"type": "separator", "margin": "md"},
                      {"type": "text", "text": "🎁 今日小驚喜", "size": "xs",
                       "weight": "bold", "color": "#E65100", "margin": "md"},
-                     {"type": "text", "text": f"{nat_icon} {nat_title}", "size": "xs",
-                      "weight": "bold", "color": "#5C6BC0", "margin": "sm"},
-                     {"type": "box", "layout": "vertical", "margin": "xs",
-                      "action": {"type": "uri", "label": nat_body, "uri": nat_link},
-                      "contents": [{"type": "text",
-                                    "text": nat_body + ("" if nat_url else "  🔍"),
-                                    "size": "xs", "color": "#1565C0", "wrap": True,
-                                    "decoration": "underline"}]},
-                     {"type": "text", "text": f"{loc_icon} {loc_title}", "size": "xs",
-                      "weight": "bold", "color": "#5C6BC0", "margin": "sm"},
-                     {"type": "box", "layout": "vertical", "margin": "xs",
-                      "action": {"type": "uri", "label": loc_body, "uri": loc_link},
-                      "contents": [{"type": "text",
-                                    "text": loc_body + ("" if loc_url else "  🔍"),
-                                    "size": "xs", "color": "#1565C0", "wrap": True,
-                                    "decoration": "underline"}]},
+                     *[item for icon, title, body, link in [
+                         (loc_icon,  loc_title,  loc_body,  loc_link),
+                         (deal_icon, deal_title, deal_body, deal_link),
+                         (song_icon, song_title, song_body, song_link),
+                       ] for item in [
+                         {"type": "text", "text": f"{icon} {title}", "size": "xs",
+                          "weight": "bold", "color": "#5C6BC0", "margin": "sm"},
+                         {"type": "box", "layout": "vertical", "margin": "xs",
+                          "action": {"type": "uri", "label": body[:40], "uri": link},
+                          "contents": [{"type": "text", "text": body + "  🔍",
+                                        "size": "xs", "color": "#1565C0",
+                                        "wrap": True, "decoration": "underline"}]},
+                     ]],
                      {"type": "separator", "margin": "md"},
                      {"type": "text", "text": "💡 今日健康提醒", "size": "xs",
                       "weight": "bold", "color": "#5C6BC0", "margin": "md"},
