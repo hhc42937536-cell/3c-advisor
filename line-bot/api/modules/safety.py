@@ -413,6 +413,9 @@ def build_legal_answer(topic: str) -> list:
                     "contents": [
                         {"type": "text", "text": qa["content"], "size": "sm",
                          "color": "#3E2723", "wrap": True},
+                        {"type": "separator", "margin": "md"},
+                        {"type": "text", "text": "⚠️ 以上為基本方向，實際情況請洽法律扶助基金會（412-8518）或律師",
+                         "size": "xs", "color": "#888888", "wrap": True, "margin": "md"},
                     ]
                 },
                 "footer": {
