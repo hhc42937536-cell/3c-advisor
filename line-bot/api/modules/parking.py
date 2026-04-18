@@ -931,19 +931,19 @@ def _build_restaurant_bubble(r: dict, lat: float, lon: float, city: str,
         body_contents.append(
             {"type": "text", "text": desc[:45] + ("…" if len(desc) > 45 else ""),
              "size": "xxs", "color": "#555555", "wrap": True,
-             "maxLines": 2, "margin": "xxs"}
+             "maxLines": 2, "margin": "xs"}
         )
     # 評分（有才顯示）
     if rating_str:
         body_contents.append(
             {"type": "text", "text": rating_str, "size": "xs",
-             "color": rating_color, "margin": "xxs"}
+             "color": rating_color, "margin": "xs"}
         )
     # 地址（有才顯示）
     if safe_addr:
         body_contents.append(
             {"type": "text", "text": safe_addr, "size": "xxs",
-             "color": "#AAAAAA", "wrap": True, "maxLines": 1, "margin": "xxs"}
+             "color": "#AAAAAA", "wrap": True, "maxLines": 1, "margin": "xs"}
         )
 
     # Postback data for eaten
