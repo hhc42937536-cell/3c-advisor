@@ -25,13 +25,13 @@ def redis_get(key: str):
 
 
 def redis_set(key: str, value, ttl: int = 300):
-    """存值到 Upstash Redis（JSON），ttl 秒後過期"""
+    """存值到 Upstash Redis（JSON），ttl=0 表示永不過期"""
     if not UPSTASH_REDIS_URL or not UPSTASH_REDIS_TOKEN:
         return
     try:
-        payload = json.dumps(
-            ["SET", key, json.dumps(value, ensure_ascii=False), "EX", ttl]
-        ).encode()
+        v = json.dumps(value, ensure_ascii=False)
+        cmd = ["SET", key, v] if ttl == 0 else ["SET", key, v, "EX", ttl]
+        payload = json.dumps(cmd).encode()
         req = urllib.request.Request(
             UPSTASH_REDIS_URL,
             data=payload,
@@ -57,4 +57,4 @@ def update_user_pref(user_id: str, **kwargs) -> None:
     key = f"user_pref:{user_id}"
     pref = redis_get(key) or {}
     pref.update(kwargs)
-    redis_set(key, pref, ttl=7_776_000)
+    redis_set(key, pref, ttl=0)  # 0 = Upstash 永不過期，成就資料不應隨非活躍消失

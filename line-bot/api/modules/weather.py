@@ -1327,23 +1327,25 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     _t2.join(timeout=max(0, _dl - _time.time()))
     _t3.join(timeout=max(0, _dl - _time.time()))
 
-    today = _dt.date.today()
-    doy   = today.timetuple().tm_yday
+    _TW_TZ = _dt.timezone(_dt.timedelta(hours=8))
+    today = _dt.datetime.now(_TW_TZ).date()
+    today_date = today.isoformat()          # "2026-04-18"
+    yesterday_date = (today - _dt.timedelta(days=1)).isoformat()
     _WEEKDAYS = ["一", "二", "三", "四", "五", "六", "日"]
     today_str = f"{today.month}月{today.day}日（星期{_WEEKDAYS[today.weekday()]}）"
-    # 每次呼叫累加計數，讓同一天多次查詢顯示不同小驚喜
-    _seq_key = f"morning_seq:{user_id}:{doy}"
+    # 每次呼叫累加計數，讓同一天多次查詢顯示不同小驚喜（key 用台灣日期，避免跨年問題）
+    _seq_key = f"morning_seq:{user_id}:{today_date}"
     _seq = int(_redis_get(_seq_key) or 0)
     _redis_set(_seq_key, str(_seq + 1), ttl=86400)
 
-    # 使用者連續打卡 streak 追蹤
+    # 使用者連續打卡 streak 追蹤（以台灣曆法日期為單位）
     _pref = _get_user_pref(user_id) if user_id else {}
-    _last_doy = _pref.get("last_checkin_doy", 0)
+    _last_date = _pref.get("last_checkin_date", "")
     _streak = _pref.get("streak", 0)
     _visited = _pref.get("visited_count", 0)
-    if user_id and _last_doy != doy:
-        _streak = (_streak + 1) if _last_doy == doy - 1 else 1
-        _update_user_pref(user_id, last_checkin_doy=doy, streak=_streak, visited_count=_visited)
+    if user_id and _last_date != today_date:
+        _streak = (_streak + 1) if _last_date == yesterday_date else 1
+        _update_user_pref(user_id, last_checkin_date=today_date, streak=_streak, visited_count=_visited)
 
     if wx_result.get("ok"):
         wx = wx_result
