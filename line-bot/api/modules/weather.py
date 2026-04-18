@@ -1302,30 +1302,14 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
             return _build_morning_city_picker()
 
     wx_result: dict = {}
-    rates: dict = {}
-    oil: dict = {}
 
     def _wx() -> None:
         nonlocal wx_result
         wx_result = _fetch_cwa_weather(city)
 
-    def _rt() -> None:
-        nonlocal rates
-        rates = _fetch_quick_rates()
-
-    def _oil_fn() -> None:
-        nonlocal oil
-        oil = _fetch_quick_oil()
-
     _t1 = _thr.Thread(target=_wx, daemon=True)
-    _t2 = _thr.Thread(target=_rt, daemon=True)
-    _t3 = _thr.Thread(target=_oil_fn, daemon=True)
-    _t1.start(); _t2.start(); _t3.start()
-    import time as _time
-    _dl = _time.time() + 3
-    _t1.join(timeout=max(0, _dl - _time.time()))
-    _t2.join(timeout=max(0, _dl - _time.time()))
-    _t3.join(timeout=max(0, _dl - _time.time()))
+    _t1.start()
+    _t1.join(timeout=2.5)
 
     _TW_TZ = _dt.timezone(_dt.timedelta(hours=8))
     today = _dt.datetime.now(_TW_TZ).date()
@@ -1386,31 +1370,6 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
             {"type": "text", "text": "☁️ 天氣資料暫時無法取得", "size": "sm", "color": "#888"},
             {"type": "text", "text": f"可說「{city}天氣」查詢",  "size": "xs", "color": "#AAA"},
         ]
-
-    info_items = []
-    usd = rates.get("USD", {}) if rates else {}
-    jpy = rates.get("JPY", {}) if rates else {}
-    if usd.get("spot_sell"):
-        r = usd["spot_sell"]
-        tip = "🎉便宜" if r <= 29.5 else "⚖️普通" if r <= 31.0 else "⚠️偏高" if r <= 32.0 else "💸高點"
-        info_items.append({"type": "text", "text": f"💵 美金 {r:.2f}　{tip}",
-                           "size": "xs", "color": "#37474F", "wrap": True})
-    if jpy.get("spot_sell"):
-        r = jpy["spot_sell"]
-        tip = "🎉超便宜" if r <= 0.215 else "😊不錯" if r <= 0.225 else "⚖️普通" if r <= 0.240 else "💸偏貴"
-        info_items.append({"type": "text", "text": f"💴 日幣 {r:.4f}　{tip}",
-                           "size": "xs", "color": "#37474F", "wrap": True})
-    if oil and oil.get("92") and oil["92"] != "?":
-        try:
-            p = float(oil["92"])
-            tip = "🎉便宜加滿" if p <= 28.5 else "⚖️普通" if p <= 30.5 else "⚠️略高" if p <= 32.0 else "💸高點"
-            info_items.append({"type": "text",
-                               "text": f"⛽ 92/{oil['92']}　95/{oil['95']}　98/{oil['98']}　{tip}",
-                               "size": "xs", "color": "#37474F", "wrap": True})
-        except Exception:
-            pass
-    if not info_items:
-        info_items = [{"type": "text", "text": "匯率/油價暫時無法取得", "size": "xs", "color": "#AAA"}]
 
     deal_icon, deal_title, deal_body, deal_url = _get_daily_deal(city, seq=_seq)
     song_icon, song_title, song_body, song_url  = _get_today_song(seq=_seq)
