@@ -825,7 +825,7 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
 
     # ── 快取命中直接返回（跳過所有 I/O）──────────────────────
     if user_id and not city_in_text:
-        _card_key = f"morning_card:{user_id}:{today_date}"
+        _card_key = f"morning_card:v2:{user_id}:{today_date}"
         _cached = _redis_get(_card_key)
         if _cached:
             return _cached
@@ -1033,7 +1033,7 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                           {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
                            "action": {"type": "message", "label": "吃什麼", "text": "今天吃什麼"}},
                           {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                           "action": {"type": "message", "label": "今日話題", "text": "今日話題"}},
+                           "action": {"type": "message", "label": "話題", "text": "今日話題"}},
                           {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
                            "action": {"type": "message", "label": "換城市", "text": "換城市"}},
                       ]},
@@ -1043,7 +1043,7 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     # fire-and-forget 寫快取（不含城市切換的請求才快取，避免記錯城市）
     if user_id and not city_in_text:
         _thr.Thread(
-            target=lambda: _redis_set(f"morning_card:{user_id}:{today_date}", result, ttl=14400),
+            target=lambda: _redis_set(f"morning_card:v2:{user_id}:{today_date}", result, ttl=14400),
             daemon=True,
         ).start()
     return result
