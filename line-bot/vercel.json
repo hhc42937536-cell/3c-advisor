@@ -8,7 +8,8 @@
         "includeFiles": [
           "api/modules/**",
           "api/utils/**",
-          "api/data/**"
+          "api/data/**",
+          "accupass_cache.json"
         ]
       }
     }
