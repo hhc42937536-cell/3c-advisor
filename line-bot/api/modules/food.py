@@ -1117,8 +1117,9 @@ def _build_group_result(city: str, dining_type: str) -> list:
                               ] + [{"type": "separator", "margin": "md"}])
                               if bib_picks else []
                           ) + (
-                              [
-                                  {"type": "separator", "margin": "md"} if bib_picks else {},
+                              (
+                                  [{"type": "separator", "margin": "md"}] if bib_picks else []
+                              ) + [
                                   {"type": "text", "text": "⭐ Google 高評分餐廳",
                                    "weight": "bold", "size": "sm", "color": "#E65100",
                                    "margin": "md"},
