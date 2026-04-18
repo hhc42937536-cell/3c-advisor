@@ -34,8 +34,8 @@ def _redis_set(key: str, value, ttl: int = 300) -> None:
 def _load_accupass_cache() -> dict:
     """載入 Accupass 爬蟲快取（accupass_cache.json）"""
     try:
-        # 從 api/ 上一層找 accupass_cache.json
-        base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        # line-bot/ 根目錄（api/modules/ 上兩層）
+        base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         cache_path = os.path.join(base, "accupass_cache.json")
         if not os.path.exists(cache_path):
             return {}
