@@ -281,9 +281,9 @@ def _build_product_footer(p: dict, is_desktop: bool, brand: str, name: str) -> d
             "type": "box", "layout": "vertical", "spacing": "sm",
             "contents": [
                 {"type": "button", "style": "primary", "color": "#8D6E63", "height": "sm",
-                 "action": {"type": "uri", "label": "🖥️ 查看完整規格建議", "uri": website_url}},
+                 "action": {"type": "uri", "label": "🖥️ 完整規格", "uri": website_url}},
                 {"type": "button", "style": "secondary", "height": "sm",
-                 "action": {"type": "message", "label": "❓ 這配置適合我嗎？",
+                 "action": {"type": "message", "label": "❓ 適合我嗎",
                             "text": f"這款適合我嗎 桌機 {name}"}},
                 {"type": "button", "style": "link", "height": "sm",
                  "action": {"type": "uri", "label": "📤 分享給朋友", "uri": _share_url}},

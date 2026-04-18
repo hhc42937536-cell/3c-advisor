@@ -151,12 +151,12 @@ def build_bmi_flex(height: float, weight: float) -> list:
                    "backgroundColor": "#FFFFFF",
                    "contents": [
             {"type": "button", "style": "primary", "color": ACCENT, "height": "sm",
-             "action": {"type": "message", "label": "🥗 健康減重方法", "text": "減肥方法"}},
+             "action": {"type": "message", "label": "🥗 減重", "text": "減肥方法"}},
             {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
                 {"type": "button", "style": "primary", "color": "#1A1F3A", "flex": 1,
-                 "height": "sm", "action": {"type": "message", "label": "😴 改善睡眠", "text": "睡眠改善"}},
+                 "height": "sm", "action": {"type": "message", "label": "😴 睡眠", "text": "睡眠改善"}},
                 {"type": "button", "style": "primary", "color": "#1A1F3A", "flex": 1,
-                 "height": "sm", "action": {"type": "message", "label": "🍽️ 健康吃什麼", "text": "吃什麼 輕食"}},
+                 "height": "sm", "action": {"type": "message", "label": "🍽️ 吃什麼", "text": "吃什麼 輕食"}},
             ]},
             {"type": "button", "style": "link", "height": "sm",
              "action": {"type": "uri", "label": "📤 分享 BMI 結果給朋友",

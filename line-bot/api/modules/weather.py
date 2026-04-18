@@ -1127,7 +1127,7 @@ def build_daily_topic(user_id: str = "") -> list:
                             "contents": [
                      {"type": "button", "style": "primary", "flex": 1, "height": "sm",
                       "color": "#1565C0",
-                      "action": {"type": "uri", "label": "📤 分享給朋友", "uri": share_url}},
+                      "action": {"type": "uri", "label": "📤 分享", "uri": share_url}},
                      {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
                       "action": {"type": "message", "label": "換一個", "text": "今日話題"}},
                  ]},

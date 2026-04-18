@@ -214,7 +214,7 @@ def build_credit_card_result(category: str) -> list:
                        "contents": [
                 {"type": "button", "style": "primary", "color": "#1565C0",
                  "height": "sm",
-                 "action": {"type": "uri", "label": "🔍 Google 搜尋申辦",
+                 "action": {"type": "uri", "label": "🔍 搜尋申辦",
                             "uri": apply_url}},
             ]},
         })
