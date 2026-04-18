@@ -2,13 +2,15 @@ name: Scrape Accupass Activities
 
 on:
   schedule:
-    - cron: '0 14 * * 5'   # 每週五 22:00 台灣時間（UTC+8 = UTC 14:00）
+    - cron: '0 14 * * 5'   # 每週五 22:00 台灣時間（UTC 14:00）
   workflow_dispatch:         # 允許手動觸發
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write        # 允許 push 回 repo
 
     steps:
       - name: Checkout repo
@@ -31,11 +33,15 @@ jobs:
         working-directory: line-bot
         run: python scrape_all.py
 
-      - name: Commit updated cache
+      - name: Commit and push updated cache
         working-directory: line-bot
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add accupass_cache.json
-          git diff --cached --quiet && echo "No changes" || git commit -m "chore: 自動更新 accupass_cache.json [skip ci]"
-          git push
+          if git diff --cached --quiet; then
+            echo "accupass_cache.json 無變化，略過 commit"
+          else
+            git commit -m "chore: 自動更新 accupass_cache.json [skip ci]"
+            git push origin HEAD:main
+          fi
