@@ -450,182 +450,182 @@
   "台南": [
     {
       "name": "大勇街無名鹹粥",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "台式鹹粥",
+      "desc": "清晨現煮鮮蚵花蛤鹹粥，小卷料鮮甜，在地人清早必吃",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/dayong-street-no-name-congee"
     },
     {
       "name": "吃麵吧",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "麵食",
+      "desc": "台式乾麵配特製滷汁，Q彈麵條每日手工現製",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/jai-mi-ba"
     },
     {
       "name": "阿文米粿",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "台式小吃",
+      "desc": "古早味米粿，軟嫩米漿蒸出無與倫比的傳統口感",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/a-wen-rice-cake"
     },
     {
       "name": "無名羊肉湯",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "羊肉湯",
+      "desc": "清湯羊肉湯底鮮甜無羊羶味，台南早午餐必吃",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/no-name-lamb-soup"
     },
     {
       "name": "阿星鹹粥",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "台式鹹粥",
+      "desc": "廟前老攤飄香數十年，米粥配鮮蚵花蛤現點現煮",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/a-hsing-congee"
     },
     {
       "name": "八寶彬圓仔惠 (國華街)",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "甜湯",
+      "desc": "古早味手工芋圓地瓜圓，國華街甜點名攤必吃",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/yuan-zai-hui-guohua-street"
     },
     {
       "name": "葉家小卷米粉",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "米粉湯",
+      "desc": "鮮甜小卷煮米粉，台南府城50年老味道",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/yeh-jia-calamari-rice-noodle-soup"
     },
     {
       "name": "誠實鍋燒意麵",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "鍋燒意麵",
+      "desc": "現點現煮鍋燒意麵，配料實在份量大方",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/cheng-shi"
     },
     {
       "name": "筑馨居",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "台菜",
+      "desc": "精緻台灣料理，傳統技法演繹台南家常菜",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/zhu-xin-ju"
     },
     {
       "name": "黃家蝦捲",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "台南小吃",
+      "desc": "台南名物蝦捲，現炸金黃酥脆，每日限量",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/huang-chia-shrimp-roll"
     },
     {
       "name": "一味品",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "肉羹",
+      "desc": "手工台式肉羹，湯底醇厚無澱粉勾芡，純正口味",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/yi-wei-pin"
     },
     {
       "name": "好農家米糕",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "米糕",
+      "desc": "台南筒仔米糕，油蔥滷肉配花生粉，古早米香",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/hao-nung-chia-migao"
     },
     {
       "name": "小公園擔仔麵",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "擔仔麵",
+      "desc": "台南擔仔麵創始風味，肉燥蝦仁一碗到底",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/small-park-danzai-noodles"
     },
     {
       "name": "博仁堂",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "藥膳",
+      "desc": "藥膳料理精心調配，養生美味的台南老店",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/po-jen-tang"
     },
     {
       "name": "添厚",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "台南小吃",
+      "desc": "古早味台南料理，老師傅手路菜份量十足",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/eat-to-fat"
     },
     {
       "name": "阿興虱目魚",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "虱目魚",
+      "desc": "台南虱目魚料理達人，魚肚魚皮魚丸三吃超滿足",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/a-xing-shi-mu-yu"
     },
     {
       "name": "落成米糕",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "米糕",
+      "desc": "糯米飯糰配肉燥花生，台南傳統米糕名店",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/lo-cheng-migao"
     },
     {
       "name": "福泰飯桌第三代",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "飯桌菜",
+      "desc": "家庭式台南飯桌菜，多款現滷小菜任選",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/fu-tai-table-third-generation"
     },
     {
       "name": "麥謎食驗室",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "創意台菜",
+      "desc": "創意台灣料理，在地食材重新詮釋台南風味",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/bue-mi-lab"
     },
     {
       "name": "謝掌櫃",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "台菜",
+      "desc": "手路菜精緻呈現，老宅空間吃出台南情懷",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/xie-shopkeeper"
     },
     {
       "name": "西羅殿牛肉湯",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "牛肉湯",
+      "desc": "清晨現宰台南牛肉湯，鮮嫩牛肉片涮熟即食",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/hsi-lo-tien-beef-soup"
     },
     {
       "name": "三好一公道當歸鴨",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "薑母鴨",
+      "desc": "溫補當歸藥膳鴨，米酒香氣四溢暖胃必吃",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/san-hao-yi-kung-tao-angelica-duck"
     },
     {
       "name": "尚好吃牛肉湯",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "牛肉湯",
+      "desc": "台南在地現撈現切牛肉湯，湯底濃郁鮮甜",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/shang-hao-chih-beef-soup"
     },
     {
       "name": "葉桑生炒鴨肉焿",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "鴨肉焿",
+      "desc": "鴨肉焿湯頭鮮甜，台南府城在地古早味",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/yeh-san-duck-thick-soup"
     },
     {
       "name": "開元紅燒土魠魚羮",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "土魠魚羮",
+      "desc": "紅燒土魠魚羹，台南老字號必吃小吃",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/kaiyuan-fried-spanish-mackerel-thick-soup"
     },
     {
       "name": "鮮蒸蝦仁肉圓",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "肉圓",
+      "desc": "手工蝦仁肉圓，皮薄餡厚現蒸上桌",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/shian-jeng-shrimp-bawan"
     },
     {
       "name": "東香台菜海味料理",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "台菜海鮮",
+      "desc": "傳統台菜海鮮，古法烹調保留食材原味",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/dong-shang-taiwanese-seafood"
     },
     {
       "name": "蓮霧腳羊肉湯",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "羊肉湯",
+      "desc": "清燉羊肉湯，羊騷味全無，市場口碑名店",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/lien-wu-chiao-lamb-soup"
     },
     {
       "name": "Lumière",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "法式料理",
+      "desc": "米其林必比登法式料理，主廚創意菜單台南精緻奢華",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/lumiere-1245897"
     },
     {
       "name": "咩灣裡羊肉店",
-      "type": "",
-      "desc": "米其林必比登推介",
+      "type": "羊肉爐",
+      "desc": "台南在地羊肉爐，清湯配薑絲暖身必訪",
       "url": "https://guide.michelin.com/tw/zh_TW/tainan-region/tainan/restaurant/baa-wanli-goat"
     }
   ],

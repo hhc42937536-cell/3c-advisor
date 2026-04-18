@@ -892,9 +892,24 @@ def _build_restaurant_bubble(r: dict, lat: float, lon: float, city: str,
         rating_color = "#888888"
         rating_str = ""
 
+    desc_raw = r.get("desc", "")
+    # 過濾掉純粹是「米其林必比登推介」的無意義 desc
+    desc = desc_raw if (desc_raw and "必比登推介" not in desc_raw) else ""
+    # 無 desc 但有 type → 用 type 補足說明
+    if not desc and r.get("type"):
+        desc = r["type"]
+
     safe_name = name or "未命名餐廳"
     safe_tag  = tag  or "👥 在地推薦"
-    safe_dist = dist_str or (addr[:20] if addr else (city[:2] if city else "附近美食"))
+    # 沒有距離時：若有 desc 用前 20 字，否則用城市名
+    if dist_str:
+        safe_dist = dist_str
+    elif desc:
+        safe_dist = f"📍 {desc[:20]}"
+    elif addr:
+        safe_dist = addr[:20]
+    else:
+        safe_dist = city[:2] if city else "附近美食"
     safe_addr = addr[:28] if addr else ""
 
     body_contents = [
@@ -907,10 +922,17 @@ def _build_restaurant_bubble(r: dict, lat: float, lon: float, city: str,
          "wrap": True, "maxLines": 2,
          "color": "#3D2B1F" if not eaten else "#AAAAAA",
          "margin": "xs"},
-        # 距離（步行分鐘）
+        # 距離（步行分鐘）或區域提示
         {"type": "text", "text": safe_dist, "size": "xs",
          "color": "#1565C0", "wrap": False, "margin": "xs"},
     ]
+    # 推薦描述（有才顯示，最多 2 行）
+    if desc and dist_str:  # 有距離才另外顯示 desc，避免重複
+        body_contents.append(
+            {"type": "text", "text": desc[:45] + ("…" if len(desc) > 45 else ""),
+             "size": "xxs", "color": "#555555", "wrap": True,
+             "maxLines": 2, "margin": "xxs"}
+        )
     # 評分（有才顯示）
     if rating_str:
         body_contents.append(
