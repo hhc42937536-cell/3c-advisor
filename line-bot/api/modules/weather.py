@@ -1374,9 +1374,9 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         wx_tom_icon = _wx_icon(wx.get("wx_tom", ""))
         wx_tomorrow = f"明天 {wx_tom_icon} {wx.get('min_tom','?')}-{wx.get('max_tom','?')}°C 雨{wx.get('pop_tom',0)}%"
         wx_items = [
-            {"type": "text", "text": wx_main,     "size": "md", "weight": "bold", "color": "#1A2D50"},
-            {"type": "text", "text": wx_hint,     "size": "xs", "color": "#E65100", "wrap": True},
-            {"type": "text", "text": wx_outfit,   "size": "xs", "color": "#37474F", "wrap": True, "margin": "sm"},
+            {"type": "text", "text": wx_main,     "size": "lg", "weight": "bold", "color": "#1A2D50"},
+            {"type": "text", "text": wx_hint,     "size": "sm", "color": "#E65100", "wrap": True},
+            {"type": "text", "text": wx_outfit,   "size": "sm", "color": "#37474F", "wrap": True, "margin": "sm"},
             {"type": "text", "text": wx_night,    "size": "xs", "color": "#607D8B", "margin": "xs"},
             {"type": "text", "text": wx_tomorrow, "size": "xs", "color": "#607D8B"},
         ]
@@ -1435,13 +1435,13 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         return {"type": "box", "layout": "horizontal", "margin": "sm",
                 "action": {"type": "uri", "label": label, "uri": url},
                 "contents": [
-                    {"type": "text", "text": icon, "size": "xs", "flex": 0,
+                    {"type": "text", "text": icon, "size": "sm", "flex": 0,
                      "color": "#5C6BC0"},
                     {"type": "box", "layout": "vertical", "flex": 1, "margin": "sm",
                      "contents": [
-                         {"type": "text", "text": label, "size": "xxs",
-                          "weight": "bold", "color": "#888888"},
-                         {"type": "text", "text": text, "size": "xs",
+                         {"type": "text", "text": label, "size": "xs",
+                          "weight": "bold", "color": "#555555"},
+                         {"type": "text", "text": text, "size": "sm",
                           "color": "#1565C0", "wrap": True, "decoration": "underline"},
                      ]},
                 ]}
@@ -1467,18 +1467,18 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                  "body": {"type": "box", "layout": "vertical", "spacing": "sm",
                           "paddingAll": "14px", "contents": [
                      # 天氣
-                     {"type": "text", "text": "🌤 今日天氣＋穿搭", "size": "xs",
+                     {"type": "text", "text": "🌤 今日天氣＋穿搭", "size": "sm",
                       "weight": "bold", "color": "#5C6BC0"},
                      *wx_items,
                      {"type": "separator", "margin": "md"},
                      # 微挑戰
-                     {"type": "text", "text": "🎯 今日微挑戰", "size": "xs",
+                     {"type": "text", "text": "🎯 今日微挑戰", "size": "sm",
                       "weight": "bold", "color": "#2E7D32", "margin": "md"},
-                     {"type": "text", "text": _challenge, "size": "xs",
+                     {"type": "text", "text": _challenge, "size": "sm",
                       "color": "#37474F", "wrap": True},
                      {"type": "separator", "margin": "md"},
                      # 今日小驚喜（5行，每行可點）
-                     {"type": "text", "text": "🎁 今日小驚喜", "size": "xs",
+                     {"type": "text", "text": "🎁 今日小驚喜", "size": "sm",
                       "weight": "bold", "color": "#E65100", "margin": "md"},
                      _row("🏷️", f"{deal_title}｜{deal_body}",
                           deal_body, _link(deal_url, deal_title)),
