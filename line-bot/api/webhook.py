@@ -46,6 +46,7 @@ from modules.food     import (
     build_food_message, build_group_dining_message,
     build_specialty_shops, build_city_specialties,
     build_food_restaurant_flex,
+    _set_user_loc, _get_user_loc,
     _ALL_CITIES, _STYLE_KEYWORDS, _ALL_FOOD_KEYWORDS,
 )
 from modules.weather  import (
@@ -1957,6 +1958,8 @@ class handler(BaseHTTPRequestHandler):
                         _parking_city = _city_from_coords(lat, lon)
                     if _parking_city:
                         _set_user_city(user_id, _parking_city)
+                    if user_id:
+                        _set_user_loc(user_id, lat, lon)
 
                     # ── 食物定位意圖（來自「吃什麼」Quick Reply）──
                     _food_flag = _redis_get(f"food_locate:{user_id}")

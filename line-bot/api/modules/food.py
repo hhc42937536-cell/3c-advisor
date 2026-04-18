@@ -905,6 +905,26 @@ def _set_user_city(user_id: str, city: str) -> None:
         _redis_set(f"user_city:{user_id}", city, ttl=86400 * 90)
 
 
+def _set_user_loc(user_id: str, lat: float, lon: float) -> None:
+    """存入用戶最後位置（1 天），供後續距離排序用"""
+    if user_id:
+        _redis_set(f"user_loc:{user_id}", f"{lat},{lon}", ttl=86400)
+
+
+def _get_user_loc(user_id: str) -> tuple:
+    """取得用戶最後位置，回傳 (lat, lon) 或 (None, None)"""
+    if not user_id:
+        return None, None
+    val = _redis_get(f"user_loc:{user_id}")
+    if val and "," in val:
+        try:
+            lat, lon = val.split(",", 1)
+            return float(lat), float(lon)
+        except ValueError:
+            pass
+    return None, None
+
+
 def _btn3d(label: str, text: str, main_c: str, shadow_c: str,
            txt_c: str = "#FFFFFF", flex: int = None) -> dict:
     """3D 凸起按鈕：外層陰影色 + 內層主色，paddingBottom 露出陰影造成立體感"""
@@ -1412,8 +1432,18 @@ def build_food_flex(style: str, area: str = "") -> list:
              }}]
 
 
-def build_food_restaurant_flex(area: str, food_type: str = "") -> list:
-    """從觀光署餐廳資料推薦在地餐廳"""
+def build_food_restaurant_flex(area: str, food_type: str = "", user_id: str = "") -> list:
+    """從觀光署餐廳資料推薦在地餐廳；有上次位置時按距離由近到遠排序"""
+    import math as _math
+
+    def _haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+        R = 6371000
+        p = _math.pi / 180
+        a = (0.5 - _math.cos((lat2 - lat1) * p) / 2
+             + _math.cos(lat1 * p) * _math.cos(lat2 * p)
+             * (1 - _math.cos((lon2 - lon1) * p)) / 2)
+        return 2 * R * _math.asin(_math.sqrt(a))
+
     area2 = area[:2] if area else ""
     pool = _RESTAURANT_CACHE.get(area, _RESTAURANT_CACHE.get(area2, []))
     if not pool:
@@ -1422,12 +1452,30 @@ def build_food_restaurant_flex(area: str, food_type: str = "") -> list:
         typed = [r for r in pool if food_type in r.get("type", "")]
         if len(typed) >= 3:
             pool = typed
-    rest_key = f"rest_{area}_{food_type}"
-    last_rest = set(_food_recent.get(rest_key, []))
-    fresh_rest = [p for p in pool if p["name"] not in last_rest]
-    if len(fresh_rest) < 5:
-        fresh_rest = pool
-    picks = _random.sample(fresh_rest, min(5, len(fresh_rest)))
+
+    # 有上次位置 → 按距離排序，取最近 5 間
+    u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
+    if u_lat and u_lon:
+        with_dist = []
+        no_dist = []
+        for r in pool:
+            if r.get("lat") and r.get("lng"):
+                d = _haversine(u_lat, u_lon, float(r["lat"]), float(r["lng"]))
+                with_dist.append((d, r))
+            else:
+                no_dist.append(r)
+        with_dist.sort(key=lambda x: x[0])
+        picks = [r for _, r in with_dist[:5]]
+        if len(picks) < 5:
+            picks += _random.sample(no_dist, min(5 - len(picks), len(no_dist)))
+    else:
+        rest_key = f"rest_{area}_{food_type}"
+        last_rest = set(_food_recent.get(rest_key, []))
+        fresh_rest = [p for p in pool if p["name"] not in last_rest]
+        if len(fresh_rest) < 5:
+            fresh_rest = pool
+        picks = _random.sample(fresh_rest, min(5, len(fresh_rest)))
+        _food_recent[rest_key] = [p["name"] for p in picks]
     _food_recent[rest_key] = [p["name"] for p in picks]
     period, meal_label = _tw_meal_period()
     area_label = f"（{area}）" if area else ""
@@ -1447,6 +1495,13 @@ def build_food_restaurant_flex(area: str, food_type: str = "") -> list:
         sub_info = f"{icon}{rtype}"
         if town:
             sub_info += f" · {town}"
+        # 有距離時顯示
+        if u_lat and u_lon and r.get("lat") and r.get("lng"):
+            dist_m = _haversine(u_lat, u_lon, float(r["lat"]), float(r["lng"]))
+            walk_min = max(1, round(dist_m / 80))
+            dist_label = (f"步行約{walk_min}分（{int(dist_m)}m）"
+                          if dist_m < 1000 else f"步行約{walk_min}分（{dist_m/1000:.1f}km）")
+            sub_info += f"  📍{dist_label}"
         rname = r['name']
         items += [
             {"type": "text", "text": f"• {rname}", "weight": "bold",
@@ -1957,7 +2012,7 @@ def build_food_message(text: str, user_id: str = None) -> list:
                 food_type = ft
                 break
         if area_city:
-            return build_food_restaurant_flex(area_city, food_type)
+            return build_food_restaurant_flex(area_city, food_type, user_id=user_id)
         if region:
             return build_food_area_picker("餐廳", region)
         return build_food_region_picker("餐廳")
