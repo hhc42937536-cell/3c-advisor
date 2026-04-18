@@ -877,11 +877,11 @@ def _get_city_local_deal(city: str, user_id: str = "") -> tuple:
 
     _ac = _get_accupass_cache()
     if _ac:
-        city_data = _ac.get(city, {})
+        city_data = _ac.get("events", _ac).get(city, {})
         city_events = []
-        for cat, events in city_data.items():
-            if isinstance(events, list):
-                city_events.extend(events)
+        for cat, evs in city_data.items():
+            if isinstance(evs, list):
+                city_events.extend(evs)
         if city_events:
             ev = city_events[_day_user_city_hash(doy, city, user_id, 4) % len(city_events)]
             return ("🎉", f"{city}近期活動", ev.get("name", "精彩活動"), ev.get("url", ""))
