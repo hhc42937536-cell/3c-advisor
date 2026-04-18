@@ -54,6 +54,7 @@ from modules.weather  import (
     build_morning_summary, _fetch_cwa_weather,
     _fetch_quick_oil, _fetch_quick_rates,
     _set_user_city, _get_user_city, _build_morning_city_picker,
+    build_switch_city_picker,
 )
 from modules.health   import build_health_message, build_mood_support, parse_height_weight
 from modules.money    import (
@@ -717,8 +718,19 @@ def handle_text_message(text: str, user_id: str = "") -> list:
 
     # ── 精確格式先判斷（不進評分，避免破壞特殊流程）──────
 
-    if text in ("換城市",):
-        return build_weather_region_picker()
+    if text in ("換城市", "切換城市", "設定城市", "更換城市"):
+        current = _get_user_city(user_id) if user_id else ""
+        return build_switch_city_picker(current)
+
+    # 切換城市確認（格式：切換城市 台北）
+    _SWITCH_CITY_PAT = re.compile(r"^切換城市\s*(.+)$")
+    _sc_m = _SWITCH_CITY_PAT.match(text)
+    if _sc_m:
+        new_city = _sc_m.group(1).strip()
+        if user_id:
+            _set_user_city(user_id, new_city)
+            _redis_set(f"user_loc:{user_id}", "", ttl=1)  # 清除舊 GPS
+        return [{"type": "text", "text": f"✅ 已切換到 {new_city}\n\n接下來美食、天氣、活動都會以 {new_city} 為主。\n如果到了目的地可以分享位置，會自動偵測更精確的範圍 📍"}]
 
     # 活動＋城市前綴（如「活動台南」）
     if text.startswith("活動") and len(text) > 2:

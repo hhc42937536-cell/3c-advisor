@@ -1178,6 +1178,51 @@ def _build_morning_city_picker() -> list:
              }}]
 
 
+def build_switch_city_picker(current_city: str = "") -> list:
+    """切換城市卡片：按下後送 '切換城市 {city}'，同時清除 GPS 快取"""
+    ACCENT = "#1A1F3A"
+
+    def _btn(c: str) -> dict:
+        style = "primary"
+        btn: dict = {"type": "button", "style": style, "height": "sm", "flex": 1,
+                     "color": "#2979FF" if c == current_city else ACCENT,
+                     "action": {"type": "message", "label": c,
+                                "text": f"切換城市 {c}"}}
+        return btn
+
+    def _rows(cities: list) -> list:
+        btns = [_btn(c) for c in cities]
+        return [{"type": "box", "layout": "horizontal", "spacing": "sm",
+                 "contents": btns[i:i+3]}
+                for i in range(0, len(btns), 3)]
+
+    def _section(label: str, cities: list) -> list:
+        return [{"type": "text", "text": label, "size": "xs",
+                 "color": "#8892B0", "margin": "md"}] + _rows(cities)
+
+    body: list = []
+    body += _section("🏙️ 北部", ["台北", "新北", "基隆", "桃園", "新竹", "苗栗"])
+    body += _section("🌾 中部", ["台中", "彰化", "南投", "雲林"])
+    body += _section("☀️ 南部", ["嘉義", "台南", "高雄", "屏東"])
+    body += _section("🏔️ 東部 ＋ 離島", ["宜蘭", "花蓮", "台東", "澎湖", "金門", "連江"])
+
+    subtitle = f"目前城市：{current_city}" if current_city else "選擇後自動套用到美食、天氣、活動"
+    return [{"type": "flex", "altText": "切換城市",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {"type": "box", "layout": "vertical",
+                            "backgroundColor": ACCENT, "paddingAll": "16px",
+                            "contents": [
+                                {"type": "text", "text": "📍 切換城市",
+                                 "color": "#FFFFFF", "size": "xl", "weight": "bold"},
+                                {"type": "text", "text": subtitle,
+                                 "color": "#8892B0", "size": "xs", "wrap": True, "margin": "sm"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                          "paddingAll": "12px", "contents": body},
+             }}]
+
+
 def build_morning_summary(text: str, user_id: str = "") -> list:
     """早安摘要：天氣 + 穿搭 + 匯率 + 油價 + 今日好康"""
     import threading as _thr
