@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: refactor/modularize
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -43,5 +44,5 @@ jobs:
             echo "accupass_cache.json 無變化，略過 commit"
           else
             git commit -m "chore: 自動更新 accupass_cache.json [skip ci]"
-            git push origin HEAD:main
+            git push origin HEAD:refactor/modularize
           fi
