@@ -1737,11 +1737,7 @@ def build_food_special_picker(city: str = "") -> list:
                  "body": {
                      "type": "box", "layout": "vertical", "paddingAll": "12px", "spacing": "sm",
                      "contents": [
-                         {"type": "box", "layout": "horizontal", "spacing": "sm",
-                          "contents": [
-                              _btn3d("⭐ 必比登", f"必比登{suf}", "#E65100", "#8A3000", flex=1),
-                              _btn3d("🏠 在地餐廳", f"在地餐廳{suf}", "#1565C0", "#0A3D8A", flex=1),
-                          ]},
+                         _btn3d("⭐ 必比登", f"必比登{suf}", "#E65100", "#8A3000"),
                          {"type": "box", "layout": "horizontal", "spacing": "sm",
                           "contents": [
                               _btn3d("🍻 多人聚餐", "聚餐", "#C62828", "#7B1515", flex=1),
