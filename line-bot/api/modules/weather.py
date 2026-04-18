@@ -851,7 +851,8 @@ def _get_national_deal(city: str, user_id: str = "") -> tuple:
     if deals:
         deal = deals[_day_user_city_hash(doy, city, user_id, 3) % len(deals)]
         tag = deal.get("tag", "PTT")
-        candidates.append(("ptt", ("🔥", f"網友好康（{tag}）", deal.get("title", ""))))
+        candidates.append(("ptt", ("🔥", f"網友好康（{tag}）", deal.get("title", ""),
+                                   deal.get("url", ""))))
 
     songs = surprise_cache.get("songs", []) if surprise_cache else []
     if songs:
@@ -861,9 +862,11 @@ def _get_national_deal(city: str, user_id: str = "") -> tuple:
 
     if candidates:
         pick = candidates[_day_user_city_hash(doy, city, user_id, 0) % len(candidates)]
-        return pick[1]
+        t = pick[1]
+        return t if len(t) == 4 else (*t, "")
 
-    return _SURPRISES_FALLBACK[_day_user_city_hash(doy, city, user_id, 9) % len(_SURPRISES_FALLBACK)]
+    t = _SURPRISES_FALLBACK[_day_user_city_hash(doy, city, user_id, 9) % len(_SURPRISES_FALLBACK)]
+    return t if len(t) == 4 else (*t, "")
 
 
 def _get_city_local_deal(city: str, user_id: str = "") -> tuple:
@@ -881,12 +884,13 @@ def _get_city_local_deal(city: str, user_id: str = "") -> tuple:
                 city_events.extend(events)
         if city_events:
             ev = city_events[_day_user_city_hash(doy, city, user_id, 4) % len(city_events)]
-            return ("🎉", f"{city}近期活動", f"{ev.get('name', '精彩活動')}，有空去看看～")
+            return ("🎉", f"{city}近期活動", ev.get("name", "精彩活動"), ev.get("url", ""))
 
     deal_pool = _CITY_LOCAL_DEALS.get(city, _GENERIC_LOCAL_DEALS)
     tip_pool = _CITY_LOCAL_TIPS.get(city, _GENERIC_LOCAL_TIPS)
     combined = deal_pool + tip_pool
-    return combined[_day_user_city_hash(doy, city, user_id, 5) % len(combined)]
+    t = combined[_day_user_city_hash(doy, city, user_id, 5) % len(combined)]
+    return t if len(t) == 4 else (*t, "")
 
 
 def _get_morning_actions() -> list:
@@ -1336,8 +1340,8 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     if not info_items:
         info_items = [{"type": "text", "text": "匯率/油價暫時無法取得", "size": "xs", "color": "#AAA"}]
 
-    nat_icon, nat_title, nat_body = _get_national_deal(city, user_id)
-    loc_icon, loc_title, loc_body = _get_city_local_deal(city, user_id)
+    nat_icon, nat_title, nat_body, nat_url = _get_national_deal(city, user_id)
+    loc_icon, loc_title, loc_body, loc_url = _get_city_local_deal(city, user_id)
 
     tip = _MORNING_ACTIONS[doy % len(_MORNING_ACTIONS)]
 
@@ -1376,12 +1380,24 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                       "weight": "bold", "color": "#E65100", "margin": "md"},
                      {"type": "text", "text": f"{nat_icon} {nat_title}", "size": "xs",
                       "weight": "bold", "color": "#5C6BC0", "margin": "sm"},
-                     {"type": "text", "text": nat_body, "size": "xs",
-                      "color": "#37474F", "wrap": True},
+                     *([{"type": "box", "layout": "vertical", "margin": "xs",
+                         "action": {"type": "uri", "label": nat_body, "uri": nat_url},
+                         "contents": [{"type": "text", "text": f"▶ {nat_body}  👆 點我看詳情",
+                                       "size": "xs", "color": "#1565C0", "wrap": True,
+                                       "decoration": "underline"}]}]
+                       if nat_url else
+                       [{"type": "text", "text": nat_body, "size": "xs",
+                         "color": "#37474F", "wrap": True}]),
                      {"type": "text", "text": f"{loc_icon} {loc_title}", "size": "xs",
                       "weight": "bold", "color": "#5C6BC0", "margin": "sm"},
-                     {"type": "text", "text": loc_body, "size": "xs",
-                      "color": "#37474F", "wrap": True},
+                     *([{"type": "box", "layout": "vertical", "margin": "xs",
+                         "action": {"type": "uri", "label": loc_body, "uri": loc_url},
+                         "contents": [{"type": "text", "text": f"▶ {loc_body}  👆 點我看詳情",
+                                       "size": "xs", "color": "#1565C0", "wrap": True,
+                                       "decoration": "underline"}]}]
+                       if loc_url else
+                       [{"type": "text", "text": loc_body, "size": "xs",
+                         "color": "#37474F", "wrap": True}]),
                      {"type": "separator", "margin": "md"},
                      {"type": "text", "text": "💡 今日健康提醒", "size": "xs",
                       "weight": "bold", "color": "#5C6BC0", "margin": "md"},
