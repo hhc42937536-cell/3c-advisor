@@ -1342,7 +1342,9 @@ def build_food_flex(style: str, area: str = "") -> list:
     if len(fresh) < 3:
         fresh = filtered
     picks = _random.sample(fresh, min(3, len(fresh)))
-    _food_recent[style] = [p["name"] for p in picks]
+    # 記住最近 2 批（6 個）避免重複
+    prev = _food_recent.get(style, [])
+    _food_recent[style] = (prev + [p["name"] for p in picks])[-6:]
     area_label = f"（{area}附近）" if area else ""
     colors = {"便當": "#C62828", "麵食": "#E65100", "小吃": "#F57C00", "火鍋": "#D32F2F",
               "日韓": "#1565C0", "早午餐": "#FF8F00", "飲料甜點": "#6A1B9A", "輕食": "#2E7D32"}
