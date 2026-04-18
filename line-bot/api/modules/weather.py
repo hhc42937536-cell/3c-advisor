@@ -1425,122 +1425,88 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     # 新發現（冷知識輪播）
     _find_icon, _find_title, _find_body = _NEW_FINDS[(today.toordinal() + _seq * 3) % len(_NEW_FINDS)]
 
-    def _link(url: str, query: str) -> str:
-        return url or "https://www.google.com/search?q=" + urllib.parse.quote(query)
-
     import urllib.parse as _up
 
-    _share_text = (
-        f"☀️ 早安！{city} {today_str}\n\n"
-        f"🌤 {wx_main}\n\n"
-        f"👉 加「生活優轉」每天收到專屬好康：\n"
-        f"https://line.me/R/ti/p/{LINE_BOT_ID}" if LINE_BOT_ID else "https://line.me/R/"
-    )
-    _share_url = f"https://social-plugins.line.me/lineit/share?url={_up.quote(_share_text)}"
+    def _link(url: str, query: str) -> str:
+        return url or "https://www.google.com/search?q=" + _up.quote(query)
 
-    # ── Message 1：主卡（天氣 + 穿搭 + 微挑戰 + streak）─────────
-    main_card = {"type": "flex", "altText": f"☀️ 早安！{city} {today_str}",
-        "contents": {
-            "type": "bubble", "size": "mega",
-            "header": {"type": "box", "layout": "vertical",
-                       "backgroundColor": "#1A1F3A", "paddingAll": "16px",
-                       "contents": [
-                           {"type": "text", "text": f"☀️ 早安！{city}",
-                            "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                           {"type": "text", "text": today_str,
-                            "color": "#8892B0", "size": "xs", "margin": "xs"},
-                           *([{"type": "text",
-                               "text": f"🔥 連續 {_streak} 天打卡！",
-                               "color": "#FFD54F", "size": "xs", "margin": "xs"}]
-                             if _streak >= 2 else []),
-                       ]},
-            "body": {"type": "box", "layout": "vertical", "spacing": "sm",
-                     "paddingAll": "14px", "contents": [
-                {"type": "text", "text": "🌤 今日天氣＋穿搭", "size": "xs",
-                 "weight": "bold", "color": "#5C6BC0"},
-                *wx_items,
-                {"type": "separator", "margin": "md"},
-                {"type": "text", "text": "🎯 今日微挑戰", "size": "xs",
-                 "weight": "bold", "color": "#2E7D32", "margin": "md"},
-                {"type": "text", "text": _challenge, "size": "xs",
-                 "color": "#37474F", "wrap": True},
-            ]},
-            "footer": {"type": "box", "layout": "vertical",
-                       "spacing": "xs", "paddingAll": "10px",
-                       "contents": [
-                {"type": "box", "layout": "horizontal", "spacing": "sm",
-                 "contents": [
-                     {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                      "action": {"type": "message", "label": "吃什麼", "text": "今天吃什麼"}},
-                     {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                      "action": {"type": "message", "label": "今日話題", "text": "今日話題"}},
-                     {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                      "action": {"type": "message", "label": "放鬆一下", "text": "放鬆一下"}},
-                 ]},
-                {"type": "button", "style": "secondary", "height": "sm",
-                 "action": {"type": "message", "label": f"📍 換城市（{city}）",
-                            "text": "換城市"}},
-            ]},
-        }}
-
-    # ── Message 2：今日小驚喜 Carousel ──────────────────────────
-    def _surprise_bubble(
-        bg: str, label: str, icon: str, title: str, body_text: str,
-        btn_label: str, btn_uri: str,
-    ) -> dict:
-        return {
-            "type": "bubble", "size": "kilo",
-            "header": {"type": "box", "layout": "vertical",
-                       "backgroundColor": bg, "paddingAll": "12px",
-                       "contents": [
-                           {"type": "text", "text": label, "color": "#FFFFFF",
-                            "size": "xxs", "weight": "bold"},
-                           {"type": "text", "text": f"{icon} {title}",
-                            "color": "#FFFFFF", "size": "sm", "weight": "bold",
-                            "wrap": True, "margin": "xs"},
-                       ]},
-            "body": {"type": "box", "layout": "vertical", "paddingAll": "12px",
+    def _row(icon: str, label: str, text: str, url: str) -> dict:
+        """單行可點連結列"""
+        return {"type": "box", "layout": "horizontal", "margin": "sm",
+                "action": {"type": "uri", "label": label, "uri": url},
+                "contents": [
+                    {"type": "text", "text": icon, "size": "xs", "flex": 0,
+                     "color": "#5C6BC0"},
+                    {"type": "box", "layout": "vertical", "flex": 1, "margin": "sm",
                      "contents": [
-                         {"type": "text", "text": body_text, "size": "xs",
-                          "color": "#37474F", "wrap": True, "lineSpacing": "4px"},
+                         {"type": "text", "text": label, "size": "xxs",
+                          "weight": "bold", "color": "#888888"},
+                         {"type": "text", "text": text, "size": "xs",
+                          "color": "#1565C0", "wrap": True, "decoration": "underline"},
                      ]},
-            "footer": {"type": "box", "layout": "vertical", "paddingAll": "8px",
-                       "contents": [
-                           {"type": "button", "style": "primary", "height": "sm",
-                            "color": bg,
-                            "action": {"type": "uri", "label": btn_label, "uri": btn_uri}},
-                       ]},
-        }
+                ]}
 
-    carousel_bubbles = [
-        _surprise_bubble(
-            "#E65100", "🏷️ 今日優惠", deal_icon, deal_title, deal_body,
-            "查看優惠", _link(deal_url, deal_title),
-        ),
-        _surprise_bubble(
-            "#5C6BC0", "💬 熱話題", _topic_icon, "今天聊這個", _topic_q,
-            "分享話題",
-            "https://social-plugins.line.me/lineit/share?url=" + _up.quote(_topic_q),
-        ),
-        _surprise_bubble(
-            "#2E7D32", "🎉 近期活動", loc_icon, loc_title, loc_body,
-            "查看活動", _link(loc_url, f"{loc_title} {city}"),
-        ),
-        _surprise_bubble(
-            "#1565C0", "🎵 新歌推薦", song_icon, song_title, song_body,
-            "去聽聽", _link(song_url, song_body),
-        ),
-        _surprise_bubble(
-            "#00695C", "🔍 新發現", _find_icon, _find_title, _find_body,
-            "了解更多",
-            "https://www.google.com/search?q=" + _up.quote(_find_title),
-        ),
-    ]
+    streak_header = (
+        [{"type": "text", "text": f"🔥 連續 {_streak} 天打卡！",
+          "color": "#FFD54F", "size": "xs", "margin": "xs"}]
+        if _streak >= 2 else []
+    )
 
-    carousel_msg = {"type": "flex", "altText": "🎁 今日小驚喜",
-                    "contents": {"type": "carousel", "contents": carousel_bubbles}}
-
-    return [main_card, carousel_msg]
+    return [{"type": "flex", "altText": f"☀️ 早安！{city} {today_str}",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {"type": "box", "layout": "vertical",
+                            "backgroundColor": "#1A1F3A", "paddingAll": "16px",
+                            "contents": [
+                                {"type": "text", "text": f"☀️ 早安！{city}",
+                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                                {"type": "text", "text": today_str,
+                                 "color": "#8892B0", "size": "xs", "margin": "xs"},
+                                *streak_header,
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                          "paddingAll": "14px", "contents": [
+                     # 天氣
+                     {"type": "text", "text": "🌤 今日天氣＋穿搭", "size": "xs",
+                      "weight": "bold", "color": "#5C6BC0"},
+                     *wx_items,
+                     {"type": "separator", "margin": "md"},
+                     # 微挑戰
+                     {"type": "text", "text": "🎯 今日微挑戰", "size": "xs",
+                      "weight": "bold", "color": "#2E7D32", "margin": "md"},
+                     {"type": "text", "text": _challenge, "size": "xs",
+                      "color": "#37474F", "wrap": True},
+                     {"type": "separator", "margin": "md"},
+                     # 今日小驚喜（5行，每行可點）
+                     {"type": "text", "text": "🎁 今日小驚喜", "size": "xs",
+                      "weight": "bold", "color": "#E65100", "margin": "md"},
+                     _row("🏷️", f"{deal_title}｜{deal_body}",
+                          deal_body, _link(deal_url, deal_title)),
+                     _row(_topic_icon, f"話題：{_topic_q[:30]}",
+                          _topic_tip,
+                          "https://social-plugins.line.me/lineit/share?url=" + _up.quote(_topic_q)),
+                     _row(loc_icon, f"{loc_title}｜{loc_body[:25]}",
+                          loc_body, _link(loc_url, f"{loc_title} {city}")),
+                     _row(song_icon, f"{song_title}｜{song_body[:25]}",
+                          song_body, _link(song_url, song_body)),
+                     _row(_find_icon, f"新發現：{_find_title}",
+                          _find_body,
+                          "https://www.google.com/search?q=" + _up.quote(_find_title)),
+                 ]},
+                 "footer": {"type": "box", "layout": "vertical",
+                            "spacing": "xs", "paddingAll": "10px",
+                            "contents": [
+                     {"type": "box", "layout": "horizontal", "spacing": "sm",
+                      "contents": [
+                          {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                           "action": {"type": "message", "label": "吃什麼", "text": "今天吃什麼"}},
+                          {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                           "action": {"type": "message", "label": "今日話題", "text": "今日話題"}},
+                          {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                           "action": {"type": "message", "label": "換城市", "text": "換城市"}},
+                      ]},
+                 ]},
+             }}]
 
 
 # ─── 放鬆建議（低壓力、無義務）──────────────────────────────
