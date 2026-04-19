@@ -1695,10 +1695,19 @@ def build_food_restaurant_flex(area: str, food_type: str = "", user_id: str = ""
     u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
     if u_lat and u_lon:
         kw = f"餐廳 {food_type}" if food_type else "餐廳 小吃 美食"
-        gp = _nearby_places(u_lat, u_lon, radius=2000, keyword=kw)
+        # 快取完整結果 30 分鐘，「再換一組」時 random sample → 不重複
+        _gp_cache_key = f"nearby_rest:{u_lat:.4f},{u_lon:.4f}:{food_type}"
+        _gp_cached = _redis_get(_gp_cache_key)
+        if _gp_cached:
+            gp = json.loads(_gp_cached) if isinstance(_gp_cached, str) else _gp_cached
+        else:
+            gp = _nearby_places(u_lat, u_lon, radius=2000, keyword=kw)
+            if gp:
+                _redis_set(_gp_cache_key, json.dumps(gp), ttl=1800)
         if len(gp) >= 3:
+            sampled = _random.sample(gp, min(5, len(gp)))
             picks = []
-            for r in gp[:5]:
+            for r in sampled:
                 rating = r.get("rating", 0)
                 cnt = r.get("user_ratings_total", 0)
                 desc = f"評分 {rating}⭐（{cnt} 則評價）" if rating else ""
@@ -1751,9 +1760,12 @@ def build_food_restaurant_flex(area: str, food_type: str = "", user_id: str = ""
         # 有距離時顯示
         if u_lat and u_lon and r.get("lat") and r.get("lng"):
             dist_m = _haversine(u_lat, u_lon, float(r["lat"]), float(r["lng"]))
-            walk_min = max(1, round(dist_m / 80))
-            dist_label = (f"步行約{walk_min}分（{int(dist_m)}m）"
-                          if dist_m < 1000 else f"步行約{walk_min}分（{dist_m/1000:.1f}km）")
+            if dist_m < 500:
+                dist_label = f"步行約{max(1, round(dist_m / 80))}分（{int(dist_m)}m）"
+            elif dist_m < 1000:
+                dist_label = f"騎車約{max(1, round(dist_m / 250))}分（{int(dist_m)}m）"
+            else:
+                dist_label = f"騎車約{max(1, round(dist_m / 250))}分（{dist_m/1000:.1f}km）"
             sub_info += f"  📍{dist_label}"
         rname = r['name']
         items += [
