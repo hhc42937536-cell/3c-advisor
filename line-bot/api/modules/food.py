@@ -985,9 +985,9 @@ def _get_user_city(user_id: str) -> str:
 
 
 def _set_user_city(user_id: str, city: str) -> None:
-    """將用戶城市偏好存入 Redis（90 天）"""
+    """將用戶城市偏好存入 Redis（8 小時，當天有效）"""
     if user_id and city:
-        _redis_set(f"user_city:{user_id}", city, ttl=86400 * 90)
+        _redis_set(f"user_city:{user_id}", city, ttl=28800)
 
 
 def _set_user_loc(user_id: str, lat: float, lon: float) -> None:
@@ -2837,7 +2837,9 @@ def build_food_message(text: str, user_id: str = None) -> list:
     area_match = re.search(rf'({all_cities_pat})\S{{0,6}}', text_s)
     if area_match:
         area = area_match.group(0)
-        _set_user_city(user_id, area[:2])
+        _is_temp_query = any(w in text_s for w in ["目的地", "特殊需求", "聚餐", "必比登", "美食活動"])
+        if not _is_temp_query:
+            _set_user_city(user_id, area[:2])
     area_city = area[:2] if area else ""
 
     # ── 若用戶沒指定城市，自動帶入上次使用的城市 ──
