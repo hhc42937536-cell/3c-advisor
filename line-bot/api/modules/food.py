@@ -1130,7 +1130,7 @@ def _build_more_restaurants(city: str, dining_type: str) -> list:
 
 
 def _build_group_result(city: str, dining_type: str) -> list:
-    """城市 + 類型 → 必比登 / 米其林 / 高評分 / 特色包廂 四區塊聚餐卡"""
+    """城市 + 類型 → 必比登 / 米其林 / 高評分 / 特色異國 四區塊聚餐卡"""
     info = _GROUP_DINING_TYPES.get(dining_type, _GROUP_DINING_TYPES["不限"])
     color = info["color"]
     emoji = info["emoji"]
@@ -1155,10 +1155,11 @@ def _build_group_result(city: str, dining_type: str) -> list:
         raw = _text_search_places(f"{city} {dining_type} 聚餐 高評分", max_results=8)
         gp_picks = [p for p in raw if (p.get("rating") or 0) >= 4.0][:3]
 
-    # ── 4. 特色包廂推薦（Google text_search） ──────────────
+    # ── 4. 特色異國料理（Google text_search） ─────────────
     featured_picks: list[dict] = []
     if GOOGLE_PLACES_API_KEY:
-        raw_f = _text_search_places(f"{city} {dining_type} 特色 包廂 聚餐", max_results=5)
+        raw_f = _text_search_places(
+            f"{city} 印度料理 泰式 川菜 法式 異國料理 特色餐廳", max_results=5)
         featured_picks = raw_f[:3]
 
     tips = {
@@ -1219,9 +1220,9 @@ def _build_group_result(city: str, dining_type: str) -> list:
         body += _section("🌟", "Google 高評分餐廳", "4.0 以上，真實評價最可信",
                          "#E65100", [_gp_row(p) for p in gp_picks])
 
-    # 區塊 4 特色包廂推薦
+    # 區塊 4 特色異國料理
     if featured_picks:
-        body += _section("🎯", "特色包廂推薦", "適合大桌聚會，氣氛佳",
+        body += _section("🌏", "特色異國料理", "印度、泰式、川菜、法式…換個口味",
                          "#1565C0", [_gp_row(p) for p in featured_picks])
 
     # 訂位 Tips
