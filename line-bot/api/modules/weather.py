@@ -974,7 +974,7 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         """單行可點連結列"""
         return {"type": "box", "layout": "horizontal", "margin": "lg",
                 "paddingTop": "8px",
-                "action": {"type": "uri", "label": label, "uri": url},
+                "action": {"type": "uri", "label": label[:40], "uri": url},
                 "contents": [
                     {"type": "text", "text": icon, "size": "sm", "flex": 0,
                      "color": "#5C6BC0"},
