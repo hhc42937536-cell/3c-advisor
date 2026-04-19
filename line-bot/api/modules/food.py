@@ -2107,6 +2107,31 @@ def build_city_specialties(city: str) -> list:
             city_btn_rows.append({"type": "box", "layout": "horizontal",
                                    "spacing": "xs", "contents": row})
             row = []
+    # 快速入口卡（必買 / 最新流行）
+    bubbles.append({
+        "type": "bubble", "size": "kilo",
+        "header": {
+            "type": "box", "layout": "vertical",
+            "backgroundColor": "#1B5E20", "paddingAll": "10px",
+            "contents": [
+                {"type": "text", "text": f"🔍 深入探索 {city2}",
+                 "color": "#FFFFFF", "size": "sm", "weight": "bold"},
+                {"type": "text", "text": "即時抓取高評分熱門店家",
+                 "color": "#A5D6A7", "size": "xxs", "margin": "xs"},
+            ]},
+        "body": {
+            "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "12px",
+            "contents": [
+                {"type": "button", "style": "primary", "color": "#2E7D32", "height": "sm",
+                 "action": {"type": "message", "label": "🛍 必買伴手禮",
+                            "text": f"必買伴手禮 {city2}"}},
+                {"type": "button", "style": "primary", "color": "#F57F17", "height": "sm",
+                 "action": {"type": "message", "label": "🔥 最新流行美食",
+                            "text": f"最新流行 {city2}"}},
+            ]},
+    })
+
+    # 換城市卡
     bubbles.append({
         "type": "bubble", "size": "kilo",
         "header": {
@@ -2126,6 +2151,68 @@ def build_city_specialties(city: str) -> list:
 
     return [{"type": "flex", "altText": f"{city2} 特色美食",
              "contents": {"type": "carousel", "contents": bubbles}}]
+
+
+def build_trending_specialty(city: str, mode: str) -> list:
+    """必買伴手禮 / 最新流行美食 — Places API 即時搜，全台22縣市通用"""
+    city2 = city[:2] if city else ""
+    if not city2:
+        return []
+
+    if mode == "souvenir":
+        query = f"{city2} 必買 伴手禮 推薦"
+        title = f"🛍 {city2} 必買伴手禮"
+        alt = f"{city2} 必買伴手禮推薦"
+        color = "#2E7D32"
+    else:
+        query = f"{city2} 2026 打卡 人氣 新開 美食"
+        title = f"🔥 {city2} 最新流行美食"
+        alt = f"{city2} 最新流行美食"
+        color = "#F57F17"
+
+    cache_key = f"trending_specialty:{mode}:{city2}"
+    cached = _redis_get(cache_key)
+    places: list = []
+    if cached:
+        places = json.loads(cached) if isinstance(cached, str) else cached
+    elif GOOGLE_PLACES_API_KEY:
+        places = _text_search_places(query, max_results=8)
+        places = [p for p in places if (p.get("rating") or 0) >= 3.8][:6]
+        _redis_set(cache_key, json.dumps(places), ttl=3 * 86400)
+
+    if not places:
+        return [{"type": "text",
+                 "text": f"目前找不到 {city2} 的{('必買伴手禮' if mode == 'souvenir' else '最新流行美食')}資料，試試「地方特色 {city2}」"}]
+
+    bubbles = [_build_restaurant_bubble(p, None, None, city2, set(), subtitle=title)
+               for p in places]
+
+    header_bubble: dict = {
+        "type": "bubble", "size": "kilo",
+        "header": {
+            "type": "box", "layout": "vertical",
+            "backgroundColor": color, "paddingAll": "12px",
+            "contents": [
+                {"type": "text", "text": title,
+                 "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                {"type": "text", "text": "資料來源：Google Places 即時評分",
+                 "color": "#FFFFFF", "size": "xxs", "margin": "xs"},
+            ]},
+        "body": {
+            "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "12px",
+            "contents": [
+                {"type": "button", "style": "primary",
+                 "color": "#F57F17" if mode == "souvenir" else "#2E7D32", "height": "sm",
+                 "action": {"type": "message",
+                            "label": "🔥 最新流行" if mode == "souvenir" else "🛍 必買伴手禮",
+                            "text": f"{'最新流行' if mode == 'souvenir' else '必買伴手禮'} {city2}"}},
+                {"type": "button", "style": "secondary", "height": "sm",
+                 "action": {"type": "message", "label": f"← {city2} 特色總覽",
+                            "text": f"地方特色 {city2}"}},
+            ]},
+    }
+    return [{"type": "flex", "altText": alt,
+             "contents": {"type": "carousel", "contents": [header_bubble] + bubbles}}]
 
 
 _STYLE_GPLACE_KW: dict = {
@@ -2388,6 +2475,22 @@ def build_food_message(text: str, user_id: str = None) -> list:
         if r in text_s:
             region = r
             break
+
+    # ── 必買伴手禮 / 最新流行美食 ──
+    _souvenir_kw = ["必買伴手禮", "伴手禮推薦", "伴手禮", "必買"]
+    _trending_kw = ["最新流行", "最新美食", "最新必吃", "最新推薦", "打卡美食", "流行美食"]
+    _is_souvenir = any(kw in text_s for kw in _souvenir_kw)
+    _is_trending = any(kw in text_s for kw in _trending_kw)
+    # 支援「2025/2026 {城市}必買」等自然語言
+    if not (_is_souvenir or _is_trending):
+        if re.search(r'20\d\d', text_s) and "必買" in text_s:
+            _is_souvenir = True
+        if re.search(r'20\d\d', text_s) and any(w in text_s for w in ["推薦", "流行", "打卡"]):
+            _is_trending = True
+    if _is_souvenir and area_city:
+        return build_trending_specialty(area_city, "souvenir")
+    if _is_trending and area_city:
+        return build_trending_specialty(area_city, "trending")
 
     # ── 必比登推介 ──
     if "必比登" in text_s or "米其林" in text_s:
