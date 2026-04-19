@@ -196,6 +196,14 @@ _tdx_lots_cache:  dict = {}   # city -> (timestamp, [lots])
 _tdx_avail_cache: dict = {}   # city -> (timestamp, {pid: avail})
 _TDX_CACHE_TTL = 90           # 快取 90 秒（即時性夠用）
 
+# TDX v2 路邊停車快取
+_TDX_STREET_CITIES = {
+    "Taipei", "NewTaipei", "Taoyuan", "Taichung", "Tainan",
+    "HualienCounty", "PingtungCounty", "ChanghuaCounty",
+}
+_tdx_street_segs_cache:  dict = {}   # city -> (timestamp, [segs])
+_tdx_street_avail_cache: dict = {}   # city -> (timestamp, {sid: {avail, total}})
+
 # 停車結果快取（座標格子，約 2km×2km，共用結果避免重複計算）
 _parking_result_cache: dict = {}   # "lat2_lon2" -> (timestamp, messages)
 _PARKING_RESULT_TTL = 180          # 3 分鐘
@@ -320,6 +328,175 @@ def _get_tdx_parking(lat: float, lon: float, radius: int = 1500) -> list:
             "name": name, "addr": addr, "fare": fare,
             "lat": float(p_lat), "lon": float(p_lon), "dist": dist,
             "total": total, "available": available, "type": "lot",
+        })
+
+    result.sort(key=lambda x: x["dist"])
+    return result
+
+
+def _tdx_get_v2(path: str, token: str, timeout: int = 10) -> list:
+    """呼叫 TDX v2 API，回傳 list"""
+    url = "https://tdx.transportdata.tw/api/basic/v2/" + path
+    req = urllib.request.Request(url, headers={
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/json",
+        "Accept-Encoding": "gzip",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            raw = r.read()
+            if r.headers.get("Content-Encoding") == "gzip":
+                import gzip
+                raw = gzip.decompress(raw)
+            data = json.loads(raw.decode("utf-8"))
+            if isinstance(data, list):
+                return data
+            for v in data.values():
+                if isinstance(v, list):
+                    return v
+            return []
+    except Exception as e:
+        print(f"[TDX v2] GET {path[:80]} 失敗: {e}")
+        return []
+
+
+def _get_tdx_street_parking(lat: float, lon: float, radius: int = 1500) -> list:
+    """TDX v2 路邊停車路段 + 即時格位，type='street'
+    路段靜態資料快取 24h；格位狀態快取 180 秒
+    支援城市：Taipei, NewTaipei, Taoyuan, Taichung, Tainan,
+             HualienCounty, PingtungCounty, ChanghuaCounty
+    """
+    import time as _time, threading
+
+    token = _get_tdx_token()
+    if not token:
+        return []
+
+    city = _coords_to_tdx_city(lat, lon)
+    if city not in _TDX_STREET_CITIES:
+        return []
+
+    now        = _time.time()
+    seg_rkey   = f"tdx_street_segs_{city}"
+    avail_rkey = f"tdx_street_avail_{city}"
+
+    segs      = _redis_get(seg_rkey)
+    avail_map = _redis_get(avail_rkey)
+
+    if segs is not None:
+        print(f"[TDX street] segs Redis命中 ({len(segs)} 筆)")
+    elif city in _tdx_street_segs_cache and now - _tdx_street_segs_cache[city][0] < 86400:
+        segs = _tdx_street_segs_cache[city][1]
+        print(f"[TDX street] segs 記憶體命中 ({len(segs)} 筆)")
+
+    if avail_map is not None:
+        print(f"[TDX street] avail Redis命中 ({len(avail_map)} 筆)")
+    elif city in _tdx_street_avail_cache and now - _tdx_street_avail_cache[city][0] < 180:
+        avail_map = _tdx_street_avail_cache[city][1]
+        print(f"[TDX street] avail 記憶體命中")
+
+    segs_buf:  list = []
+    avail_buf: list = []
+
+    def _fetch_segs():
+        data = _tdx_get_v2(
+            f"Parking/OnStreet/CurbParkingSegment/City/{city}?$format=JSON",
+            token, timeout=5,
+        )
+        segs_buf.extend(data)
+
+    def _fetch_avail():
+        data = _tdx_get_v2(
+            f"Parking/OnStreet/CurbParkingSpotAvailability/City/{city}"
+            f"?$format=JSON&$top=2000",
+            token, timeout=5,
+        )
+        avail_buf.extend(data)
+
+    threads = []
+    if segs is None:
+        t1 = threading.Thread(target=_fetch_segs, daemon=True)
+        threads.append(t1); t1.start()
+    if avail_map is None:
+        t2 = threading.Thread(target=_fetch_avail, daemon=True)
+        threads.append(t2); t2.start()
+    for t in threads:
+        t.join(timeout=6)
+
+    if segs is None:
+        segs = segs_buf
+        _tdx_street_segs_cache[city] = (now, segs)
+        if segs:
+            _redis_set(seg_rkey, segs, ttl=86400)
+
+    if avail_map is None:
+        # 每格位回傳 SegmentID + 狀態，統計各路段空位數
+        # VacantStatus: "0"=空位, "1"=佔用（部分縣市用 IsVacant bool）
+        tmp: dict = {}
+        for sp in avail_buf:
+            sid = sp.get("SegmentID", "")
+            if not sid:
+                continue
+            if sid not in tmp:
+                tmp[sid] = {"avail": 0, "total": 0}
+            tmp[sid]["total"] += 1
+            is_vacant = (
+                sp.get("VacantStatus") in ("0", 0)
+                or sp.get("IsVacant") is True
+                or sp.get("Status") in ("Y", "Vacant", "Empty")
+            )
+            if is_vacant:
+                tmp[sid]["avail"] += 1
+        avail_map = tmp
+        _tdx_street_avail_cache[city] = (now, avail_map)
+        if avail_map:
+            _redis_set(avail_rkey, avail_map, ttl=180)
+
+    print(f"[TDX street] {city} Segments: {len(segs)}, AvailMap: {len(avail_map)}")
+
+    def _zh(obj: object) -> str:
+        if isinstance(obj, dict):
+            return obj.get("Zh_tw") or next(iter(obj.values()), "") if obj else ""
+        return str(obj) if obj else ""
+
+    result = []
+    for seg in segs:
+        pos = (
+            seg.get("SegmentStartPosition")
+            or seg.get("StartPosition")
+            or seg.get("Position")
+            or {}
+        )
+        p_lat = pos.get("PositionLat") or seg.get("PositionLat")
+        p_lon = pos.get("PositionLon") or seg.get("PositionLon")
+        if not p_lat or not p_lon:
+            continue
+
+        dist = _haversine(lat, lon, float(p_lat), float(p_lon))
+        if dist > radius:
+            continue
+
+        sid       = seg.get("SegmentID", "")
+        name      = (_zh(seg.get("SegmentName") or seg.get("RoadSectionName") or {})
+                     or _zh(seg.get("RoadName") or {}) or "路邊停車")
+        road      = _zh(seg.get("RoadName") or {})
+        fare      = str(_zh(seg.get("FareDescription") or seg.get("Fare") or {}))[:30]
+        total_seg = int(seg.get("TotalSpaces") or seg.get("SpaceQuantity") or 0)
+        sp_info   = avail_map.get(sid, {})
+        available = sp_info.get("avail", -1) if sp_info else -1
+        if sp_info and total_seg == 0:
+            total_seg = sp_info.get("total", 0)
+
+        result.append({
+            "name":      name,
+            "addr":      road or name,
+            "fare":      fare,
+            "lat":       float(p_lat),
+            "lon":       float(p_lon),
+            "dist":      dist,
+            "total":     total_seg,
+            "available": available,
+            "type":      "street",
         })
 
     result.sort(key=lambda x: x["dist"])
@@ -787,18 +964,18 @@ def _get_nearby_parking(lat: float, lon: float, radius: int = 1500) -> dict:
     street_result: list = []
     lot_result:    list = []
 
-    def _run_parallel(fn1, fn2, timeout=5):
-        """並行執行兩個函式，各自 timeout 秒，超時只記 log 不崩潰"""
-        t1 = threading.Thread(target=fn1, daemon=True)
-        t2 = threading.Thread(target=fn2, daemon=True)
-        t1.start(); t2.start()
-        t1.join(timeout=timeout); t2.join(timeout=timeout)
-        if t1.is_alive(): print(f"[parking] thread1 超時仍在執行")
-        if t2.is_alive(): print(f"[parking] thread2 超時仍在執行")
+    def _run_parallel(*fns, timeout=6):
+        """並行執行多個函式，超時只記 log 不崩潰"""
+        threads = [threading.Thread(target=fn, daemon=True) for fn in fns]
+        for t in threads: t.start()
+        for i, t in enumerate(threads):
+            t.join(timeout=timeout)
+            if t.is_alive(): print(f"[parking] thread{i+1} 超時仍在執行")
 
     if city == "YilanCounty":
         lot_result = _get_yilan_parking(lat, lon, radius)
     elif city == "NewTaipei":
+        # NTPC 路邊停車格（感測器即時）優先；路外停車場並行
         def fetch_street(): street_result.extend(_get_ntpc_street_parking(lat, lon, radius))
         def fetch_lot():
             try:
@@ -812,7 +989,8 @@ def _get_nearby_parking(lat: float, lon: float, radius: int = 1500) -> dict:
             tdx = _get_tdx_parking(lat, lon, radius)
             existing = {p["name"] for p in lot_result}
             lot_result.extend(p for p in tdx if p["name"] not in existing)
-        _run_parallel(fetch_tycg, fetch_tdx_ty)
+        def fetch_street_ty(): street_result.extend(_get_tdx_street_parking(lat, lon, radius))
+        _run_parallel(fetch_tycg, fetch_tdx_ty, fetch_street_ty)
     elif city == "Hsinchu":
         def fetch_hsinchu(): lot_result.extend(_get_hsinchu_parking(lat, lon, radius))
         def fetch_tdx_hc():
@@ -822,11 +1000,17 @@ def _get_nearby_parking(lat: float, lon: float, radius: int = 1500) -> dict:
         _run_parallel(fetch_hsinchu, fetch_tdx_hc)
     elif city == "Tainan":
         def fetch_tainan(): lot_result.extend(_get_tainan_parking(lat, lon, radius))
-        def fetch_tdx():
+        def fetch_tdx_tn():
             tdx = _get_tdx_parking(lat, lon, radius)
             existing = {p["name"] for p in lot_result}
             lot_result.extend(p for p in tdx if p["name"] not in existing)
-        _run_parallel(fetch_tainan, fetch_tdx)
+        def fetch_street_tn(): street_result.extend(_get_tdx_street_parking(lat, lon, radius))
+        _run_parallel(fetch_tainan, fetch_tdx_tn, fetch_street_tn)
+    elif city in _TDX_STREET_CITIES:
+        # Taipei, Taichung, HualienCounty, PingtungCounty, ChanghuaCounty
+        def fetch_lots(): lot_result.extend(_get_tdx_parking(lat, lon, radius))
+        def fetch_street_tdx(): street_result.extend(_get_tdx_street_parking(lat, lon, radius))
+        _run_parallel(fetch_lots, fetch_street_tdx)
     else:
         lot_result = _get_tdx_parking(lat, lon, radius)
 
@@ -1247,6 +1431,8 @@ def build_parking_flex(lat: float, lon: float, city: str = "") -> list:
         "資料來源：新竹市 HisPark 即時資料｜實際以現場為準" if city == "Hsinchu" else
         "資料來源：台南市停車資訊 + TDX｜實際以現場為準" if city == "Tainan" else
         "資料來源：宜蘭縣開放資料 + TDX｜實際以現場為準" if city == "YilanCounty" else
+        f"資料來源：交通部 TDX 路邊+路外（{radius_label}內）｜實際以現場為準"
+        if city in _TDX_STREET_CITIES else
         f"資料來源：交通部 TDX（{radius_label}內）｜實際以現場為準"
     )
 
