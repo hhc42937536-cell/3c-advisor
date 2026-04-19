@@ -1535,7 +1535,6 @@ def build_food_restaurant_flex(area: str, food_type: str = "", user_id: str = ""
             fresh_rest = pool
         picks = _random.sample(fresh_rest, min(5, len(fresh_rest)))
         _food_recent[rest_key] = [p["name"] for p in picks]
-    _food_recent[rest_key] = [p["name"] for p in picks]
     period, meal_label = _tw_meal_period()
     area_label = f"（{area}）" if area else ""
     color = "#6D4C41"
@@ -1734,7 +1733,7 @@ def build_food_type_picker(city: str = "") -> list:
     _period_cfg = {
         "M": (["早午餐", "輕食",  "飲料甜點", "便當", "麵食", "小吃", "日韓"],
               "☀️ 早上推薦輕一點的選項"),
-        "D": (["便當",   "麵食",  "小吃", "日韓", "輕食", "飲料甜點", "火鍋"],
+        "D": (["便當",   "麵食",  "小吃", "日韓", "早午餐", "輕食", "飲料甜點", "火鍋"],
               "🌞 午餐時間，飽足感優先"),
         "N": (["火鍋",   "日韓",  "麵食", "便當", "小吃", "輕食", "飲料甜點"],
               "🌙 晚餐時間，好好犒賞自己"),
