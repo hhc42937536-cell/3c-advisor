@@ -129,7 +129,7 @@ def _google_news_rss(city: str, mode: str) -> list[dict]:
 
 # ── 2. 部落格 RSS ─────────────────────────────────────────────────────────────
 
-def _blog_rss(site_url: str, name: str) -> list[dict]:
+def _blog_rss(site_url: str, name: str, forced_cities: list[str] | None = None) -> list[dict]:
     """嘗試 /feed, /rss, /atom.xml 等常見 RSS 路徑"""
     base = site_url.rstrip("/")
     candidates = [
@@ -168,11 +168,14 @@ def _blog_rss(site_url: str, name: str) -> list[dict]:
                 )
                 if not title:
                     continue
+                # 若部落格來源有城市標記，強制在 snippet 加入城市名讓分類抓得到
+                city_hint = " ".join(forced_cities) if forced_cities else ""
                 posts.append({
-                    "title":   title[:100],
-                    "snippet": desc[:150],
-                    "url":     link or site_url,
-                    "source":  name,
+                    "title":        title[:100],
+                    "snippet":      (city_hint + " " + desc)[:200],
+                    "url":          link or site_url,
+                    "source":       name,
+                    "_forced_cities": forced_cities or [],
                 })
             if posts:
                 print(f"  [Blog RSS] {name}: {len(posts)} 篇  ({rss_url})")
@@ -184,6 +187,9 @@ def _blog_rss(site_url: str, name: str) -> list[dict]:
 
 # ── 3. 分類 ───────────────────────────────────────────────────────────────────
 
+_BUCKET_LIMIT = 30
+
+
 def _categorize(posts: list[dict]) -> dict[str, dict[str, list]]:
     result: dict[str, dict[str, list]] = {
         city: {"souvenir": [], "trending": []} for city in CITIES
@@ -192,10 +198,15 @@ def _categorize(posts: list[dict]) -> dict[str, dict[str, list]]:
 
     for post in posts:
         combined = post["title"] + " " + post.get("snippet", "")
-        cities = _detect_cities(combined)
+        # 優先用部落格來源標記的城市，其次靠關鍵字偵測
+        forced = post.get("_forced_cities", [])
+        cities = forced if forced else _detect_cities(combined)
         mode = _classify_mode(combined)
-        if not cities or not mode:
+        if not cities:
             continue
+        # 無法分類 trending/souvenir 的部落格文章，預設為 trending
+        if not mode:
+            mode = "trending"
         url = post["url"]
         if url in seen_urls:
             continue
@@ -203,8 +214,10 @@ def _categorize(posts: list[dict]) -> dict[str, dict[str, list]]:
 
         entry = {"title": post["title"], "url": url, "source": post["source"]}
         for city in cities:
+            if city not in result:
+                continue
             bucket = result[city][mode]
-            if len(bucket) < 10:
+            if len(bucket) < _BUCKET_LIMIT:
                 bucket.append(entry)
 
     return result
@@ -240,9 +253,10 @@ def main() -> None:
         for blog in blogs:
             url = (blog.get("url") or "").strip()
             name = blog.get("name", "部落格")
+            cities = blog.get("cities", [])
             if not url or not url.startswith("http"):
                 continue
-            posts = _blog_rss(url, name)
+            posts = _blog_rss(url, name, forced_cities=cities if cities else None)
             all_posts.extend(posts)
             time.sleep(0.8)
     except Exception as e:
