@@ -1871,30 +1871,46 @@ def build_city_specialties(city: str) -> list:
              "contents": {"type": "carousel", "contents": bubbles}}]
 
 
-def build_brunch_restaurants(city: str, user_id: str = "") -> list:
-    """早午餐：Google Places 搜附近真實 Brunch 店家，而非靜態食物清單"""
+_STYLE_GPLACE_KW: dict = {
+    "便當":   "便當店 自助餐",
+    "麵食":   "麵食 牛肉麵 湯麵",
+    "小吃":   "小吃 台式料理",
+    "火鍋":   "火鍋",
+    "日韓":   "日式料理 韓式料理",
+    "早午餐": "早午餐 brunch 咖啡廳",
+    "飲料甜點": "飲料店 甜點咖啡",
+    "輕食":   "輕食 健康餐 沙拉",
+}
+_STYLE_ICON: dict = {
+    "便當": "🍱", "麵食": "🍜", "小吃": "🥘", "火鍋": "🍲",
+    "日韓": "🍣", "早午餐": "☕", "飲料甜點": "🧋", "輕食": "🥗",
+}
+
+
+def build_food_real_restaurants(style: str, city: str, user_id: str = "") -> list:
+    """使用者明確指定食物類型 → Google Places 搜附近真實店家"""
     city2 = city[:2] if city else ""
+    kw = _STYLE_GPLACE_KW.get(style, style)
+    icon = _STYLE_ICON.get(style, "🍽️")
     u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
 
     if u_lat and u_lon and GOOGLE_PLACES_API_KEY:
-        places = _nearby_places(u_lat, u_lon, radius=2000, keyword="早午餐 brunch 咖啡廳")
+        places = _nearby_places(u_lat, u_lon, radius=2000, keyword=kw)
     elif GOOGLE_PLACES_API_KEY:
-        places = _text_search_places(f"{city2} 早午餐 brunch 咖啡廳", max_results=5)
+        places = _text_search_places(f"{city2} {kw}", max_results=5)
     else:
         places = []
 
     if not places:
-        gmap_uri = "https://www.google.com/maps/search/" + urllib.parse.quote(f"{city2} 早午餐")
-        return [{"type": "text",
-                 "text": f"找不到附近早午餐資料，直接用 Google Maps 搜吧 👉 {gmap_uri}"}]
+        return build_food_flex(style, city)  # fallback 靜態建議
 
     eaten_set: set = set()
     bubbles = []
     for r in places[:5]:
         b = _build_restaurant_bubble(r, u_lat, u_lon, city2, eaten_set,
-                                     subtitle="☕ 附近早午餐 Brunch")
+                                     subtitle=f"{icon} 附近{style}")
         bubbles.append(b)
-    return [{"type": "flex", "altText": f"早午餐推薦 {city2}",
+    return [{"type": "flex", "altText": f"{style}推薦 {city2}",
              "contents": {"type": "carousel", "contents": bubbles}}]
 
 
@@ -2238,18 +2254,14 @@ def build_food_message(text: str, user_id: str = None) -> list:
             return build_food_special_picker("")
         explicit_style = style and (style != "便當" or "便當" in text_s)
         if explicit_style and area_city:
-            if style == "早午餐":
-                return build_brunch_restaurants(area_city, user_id or "")
-            return build_food_flex(style, area_city)
+            return build_food_real_restaurants(style, area_city, user_id or "")
         if area_city:
             return build_food_menu(city=area_city, user_id=user_id or "")
         return _build_food_entry_region_picker(user_id or "")
 
     # ── 有風格 + 有城市 → 直接推薦 ──
     if area:
-        if style == "早午餐":
-            return build_brunch_restaurants(area, user_id or "")
-        return build_food_flex(style, area)
+        return build_food_real_restaurants(style, area, user_id or "")
 
     # ── 有風格 + 有地區 → 選城市 ──
     if region:
@@ -2261,4 +2273,4 @@ def build_food_message(text: str, user_id: str = None) -> list:
     if has_style_kw and not is_internal:
         return build_food_region_picker(style)
 
-    return build_food_flex(style, area)
+    return build_food_real_restaurants(style, area, user_id or "") if area else build_food_flex(style, area)
