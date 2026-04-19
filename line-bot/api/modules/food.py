@@ -1736,7 +1736,9 @@ def build_food_restaurant_flex(area: str, food_type: str = "", user_id: str = ""
                     ]},
                     {"type": "separator", "margin": "sm"},
                 ]
-            items += _blog_extra_items(area[:2], area)
+            # area 可能是「台中西區」，取後兩字作為 district 輔助篩選
+            _dist = area[2:] if len(area) > 2 else ""
+            items += _blog_extra_items(area[:2], area, district=_dist)
             footer_contents = [
                 {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
                     {"type": "button", "style": "primary", "color": color, "flex": 1,
@@ -2475,6 +2477,9 @@ def build_city_specialties(city: str) -> list:
 _BLOG_CACHE_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "..", "..", "food_blog_cache.json"
 )
+_RESTAURANT_DB_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "..", "..", "restaurant_db.json"
+)
 
 
 def _read_blog_cache(city2: str, mode: str) -> list[dict]:
@@ -2487,12 +2492,42 @@ def _read_blog_cache(city2: str, mode: str) -> list[dict]:
         return []
 
 
+def _load_restaurant_db() -> dict[str, list]:
+    """載入預建餐廳資料庫（scrape_restaurant_db.py 產生）。"""
+    try:
+        with open(_RESTAURANT_DB_PATH, encoding="utf-8") as f:
+            return json.load(f).get("by_city", {})
+    except Exception:
+        return {}
+
+
+_RESTAURANT_DB: dict[str, list] = _load_restaurant_db()
+
+
+def _get_db_stores(city2: str, district: str = "", mode: str = "") -> list[dict]:
+    """從預建資料庫取餐廳，可按行政區與 mode 篩選，按評分降序。"""
+    stores = _RESTAURANT_DB.get(city2, [])
+    if district:
+        stores = [s for s in stores if district in s.get("district", "")]
+    if mode:
+        stores = [s for s in stores if s.get("mode") == mode]
+    return sorted(stores, key=lambda s: s.get("rating", 0), reverse=True)
+
+
 def _get_enriched_blog_stores(city2: str, mode: str) -> list[dict]:
-    """Blog cache + Google Places 座標補全；Redis 快取 7 天。"""
+    """優先讀預建資料庫；無資料時才用 Redis 快取 or Google Places 即時查。"""
+    # 1. 預建資料庫（最快，不打 API）
+    db_stores = _get_db_stores(city2, mode=mode)
+    if db_stores:
+        return db_stores
+
+    # 2. Redis 快取
     cache_key = f"blog_enriched:{city2}:{mode}"
     cached = _redis_get(cache_key)
     if cached:
         return json.loads(cached) if isinstance(cached, str) else cached
+
+    # 3. 即時查詢 Google Places（Fallback，爬蟲尚未產生資料庫時）
     posts = _read_blog_cache(city2, mode)
     if not posts or not GOOGLE_PLACES_API_KEY:
         return posts
@@ -2516,9 +2551,15 @@ def _get_enriched_blog_stores(city2: str, mode: str) -> list[dict]:
     return enriched
 
 
-def _blog_extra_items(city2: str, area: str) -> list:
+def _blog_extra_items(city2: str, area: str, district: str = "") -> list:
     """為餐廳 Bubble body 附加部落格精選項目（最多 2 筆）。"""
-    stores = _get_enriched_blog_stores(city2, "trending")[:2]
+    # 有行政區時優先用行政區篩選，提升相關性
+    if district:
+        stores = _get_db_stores(city2, district=district, mode="trending")[:2]
+        if not stores:
+            stores = _get_db_stores(city2, mode="trending")[:2]
+    else:
+        stores = _get_enriched_blog_stores(city2, "trending")[:2]
     if not stores:
         return []
     out: list = [
@@ -2528,15 +2569,21 @@ def _blog_extra_items(city2: str, area: str) -> list:
     ]
     for bp in stores:
         bname = bp.get("name", "")
-        bdesc = bp.get("desc", "")[:40]
+        bdesc = (bp.get("desc") or bp.get("addr", ""))[:40]
         bplace = bp.get("place_id", "")
         maps_u = (f"https://maps.google.com/?q=place_id:{bplace}" if bplace
                   else f"https://www.google.com/maps/search/{urllib.parse.quote(bname + ' ' + area)}")
+        rating = bp.get("rating", 0)
+        rating_txt = f"⭐ {rating}" if rating else ""
         out += [
             {"type": "text", "text": f"• {bname}", "weight": "bold", "size": "sm",
              "color": "#6D4C41", "wrap": True, "maxLines": 2, "margin": "xs"},
-            {"type": "text", "text": bdesc, "size": "xxs", "color": "#888888",
-             "margin": "xs"} if bdesc else {"type": "filler"},
+            {"type": "box", "layout": "horizontal", "margin": "xs", "contents": [
+                {"type": "text", "text": bdesc, "size": "xxs", "color": "#888888",
+                 "flex": 4, "wrap": True},
+                {"type": "text", "text": rating_txt, "size": "xxs", "color": "#F57F17",
+                 "flex": 1, "align": "end"},
+            ]} if bdesc or rating_txt else {"type": "filler"},
             {"type": "button", "style": "link", "height": "sm",
              "action": {"type": "uri", "label": "📍 導航", "uri": maps_u}},
         ]

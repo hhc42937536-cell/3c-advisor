@@ -1,0 +1,41 @@
+name: 每週更新餐廳資料庫
+
+on:
+  schedule:
+    # 每週日 23:00 UTC（台灣時間週一 07:00）
+    - cron: '0 23 * * 0'
+  workflow_dispatch:
+
+jobs:
+  build-restaurant-db:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 建構餐廳資料庫
+        env:
+          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
+        run: python line-bot/scrape_restaurant_db.py
+
+      - name: Commit & push restaurant_db.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git reset --hard origin/main
+          cp line-bot/restaurant_db.json /tmp/restaurant_db.json
+          git checkout -- .
+          cp /tmp/restaurant_db.json line-bot/restaurant_db.json
+          git add line-bot/restaurant_db.json
+          git diff --cached --quiet || git commit -m "🍽️ 自動更新餐廳資料庫 $(date +'%Y-%m-%d')"
+          git push
