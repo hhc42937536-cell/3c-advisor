@@ -2153,7 +2153,7 @@ def build_destination_picker(city: str = "") -> list:
                      "spacing": "sm",
                      "contents": [
                          {"type": "text",
-                          "text": "💡 也可直接輸入，例如「板橋餐廳」「台南東區小吃」",
+                          "text": "💡 也可直接輸入地址或地標，例如：\n「目的地美食 台南火車站」\n「目的地美食 板橋車站」",
                           "size": "xxs", "color": "#888888", "wrap": True},
                          {"type": "button", "style": "secondary", "height": "sm",
                           "action": {"type": "message",
@@ -2191,6 +2191,74 @@ def build_destination_city_picker() -> list:
                             ]},
                  "body": {"type": "box", "layout": "vertical", "spacing": "sm",
                           "paddingAll": "12px", "contents": rows},
+             }}]
+
+
+def build_food_by_dest_address(address: str) -> list:
+    """地址/地標 → Geocode → 附近 2km 小吃推薦"""
+    if not GOOGLE_PLACES_API_KEY:
+        return [{"type": "text", "text": "目前無法使用地址搜尋，請改選行政區"}]
+    geo = _text_search_places(address, max_results=1)
+    if not geo or not geo[0].get("lat"):
+        return [{"type": "text", "text": f"找不到「{address}」，請確認地址或改選行政區"}]
+    lat, lng = float(geo[0]["lat"]), float(geo[0]["lng"])
+    cache_key = f"dest_addr:{lat:.4f},{lng:.4f}"
+    _cached = _redis_get(cache_key)
+    if _cached:
+        places = json.loads(_cached) if isinstance(_cached, str) else _cached
+    else:
+        places = _nearby_places(lat, lng, radius=2000, keyword="小吃 便當 美食 熟食")
+        if places:
+            _redis_set(cache_key, json.dumps(places), ttl=1800)
+    if not places:
+        return [{"type": "text", "text": f"「{address}」附近 2km 找不到餐廳，試試改用行政區搜尋"}]
+    sampled = _random.sample(places, min(5, len(places)))
+    period, meal_label = _tw_meal_period()
+    color = "#1565C0"
+    items: list = []
+    for r in sampled:
+        rname = r.get("name", "")
+        rating = r.get("rating", 0)
+        cnt = r.get("user_ratings_total", 0)
+        addr_txt = r.get("addr", "")
+        rating_txt = f"評分 {rating}⭐（{cnt} 則評價）" if rating else ""
+        items += [
+            {"type": "text", "text": f"• {rname}", "weight": "bold",
+             "size": "sm", "color": color, "wrap": True, "maxLines": 2},
+            {"type": "text", "text": addr_txt, "size": "xxs", "color": "#888888",
+             "margin": "xs"} if addr_txt else {"type": "filler"},
+            {"type": "text", "text": rating_txt, "size": "xs", "color": "#555555",
+             "margin": "xs"} if rating_txt else {"type": "filler"},
+            {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
+                {"type": "button", "style": "link", "height": "sm", "flex": 3,
+                 "action": {"type": "uri", "label": "📍 導航",
+                            "uri": (f"https://maps.google.com/?q=place_id:{r['place_id']}"
+                                    if r.get("place_id")
+                                    else f"https://www.google.com/maps/search/{urllib.parse.quote(rname)}")}},
+                {"type": "button", "style": "link", "height": "sm", "flex": 1,
+                 "action": {"type": "message", "label": "👍", "text": f"回報 好吃 {rname}"}},
+                {"type": "button", "style": "link", "height": "sm", "flex": 1,
+                 "action": {"type": "message", "label": "❌", "text": f"回報 倒閉 {rname}"}},
+            ]},
+            {"type": "separator", "margin": "sm"},
+        ]
+    return [{"type": "flex", "altText": f"{address}附近美食",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {"type": "box", "layout": "vertical", "backgroundColor": color,
+                            "paddingAll": "12px", "contents": [
+                                {"type": "text", "text": f"📍 {meal_label}（{address}附近）",
+                                 "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                                {"type": "text", "text": "目的地 2km 內小吃 · 便當 · 熟食",
+                                 "color": "#BBDEFB", "size": "xs", "margin": "xs"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                          "contents": items},
+                 "footer": {"type": "box", "layout": "vertical", "contents": [
+                     {"type": "button", "style": "primary", "color": color, "height": "sm",
+                      "action": {"type": "message", "label": "🔄 再換一組",
+                                 "text": f"目的地美食 {address}"}},
+                 ]},
              }}]
 
 
@@ -2934,6 +3002,9 @@ def build_food_message(text: str, user_id: str = None) -> list:
         _d_match = re.search(r'[\u4e00-\u9fff]{2,5}區', text_s)
         if _d_match:
             return build_food_restaurant_flex(_d_match.group(0), "", user_id=user_id)
+        _addr = re.sub(r'目的地美食\s*', "", text_s).strip()
+        if _addr and _addr[:2] not in _CITY_DISTRICTS:
+            return build_food_by_dest_address(_addr)
         return build_destination_picker(area_city)
 
     # ── 純呼叫主選單 ──
