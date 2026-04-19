@@ -1671,7 +1671,8 @@ def build_food_flex(style: str, area: str = "") -> list:
 
 
 def build_food_restaurant_flex(area: str, food_type: str = "", user_id: str = "") -> list:
-    """從觀光署餐廳資料推薦在地餐廳；有上次位置時按距離由近到遠排序"""
+    """從觀光署餐廳資料推薦在地餐廳；有上次位置時按距離由近到遠排序。
+    area 含「區」時（如台南東區）→ 直接用 text_search 搜該行政區，不用 GPS。"""
     import math as _math
 
     def _haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -1681,6 +1682,74 @@ def build_food_restaurant_flex(area: str, food_type: str = "", user_id: str = ""
              + _math.cos(lat1 * p) * _math.cos(lat2 * p)
              * (1 - _math.cos((lon2 - lon1) * p)) / 2)
         return 2 * R * _math.asin(_math.sqrt(a))
+
+    # ── 行政區搜尋：直接用 text_search，不依賴 GPS ────────────────────────────
+    if "區" in area and GOOGLE_PLACES_API_KEY:
+        kw = f"{area} {food_type} 美食 餐廳" if food_type else f"{area} 美食 餐廳 推薦"
+        cache_key = f"district_rest:{area}:{food_type}"
+        _cached = _redis_get(cache_key)
+        if _cached:
+            places = json.loads(_cached) if isinstance(_cached, str) else _cached
+        else:
+            places = _text_search_places(kw, max_results=15)
+            if places:
+                _redis_set(cache_key, json.dumps(places), ttl=3600)
+        if places:
+            sampled = _random.sample(places, min(5, len(places)))
+            period, meal_label = _tw_meal_period()
+            color = "#6D4C41"
+            items: list = []
+            for r in sampled:
+                rname = r.get("name", "")
+                rating = r.get("rating", 0)
+                cnt = r.get("user_ratings_total", 0)
+                addr = r.get("addr", "")
+                rating_txt = f"評分 {rating}⭐（{cnt} 則評價）" if rating else ""
+                items += [
+                    {"type": "text", "text": f"• {rname}", "weight": "bold",
+                     "size": "sm", "color": color, "wrap": True, "maxLines": 2},
+                    {"type": "text", "text": addr, "size": "xxs", "color": "#888888",
+                     "margin": "xs"} if addr else {"type": "filler"},
+                    {"type": "text", "text": rating_txt, "size": "xs", "color": "#555555",
+                     "margin": "xs"} if rating_txt else {"type": "filler"},
+                    {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
+                        {"type": "button", "style": "link", "height": "sm", "flex": 3,
+                         "action": {"type": "uri", "label": "📍 導航",
+                                    "uri": (f"https://maps.google.com/?q=place_id:{r['place_id']}"
+                                            if r.get("place_id")
+                                            else f"https://www.google.com/maps/search/{urllib.parse.quote(rname + ' ' + area)}")}},
+                        {"type": "button", "style": "link", "height": "sm", "flex": 1,
+                         "action": {"type": "message", "label": "👍", "text": f"回報 好吃 {rname}"}},
+                        {"type": "button", "style": "link", "height": "sm", "flex": 1,
+                         "action": {"type": "message", "label": "❌", "text": f"回報 倒閉 {rname}"}},
+                    ]},
+                    {"type": "separator", "margin": "sm"},
+                ]
+            footer_contents = [
+                {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
+                    {"type": "button", "style": "primary", "color": color, "flex": 1,
+                     "height": "sm", "action": {"type": "message", "label": "🔄 再換一組",
+                                                "text": f"餐廳 {area}"}},
+                    {"type": "button", "style": "secondary", "flex": 1,
+                     "height": "sm", "action": {"type": "message", "label": "🍽️ 品項推薦",
+                                                "text": f"吃什麼 {area[:2]}"}},
+                ]},
+            ]
+            return [{"type": "flex", "altText": f"{area}餐廳推薦",
+                     "contents": {
+                         "type": "bubble", "size": "mega",
+                         "header": {"type": "box", "layout": "vertical", "backgroundColor": color,
+                                    "paddingAll": "12px", "contents": [
+                                        {"type": "text", "text": f"🏪 {meal_label}（{area}）",
+                                         "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                                        {"type": "text", "text": f"預覽目的地美食 · {food_type or '綜合'}",
+                                         "color": "#FFFFFFCC", "size": "xs", "margin": "xs"},
+                                    ]},
+                         "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                                  "contents": items},
+                         "footer": {"type": "box", "layout": "vertical", "spacing": "sm",
+                                    "contents": footer_contents},
+                     }}]
 
     area2 = area[:2] if area else ""
     pool = _RESTAURANT_CACHE.get(area, _RESTAURANT_CACHE.get(area2, []))
@@ -2620,6 +2689,14 @@ def build_food_message(text: str, user_id: str = None) -> list:
     # ── 必比登推介 ──
     if "必比登" in text_s or "米其林" in text_s:
         return build_bib_gourmand_flex(area)
+
+    # ── 行政區預覽搜尋（如「台南東區餐廳」「東區美食」）──
+    _district_m = re.search(r'[\u4e00-\u9fff]{1,4}區', text_s)
+    if _district_m and any(w in text_s for w in ["餐廳", "美食", "小吃", "吃", "在地"]):
+        _district = _district_m.group(0)
+        _food_type_d = next((ft for ft in ["小吃", "中式", "日式", "西式", "海鮮", "火鍋", "素食"]
+                             if ft in text_s), "")
+        return build_food_restaurant_flex(_district, _food_type_d, user_id=user_id)
 
     # ── 在地餐廳路由 ──
     is_restaurant = "餐廳" in text_s or "在地餐廳" in text_s
