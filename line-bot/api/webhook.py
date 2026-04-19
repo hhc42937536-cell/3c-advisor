@@ -45,7 +45,7 @@ from utils.intent      import classify_intent
 from modules.food     import (
     build_food_message, build_group_dining_message,
     build_specialty_shops, build_city_specialties, build_trending_specialty,
-    build_food_restaurant_flex,
+    build_trending_by_district, build_food_restaurant_flex,
     _set_user_loc, _get_user_loc,
     _ALL_CITIES, _STYLE_KEYWORDS, _ALL_FOOD_KEYWORDS,
 )
@@ -928,6 +928,23 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     _souvenir_triggers = ["必買伴手禮", "伴手禮推薦", "伴手禮", "必買"]
     _trending_triggers = ["最新流行", "流行美食", "最新美食", "打卡美食", "最新必吃"]
     _city_match2 = next((c for c in _ALL_CITIES if c in text), "") or (_get_user_city(user_id) or "")
+    # 換縣市 picker
+    if "必買伴手禮換縣市" in text:
+        return build_trending_specialty(_city_match2, "souvenir")
+    if "最新流行換縣市" in text:
+        return build_trending_specialty(_city_match2, "trending")
+    # 行政區直接查詢（按鈕送出「必買伴手禮 台中西屯區」）
+    import re as _re
+    _dp = _re.search(
+        r"(必買伴手禮|伴手禮|最新流行|流行美食|打卡美食)"
+        r"(台北|新北|基隆|桃園|新竹|苗栗|台中|彰化|南投|雲林|嘉義|台南|高雄|屏東|宜蘭|花蓮|台東|澎湖|金門|連江)?"
+        r"([^\s]{2,6}[區市鄉鎮])",
+        text,
+    )
+    if _dp:
+        _dp_mode = "souvenir" if any(kw in _dp.group(1) for kw in ["伴手禮", "必買"]) else "trending"
+        _dp_city = (_dp.group(2) or _city_match2 or "")[:2]
+        return build_trending_by_district(_dp.group(3), _dp_city, _dp_mode)
     if any(t in text for t in _souvenir_triggers) and _city_match2:
         return build_trending_specialty(_city_match2, "souvenir")
     if any(t in text for t in _trending_triggers) and _city_match2:

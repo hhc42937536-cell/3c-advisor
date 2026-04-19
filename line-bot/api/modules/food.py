@@ -2479,26 +2479,80 @@ _SOUVENIR_DESC_KW: list[str] = ["伴手禮", "必帶", "必買", "名產", "特�
 
 
 def build_trending_specialty(city: str, mode: str) -> list:
-    """必買伴手禮 / 最新流行美食
-
-    優先級：
-    1. _CITY_SPECIALTIES 靜態資料（用戶整理的在地資料）
-    2. 部落格爬蟲快取（food_blog_cache.json）
-    3. Google Places API fallback
-    """
+    """必買伴手禮 / 最新流行：顯示行政區選擇器"""
     city2 = city[:2] if city else ""
     if not city2:
         return []
 
     is_souvenir = mode == "souvenir"
-    title = f"🛍 {city2} 必買伴手禮" if is_souvenir else f"🔥 {city2} 最新流行美食"
-    alt = f"{city2} {'必買伴手禮' if is_souvenir else '最新流行美食'}"
     color = "#2E7D32" if is_souvenir else "#E65100"
+    title = f"🛍 {city2} 必買伴手禮" if is_souvenir else f"🔥 {city2} 最新流行美食"
     swap_label = "🔥 最新流行" if is_souvenir else "🛍 必買伴手禮"
-    swap_text = f"{'最新流行' if is_souvenir else '必買伴手禮'} {city2}"
+    swap_mode = "最新流行" if is_souvenir else "必買伴手禮"
+    intent_prefix = "必買伴手禮" if is_souvenir else "最新流行"
+
+    districts = _CITY_DISTRICTS.get(city2, [])
+    if not districts:
+        return build_trending_by_district(city2, city2, mode)
+
+    rows = []
+    for i in range(0, len(districts), 3):
+        chunk = districts[i:i + 3]
+        rows.append({
+            "type": "box", "layout": "horizontal", "spacing": "sm",
+            "contents": [
+                {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                 "action": {"type": "message",
+                            "label": d if len(d) <= 6 else d[:5],
+                            "text": f"{intent_prefix} {city2}{d}"}}
+                for d in chunk
+            ],
+        })
+
+    return [{"type": "flex", "altText": title,
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {
+                     "type": "box", "layout": "vertical",
+                     "backgroundColor": color, "paddingAll": "12px",
+                     "contents": [
+                         {"type": "text", "text": title,
+                          "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                         {"type": "text", "text": "選擇行政區，查詢當地精選店家",
+                          "color": "#FFFFFF", "size": "xxs", "margin": "xs"},
+                     ]},
+                 "body": {
+                     "type": "box", "layout": "vertical",
+                     "paddingAll": "12px", "spacing": "sm", "contents": rows,
+                 },
+                 "footer": {
+                     "type": "box", "layout": "vertical", "paddingAll": "10px", "spacing": "sm",
+                     "contents": [
+                         {"type": "button", "style": "primary", "height": "sm", "color": color,
+                          "action": {"type": "message",
+                                     "label": swap_label,
+                                     "text": f"{swap_mode} {city2}"}},
+                         {"type": "button", "style": "secondary", "height": "sm",
+                          "action": {"type": "message",
+                                     "label": "🏙️ 換縣市",
+                                     "text": f"{intent_prefix}換縣市"}},
+                     ],
+                 },
+             }}]
+
+
+def build_trending_by_district(district: str, city2: str, mode: str) -> list:
+    """行政區層級：Google Places + blog cache 混合顯示"""
+    is_souvenir = mode == "souvenir"
+    color = "#2E7D32" if is_souvenir else "#E65100"
+    mode_label = "必買伴手禮" if is_souvenir else "最新流行美食"
+    title = f"🛍 {district} 必買伴手禮" if is_souvenir else f"🔥 {district} 最新流行美食"
+    alt = f"{district} {mode_label}"
+    swap_label = "🔥 最新流行" if is_souvenir else "🛍 必買伴手禮"
+    swap_mode = "最新流行" if is_souvenir else "必買伴手禮"
+    intent_prefix = "必買伴手禮" if is_souvenir else "最新流行"
 
     def _nav_bubble() -> dict:
-        """頂部導覽卡（標題 + 切換按鈕）"""
         return {
             "type": "bubble", "size": "kilo",
             "header": {
@@ -2507,7 +2561,7 @@ def build_trending_specialty(city: str, mode: str) -> list:
                 "contents": [
                     {"type": "text", "text": title,
                      "color": "#FFFFFF", "size": "md", "weight": "bold"},
-                    {"type": "text", "text": "整合在地精選資料",
+                    {"type": "text", "text": "整合 Google Maps + 部落格精選",
                      "color": "#FFFFFF", "size": "xxs", "margin": "xs"},
                 ]},
             "body": {
@@ -2515,71 +2569,69 @@ def build_trending_specialty(city: str, mode: str) -> list:
                 "contents": [
                     {"type": "button", "style": "primary", "height": "sm",
                      "color": "#E65100" if is_souvenir else "#2E7D32",
-                     "action": {"type": "message", "label": swap_label, "text": swap_text}},
+                     "action": {"type": "message", "label": swap_label,
+                                "text": f"{swap_mode} {city2}"}},
                     {"type": "button", "style": "secondary", "height": "sm",
-                     "action": {"type": "message", "label": f"← {city2} 特色總覽",
-                                "text": f"地方特色 {city2}"}},
+                     "action": {"type": "message", "label": f"← {city2} 行政區",
+                                "text": f"{intent_prefix} {city2}"}},
                 ]},
         }
 
-    # ── 1. 部落格爬蟲快取 ────────────────────────────────────────────────────
-    blog_posts = _read_blog_cache(city2, mode)
-    if blog_posts:
-        blog_bubbles = []
-        for post in blog_posts[:10]:
-            name = post.get("name") or post.get("title", "")
-            desc = post.get("desc") or post.get("source", "")
-            maps_url = (
-                f"https://www.google.com/maps/search/"
-                + urllib.parse.quote(f"{city2} {name}")
-            )
-            blog_bubbles.append({
-                "type": "bubble", "size": "kilo",
-                "body": {
-                    "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "14px",
-                    "contents": [
-                        {"type": "text", "text": "📍 精選推薦",
-                         "size": "xxs", "color": color, "weight": "bold"},
-                        {"type": "text", "text": name, "wrap": True,
-                         "size": "sm", "weight": "bold", "maxLines": 2, "margin": "xs"},
-                        {"type": "text", "text": desc,
-                         "size": "xxs", "color": "#888888", "margin": "sm", "wrap": True},
-                    ],
-                },
-                "footer": {
-                    "type": "box", "layout": "vertical", "paddingAll": "8px",
-                    "contents": [{
-                        "type": "button", "style": "primary", "height": "sm", "color": color,
-                        "action": {"type": "uri", "label": "Google Maps 搜尋", "uri": maps_url},
-                    }],
-                },
-            })
-        return [{"type": "flex", "altText": alt,
-                 "contents": {"type": "carousel",
-                              "contents": [_nav_bubble()] + blog_bubbles}}]
+    bubbles: list[dict] = []
 
-    # ── 3. Google Places API fallback ────────────────────────────────────────
-    query = (f"{city2} 必買 伴手禮 推薦" if is_souvenir
-             else f"{city2} 2026 打卡 人氣 新開 美食")
-    cache_key = f"trending_specialty:{mode}:{city2}"
+    # ── Google Places ────────────────────────────────────────────────────────
+    kw = f"{district} 伴手禮 名產 特產" if is_souvenir else f"{district} 人氣 必吃 新開"
+    cache_key = f"trending_district:{mode}:{district}"
     cached = _redis_get(cache_key)
     places: list = []
     if cached:
         places = json.loads(cached) if isinstance(cached, str) else cached
     elif GOOGLE_PLACES_API_KEY:
-        raw = _text_search_places(query, max_results=10)
+        raw = _text_search_places(kw, max_results=10)
         filtered = [p for p in raw if (p.get("rating") or 0) >= 3.8]
-        places = (filtered or raw)[:6]  # 過濾後沒結果就直接用原始
+        places = (filtered or raw)[:6]
         if places:
             _redis_set(cache_key, json.dumps(places), ttl=3 * 86400)
 
-    if not places:
-        return [{"type": "text",
-                 "text": f"目前找不到 {city2} 的{('必買伴手禮' if is_souvenir else '最新流行美食')}資料，試試「地方特色 {city2}」"}]
+    for p in places:
+        bubbles.append(_build_restaurant_bubble(p, None, None, city2, set(), subtitle=title))
 
-    bubbles = [_build_restaurant_bubble(p, None, None, city2, set(), subtitle=title) for p in places]
+    # ── Blog cache 補充（縣市層級，最多 5 筆）────────────────────────────────
+    blog_posts = _read_blog_cache(city2, mode)
+    for post in blog_posts[:5]:
+        name = post.get("name") or post.get("title", "")
+        desc = post.get("desc") or post.get("source", "")
+        maps_url = ("https://www.google.com/maps/search/"
+                    + urllib.parse.quote(f"{district} {name}"))
+        bubbles.append({
+            "type": "bubble", "size": "kilo",
+            "body": {
+                "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "14px",
+                "contents": [
+                    {"type": "text", "text": "📰 部落格精選",
+                     "size": "xxs", "color": color, "weight": "bold"},
+                    {"type": "text", "text": name, "wrap": True,
+                     "size": "sm", "weight": "bold", "maxLines": 2, "margin": "xs"},
+                    {"type": "text", "text": desc,
+                     "size": "xxs", "color": "#888888", "margin": "sm", "wrap": True},
+                ],
+            },
+            "footer": {
+                "type": "box", "layout": "vertical", "paddingAll": "8px",
+                "contents": [{
+                    "type": "button", "style": "primary", "height": "sm", "color": color,
+                    "action": {"type": "uri", "label": "Google Maps 搜尋", "uri": maps_url},
+                }],
+            },
+        })
+
+    if not bubbles:
+        return [{"type": "text",
+                 "text": f"目前找不到 {district} 的{mode_label}資料，試試「地方特色 {city2}」"}]
+
     return [{"type": "flex", "altText": alt,
-             "contents": {"type": "carousel", "contents": [_nav_bubble()] + bubbles}}]
+             "contents": {"type": "carousel",
+                          "contents": [_nav_bubble()] + bubbles[:10]}}]
 
 
 _STYLE_GPLACE_KW: dict = {
@@ -2920,6 +2972,18 @@ def build_food_message(text: str, user_id: str = None) -> list:
             _is_souvenir = True
         if re.search(r'20\d\d', text_s) and any(w in text_s for w in ["推薦", "流行", "打卡"]):
             _is_trending = True
+    # 解析「必買伴手禮 台中西屯區」/ 「最新流行 台中西屯區」→ 行政區查詢
+    _district_pat = re.compile(
+        r"(必買伴手禮|伴手禮|最新流行|流行美食|打卡美食)\s*"
+        r"(台北|新北|基隆|桃園|新竹|苗栗|台中|彰化|南投|雲林|嘉義|台南|高雄|屏東|宜蘭|花蓮|台東|澎湖|金門|連江)?"
+        r"([^\s]{2,6}[區市鄉鎮])"
+    )
+    _dm = _district_pat.search(text_s)
+    if _dm:
+        _d_mode = "souvenir" if any(kw in _dm.group(1) for kw in ["伴手禮", "必買"]) else "trending"
+        _d_city = (_dm.group(2) or area_city or "")[:2]
+        _d_dist = _dm.group(3)
+        return build_trending_by_district(_d_dist, _d_city, _d_mode)
     if _is_souvenir and area_city:
         return build_trending_specialty(area_city, "souvenir")
     if _is_trending and area_city:
