@@ -450,7 +450,11 @@ def _get_city_local_deal(city: str, user_id: str = "", seq: int = 0) -> tuple:
     pool: list[tuple] = []
 
     # Accupass 活動（過濾冷門古典表演）
-    _NICHE_KW = {"獨奏", "交響", "古典", "協奏", "弦樂", "管弦", "室內樂", "歌劇", "聲樂"}
+    _NICHE_KW = {
+        "獨奏", "交響", "古典", "協奏", "弦樂", "管弦", "室內樂", "歌劇", "聲樂",
+        "合唱", "詩歌", "講座", "研討", "座談", "論壇", "說明會", "工作坊",
+        "學術", "頒獎", "表揚", "公聽", "里民", "社區發展", "志工",
+    }
     _ac = _get_accupass_cache()
     if _ac:
         city_data = _ac.get("events", _ac).get(city, {})
