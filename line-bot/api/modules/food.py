@@ -2289,25 +2289,25 @@ def build_trending_specialty(city: str, mode: str) -> list:
 
 
 _STYLE_GPLACE_KW: dict = {
-    "台式早餐": "早餐店 豆漿 蛋餅",
-    "西式早餐": "早餐店 漢堡蛋 三明治 西式早餐",
-    "便當":   "便當店 自助餐",
-    "麵食":   "麵食 牛肉麵 湯麵",
-    "小吃":   "小吃 台式料理",
-    "火鍋":   "火鍋",
-    "日韓":   "日式料理 韓式料理",
-    "早午餐": "早午餐 brunch 咖啡廳",
-    "飲料甜點": "飲料店 甜點咖啡",
-    "輕食":   "輕食 健康餐 沙拉",
-    "燒烤":   "燒烤 烤肉",
-    "夜市小吃": "夜市 鹽酥雞 滷味",
-    "炸物":   "鹽酥雞 炸雞 炸物 夜市",
-    "粥":     "粥 廣式粥 稀飯",
-    "拉麵":   "拉麵 日式拉麵 豚骨",
-    "港式":   "港式料理 飲茶 燒臘",
-    "義式":   "義大利麵 披薩 義式料理",
-    "素食":   "素食 蔬食餐廳",
-    "麵包蛋糕": "麵包店 烘焙 蛋糕",
+    "台式早餐": "台式早餐 豆漿店 蛋餅 燒餅油條",
+    "西式早餐": "西式早餐 班尼迪克蛋 法式吐司 歐姆蛋",
+    "便當":   "便當 滷肉飯 雞腿便當 自助餐 排骨飯",
+    "麵食":   "牛肉麵 乾麵 陽春麵 擔仔麵 米粉 麵線",
+    "小吃":   "在地小吃 蚵仔煎 臭豆腐 肉圓 碗粿 米糕",
+    "火鍋":   "火鍋 麻辣鍋 涮涮鍋 薑母鴨",
+    "日韓":   "日式料理 壽司 拉麵 韓式料理 燒肉",
+    "早午餐": "早午餐 brunch 鬆餅 班尼迪克蛋",
+    "飲料甜點": "甜點 咖啡廳 豆花 珍奶 手搖飲",
+    "輕食":   "輕食 沙拉 健康餐 低卡",
+    "燒烤":   "燒烤 串燒 炭烤 BBQ",
+    "夜市小吃": "夜市 鹽酥雞 滷味 臭豆腐 關東煮",
+    "炸物":   "鹽酥雞 炸雞排 炸物",
+    "粥":     "粥 廣式粥 皮蛋瘦肉粥 稀飯",
+    "拉麵":   "拉麵 日式拉麵 豚骨 沾麵",
+    "港式":   "港式飲茶 港點 燒臘 叉燒",
+    "義式":   "義大利麵 披薩 燉飯 義式料理",
+    "素食":   "素食 蔬食餐廳 全素",
+    "麵包蛋糕": "麵包店 烘焙坊 貝果 可頌 甜點",
 }
 _STYLE_ICON: dict = {
     "台式早餐": "🥚", "便當": "🍱", "麵食": "🍜", "小吃": "🥘", "火鍋": "🍲",
@@ -2317,17 +2317,28 @@ _STYLE_ICON: dict = {
 }
 
 
+def _filter_by_rating(places: list, prefer: float = 4.0, fallback: float = 3.8) -> list:
+    """評分過濾：優先 ≥prefer，數量不足5時降至 ≥fallback"""
+    high = [p for p in places if (p.get("rating") or 0) >= prefer]
+    return high if len(high) >= 5 else [p for p in places if (p.get("rating") or 0) >= fallback]
+
+
 def build_food_real_restaurants(style: str, city: str, user_id: str = "") -> list:
-    """使用者明確指定食物類型 → Google Places 搜附近真實店家"""
+    """使用者明確指定食物類型 → Google Places 搜附近真實店家（在地優先、評分 ≥4.0）"""
     city2 = city[:2] if city else ""
     kw = _STYLE_GPLACE_KW.get(style, style)
     icon = _STYLE_ICON.get(style, "🍽️")
     u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
 
     if u_lat and u_lon and GOOGLE_PLACES_API_KEY:
-        places = _nearby_places(u_lat, u_lon, radius=2000, keyword=kw)
+        raw = _nearby_places(u_lat, u_lon, radius=2000, keyword=kw)
+        places = _filter_by_rating(raw)
     elif GOOGLE_PLACES_API_KEY:
-        places = _text_search_places(f"{city2} {kw}", max_results=5)
+        # 先用「在地 必吃」強化版，再 fallback 基本版
+        raw = _text_search_places(f"{city2} {kw} 在地 必吃 推薦", max_results=10)
+        if len(raw) < 5:
+            raw += _text_search_places(f"{city2} {kw}", max_results=10)
+        places = _filter_by_rating(raw)
     else:
         places = []
 
@@ -2336,7 +2347,7 @@ def build_food_real_restaurants(style: str, city: str, user_id: str = "") -> lis
 
     eaten_set: set = set()
     bubbles = []
-    for r in places[:5]:
+    for r in places[:8]:
         b = _build_restaurant_bubble(r, u_lat, u_lon, city2, eaten_set,
                                      subtitle=f"{icon} 附近{style}")
         bubbles.append(b)
@@ -2345,17 +2356,18 @@ def build_food_real_restaurants(style: str, city: str, user_id: str = "") -> lis
 
 
 def build_specialty_shops(city: str, food_name: str) -> list:
-    """第二步：用 Google Places Text Search 搜該城市的食物名店"""
+    """第二步：用 Google Places Text Search 搜該城市的食物名店（評分 ≥3.8，最多8筆）"""
     city2 = city[:2] if city else ""
     query = f"{city2} {food_name}"
-    shops = _text_search_places(query, max_results=5)
+    raw = _text_search_places(query, max_results=10)
+    shops = _filter_by_rating(raw, prefer=4.0, fallback=3.8)
     if not shops:
         gmap_uri = f"https://www.google.com/maps/search/{urllib.parse.quote(query)}/"
         return [{"type": "text",
                  "text": f"搜尋「{query}」名店中...\n目前無法取得即時資料，點下方連結用 Google Maps 搜尋 👇\n{gmap_uri}"}]
     eaten_set: set = set()
     bubbles = []
-    for r in shops:
+    for r in shops[:8]:
         r["dist"] = None
         b = _build_restaurant_bubble(r, None, None, city2, eaten_set,
                                      subtitle=f"🏆 {city2}{food_name}名店")
