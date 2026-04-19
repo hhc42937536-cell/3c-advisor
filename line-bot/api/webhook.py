@@ -2215,10 +2215,17 @@ class handler(BaseHTTPRequestHandler):
                                      "action": {"type": "message",
                                                 "label": "🗺️ 目的地美食查詢",
                                                 "text": f"目的地美食 {_city2}" if _city2 else "目的地美食"}},
-                                    {"type": "button", "style": "secondary", "height": "sm",
-                                     "action": {"type": "message",
-                                                "label": "🎉 附近活動",
-                                                "text": f"近期活動 {_city2}" if _city2 else "近期活動"}},
+                                    {"type": "box", "layout": "horizontal", "spacing": "sm",
+                                     "contents": [
+                                         {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                                          "action": {"type": "message",
+                                                     "label": "🎉 附近活動",
+                                                     "text": f"近期活動 {_city2}" if _city2 else "近期活動"}},
+                                         {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                                          "action": {"type": "message",
+                                                     "label": "🗓️ 目的地活動",
+                                                     "text": "近期活動"}},
+                                     ]},
                                 ]}}}
 
                     # 快速路徑：快取命中
@@ -2299,10 +2306,17 @@ class handler(BaseHTTPRequestHandler):
                                              "action": {"type": "message",
                                                         "label": "🗺️ 目的地美食查詢",
                                                         "text": f"目的地美食 {_liff_city2}" if _liff_city2 else "目的地美食"}},
-                                            {"type": "button", "style": "secondary", "height": "sm",
-                                             "action": {"type": "message",
-                                                        "label": "🎉 附近活動",
-                                                        "text": f"近期活動 {_liff_city2}" if _liff_city2 else "近期活動"}},
+                                            {"type": "box", "layout": "horizontal", "spacing": "sm",
+                                             "contents": [
+                                                 {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                                                  "action": {"type": "message",
+                                                             "label": "🎉 附近活動",
+                                                             "text": f"近期活動 {_liff_city2}" if _liff_city2 else "近期活動"}},
+                                                 {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                                                  "action": {"type": "message",
+                                                             "label": "🗓️ 目的地活動",
+                                                             "text": "近期活動"}},
+                                             ]},
                                         ]}}}
                             if cached:
                                 reply_message(reply_token, cached)
