@@ -23,36 +23,32 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="repla
 OUTPUT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "surprise_cache.json")
 
 
-def scrape_kkbox_new_songs(limit=10):
-    """爬 KKBOX 華語新歌日榜（從頁面內嵌 JS 變數 chart 抓資料）"""
-    print("[KKBOX] 開始爬新歌榜...")
-    url = "https://kma.kkbox.com/charts/daily/newrelease?cate=297&lang=tc&terr=tw"
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+def scrape_apple_music_chart(limit: int = 15) -> list[dict]:
+    """Apple Music 台灣熱門歌曲排行（公開 JSON API，無需認證）。"""
+    print("[Apple Music] 開始抓台灣排行榜...")
+    url = "https://rss.applemarketingtools.com/api/v2/tw/music/most-played/25/songs.json"
     try:
-        req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            html = resp.read().decode("utf-8", errors="ignore")
-
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=12) as r:
+            data = json.loads(r.read().decode("utf-8"))
         songs = []
-        # KKBOX 把排行榜資料放在 JS 變數: var chart = [{...}, ...]
-        m = re.search(r'var\s+chart\s*=\s*(\[.*?\])\s*;', html, re.DOTALL)
-        if m:
-            chart_data = json.loads(m.group(1))
-            for entry in chart_data[:limit]:
-                name = entry.get("song_name", "").strip()
-                artist = entry.get("artist_name", "").strip()
-                if name and artist:
-                    # 截斷過長的歌手名（多人合作時很長）
-                    if len(artist) > 20:
-                        parts = re.split(r'[,、/]', artist)
-                        artist = parts[0].strip() + " 等"
-                    songs.append({"name": name, "artist": artist})
-
-        print(f"[KKBOX] 抓到 {len(songs)} 首新歌")
+        for entry in data.get("feed", {}).get("results", [])[:limit]:
+            name = entry.get("name", "").strip()
+            artist = entry.get("artistName", "").strip()
+            if name and artist:
+                if len(artist) > 20:
+                    artist = artist[:18] + "…"
+                songs.append({"name": name, "artist": artist})
+        print(f"[Apple Music] 抓到 {len(songs)} 首")
         return songs
-
     except Exception as e:
-        print(f"[KKBOX] 錯誤: {e}")
+        print(f"[Apple Music] 錯誤: {e}")
+        return []
+
+
+def scrape_kkbox_new_songs(limit: int = 15) -> list[dict]:
+    """KKBOX 已改用 JS 渲染，保留函式供向後相容，直接回傳空列表。"""
+    return []
         return []
 
 
@@ -312,10 +308,10 @@ def main():
         "deals": [],
     }
 
-    # 歌單：先試 KKBOX，失敗改用 Serper
-    result["songs"] = scrape_kkbox_new_songs(limit=15)
+    # 歌單：Apple Music 台灣排行榜，失敗才用 Serper 備援
+    result["songs"] = scrape_apple_music_chart(limit=15)
     if not result["songs"]:
-        print("[歌單] KKBOX 失敗，改用 Serper")
+        print("[歌單] Apple Music 失敗，改用 Serper")
         result["songs"] = scrape_songs_via_serper(limit=15)
     time.sleep(1)
 
