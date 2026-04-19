@@ -2150,12 +2150,47 @@ def build_destination_picker(city: str = "") -> list:
                  },
                  "footer": {
                      "type": "box", "layout": "vertical", "paddingAll": "10px",
-                     "contents": [{
-                         "type": "text",
-                         "text": "💡 也可直接輸入，例如「板橋餐廳」「台南東區小吃」",
-                         "size": "xxs", "color": "#888888", "wrap": True,
-                     }],
+                     "spacing": "sm",
+                     "contents": [
+                         {"type": "text",
+                          "text": "💡 也可直接輸入，例如「板橋餐廳」「台南東區小吃」",
+                          "size": "xxs", "color": "#888888", "wrap": True},
+                         {"type": "button", "style": "secondary", "height": "sm",
+                          "action": {"type": "message",
+                                     "label": "🏙️ 換城市",
+                                     "text": "目的地美食換城市"}},
+                     ],
                  },
+             }}]
+
+
+def build_destination_city_picker() -> list:
+    """目的地美食 — 換城市選擇器"""
+    cities = list(_CITY_DISTRICTS.keys())
+    rows = []
+    for i in range(0, len(cities), 3):
+        chunk = cities[i:i + 3]
+        rows.append({
+            "type": "box", "layout": "horizontal", "spacing": "sm",
+            "contents": [
+                {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                 "action": {"type": "message", "label": c, "text": f"目的地美食 {c}"}}
+                for c in chunk
+            ],
+        })
+    return [{"type": "flex", "altText": "選擇目的地城市",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {"type": "box", "layout": "vertical",
+                            "backgroundColor": "#1565C0", "paddingAll": "12px",
+                            "contents": [
+                                {"type": "text", "text": "🏙️ 選擇目的地城市",
+                                 "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                                {"type": "text", "text": "選城市後再選行政區",
+                                 "color": "#BBDEFB", "size": "xs", "margin": "xs"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                          "paddingAll": "12px", "contents": rows},
              }}]
 
 
@@ -2893,6 +2928,8 @@ def build_food_message(text: str, user_id: str = None) -> list:
         }]
 
     # ── 目的地美食（獨立路由，不限入口詞）──
+    if "目的地美食換城市" in text_s:
+        return build_destination_city_picker()
     if "目的地美食" in text_s:
         return build_destination_picker(area_city)
 
