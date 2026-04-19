@@ -14,6 +14,7 @@ import urllib.request
 # ── 外部工具（utils 模組）──
 from utils.redis import redis_get as _redis_get, redis_set as _redis_set
 from utils.line_api import push_message
+from utils.google_places import nearby_places as _nearby_places
 
 # ── 環境變數 ──
 ADMIN_USER_ID        = os.environ.get("ADMIN_USER_ID", "")
@@ -1512,21 +1513,37 @@ def build_food_restaurant_flex(area: str, food_type: str = "", user_id: str = ""
         if len(typed) >= 3:
             pool = typed
 
-    # 有上次位置 → 按距離排序，取最近 5 間
+    # 有上次位置 → 優先用 Google Places Nearby Search 取真實附近餐廳
     u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
     if u_lat and u_lon:
-        with_dist = []
-        no_dist = []
-        for r in pool:
-            if r.get("lat") and r.get("lng"):
-                d = _haversine(u_lat, u_lon, float(r["lat"]), float(r["lng"]))
-                with_dist.append((d, r))
-            else:
-                no_dist.append(r)
-        with_dist.sort(key=lambda x: x[0])
-        picks = [r for _, r in with_dist[:5]]
-        if len(picks) < 5:
-            picks += _random.sample(no_dist, min(5 - len(picks), len(no_dist)))
+        kw = f"餐廳 {food_type}" if food_type else "餐廳 小吃 美食"
+        gp = _nearby_places(u_lat, u_lon, radius=2000, keyword=kw)
+        if len(gp) >= 3:
+            picks = []
+            for r in gp[:5]:
+                rating = r.get("rating", 0)
+                cnt = r.get("user_ratings_total", 0)
+                desc = f"評分 {rating}⭐（{cnt} 則評價）" if rating else ""
+                picks.append({
+                    "name": r["name"], "type": "其他",
+                    "desc": desc, "addr": r.get("addr", ""), "town": "",
+                    "lat": r["lat"], "lng": r["lng"],
+                    "place_id": r.get("place_id", ""),
+                })
+        else:
+            # Google Places 沒結果 → fallback 按距離篩快取
+            with_dist = []
+            no_dist = []
+            for r in pool:
+                if r.get("lat") and r.get("lng"):
+                    d = _haversine(u_lat, u_lon, float(r["lat"]), float(r["lng"]))
+                    with_dist.append((d, r))
+                else:
+                    no_dist.append(r)
+            with_dist.sort(key=lambda x: x[0])
+            picks = [r for _, r in with_dist[:5]]
+            if len(picks) < 5:
+                picks += _random.sample(no_dist, min(5 - len(picks), len(no_dist)))
     else:
         rest_key = f"rest_{area}_{food_type}"
         last_rest = set(_food_recent.get(rest_key, []))
