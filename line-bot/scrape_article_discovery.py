@@ -50,7 +50,7 @@ TRENDING_KW  = ["美食", "必吃", "人氣", "推薦", "新開"]
 # 每次搜尋最多取幾篇文章
 MAX_RESULTS_PER_QUERY = 10
 # 每篇文章最多抽幾家店
-STORES_PER_ARTICLE = 8
+STORES_PER_ARTICLE = 20
 # Custom Search 每日 100 次免費，22城市×2=44次，留有餘裕
 SEARCH_RATE_SEC  = 1.0
 SCRAPE_RATE_SEC  = 0.8
