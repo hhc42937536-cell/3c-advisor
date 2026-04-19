@@ -78,7 +78,8 @@ _GENERIC_ONLY = {
 _SENTENCE_PATTERNS = re.compile(
     r"只有|都在|這裡|也有|都可|就是|一定|不能|不會|可以|如何|怎麼|"
     r"&nbsp|&amp|&lt|&gt|&quot|\+餐廳|\+店|都加分|兼具|為主|旅遊|"
-    r"youtube|facebook|instagram|tiktok|系列套餐|套餐$",
+    r"youtube|facebook|instagram|tiktok|系列套餐|套餐$|"
+    r"^除了|^不只|^此外|^另外|^其中|^其實|^其他|^還有|^加上|^包括|^包含",
     re.IGNORECASE,
 )
 # 出現即排除的單詞（非店名）
@@ -200,6 +201,12 @@ def _is_valid_name(name: str) -> bool:
         return False
     # 純食品種類結尾（無前綴店名特徵）
     if re.match(r"^[\w\s]{1,4}(蛋糕|吐司|泡芙|塔|派|捲|卷|餅|糕|酥|凍|布丁|慕斯|冰淇淋|冰品|飲品|果汁)$", name):
+        return False
+    # 句子尾綴：代表是「XX 以外/之外」這類句子碎片
+    if re.search(r"(以外|之外|以上|以下|之類|等等|而已|為主|為輔)[^店館坊屋廳樓]?$", name):
+        return False
+    # 結尾單字「外」且前面不是正常店名字（如「○○外帶」合法，「捲外」不合法）
+    if re.search(r"[捲餅糕酥凍塔派粉麵飯粥湯]外$", name):
         return False
     return True
 
