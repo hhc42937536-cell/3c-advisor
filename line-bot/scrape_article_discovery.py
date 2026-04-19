@@ -23,8 +23,8 @@ _DIR = os.path.dirname(os.path.abspath(__file__))
 BLOG_CACHE   = os.path.join(_DIR, "food_blog_cache.json")
 SOURCES_FILE = os.path.join(_DIR, "api", "data", "food_blog_sources.json")
 
-API_KEY = os.environ.get("GOOGLE_PLACES_API_KEY", "")
-CSE_ID  = os.environ.get("GOOGLE_CSE_ID", "")
+API_KEY    = os.environ.get("GOOGLE_PLACES_API_KEY", "")
+SERPER_KEY = os.environ.get("SERPER_API_KEY", "")
 
 CITIES = [
     "台北", "新北", "基隆", "桃園", "新竹", "苗栗", "台中", "彰化", "南投",
@@ -108,22 +108,28 @@ def _fetch(url: str, timeout: int = 12) -> bytes | None:
 
 
 def _google_search(query: str) -> list[str]:
-    """呼叫 Google Custom Search API，回傳文章 URL 列表。"""
-    url = (
-        "https://www.googleapis.com/customsearch/v1"
-        f"?key={API_KEY}&cx={CSE_ID}"
-        f"&q={urllib.parse.quote(query)}"
-        "&num=10&hl=zh-TW&gl=tw"
-        "&dateRestrict=y1"   # 限定近一年內的結果
-    )
-    raw = _fetch(url)
-    if not raw:
-        return []
+    """呼叫 Serper.dev Google Search API，回傳文章 URL 列表。"""
+    import json as _json
+    payload = _json.dumps({
+        "q": query,
+        "gl": "tw",
+        "hl": "zh-tw",
+        "num": 10,
+        "tbs": "qdr:y",  # 限定近一年
+    }).encode("utf-8")
     try:
-        data = json.loads(raw.decode("utf-8"))
-        items = data.get("items", [])
+        req = urllib.request.Request(
+            "https://google.serper.dev/search",
+            data=payload,
+            headers={
+                "X-API-KEY": SERPER_KEY,
+                "Content-Type": "application/json",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=12) as r:
+            data = _json.loads(r.read().decode("utf-8"))
         urls = []
-        for item in items:
+        for item in data.get("organic", []):
             link = item.get("link", "")
             domain = urllib.parse.urlparse(link).netloc.lower().lstrip("www.")
             if any(skip in domain for skip in _SKIP_DOMAINS):
@@ -131,7 +137,7 @@ def _google_search(query: str) -> list[str]:
             urls.append(link)
         return urls[:MAX_RESULTS_PER_QUERY]
     except Exception as e:
-        print(f"    ✗ search parse error: {e}")
+        print(f"    ✗ search error: {e}")
         return []
 
 
@@ -203,8 +209,8 @@ def _load_cache() -> dict:
 
 
 def main() -> None:
-    if not API_KEY or not CSE_ID:
-        print("✗ 缺少 GOOGLE_PLACES_API_KEY 或 GOOGLE_CSE_ID")
+    if not SERPER_KEY:
+        print("✗ 缺少 SERPER_API_KEY")
         sys.exit(1)
 
     cache = _load_cache()

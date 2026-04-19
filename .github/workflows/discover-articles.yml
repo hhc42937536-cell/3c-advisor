@@ -19,8 +19,7 @@ jobs:
 
       - name: 搜尋並爬取最新美食文章
         env:
-          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
-          GOOGLE_CSE_ID: ${{ secrets.GOOGLE_CSE_ID }}
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
         run: python line-bot/scrape_article_discovery.py
 
       - name: Commit & push food_blog_cache.json
