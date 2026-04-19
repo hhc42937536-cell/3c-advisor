@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-18 08:46",
+  "updated_at": "2026-04-19 18:20",
   "songs": [
     {
       "name": "那天下雨了",
@@ -22,6 +22,10 @@
       "artist": "周杰倫 (Jay Chou)"
     },
     {
+      "name": "一念 (影视剧《逐玉》插曲)",
+      "artist": "Various Artists"
+    },
+    {
       "name": "西西里",
       "artist": "周杰倫 (Jay Chou)"
     },
@@ -38,9 +42,66 @@
       "artist": "周杰倫 (Jay Chou)"
     },
     {
+      "name": "湘女多情",
+      "artist": "周杰倫 (Jay Chou)"
+    },
+    {
+      "name": "鄉間的路",
+      "artist": "周杰倫 (Jay Chou)"
+    },
+    {
+      "name": "孤單心事-音樂產房(原唱:藍又時)(Live)",
+      "artist": "曾沛慈 (Pets Tseng)"
+    },
+    {
+      "name": "不想再讓你哭",
+      "artist": "周祖安"
+    },
+    {
       "name": "誰給我的勇氣",
       "artist": "周渝民 (Vic Chou)"
     }
   ],
-  "deals": []
+  "deals": [
+    {
+      "title": "優惠活動 - Costco",
+      "url": "https://www.costco.com.tw/savings?srsltid=AfmBOoojwH3WHLiNCPvUdekfw_fFl3ygI5io8TuoSa7cGxkd353cB1tt",
+      "tag": "優惠"
+    },
+    {
+      "title": "Costco好市多(新品/優惠)最速報– Telegram",
+      "url": "https://t.me/s/daybuy?before=17130",
+      "tag": "優惠"
+    },
+    {
+      "title": "2025週年慶首波！新光三越南西店必買攻略：日本展必買、獨家美食/美妝",
+      "url": "https://www.skm.com.tw/skmmedia/lifestyleandfood/living/nanxiddf",
+      "tag": "優惠"
+    },
+    {
+      "title": "Top City 台中大遠百-線上DM - 遠東百貨",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=53",
+      "tag": "優惠"
+    },
+    {
+      "title": "明天信義莊敬店盛大開幕有連續5天的優惠活動哦   - Threads",
+      "url": "https://www.threads.com/@dailybreakfast.official/post/DXLZt3wj05T/%E6%98%8E%E5%A4%A9%E4%BF%A1%E7%BE%A9%E8%8E%8A%E6%95%AC%E5%BA%97%E7%9B%9B%E5%A4%A7%E9%96%8B%E5%B9%95-%E6%9C%89%E9%80%A3%E7%BA%8C5%E5%A4%A9%E7%9A%84%E5%84%AA%E6%83%A0%E6%B4%BB%E5%8B%95%E5%93%A6",
+      "tag": "優惠"
+    },
+    {
+      "title": "2026新光三越台南新天地初夏購物節｜百貨折扣、滿額贈與豐富活動 ...",
+      "url": "https://www.skm.com.tw/page/summer-shopping-tainan",
+      "tag": "優惠"
+    },
+    {
+      "title": "世界日報雙親節感恩市集5月登場匯聚品牌優惠一次看",
+      "url": "https://www.worldjournal.com/wj/story/121388/9434953",
+      "tag": "優惠"
+    },
+    {
+      "title": "UNIQLO勁敵來了! 日本WEGO進軍台灣開幕時間、地點曝 - MSN",
+      "url": "https://www.msn.com/zh-tw/news/living/uniqlo%E5%8B%81%E6%95%B5%E4%BE%86%E4%BA%86-%E6%97%A5%E6%9C%ACwego%E9%80%B2%E8%BB%8D%E5%8F%B0%E7%81%A3-%E9%96%8B%E5%B9%95%E6%99%82%E9%96%93-%E5%9C%B0%E9%BB%9E%E6%9B%9D/ar-AA20yPBl",
+      "tag": "優惠"
+    }
+  ]
 }
