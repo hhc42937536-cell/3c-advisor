@@ -2058,7 +2058,15 @@ def build_food_type_picker(city: str = "") -> list:
 def build_food_special_picker(city: str = "") -> list:
     """第二層：精選評鑑（必比登 / 在地餐廳 / 聚餐 / 美食活動）"""
     suf = f" {city}" if city else ""
-    return [{"type": "flex", "altText": "精選評鑑推薦",
+    city_label = f"（{city}）" if city else ""
+    quick_cities = _ALL_CITIES[:13]  # quickReply 上限 13 個
+    quick_items = [
+        {"type": "action",
+         "action": {"type": "message", "label": c,
+                    "text": f"吃什麼 特殊需求 {c}"}}
+        for c in quick_cities
+    ]
+    return [{"type": "flex", "altText": f"精選評鑑推薦{city_label}",
              "contents": {
                  "type": "bubble", "size": "mega",
                  "hero": {
@@ -2066,7 +2074,7 @@ def build_food_special_picker(city: str = "") -> list:
                      "backgroundColor": "#4A148C",
                      "paddingAll": "16px", "paddingTop": "18px",
                      "contents": [
-                         {"type": "text", "text": "🏅 精選評鑑推薦",
+                         {"type": "text", "text": f"🏅 精選評鑑推薦{city_label}",
                           "color": "#FFFFFF", "size": "lg", "weight": "bold"},
                          {"type": "text", "text": "評鑑認可 / 多人聚餐 / 近期美食活動",
                           "color": "#CE93D8", "size": "xs", "margin": "xs"},
@@ -2081,10 +2089,46 @@ def build_food_special_picker(city: str = "") -> list:
                               _btn3d("🎪 美食活動", "本週美食活動", "#6A1B9A", "#3E0B6B", flex=1),
                           ]},
                          _btn3d("🌏 地方特色小吃", f"地方特色{suf}", "#00695C", "#003D36"),
-                         {"type": "button", "style": "link", "height": "sm",
-                          "action": {"type": "message", "label": "← 回主選單",
-                                     "text": f"今天吃什麼{suf}"}},
+                         {"type": "box", "layout": "horizontal", "spacing": "sm",
+                          "contents": [
+                              {"type": "button", "style": "link", "height": "sm", "flex": 1,
+                               "action": {"type": "message", "label": "🏙️ 換縣市",
+                                          "text": "特殊需求換縣市"}},
+                              {"type": "button", "style": "link", "height": "sm", "flex": 1,
+                               "action": {"type": "message", "label": "← 回主選單",
+                                          "text": f"今天吃什麼{suf}"}},
+                          ]},
                      ]},
+             }}]
+
+
+def _build_special_city_picker() -> list:
+    """精選評鑑換縣市選擇器"""
+    rows = []
+    for i in range(0, len(_ALL_CITIES), 3):
+        chunk = _ALL_CITIES[i:i + 3]
+        rows.append({
+            "type": "box", "layout": "horizontal", "spacing": "sm",
+            "contents": [
+                {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                 "action": {"type": "message", "label": c,
+                            "text": f"吃什麼 特殊需求 {c}"}}
+                for c in chunk
+            ],
+        })
+    return [{"type": "flex", "altText": "精選評鑑 — 選擇縣市",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {"type": "box", "layout": "vertical",
+                            "backgroundColor": "#4A148C", "paddingAll": "12px",
+                            "contents": [
+                                {"type": "text", "text": "🏙️ 選擇縣市",
+                                 "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                                {"type": "text", "text": "選縣市後繼續查精選評鑑",
+                                 "color": "#CE93D8", "size": "xs", "margin": "xs"},
+                            ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "sm",
+                          "paddingAll": "12px", "contents": rows},
              }}]
 
 
@@ -3007,6 +3051,8 @@ def build_food_message(text: str, user_id: str = None) -> list:
     # ── 目的地美食（獨立路由，不限入口詞）──
     if "目的地美食換城市" in text_s:
         return build_destination_city_picker()
+    if "特殊需求換縣市" in text_s:
+        return _build_special_city_picker()
     if "目的地美食" in text_s:
         _addr = re.sub(r'目的地美食\s*', "", text_s).strip()
         if re.search(r'[\u4e00-\u9fff]{2,6}[區市鄉鎮]', _addr):
@@ -3024,6 +3070,8 @@ def build_food_message(text: str, user_id: str = None) -> list:
             return _build_food_entry_city_picker(_sel_match.group(1))
         if "選類型" in text_s:
             return build_food_type_picker(area_city)
+        if "特殊需求換縣市" in text_s:
+            return _build_special_city_picker()
         if "特殊需求" in text_s:
             return build_food_special_picker(area_city)
         if "地方特色" in text_s:
