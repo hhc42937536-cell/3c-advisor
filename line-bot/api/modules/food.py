@@ -961,6 +961,12 @@ def _btn3d(label: str, text: str, main_c: str, shadow_c: str,
 def build_group_dining_message(text: str) -> list:
     """聚餐推薦主路由"""
     text_s = text.strip()
+    # 處理「更多推薦 {city} {type}」
+    if text_s.startswith("更多推薦"):
+        rest = text_s[4:].strip()
+        city = next((c for c in _GROUP_DINING_CITIES if c in rest), "台北")
+        dtype = next((t for t in _GROUP_DINING_TYPES if t in rest), "不限")
+        return _build_more_restaurants(city, dtype)
     city_found, type_found = "", ""
     for c in _GROUP_DINING_CITIES:
         if c in text_s:
@@ -1062,30 +1068,99 @@ _GROUP_TYPE_KEYWORDS: dict[str, list[str]] = {
 }
 
 
+def _gp_row(p: dict) -> dict:
+    """單家餐廳的橫排顯示元件（共用）"""
+    maps_url = ("https://www.google.com/maps/search/"
+                + urllib.parse.quote(f"{p['name']} {p.get('addr', '')}"))
+    open_tag = ("🟢 營業中" if p.get("open_now") is True
+                else ("🔴 休息中" if p.get("open_now") is False else ""))
+    sub_parts = [s for s in [p.get("addr", ""), open_tag] if s]
+    sub = "　".join(sub_parts[:1])  # 只顯示地址，不截斷
+    return {
+        "type": "box", "layout": "vertical", "spacing": "none", "margin": "sm",
+        "action": {"type": "uri", "label": p["name"][:40], "uri": maps_url},
+        "contents": [
+            {"type": "box", "layout": "horizontal", "contents": [
+                {"type": "text", "text": p["name"], "size": "sm", "flex": 1,
+                 "wrap": True, "color": "#1A1F3A", "weight": "bold"},
+                {"type": "text",
+                 "text": f"⭐{p['rating']}（{p.get('user_ratings_total', 0)}則）",
+                 "size": "xs", "color": "#FF9800", "flex": 0, "align": "end"},
+            ]},
+        ] + ([{"type": "text", "text": sub, "size": "xs", "color": "#888888", "wrap": True}]
+             if sub else []),
+    }
+
+
+def _build_more_restaurants(city: str, dining_type: str) -> list:
+    """「更多推薦」— 顯示 6 家 Google Places 餐廳於 LINE 內"""
+    info = _GROUP_DINING_TYPES.get(dining_type, _GROUP_DINING_TYPES["不限"])
+    color = info["color"]
+    picks: list[dict] = []
+    if GOOGLE_PLACES_API_KEY:
+        raw = _text_search_places(f"{city} {dining_type} 聚餐 推薦", max_results=10)
+        picks = [p for p in raw if (p.get("rating") or 0) >= 3.8][:6]
+    if not picks:
+        return [{"type": "text", "altText": "目前無資料",
+                 "text": f"目前找不到 {city} {dining_type} 的推薦資料，請稍後再試。"}]
+    rows = [_gp_row(p) for p in picks]
+    return [{"type": "flex", "altText": f"🔍 {city} {dining_type} 更多推薦",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {"type": "box", "layout": "vertical",
+                             "backgroundColor": color, "paddingAll": "14px",
+                             "contents": [
+                                 {"type": "text",
+                                  "text": f"🔍 {city} {dining_type} 更多推薦",
+                                  "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                                 {"type": "text", "text": "以下均為 Google 真實評分餐廳",
+                                  "color": "#FFFFFFBB", "size": "xs", "margin": "xs"},
+                             ]},
+                 "body": {"type": "box", "layout": "vertical",
+                          "spacing": "sm", "paddingAll": "14px",
+                          "contents": rows},
+                 "footer": {"type": "box", "layout": "horizontal", "spacing": "sm",
+                             "paddingAll": "10px",
+                             "contents": [
+                                 {"type": "button", "style": "link", "flex": 1, "height": "sm",
+                                  "action": {"type": "message", "label": "← 回上一頁",
+                                             "text": f"聚餐 {city} {dining_type}"}},
+                             ]},
+             }}]
+
+
 def _build_group_result(city: str, dining_type: str) -> list:
-    """城市 + 類型 → 必比登精選卡（依類型過濾）+ Google 高評分 + 搜尋建議卡"""
+    """城市 + 類型 → 必比登 / 米其林 / 高評分 / 特色包廂 四區塊聚餐卡"""
     info = _GROUP_DINING_TYPES.get(dining_type, _GROUP_DINING_TYPES["不限"])
     color = info["color"]
     emoji = info["emoji"]
+
+    # ── 1. 必比登精選 ──────────────────────────────────────
     bib_pool = _BIB_GOURMAND.get(city[:2], [])
-    # 依類型關鍵字過濾必比登
     kws = _GROUP_TYPE_KEYWORDS.get(dining_type, [])
     if kws and bib_pool:
         typed = [r for r in bib_pool if any(k in r.get("type", "") for k in kws)]
         bib_pool = typed if len(typed) >= 2 else bib_pool
     bib_picks = _random.sample(bib_pool, min(3, len(bib_pool))) if bib_pool else []
-    # Google Places 高評分
+
+    # ── 2. 米其林星級（Google text_search） ────────────────
+    michelin_picks: list[dict] = []
+    if GOOGLE_PLACES_API_KEY:
+        raw_m = _text_search_places(f"米其林 {city} {dining_type} 餐廳", max_results=5)
+        michelin_picks = [p for p in raw_m if (p.get("rating") or 0) >= 4.0][:3]
+
+    # ── 3. Google 高評分 ───────────────────────────────────
     gp_picks: list[dict] = []
     if GOOGLE_PLACES_API_KEY:
-        raw = _text_search_places(f"{city} {dining_type} 聚餐", max_results=6)
+        raw = _text_search_places(f"{city} {dining_type} 聚餐 高評分", max_results=8)
         gp_picks = [p for p in raw if (p.get("rating") or 0) >= 4.0][:3]
-    query_str = _GROUP_SEARCH_TEMPLATES.get(dining_type, "{city} 聚餐").format(city=city)
-    gmap_url = "https://www.google.com/maps/search/" + urllib.parse.quote(query_str)
-    gmap_url_pkg = "https://maps.google.com/?q=" + urllib.parse.quote(f"{city} {dining_type} 聚餐 包廂")
-    google_rank_url = f"https://www.google.com/search?q={urllib.parse.quote(f'{city} {dining_type} 聚餐 推薦 排名 必吃')}"
-    walker_url  = f"https://www.walkerland.com.tw/search?keyword={urllib.parse.quote(f'{city} {dining_type} 聚餐')}&sort=rating"
-    ipeen_url   = f"https://www.ipeen.com.tw/search/all/{urllib.parse.quote(city)}/0-0-0-0/1?q={urllib.parse.quote(dining_type + ' 聚餐')}"
-    eztable_url = f"https://www.eztable.com.tw/restaurants/?q={urllib.parse.quote(city + ' ' + dining_type)}"
+
+    # ── 4. 特色包廂推薦（Google text_search） ──────────────
+    featured_picks: list[dict] = []
+    if GOOGLE_PLACES_API_KEY:
+        raw_f = _text_search_places(f"{city} {dining_type} 特色 包廂 聚餐", max_results=5)
+        featured_picks = raw_f[:3]
+
     tips = {
         "火鍋":     ["✅ 確認是否可分鍋（素食/葷食同桌）", "✅ 問有無包廂或半包廂", "✅ 人多可問有無固定套餐"],
         "燒肉":     ["✅ 確認是桌邊烤還是個人烤", "✅ 生日通常有驚喜服務，記得告知", "✅ 提前訂位，熱門店假日爆滿"],
@@ -1102,8 +1177,60 @@ def _build_group_result(city: str, dining_type: str) -> list:
     tip_list = tips.get(dining_type, tips["不限"])
     tip_items = [{"type": "text", "text": t, "size": "xs",
                   "color": "#555555", "wrap": True} for t in tip_list]
-    share_text = f"🍽️ {city} {dining_type} 聚餐\n朋友來找餐廳，用「生活優轉」幫你選！\n{gmap_url_pkg}"
-    share_url  = "https://line.me/R/share?text=" + urllib.parse.quote(share_text)
+
+    eztable_url = f"https://www.eztable.com.tw/restaurants/?q={urllib.parse.quote(city + ' ' + dining_type)}"
+    share_text = f"🍽️ {city} {dining_type} 聚餐\n朋友來找餐廳，用「生活優轉」幫你選！"
+    share_url = "https://line.me/R/share?text=" + urllib.parse.quote(share_text)
+
+    def _section(icon: str, title: str, subtitle: str, col: str,
+                 rows: list, margin: str = "md") -> list:
+        return [
+            {"type": "separator", "margin": margin},
+            {"type": "text", "text": f"{icon} {title}", "weight": "bold",
+             "size": "sm", "color": col, "margin": "md"},
+            {"type": "text", "text": subtitle, "size": "xs",
+             "color": "#888888", "margin": "xs"},
+        ] + rows
+
+    body: list = []
+
+    # 區塊 1 必比登
+    if bib_picks:
+        body += [
+            {"type": "text", "text": "🏅 必比登精選", "weight": "bold",
+             "size": "sm", "color": "#B71C1C"},
+            {"type": "text", "text": "米其林必比登推介，平價高品質首選",
+             "size": "xs", "color": "#888888", "margin": "xs"},
+        ] + [
+            {"type": "button", "style": "secondary", "height": "sm", "margin": "xs",
+             "action": {"type": "uri",
+                        "label": f"🏅 {r['name']}"[:40], "uri": r["url"]}}
+            for r in bib_picks
+        ]
+
+    # 區塊 2 米其林星級
+    if michelin_picks:
+        body += _section("⭐", "米其林星級餐廳", "星級認證，正式聚餐首選",
+                         "#F9A825", [_gp_row(p) for p in michelin_picks],
+                         margin="md" if bib_picks else "none")
+
+    # 區塊 3 Google 高評分
+    if gp_picks:
+        body += _section("🌟", "Google 高評分餐廳", "4.0 以上，真實評價最可信",
+                         "#E65100", [_gp_row(p) for p in gp_picks])
+
+    # 區塊 4 特色包廂推薦
+    if featured_picks:
+        body += _section("🎯", "特色包廂推薦", "適合大桌聚會，氣氛佳",
+                         "#1565C0", [_gp_row(p) for p in featured_picks])
+
+    # 訂位 Tips
+    body += [
+        {"type": "separator", "margin": "md"},
+        {"type": "text", "text": "📋 訂位前確認", "weight": "bold",
+         "size": "sm", "color": "#333333", "margin": "md"},
+    ] + tip_items
+
     return [{"type": "flex", "altText": f"🍽️ {city} {dining_type} 聚餐推薦",
              "contents": {
                  "type": "bubble", "size": "mega",
@@ -1115,79 +1242,31 @@ def _build_group_result(city: str, dining_type: str) -> list:
                                  {"type": "text", "text": info["note"],
                                   "color": "#FFFFFFBB", "size": "xs", "margin": "xs"},
                              ]},
-                 "body": {"type": "box", "layout": "vertical", "spacing": "md",
-                          "paddingAll": "16px",
-                          "contents": (
-                              ([
-                                  {"type": "text", "text": "🏅 必比登精選（米其林認證）",
-                                   "weight": "bold", "size": "sm", "color": "#B71C1C"},
-                                  {"type": "text", "text": "品質有保證，可作為聚餐起點",
-                                   "size": "xs", "color": "#888888", "margin": "xs"},
-                              ] + [
-                                  {"type": "button", "style": "secondary", "height": "sm", "margin": "sm",
-                                   "action": {"type": "uri", "label": f"🏅 {r['name']}", "uri": r["url"]}}
-                                  for r in bib_picks
-                              ] + [{"type": "separator", "margin": "md"}])
-                              if bib_picks else []
-                          ) + (
-                              (
-                                  [{"type": "separator", "margin": "md"}] if bib_picks else []
-                              ) + [
-                                  {"type": "text", "text": "⭐ Google 高評分餐廳",
-                                   "weight": "bold", "size": "sm", "color": "#E65100",
-                                   "margin": "md"},
-                                  {"type": "text", "text": "評分 4.0 以上，真實評價最可信",
-                                   "size": "xs", "color": "#888888", "margin": "xs"},
-                              ] + [
-                                  {"type": "box", "layout": "horizontal", "spacing": "sm",
-                                   "margin": "sm",
-                                   "action": {"type": "uri", "label": p["name"],
-                                              "uri": "https://www.google.com/maps/search/"
-                                                     + urllib.parse.quote(f"{p['name']} {p.get('addr','')}")},
-                                   "contents": [
-                                       {"type": "text", "text": p["name"], "size": "sm",
-                                        "flex": 1, "wrap": True, "color": "#1A1F3A"},
-                                       {"type": "text",
-                                        "text": f"⭐{p['rating']}（{p.get('user_ratings_total',0)}則）",
-                                        "size": "xs", "color": "#FF9800", "flex": 0, "align": "end"},
-                                   ]}
-                                  for p in gp_picks
-                              ] + [{"type": "separator", "margin": "md"}]
-                              if gp_picks else []
-                          ) + [
-                              {"type": "text", "text": "📋 訂位前確認",
-                               "weight": "bold", "size": "sm", "color": "#333333",
-                               "margin": "md" if (bib_picks or gp_picks) else "none"},
-                          ] + tip_items + [
-                              {"type": "separator", "margin": "md"},
-                              {"type": "text", "text": "🔍 依評價找更多餐廳",
-                               "weight": "bold", "size": "sm", "color": "#333333", "margin": "md"},
-                              {"type": "text", "text": "按評價排序，快速鎖定高分店家",
-                               "size": "xs", "color": "#888888"},
-                          ]},
+                 "body": {"type": "box", "layout": "vertical", "spacing": "none",
+                          "paddingAll": "16px", "contents": body},
                  "footer": {"type": "box", "layout": "vertical", "spacing": "sm",
                              "paddingAll": "12px",
                              "contents": [
-                                 {"type": "button", "style": "primary", "color": color, "height": "sm",
-                                  "action": {"type": "uri", "label": "⭐ 網友推薦排行", "uri": google_rank_url}},
-                                 {"type": "button", "style": "primary", "color": color, "height": "sm",
-                                  "action": {"type": "uri", "label": f"🗺️ Google Maps 找{dining_type}", "uri": gmap_url}},
-                                 {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
-                                     {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
-                                      "action": {"type": "uri", "label": "📝 窩客島評價", "uri": walker_url}},
-                                     {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
-                                      "action": {"type": "uri", "label": "📅 EZTABLE訂位", "uri": eztable_url}},
-                                 ]},
-                                 {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
-                                     {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
-                                      "action": {"type": "uri", "label": "🍽️ 愛評網", "uri": ipeen_url}},
-                                 ]},
-                                 {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
-                                     {"type": "button", "style": "link", "flex": 1, "height": "sm",
-                                      "action": {"type": "message", "label": "← 換類型", "text": f"聚餐 {city}"}},
-                                     {"type": "button", "style": "link", "flex": 1, "height": "sm",
-                                      "action": {"type": "uri", "label": "📤 揪朋友", "uri": share_url}},
-                                 ]},
+                                 {"type": "button", "style": "primary", "color": color,
+                                  "height": "sm",
+                                  "action": {"type": "message",
+                                             "label": "🔍 更多推薦餐廳",
+                                             "text": f"更多推薦 {city} {dining_type}"}},
+                                 {"type": "button", "style": "secondary", "height": "sm",
+                                  "action": {"type": "uri",
+                                             "label": "📅 EZTABLE 線上訂位",
+                                             "uri": eztable_url}},
+                                 {"type": "box", "layout": "horizontal", "spacing": "sm",
+                                  "contents": [
+                                      {"type": "button", "style": "link", "flex": 1,
+                                       "height": "sm",
+                                       "action": {"type": "message", "label": "← 換類型",
+                                                  "text": f"聚餐 {city}"}},
+                                      {"type": "button", "style": "link", "flex": 1,
+                                       "height": "sm",
+                                       "action": {"type": "uri", "label": "📤 揪朋友",
+                                                  "uri": share_url}},
+                                  ]},
                              ]},
              }}]
 
