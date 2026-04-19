@@ -2081,7 +2081,6 @@ def build_food_special_picker(city: str = "") -> list:
                               _btn3d("🎪 美食活動", "本週美食活動", "#6A1B9A", "#3E0B6B", flex=1),
                           ]},
                          _btn3d("🌏 地方特色小吃", f"地方特色{suf}", "#00695C", "#003D36"),
-                         _btn3d("🗺️ 目的地美食", f"目的地美食{suf}", "#1565C0", "#0D3F7A"),
                          {"type": "button", "style": "link", "height": "sm",
                           "action": {"type": "message", "label": "← 回主選單",
                                      "text": f"今天吃什麼{suf}"}},
