@@ -1164,19 +1164,19 @@ def _build_group_result(city: str, dining_type: str) -> list:
     if kws and bib_pool:
         typed = [r for r in bib_pool if any(k in r.get("type", "") for k in kws)]
         bib_pool = typed if len(typed) >= 2 else bib_pool
-    bib_picks = _random.sample(bib_pool, min(3, len(bib_pool))) if bib_pool else []
+    bib_picks = _random.sample(bib_pool, min(5, len(bib_pool))) if bib_pool else []
 
     # ── 2. 米其林星級（Google text_search） ────────────────
     michelin_picks: list[dict] = []
     if GOOGLE_PLACES_API_KEY:
-        raw_m = _text_search_places(f"米其林 {city} {dining_type} 餐廳", max_results=5)
-        michelin_picks = [p for p in raw_m if (p.get("rating") or 0) >= 4.0][:3]
+        raw_m = _text_search_places(f"米其林 {city} {dining_type} 餐廳", max_results=8)
+        michelin_picks = [p for p in raw_m if (p.get("rating") or 0) >= 4.0][:4]
 
     # ── 3. Google 高評分 ───────────────────────────────────
     gp_picks: list[dict] = []
     if GOOGLE_PLACES_API_KEY:
-        raw = _text_search_places(f"{city} {dining_type} 聚餐 高評分", max_results=8)
-        gp_picks = [p for p in raw if (p.get("rating") or 0) >= 4.0][:3]
+        raw = _text_search_places(f"{city} {dining_type} 聚餐 高評分", max_results=10)
+        gp_picks = [p for p in raw if (p.get("rating") or 0) >= 4.0][:4]
 
     # ── 4. 特色異國料理（Google text_search） ─────────────
     featured_picks: list[dict] = []
@@ -1204,103 +1204,94 @@ def _build_group_result(city: str, dining_type: str) -> list:
     share_text = f"🍽️ {city} {dining_type} 聚餐\n朋友來找餐廳，用「生活優轉」幫你選！"
     share_url = "https://line.me/R/share?text=" + urllib.parse.quote(share_text)
 
-    def _mk_bubble(hdr_color: str, hdr_text: str, hdr_sub: str,
-                   rows: list, footer: dict | None = None) -> dict:
-        b: dict = {
-            "type": "bubble", "size": "mega",
-            "header": {"type": "box", "layout": "vertical",
-                       "backgroundColor": hdr_color, "paddingAll": "14px",
-                       "contents": [
-                           {"type": "text", "text": hdr_text,
-                            "color": "#FFFFFF", "size": "md", "weight": "bold"},
-                           {"type": "text", "text": hdr_sub,
-                            "color": "#FFFFFFBB", "size": "xs", "margin": "xs"},
-                       ]},
-            "body": {"type": "box", "layout": "vertical", "spacing": "none",
-                     "paddingAll": "12px", "contents": rows},
-        }
-        if footer:
-            b["footer"] = footer
-        return b
-
-    common_footer = {
-        "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "10px",
-        "contents": [
-            {"type": "button", "style": "primary", "color": color, "height": "sm",
-             "action": {"type": "message", "label": "🔍 更多推薦餐廳",
-                        "text": f"更多推薦 {city} {dining_type}"}},
-            {"type": "box", "layout": "horizontal", "spacing": "xs",
-             "contents": [
-                 {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
-                  "action": {"type": "uri", "label": "📅 訂位", "uri": eztable_url}},
-                 {"type": "button", "style": "link", "flex": 1, "height": "sm",
-                  "action": {"type": "message", "label": "← 換類型",
-                             "text": f"聚餐 {city}"}},
-                 {"type": "button", "style": "link", "flex": 1, "height": "sm",
-                  "action": {"type": "uri", "label": "📤 揪朋友", "uri": share_url}},
-             ]},
-        ],
+    action_bubble: dict = {
+        "type": "bubble", "size": "kilo",
+        "body": {
+            "type": "box", "layout": "vertical", "spacing": "sm",
+            "paddingAll": "14px",
+            "contents": [
+                {"type": "text", "text": "📋 訂位前確認", "weight": "bold",
+                 "size": "sm", "color": "#333333"},
+            ] + [{"type": "text", "text": f"✅ {t}", "size": "xs",
+                  "color": "#555555", "wrap": True} for t in tip_list],
+        },
+        "footer": {
+            "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "10px",
+            "contents": [
+                {"type": "button", "style": "primary", "color": color, "height": "sm",
+                 "action": {"type": "message", "label": "🔍 更多推薦餐廳",
+                            "text": f"更多推薦 {city} {dining_type}"}},
+                {"type": "box", "layout": "horizontal", "spacing": "xs",
+                 "contents": [
+                     {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
+                      "action": {"type": "uri", "label": "📅 訂位", "uri": eztable_url}},
+                     {"type": "button", "style": "link", "flex": 1, "height": "sm",
+                      "action": {"type": "message", "label": "← 換類型",
+                                 "text": f"聚餐 {city}"}},
+                     {"type": "button", "style": "link", "flex": 1, "height": "sm",
+                      "action": {"type": "uri", "label": "📤 揪朋友", "uri": share_url}},
+                 ]},
+            ],
+        },
     }
 
+    # ── 必比登：各自一張 bubble（無照片，帶米其林連結）──────
+    def _bib_card(r: dict) -> dict:
+        name = _clean_place_name(r["name"])
+        maps_url = ("https://www.google.com/maps/search/"
+                    + urllib.parse.quote(f"{name} {city}"))
+        return {
+            "type": "bubble", "size": "kilo",
+            "header": {
+                "type": "box", "layout": "vertical",
+                "backgroundColor": "#B71C1C", "paddingAll": "10px",
+                "contents": [
+                    {"type": "text", "text": "🏅 必比登精選",
+                     "color": "#FFCDD2", "size": "xxs", "weight": "bold"},
+                ]},
+            "body": {
+                "type": "box", "layout": "vertical", "paddingAll": "14px",
+                "contents": [
+                    {"type": "text", "text": name, "size": "lg", "weight": "bold",
+                     "wrap": True, "color": "#3D2B1F"},
+                    {"type": "text", "text": "米其林必比登推介",
+                     "size": "xs", "color": "#888888", "margin": "xs"},
+                ]},
+            "footer": {
+                "type": "box", "layout": "vertical", "spacing": "xs", "paddingAll": "10px",
+                "contents": [
+                    {"type": "button", "style": "primary", "color": "#B71C1C", "height": "sm",
+                     "action": {"type": "uri", "label": "🏅 米其林頁面", "uri": r["url"]}},
+                    {"type": "button", "style": "secondary", "height": "sm",
+                     "action": {"type": "uri", "label": "📍 Google Maps", "uri": maps_url}},
+                ]},
+        }
+
+    eaten_set: set = set()
     bubbles: list[dict] = []
 
-    # 卡 1：必比登精選
-    if bib_picks:
-        bib_rows = [
-            {"type": "button", "style": "secondary", "height": "sm", "margin": "xs",
-             "action": {"type": "uri",
-                        "label": f"🏅 {_clean_place_name(r['name'])}"[:40],
-                        "uri": r["url"]}}
-            for r in bib_picks
-        ]
-        bubbles.append(_mk_bubble(
-            "#B71C1C", "🏅 必比登精選", "米其林必比登推介，平價高品質首選",
-            bib_rows,
-        ))
+    for r in bib_picks:
+        bubbles.append(_bib_card(r))
+    for r in michelin_picks:
+        bubbles.append(_build_restaurant_bubble(
+            r, None, None, city[:2], eaten_set, subtitle="⭐ 米其林星級"))
+    for r in gp_picks:
+        bubbles.append(_build_restaurant_bubble(
+            r, None, None, city[:2], eaten_set, subtitle="🌟 Google 高評分"))
+    for r in featured_picks:
+        bubbles.append(_build_restaurant_bubble(
+            r, None, None, city[:2], eaten_set, subtitle="🌏 特色異國料理"))
 
-    # 卡 2：米其林星級
-    if michelin_picks:
-        bubbles.append(_mk_bubble(
-            "#F57F17", "⭐ 米其林星級餐廳", "星級認證，正式聚餐首選",
-            [_gp_row(p) for p in michelin_picks],
-        ))
+    # LINE carousel 上限 12，保留最後一張給 action_bubble
+    if len(bubbles) > 11:
+        bubbles = bubbles[:11]
+    bubbles.append(action_bubble)
 
-    # 卡 3：Google 高評分
-    if gp_picks:
-        bubbles.append(_mk_bubble(
-            "#E65100", "🌟 Google 高評分餐廳", "4.0 以上，真實評價最可信",
-            [_gp_row(p) for p in gp_picks],
-        ))
-
-    # 卡 4：特色異國料理 + 訂位 Tips（最後一張，附 footer）
-    featured_rows = [_gp_row(p) for p in featured_picks] if featured_picks else []
-    tip_items = (
-        [{"type": "separator", "margin": "md"},
-         {"type": "text", "text": "📋 訂位前確認", "weight": "bold",
-          "size": "xs", "color": "#555555", "margin": "md"}]
-        + [{"type": "text", "text": f"✅ {t}", "size": "xxs",
-            "color": "#777777", "wrap": True} for t in tip_list]
-    )
-    if featured_rows:
-        bubbles.append(_mk_bubble(
-            "#1565C0", "🌏 特色異國料理", "印度、泰式、川菜、法式…換個口味",
-            featured_rows + tip_items, footer=common_footer,
-        ))
-    elif bubbles:
-        # 沒有特色異國時，把 Tips 加到最後一張卡的 body，footer 接在最後一張
-        bubbles[-1]["body"]["contents"] += tip_items
-        bubbles[-1]["footer"] = common_footer
-    else:
+    if not bubbles or len(bubbles) == 1:
         return [{"type": "text", "text": f"目前找不到 {city} {dining_type} 的推薦資料，請稍後再試。"}]
 
-    # 只有一張時直接回傳 bubble，否則 carousel
-    if len(bubbles) == 1:
-        contents = bubbles[0]
-    else:
-        contents = {"type": "carousel", "contents": bubbles}
-
     return [{"type": "flex", "altText": f"🍽️ {city} {dining_type} 聚餐推薦",
-             "contents": contents}]
+             "contents": {"type": "carousel", "contents": bubbles}}]
 
 
 # ─── 必比登函式 ──────────────────────────────────────────
