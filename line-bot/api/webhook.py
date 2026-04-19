@@ -933,7 +933,7 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     if any(t in text for t in _trending_triggers) and _city_match2:
         return build_trending_specialty(_city_match2, "trending")
 
-    if "我要分享位置找美食" in text or "目的地美食" in text:
+    if "我要分享位置找美食" in text or "目的地美食" in text or "特殊需求換縣市" in text:
         return build_food_message(text, user_id=user_id)
 
     # 防詐+法律合併入口（Rich Menu 按鈕，精確指令）
