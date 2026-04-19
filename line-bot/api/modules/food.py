@@ -2470,13 +2470,13 @@ _RESTAURANT_DB: dict[str, list] = _load_restaurant_db()
 
 
 def _get_db_stores(city2: str, district: str = "", mode: str = "") -> list[dict]:
-    """從預建資料庫取餐廳，可按行政區與 mode 篩選，按評分降序。"""
+    """從預建資料庫取餐廳，可按行政區與 mode 篩選，按綜合分數降序。"""
     stores = _RESTAURANT_DB.get(city2, [])
     if district:
         stores = [s for s in stores if district in s.get("district", "")]
     if mode:
         stores = [s for s in stores if s.get("mode") == mode]
-    return sorted(stores, key=lambda s: s.get("rating", 0), reverse=True)
+    return sorted(stores, key=lambda s: s.get("score", s.get("rating", 0)), reverse=True)
 
 
 def _get_enriched_blog_stores(city2: str, mode: str) -> list[dict]:

@@ -157,12 +157,21 @@ def build() -> None:
                 if not name:
                     continue
 
+                mention_count = post.get("count", 1)
+                sources = post.get("sources", [])
+
+                # 只有一個來源提及的店家可信度低，直接略過
+                if mention_count < 2:
+                    skip_count += 1
+                    continue
+
                 # 先嘗試用名稱比對現有資料，避免重查
                 if any(s["name"] == name for s in by_city.get(city2, [])):
                     skip_count += 1
                     continue
 
-                print(f"  查詢 [{city2}/{mode}] {name} ...", end=" ", flush=True)
+                print(f"  查詢 [{city2}/{mode}] {name}（提及 {mention_count} 次）...",
+                      end=" ", flush=True)
                 result = _text_search(f"{city2} {name}")
                 time.sleep(RATE_LIMIT_SEC)
 
@@ -186,6 +195,15 @@ def build() -> None:
                     continue
 
                 district = _extract_district(result.get("addr", ""), city2)
+                # 綜合分數 = 被提及次數（可信度）× Google 評分（品質）
+                score = round(mention_count * (rating or 3.0), 2)
+                # desc：用來源列表產生有意義的說明
+                if len(sources) >= 2:
+                    desc = f"{mention_count} 個來源推薦・{'、'.join(sources[:3])}"
+                elif sources:
+                    desc = f"{sources[0]} 推薦"
+                else:
+                    desc = post.get("desc", "")
                 store = {
                     "name":               result["name"],
                     "city":               city2,
@@ -198,17 +216,21 @@ def build() -> None:
                     "place_id":           pid,
                     "photo_ref":          result.get("photo_ref", ""),
                     "mode":               mode,
+                    "mention_count":      mention_count,
+                    "sources":            sources,
+                    "desc":               desc,
+                    "score":              score,
                 }
                 by_city.setdefault(city2, []).append(store)
                 if pid:
                     existing_ids.add(pid)
                     city_ids.add(pid)
                 new_count += 1
-                print(f"✓  {result['name']}  評分 {rating}  {district}")
+                print(f"✓  {result['name']}  評分 {rating}  提及 {mention_count}x  分數 {score}")
 
-    # 每城市按評分降序排列
+    # 每城市按綜合分數降序排列
     for city2 in by_city:
-        by_city[city2].sort(key=lambda s: s.get("rating", 0), reverse=True)
+        by_city[city2].sort(key=lambda s: s.get("score", 0), reverse=True)
 
     total = sum(len(v) for v in by_city.values())
     output = {

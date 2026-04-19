@@ -367,31 +367,37 @@ def _scrape_stores(article_url: str, city: str, mode: str, source: str) -> list[
 
 def main() -> None:
     print("=" * 50)
-    print(f"食記爬蟲 v3（店家提取模式）— {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    print(f"食記爬蟲 v4（計次 + 品質篩選）— {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("=" * 50)
 
-    by_city: dict[str, dict[str, list]] = {
-        city: {"souvenir": [], "trending": []} for city in CITIES
+    # 改為 dict 以便計次：{city: {mode: {name: {count, sources, desc}}}}
+    counts: dict[str, dict[str, dict[str, dict]]] = {
+        city: {"souvenir": {}, "trending": {}} for city in CITIES
     }
-    seen_names: dict[str, set] = {city: set() for city in CITIES}
 
-    def _add_stores(city: str, mode: str, stores: list[dict]) -> None:
-        bucket = by_city[city][mode]
-        ns = seen_names[city]
+    def _add_stores(city: str, mode: str, stores: list[dict], source: str = "") -> None:
+        bucket = counts[city][mode]
         for s in stores:
             name = s["name"]
-            if name in ns or len(bucket) >= _BUCKET_LIMIT:
-                continue
-            ns.add(name)
-            bucket.append(s)
+            if name in bucket:
+                bucket[name]["count"] += 1
+                if source and source not in bucket[name]["sources"]:
+                    bucket[name]["sources"].append(source)
+            else:
+                bucket[name] = {
+                    "name":    name,
+                    "count":   1,
+                    "sources": [source] if source else [],
+                    "desc":    s.get("desc", ""),
+                }
 
     # ── Step 1: Google News RSS 標題/摘要抽取店名 ────────────────────────────
     print("\n── Google News RSS 標題摘要抽取 ──")
     for city in CITIES:
         for mode in ("trending", "souvenir"):
             stores = _google_news_stores(city, mode)
-            _add_stores(city, mode, stores)
-            t = len(by_city[city][mode])
+            _add_stores(city, mode, stores, source="Google News")
+            t = len(counts[city][mode])
             print(f"  {city}/{mode}: {t} 家")
             time.sleep(0.3)
 
@@ -403,40 +409,63 @@ def main() -> None:
         blogs = sources_data.get("blogs", [])
         for blog in blogs:
             site_url = (blog.get("url") or "").strip()
-            name = blog.get("name", "部落格")
+            blog_name = blog.get("name", "部落格")
             blog_cities = blog.get("cities", [])
             if not site_url or not site_url.startswith("http") or not blog_cities:
                 continue
             article_urls = _blog_article_urls(site_url)
             if not article_urls:
                 continue
-            print(f"  {name}（{', '.join(blog_cities[:3])}）: {len(article_urls)} 篇文章")
+            print(f"  {blog_name}（{', '.join(blog_cities[:3])}）: {len(article_urls)} 篇文章")
             for url in article_urls:
-                # 依文章 URL 判斷 mode，無法判斷預設 trending
                 raw = _fetch_url(url, timeout=15)
                 if not raw:
                     time.sleep(0.5)
                     continue
                 html = raw.decode("utf-8", errors="ignore")
-                # 從 og:title 或 title tag 推斷 mode
                 title_m = re.search(r"<title[^>]*>([^<]+)</title>", html, re.I)
                 title_text = title_m.group(1) if title_m else ""
                 mode = _classify_mode(title_text)
                 names = _extract_store_names(html, blog_cities[0])
-                stores = [
-                    {"name": n, "desc": f"{c} {'必買伴手禮' if mode == 'souvenir' else '人氣美食'}・{name} 推薦"}
-                    for c in blog_cities for n in names
-                ]
+                stores = [{"name": n, "desc": ""} for n in names]
                 for city in blog_cities:
-                    city_stores = [s for s in stores if s["desc"].startswith(city)]
-                    _add_stores(city, mode, city_stores)
+                    _add_stores(city, mode, stores, source=blog_name)
                 time.sleep(0.6)
     except Exception as e:
         print(f"部落格來源載入失敗: {e}")
 
+    # ── 轉換為清單，按出現次數降序，產生有意義的 desc ────────────────────────
+    by_city: dict[str, dict[str, list]] = {}
+    for city in CITIES:
+        by_city[city] = {}
+        for mode in ("souvenir", "trending"):
+            items = sorted(counts[city][mode].values(),
+                           key=lambda x: x["count"], reverse=True)
+            result_items = []
+            for item in items[:_BUCKET_LIMIT]:
+                src_list = item["sources"]
+                if len(src_list) == 1:
+                    desc = f"{src_list[0]} 推薦"
+                elif len(src_list) >= 2:
+                    desc = f"{len(src_list)} 個來源提及・{'、'.join(src_list[:3])}"
+                else:
+                    desc = item.get("desc", "")
+                result_items.append({
+                    "name":    item["name"],
+                    "count":   item["count"],
+                    "sources": src_list,
+                    "desc":    desc,
+                })
+            by_city[city][mode] = result_items
+
     # ── 統計 ──────────────────────────────────────────────────────────────────
     total = sum(len(v["souvenir"]) + len(v["trending"]) for v in by_city.values())
-    print(f"\n分類完成：{total} 家店資料")
+    multi = sum(
+        1 for v in by_city.values()
+        for items in v.values()
+        for item in items if item["count"] >= 2
+    )
+    print(f"\n分類完成：{total} 家店，其中 {multi} 家被多個來源提及（品質較高）")
     for city in CITIES:
         s = len(by_city[city]["souvenir"])
         t = len(by_city[city]["trending"])
