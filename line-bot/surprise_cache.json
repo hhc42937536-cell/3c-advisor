@@ -1,10 +1,15 @@
 {
-  "updated_at": "2026-04-19 18:32",
+  "updated_at": "2026-04-19 18:36",
   "songs": [],
   "deals": [
     {
       "title": "優惠活動 - Costco",
-      "url": "https://www.costco.com.tw/savings?srsltid=AfmBOoqe_HBnWvUq_ujb4IfWdQGEgGUunb0LDeLCAU9PkoX7UmK5T9lA",
+      "url": "https://www.costco.com.tw/savings?srsltid=AfmBOorixUksHh21iPW13JAiauNFd3GtwiFecYOy6y7OiKp30-JgtV_4",
+      "tag": "優惠"
+    },
+    {
+      "title": "COSTCO好市多本週限時隱藏優惠懶人包2025 11.10(一) - 今購百科",
+      "url": "https://www.daybuy.tw/costco/217598/",
       "tag": "優惠"
     },
     {
@@ -25,6 +30,11 @@
     {
       "title": "線上DM - 南紡購物中心-",
       "url": "https://www.tsrd.com.tw/online-dm/online-dm-page",
+      "tag": "優惠"
+    },
+    {
+      "title": "最新活動|中壢店 - 遠東SOGO百貨",
+      "url": "https://info.sogo.com.tw/zl/newsdate",
       "tag": "優惠"
     },
     {
