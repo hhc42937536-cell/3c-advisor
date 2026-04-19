@@ -2102,28 +2102,7 @@ def build_city_specialties(city: str) -> list:
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
         place_data = list(ex.map(_fetch_place, keys))
 
-    item_bubbles = [_bubble(item, place) for item, place in zip(batch, place_data)]
-
-    # 在第一張卡的 footer 加第二排：必買伴手禮 + 最新流行（左右並排）
-    if item_bubbles:
-        first = item_bubbles[0]
-        first.setdefault("footer", {"type": "box", "layout": "vertical",
-                                     "paddingAll": "10px", "contents": []})
-        first["footer"]["contents"].append({
-            "type": "box", "layout": "horizontal", "spacing": "xs", "margin": "sm",
-            "contents": [
-                {"type": "button", "style": "primary", "flex": 1,
-                 "color": "#2E7D32", "height": "sm",
-                 "action": {"type": "message", "label": "🛍 必買",
-                            "text": f"必買伴手禮 {city2}"}},
-                {"type": "button", "style": "primary", "flex": 1,
-                 "color": "#E65100", "height": "sm",
-                 "action": {"type": "message", "label": "🔥 最新流行",
-                            "text": f"最新流行 {city2}"}},
-            ],
-        })
-
-    bubbles = item_bubbles
+    bubbles = [_bubble(item, place) for item, place in zip(batch, place_data)]
 
     # 換城市卡
     specialty_cities = list(_CITY_SPECIALTIES.keys())
@@ -2155,8 +2134,20 @@ def build_city_specialties(city: str) -> list:
         },
     })
 
+    # quickReply 顯示在 carousel 正下方（第二排）
+    quick_reply = {
+        "items": [
+            {"type": "action", "action": {
+                "type": "message", "label": "🛍 必買伴手禮",
+                "text": f"必買伴手禮 {city2}"}},
+            {"type": "action", "action": {
+                "type": "message", "label": "🔥 最新流行美食",
+                "text": f"最新流行 {city2}"}},
+        ]
+    }
     return [{"type": "flex", "altText": f"{city2} 特色美食",
-             "contents": {"type": "carousel", "contents": bubbles}}]
+             "contents": {"type": "carousel", "contents": bubbles},
+             "quickReply": quick_reply}]
 
 
 _BLOG_CACHE_PATH = os.path.join(
