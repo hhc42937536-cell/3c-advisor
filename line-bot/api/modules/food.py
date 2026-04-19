@@ -2157,7 +2157,7 @@ def build_destination_picker(city: str = "") -> list:
                           "size": "xxs", "color": "#888888", "wrap": True},
                          {"type": "button", "style": "secondary", "height": "sm",
                           "action": {"type": "message",
-                                     "label": "🏙️ 換城市",
+                                     "label": "🏙️ 換縣市",
                                      "text": "目的地美食換城市"}},
                      ],
                  },
@@ -2178,15 +2178,15 @@ def build_destination_city_picker() -> list:
                 for c in chunk
             ],
         })
-    return [{"type": "flex", "altText": "選擇目的地城市",
+    return [{"type": "flex", "altText": "選擇目的地縣市",
              "contents": {
                  "type": "bubble", "size": "mega",
                  "header": {"type": "box", "layout": "vertical",
                             "backgroundColor": "#1565C0", "paddingAll": "12px",
                             "contents": [
-                                {"type": "text", "text": "🏙️ 選擇目的地城市",
+                                {"type": "text", "text": "🏙️ 選擇目的地縣市",
                                  "color": "#FFFFFF", "size": "md", "weight": "bold"},
-                                {"type": "text", "text": "選城市後再選行政區",
+                                {"type": "text", "text": "選縣市後再選行政區",
                                  "color": "#BBDEFB", "size": "xs", "margin": "xs"},
                             ]},
                  "body": {"type": "box", "layout": "vertical", "spacing": "sm",
