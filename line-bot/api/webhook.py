@@ -918,8 +918,11 @@ def handle_text_message(text: str, user_id: str = "") -> list:
         if len(parts) == 2:
             return build_specialty_shops(parts[0], parts[1])
 
-    if "地方特色" in text and any(c in text for c in _ALL_CITIES):
+    if "地方特色" in text:
         city_match = next((c for c in _ALL_CITIES if c in text), "")
+        if not city_match:
+            # GPS 城市 fallback
+            city_match = _get_user_city(user_id) or ""
         return build_city_specialties(city_match)
 
     if "我要分享位置找美食" in text:

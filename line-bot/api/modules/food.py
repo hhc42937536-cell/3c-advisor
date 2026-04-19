@@ -503,14 +503,18 @@ if not _CITY_SPECIALTIES:
         {"name": "嘉義布丁", "desc": "嘉義特色古早味布丁，雞蛋奶香焦糖濃郁", "key": "嘉義 布丁", "s": ""},
     ],
     "台南": [
-        {"name": "紅磚布丁", "desc": "台南排隊名物，古早味雞蛋布丁冷吃最香", "key": "台南 紅磚布丁", "s": ""},
         {"name": "虱目魚粥", "desc": "台南早餐靈魂，鮮甜虱目魚配清粥無腥味", "key": "台南 虱目魚粥", "s": ""},
         {"name": "擔仔麵", "desc": "台南百年老味道，度小月湯頭鮮甜不膩", "key": "台南 擔仔麵", "s": ""},
         {"name": "鱔魚意麵", "desc": "台南獨有大火炒法，鑊氣十足滑嫩入味", "key": "台南 鱔魚意麵", "s": ""},
         {"name": "碗粿", "desc": "軟Q米食加肉燥蒸熟，沾蒜蓉醬超下飯", "key": "台南 碗粿", "s": ""},
         {"name": "土魠魚羹", "desc": "台灣鯧魚炸酥後加羹，鮮甜濃郁台南招牌", "key": "台南 土魠魚羹", "s": ""},
-        {"name": "粉粿", "desc": "古早粉粿加黑糖水，夏天消暑必吃", "key": "台南 粉粿", "s": "hot"},
         {"name": "棺材板", "desc": "延平街名物，厚吐司挖空填濃郁白醬海鮮", "key": "台南 棺材板", "s": ""},
+        {"name": "安平豆花", "desc": "安平老街必吃，豆香濃郁配薑汁或花生，古早味十足", "key": "台南 安平 豆花", "s": ""},
+        {"name": "周氏蝦捲", "desc": "安平名物，現炸蝦捲外酥內嫩（近期評價兩極，建議先查當日評論）", "key": "台南 周氏蝦捲", "s": ""},
+        {"name": "金葡萄蛋黃酥", "desc": "台南人氣伴手禮，蛋黃酥酥皮厚實、蛋黃鹹香，中秋前後最搶手", "key": "台南 金葡萄 蛋黃酥", "s": ""},
+        {"name": "葉家小卷米粉", "desc": "武聖夜市老店，鮮甜小卷配細米粉湯，宵夜首選", "key": "台南 葉家 小卷米粉", "s": ""},
+        {"name": "紅磚布丁", "desc": "台南排隊名物，古早味雞蛋布丁冷吃最香", "key": "台南 紅磚布丁", "s": ""},
+        {"name": "粉粿", "desc": "古早粉粿加黑糖水，夏天消暑必吃", "key": "台南 粉粿", "s": "hot"},
     ],
     "高雄": [
         {"name": "木瓜牛奶", "desc": "高雄鹽埕傳統木瓜牛奶，甜而不膩消暑聖品", "key": "高雄 木瓜牛奶", "s": ""},
@@ -1977,6 +1981,37 @@ def build_city_specialties(city: str) -> list:
         }
 
     bubbles = [_bubble(item) for item in items[:8]]
+
+    # 換城市卡（讓 GPS 鎖定的使用者也能手動切換）
+    specialty_cities = list(_CITY_SPECIALTIES.keys())
+    city_btn_rows: list = []
+    row: list = []
+    for i, c in enumerate(specialty_cities):
+        row.append({
+            "type": "button", "style": "secondary", "flex": 1, "height": "sm",
+            "action": {"type": "message", "label": c, "text": f"地方特色 {c}"},
+        })
+        if len(row) == 4 or i == len(specialty_cities) - 1:
+            city_btn_rows.append({"type": "box", "layout": "horizontal",
+                                   "spacing": "xs", "contents": row})
+            row = []
+    bubbles.append({
+        "type": "bubble", "size": "kilo",
+        "header": {
+            "type": "box", "layout": "vertical",
+            "backgroundColor": "#37474F", "paddingAll": "10px",
+            "contents": [
+                {"type": "text", "text": "📍 換個城市看看",
+                 "color": "#FFFFFF", "size": "sm", "weight": "bold"},
+                {"type": "text", "text": "點選城市切換特色小吃",
+                 "color": "#B0BEC5", "size": "xxs", "margin": "xs"},
+            ]},
+        "body": {
+            "type": "box", "layout": "vertical", "spacing": "xs", "paddingAll": "10px",
+            "contents": city_btn_rows,
+        },
+    })
+
     return [{"type": "flex", "altText": f"{city2} 特色美食",
              "contents": {"type": "carousel", "contents": bubbles}}]
 
