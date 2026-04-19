@@ -1,76 +1,81 @@
 {
-  "updated_at": "2026-04-19 18:20",
+  "updated_at": "2026-04-19 18:29",
   "songs": [
     {
+      "name": "Beauty and a Beat (feat. Nicki Minaj)",
+      "artist": "Justin Bieber"
+    },
+    {
+      "name": "That Should Be Me",
+      "artist": "Justin Bieber"
+    },
+    {
+      "name": "Baby (feat. Ludacris)",
+      "artist": "Justin Bieber"
+    },
+    {
+      "name": "STAY",
+      "artist": "樂洛伊小子 & Justin Bie…"
+    },
+    {
+      "name": "DAISIES",
+      "artist": "Justin Bieber"
+    },
+    {
+      "name": "SWIM",
+      "artist": "防彈少年團"
+    },
+    {
+      "name": "Sorry",
+      "artist": "Justin Bieber"
+    },
+    {
       "name": "那天下雨了",
-      "artist": "周杰倫 (Jay Chou)"
+      "artist": "周杰倫"
     },
     {
-      "name": "I Do",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "YUKON",
+      "artist": "Justin Bieber"
     },
     {
-      "name": "愛琴海",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "Golden",
+      "artist": "HUNTR/X, EJAE, AUD…"
     },
     {
-      "name": "太陽之子",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "太陽與地球",
+      "artist": "盧廣仲"
     },
     {
-      "name": "誰稀罕",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "drop dead",
+      "artist": "Olivia Rodrigo"
     },
     {
-      "name": "一念 (影视剧《逐玉》插曲)",
-      "artist": "Various Artists"
+      "name": "擱淺",
+      "artist": "周杰倫"
     },
     {
-      "name": "西西里",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "一念(電視劇《逐玉》插曲)",
+      "artist": "張紫寧 & 李鑫一"
     },
     {
-      "name": "七月的極光",
-      "artist": "周杰倫 (Jay Chou)"
-    },
-    {
-      "name": "女兒殿下",
-      "artist": "周杰倫 (Jay Chou)"
-    },
-    {
-      "name": "淘金小鎮",
-      "artist": "周杰倫 (Jay Chou)"
-    },
-    {
-      "name": "湘女多情",
-      "artist": "周杰倫 (Jay Chou)"
-    },
-    {
-      "name": "鄉間的路",
-      "artist": "周杰倫 (Jay Chou)"
-    },
-    {
-      "name": "孤單心事-音樂產房(原唱:藍又時)(Live)",
-      "artist": "曾沛慈 (Pets Tseng)"
-    },
-    {
-      "name": "不想再讓你哭",
-      "artist": "周祖安"
-    },
-    {
-      "name": "誰給我的勇氣",
-      "artist": "周渝民 (Vic Chou)"
+      "name": "Love Yourself",
+      "artist": "Justin Bieber"
     }
   ],
   "deals": [
     {
-      "title": "優惠活動 - Costco",
-      "url": "https://www.costco.com.tw/savings?srsltid=AfmBOoojwH3WHLiNCPvUdekfw_fFl3ygI5io8TuoSa7cGxkd353cB1tt",
+      "title": "上昨天特賣不到2分鐘就搶光了，希望你可以順利搶到！ - Threads",
+      "url": "https://www.threads.com/@evaddoo/post/DXPA7SsmXK6/%E4%B8%8A%E6%98%A8%E5%A4%A9%E7%89%B9%E8%B3%A3%E4%B8%8D%E5%88%B02%E5%88%86%E9%90%98%E5%B0%B1%E6%90%B6%E5%85%89%E4%BA%86%E5%B8%8C%E6%9C%9B%E4%BD%A0%E5%8F%AF%E4%BB%A5%E9%A0%86%E5%88%A9%E6%90%B6%E5%88%B0",
       "tag": "優惠"
     },
     {
-      "title": "Costco好市多(新品/優惠)最速報– Telegram",
-      "url": "https://t.me/s/daybuy?before=17130",
+      "title": "等等跨夜後4/18 0點開始限時特賣 - Threads",
+      "url": "https://www.threads.com/@evaddoo/post/DXPBPtVmf-d/%E7%AD%89%E7%AD%89%E8%B7%A8%E5%A4%9C%E5%BE%8C418-0%E9%BB%9E%E9%96%8B%E5%A7%8B%E9%99%90%E6%99%82%E7%89%B9%E8%B3%A3",
+      "tag": "優惠"
+    },
+    {
+      "title": "優惠活動 - Costco",
+      "url": "https://www.costco.com.tw/savings?srsltid=AfmBOoqGrcl9zA5S4CGFzai-w0RKv4-wpWICzegIC4lbIwKV8GIZqEiW",
       "tag": "優惠"
     },
     {
@@ -81,6 +86,16 @@
     {
       "title": "Top City 台中大遠百-線上DM - 遠東百貨",
       "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=53",
+      "tag": "優惠"
+    },
+    {
+      "title": "線上DM - 南紡購物中心-",
+      "url": "https://www.tsrd.com.tw/online-dm/online-dm-page",
+      "tag": "優惠"
+    },
+    {
+      "title": "最新活動|中壢店 - 遠東SOGO百貨",
+      "url": "https://info.sogo.com.tw/zl/newsdate",
       "tag": "優惠"
     },
     {
