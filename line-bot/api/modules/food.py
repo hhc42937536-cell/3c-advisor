@@ -2102,9 +2102,35 @@ def build_city_specialties(city: str) -> list:
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
         place_data = list(ex.map(_fetch_place, keys))
 
-    bubbles = [_bubble(item, place) for item, place in zip(batch, place_data)]
+    item_bubbles = [_bubble(item, place) for item, place in zip(batch, place_data)]
 
-    # 換城市卡（讓 GPS 鎖定的使用者也能手動切換）
+    # 快速入口卡放第二張（index 1），用戶一開即可點
+    quick_card: dict = {
+        "type": "bubble", "size": "kilo",
+        "header": {
+            "type": "box", "layout": "vertical",
+            "backgroundColor": "#1B5E20", "paddingAll": "10px",
+            "contents": [
+                {"type": "text", "text": f"🔍 {city2} 深入探索",
+                 "color": "#FFFFFF", "size": "sm", "weight": "bold"},
+                {"type": "text", "text": "整合在地資料精選推薦",
+                 "color": "#A5D6A7", "size": "xxs", "margin": "xs"},
+            ]},
+        "body": {
+            "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "12px",
+            "contents": [
+                {"type": "button", "style": "primary", "color": "#2E7D32", "height": "sm",
+                 "action": {"type": "message", "label": "🛍 必買伴手禮",
+                            "text": f"必買伴手禮 {city2}"}},
+                {"type": "button", "style": "primary", "color": "#E65100", "height": "sm",
+                 "action": {"type": "message", "label": "🔥 最新流行美食",
+                            "text": f"最新流行 {city2}"}},
+            ]},
+    }
+    # 第一張特色卡 + 快速入口 + 其餘特色卡
+    bubbles = [item_bubbles[0], quick_card] + item_bubbles[1:] if item_bubbles else [quick_card]
+
+    # 換城市卡
     specialty_cities = list(_CITY_SPECIALTIES.keys())
     city_btn_rows: list = []
     row: list = []
@@ -2117,7 +2143,6 @@ def build_city_specialties(city: str) -> list:
             city_btn_rows.append({"type": "box", "layout": "horizontal",
                                    "spacing": "xs", "contents": row})
             row = []
-    # 換城市卡
     bubbles.append({
         "type": "bubble", "size": "kilo",
         "header": {
