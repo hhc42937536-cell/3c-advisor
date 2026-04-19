@@ -49,7 +49,6 @@ def scrape_apple_music_chart(limit: int = 15) -> list[dict]:
 def scrape_kkbox_new_songs(limit: int = 15) -> list[dict]:
     """KKBOX 已改用 JS 渲染，保留函式供向後相容，直接回傳空列表。"""
     return []
-        return []
 
 
 def scrape_ptt_deals(limit=10):
