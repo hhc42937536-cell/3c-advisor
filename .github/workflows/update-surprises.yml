@@ -31,10 +31,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          cp line-bot/surprise_cache.json /tmp/surprise_cache.json
           git fetch origin main
           git reset --hard origin/main
-          cp line-bot/surprise_cache.json /tmp/surprise_cache.json
-          git checkout -- .
           cp /tmp/surprise_cache.json line-bot/surprise_cache.json
           git add line-bot/surprise_cache.json
           git diff --cached --quiet || git commit -m "🎉 自動更新驚喜資料 $(date +'%Y-%m-%d')"
