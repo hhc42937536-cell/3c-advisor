@@ -1,0 +1,37 @@
+name: 每週自動探索最新美食文章
+
+on:
+  schedule:
+    # 每週六 22:00 UTC（台灣時間週日 06:00），在 blog 爬蟲之前跑
+    - cron: '0 22 * * 6'
+  workflow_dispatch:
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 搜尋並爬取最新美食文章
+        env:
+          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
+          GOOGLE_CSE_ID: ${{ secrets.GOOGLE_CSE_ID }}
+        run: python line-bot/scrape_article_discovery.py
+
+      - name: Commit & push food_blog_cache.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git reset --hard origin/main
+          cp line-bot/food_blog_cache.json /tmp/food_blog_cache.json
+          git checkout -- .
+          cp /tmp/food_blog_cache.json line-bot/food_blog_cache.json
+          git add line-bot/food_blog_cache.json
+          git diff --cached --quiet || git commit -m "🔍 自動探索最新美食文章 $(date +'%Y-%m-%d')"
+          git push
