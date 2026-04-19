@@ -1685,7 +1685,7 @@ def build_food_restaurant_flex(area: str, food_type: str = "", user_id: str = ""
         return 2 * R * _math.asin(_math.sqrt(a))
 
     # ── 行政區搜尋：直接用 text_search，不依賴 GPS ────────────────────────────
-    if "區" in area and GOOGLE_PLACES_API_KEY:
+    if re.search(r'[區市鄉鎮]', area) and GOOGLE_PLACES_API_KEY:
         kw = f"{area} {food_type}" if food_type else f"{area} 小吃"
         cache_key = f"district_rest3:{area}:{food_type}"
         _cached = _redis_get(cache_key)
@@ -2090,11 +2090,11 @@ def build_food_special_picker(city: str = "") -> list:
 
 
 _CITY_DISTRICTS: dict[str, list[str]] = {
-    "台北": ["中正", "大同", "中山", "松山", "大安", "萬華", "信義", "士林", "北投", "內湖", "南港", "文山"],
-    "新北": ["板橋", "三重", "中和", "永和", "新莊", "新店", "樹林", "鶯歌", "三峽", "淡水", "汐止", "土城"],
-    "台中": ["中區", "東區", "南區", "西區", "北區", "北屯", "西屯", "南屯", "太平", "大里", "霧峰", "烏日"],
+    "台北": ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "士林區", "北投區", "內湖區", "南港區", "文山區"],
+    "新北": ["板橋區", "三重區", "中和區", "永和區", "新莊區", "新店區", "樹林區", "鶯歌區", "三峽區", "淡水區", "汐止區", "土城區"],
+    "台中": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區"],
     "台南": ["中西區", "東區", "南區", "北區", "安平區", "安南區", "永康區", "歸仁區", "新營區", "鹽水區"],
-    "高雄": ["楠梓", "左營", "鼓山", "三民", "鹽埕", "前金", "新興", "苓雅", "前鎮", "小港", "鳳山", "林園"],
+    "高雄": ["楠梓區", "左營區", "鼓山區", "三民區", "鹽埕區", "前金區", "新興區", "苓雅區", "前鎮區", "小港區", "鳳山區", "林園區"],
     "桃園": ["桃園區", "中壢區", "大溪區", "楊梅區", "蘆竹區", "龜山區", "八德區", "龍潭區", "平鎮區"],
     "新竹": ["東區", "北區", "香山區"],
     "基隆": ["仁愛區", "信義區", "中正區", "中山區", "安樂區", "暖暖區", "七堵區"],
@@ -3000,7 +3000,7 @@ def build_food_message(text: str, user_id: str = None) -> list:
         return build_destination_city_picker()
     if "目的地美食" in text_s:
         _addr = re.sub(r'目的地美食\s*', "", text_s).strip()
-        if re.search(r'[\u4e00-\u9fff]{2,5}區', _addr):
+        if re.search(r'[\u4e00-\u9fff]{2,6}[區市鄉鎮]', _addr):
             return build_food_restaurant_flex(_addr, "", user_id=user_id)
         if _addr and _addr[:2] not in _CITY_DISTRICTS:
             return build_food_by_dest_address(_addr)
