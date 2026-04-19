@@ -26,7 +26,7 @@ OUTPUT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "surprise
 def scrape_apple_music_chart(limit: int = 15) -> list[dict]:
     """Apple Music 台灣熱門歌曲排行（公開 JSON API，無需認證）。"""
     print("[Apple Music] 開始抓台灣排行榜...")
-    url = "https://rss.applemarketingtools.com/api/v2/tw/music/most-played/25/songs.json"
+    url = "https://rss.applemarketingtools.com/api/v2/tw/music/top-songs/25/songs.json"
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
         with urllib.request.urlopen(req, timeout=12) as r:
