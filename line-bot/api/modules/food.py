@@ -1871,6 +1871,33 @@ def build_city_specialties(city: str) -> list:
              "contents": {"type": "carousel", "contents": bubbles}}]
 
 
+def build_brunch_restaurants(city: str, user_id: str = "") -> list:
+    """早午餐：Google Places 搜附近真實 Brunch 店家，而非靜態食物清單"""
+    city2 = city[:2] if city else ""
+    u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
+
+    if u_lat and u_lon and GOOGLE_PLACES_API_KEY:
+        places = _nearby_places(u_lat, u_lon, radius=2000, keyword="早午餐 brunch 咖啡廳")
+    elif GOOGLE_PLACES_API_KEY:
+        places = _text_search_places(f"{city2} 早午餐 brunch 咖啡廳", max_results=5)
+    else:
+        places = []
+
+    if not places:
+        gmap_uri = "https://www.google.com/maps/search/" + urllib.parse.quote(f"{city2} 早午餐")
+        return [{"type": "text",
+                 "text": f"找不到附近早午餐資料，直接用 Google Maps 搜吧 👉 {gmap_uri}"}]
+
+    eaten_set: set = set()
+    bubbles = []
+    for r in places[:5]:
+        b = _build_restaurant_bubble(r, u_lat, u_lon, city2, eaten_set,
+                                     subtitle="☕ 附近早午餐 Brunch")
+        bubbles.append(b)
+    return [{"type": "flex", "altText": f"早午餐推薦 {city2}",
+             "contents": {"type": "carousel", "contents": bubbles}}]
+
+
 def build_specialty_shops(city: str, food_name: str) -> list:
     """第二步：用 Google Places Text Search 搜該城市的食物名店"""
     city2 = city[:2] if city else ""
@@ -2211,6 +2238,8 @@ def build_food_message(text: str, user_id: str = None) -> list:
             return build_food_special_picker("")
         explicit_style = style and (style != "便當" or "便當" in text_s)
         if explicit_style and area_city:
+            if style == "早午餐":
+                return build_brunch_restaurants(area_city, user_id or "")
             return build_food_flex(style, area_city)
         if area_city:
             return build_food_menu(city=area_city, user_id=user_id or "")
@@ -2218,6 +2247,8 @@ def build_food_message(text: str, user_id: str = None) -> list:
 
     # ── 有風格 + 有城市 → 直接推薦 ──
     if area:
+        if style == "早午餐":
+            return build_brunch_restaurants(area, user_id or "")
         return build_food_flex(style, area)
 
     # ── 有風格 + 有地區 → 選城市 ──
