@@ -35,7 +35,7 @@ from utils.line_api    import broadcast_message as _broadcast_message
 from utils.line_api    import verify_signature
 from utils.supabase    import log_usage
 from utils.supabase    import record_eaten as _record_eaten, get_eaten as _get_eaten
-from utils.redis       import redis_get as _redis_get, redis_set as _redis_set
+from utils.redis       import redis_get as _redis_get, redis_set as _redis_set, redis_lpush as _redis_lpush
 from utils.google_places import nearby_places as _nearby_places_google
 from utils.google_places import text_search as _text_search_places
 from utils.google_places import photo_url as _places_photo_url
@@ -802,6 +802,16 @@ def handle_text_message(text: str, user_id: str = "") -> list:
                           "size": "xs", "weight": "bold", "color": "#5C6BC0", "margin": "md"},
                          {"type": "button", "style": "secondary", "height": "sm", "margin": "xs",
                           "action": {"type": "message", "label": "我的記錄", "text": "我的記錄"}},
+                         {"type": "separator", "margin": "md"},
+                         {"type": "text", "text": "💌 回饋給我們",
+                          "size": "xs", "weight": "bold", "color": "#5C6BC0", "margin": "md"},
+                         {"type": "box", "layout": "horizontal", "spacing": "sm", "margin": "xs",
+                          "contents": [
+                              {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
+                               "action": {"type": "message", "label": "✨ 許願", "text": "許願"}},
+                              {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
+                               "action": {"type": "message", "label": "🚨 回報", "text": "回報"}},
+                         ]},
                      ]},
                  }}]
 
@@ -824,6 +834,53 @@ def handle_text_message(text: str, user_id: str = "") -> list:
         elif streak >= 3:
             lines.append("\n👏 很棒！保持下去")
         return [{"type": "text", "text": "\n".join(lines)}]
+
+    # ── 許願 ──────────────────────────────────────────────
+    if text.strip() == "許願":
+        return [{"type": "text", "text": (
+            "✨ 許願池開啟！\n\n"
+            "請輸入你想要的功能，格式：\n"
+            "許願 [你的想法]\n\n"
+            "例如：許願 我想要查捷運時刻表"
+        )}]
+
+    _wish_m = re.match(r"^許願[\s　:：]+(.+)$", text, re.DOTALL)
+    if _wish_m:
+        wish = _wish_m.group(1).strip()
+        if wish and user_id:
+            import time as _ft
+            _redis_lpush("feedback:wishes", {"uid": user_id, "msg": wish, "ts": int(_ft.time())})
+        return [{"type": "text", "text": (
+            f"✨ 收到你的許願：「{wish}」\n\n"
+            "已記錄！感謝你讓生活優轉越來越好 🙏"
+        )}]
+
+    # ── 回報（明確指令 + 自然語言偵測）──────────────────────
+    if text.strip() == "回報":
+        return [{"type": "text", "text": (
+            "🚨 功能回報\n\n"
+            "請說明哪個功能出了問題，格式：\n"
+            "回報 [問題描述]\n\n"
+            "例如：回報 找車位一直轉圈沒反應\n"
+            "例如：回報 天氣查詢顯示錯誤"
+        )}]
+
+    _report_m = re.match(r"^回報[\s　:：]+(.+)$", text, re.DOTALL)
+    # 自然語言觸發：「找車位沒反應」「天氣卡住了」「美食失效」等
+    _auto_report_m = (
+        not _report_m
+        and re.search(r"(沒反應|卡住了?|失效了?|壞了|不能用|出錯了?|一直轉|跑不出來|沒有結果)", text)
+    )
+    if _report_m or _auto_report_m:
+        report = _report_m.group(1).strip() if _report_m else text.strip()
+        if report and user_id:
+            import time as _ft
+            _redis_lpush("feedback:reports", {"uid": user_id, "msg": report, "ts": int(_ft.time())})
+        return [{"type": "text", "text": (
+            f"🚨 收到回報：「{report}」\n\n"
+            "已記錄！我們會盡快確認修復 🛠️\n"
+            "感謝你幫助改善生活優轉 💪"
+        )}]
 
     if text in ("換城市", "切換城市", "設定城市", "更換城市"):
         current = _get_user_city(user_id) if user_id else ""
