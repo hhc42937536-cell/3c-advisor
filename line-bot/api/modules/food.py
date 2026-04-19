@@ -887,10 +887,10 @@ def _build_restaurant_bubble(r: dict, lat, lon, city: str,
         else:
             dist_str = f"步行約{walk_min}分鐘（{dist_m/1000:.1f}km）"
 
-    if r.get("lat") and r.get("lng"):
-        gmap_uri = f"https://maps.google.com/?q={r['lat']},{r['lng']}&query={urllib.parse.quote(name)}"
-    elif r.get("place_id"):
+    if r.get("place_id"):
         gmap_uri = f"https://maps.google.com/?q=place_id:{r['place_id']}"
+    elif r.get("lat") and r.get("lng"):
+        gmap_uri = f"https://www.google.com/maps/search/?api=1&query={urllib.parse.quote(name)}&center={r['lat']},{r['lng']}"
     else:
         gmap_uri = f"https://www.google.com/maps/search/{urllib.parse.quote(name + ' ' + city)}"
 
