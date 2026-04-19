@@ -850,6 +850,9 @@ def handle_text_message(text: str, user_id: str = "") -> list:
         if wish and user_id:
             import time as _ft
             _redis_lpush("feedback:wishes", {"uid": user_id, "msg": wish, "ts": int(_ft.time())})
+            if ADMIN_USER_ID:
+                push_message(ADMIN_USER_ID, [{"type": "text",
+                    "text": f"✨ 新許願\n\n{wish}\n\nUID: {user_id}"}])
         return [{"type": "text", "text": (
             f"✨ 收到你的許願：「{wish}」\n\n"
             "已記錄！感謝你讓生活優轉越來越好 🙏"
@@ -873,9 +876,13 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     )
     if _report_m or _auto_report_m:
         report = _report_m.group(1).strip() if _report_m else text.strip()
+        source = "明確回報" if _report_m else "自動偵測"
         if report and user_id:
             import time as _ft
             _redis_lpush("feedback:reports", {"uid": user_id, "msg": report, "ts": int(_ft.time())})
+            if ADMIN_USER_ID:
+                push_message(ADMIN_USER_ID, [{"type": "text",
+                    "text": f"🚨 功能回報（{source}）\n\n{report}\n\nUID: {user_id}"}])
         return [{"type": "text", "text": (
             f"🚨 收到回報：「{report}」\n\n"
             "已記錄！我們會盡快確認修復 🛠️\n"
