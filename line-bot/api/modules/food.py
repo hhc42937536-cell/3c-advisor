@@ -2243,6 +2243,7 @@ def build_trending_specialty(city: str, mode: str) -> list:
             _redis_set(cache_key, json.dumps(data), ttl=7 * 86400)
             return data
 
+        import concurrent.futures
         with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
             place_data = list(ex.map(_fetch_place_local, keys))
 
