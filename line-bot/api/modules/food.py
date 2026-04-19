@@ -881,11 +881,12 @@ def _build_restaurant_bubble(r: dict, lat, lon, city: str,
     if dist_m is None and lat and lon and r.get("lat") and r.get("lng"):
         dist_m = _haversine(lat, lon, r["lat"], r["lng"])
     if dist_m is not None:
-        walk_min = max(1, round(dist_m / 80))
-        if dist_m < 1000:
-            dist_str = f"步行約{walk_min}分鐘（{int(dist_m)}m）"
+        if dist_m < 500:
+            dist_str = f"步行約{max(1, round(dist_m / 80))}分鐘（{int(dist_m)}m）"
+        elif dist_m < 1000:
+            dist_str = f"騎車約{max(1, round(dist_m / 250))}分（{int(dist_m)}m）"
         else:
-            dist_str = f"步行約{walk_min}分鐘（{dist_m/1000:.1f}km）"
+            dist_str = f"騎車約{max(1, round(dist_m / 250))}分（{dist_m/1000:.1f}km）"
 
     if r.get("place_id"):
         gmap_uri = f"https://maps.google.com/?q=place_id:{r['place_id']}"
@@ -2891,6 +2892,10 @@ def build_food_message(text: str, user_id: str = None) -> list:
             }
         }]
 
+    # ── 目的地美食（獨立路由，不限入口詞）──
+    if "目的地美食" in text_s:
+        return build_destination_picker(area_city)
+
     # ── 純呼叫主選單 ──
     _food_bare = ["今天吃什麼", "晚餐吃什麼", "午餐吃什麼", "吃什麼", "晚餐推薦", "午餐推薦"]
     if any(text_s == b or text_s.startswith(b + " ") or text_s.startswith(b + "\n")
@@ -2902,8 +2907,6 @@ def build_food_message(text: str, user_id: str = None) -> list:
             return build_food_type_picker(area_city)
         if "特殊需求" in text_s:
             return build_food_special_picker(area_city)
-        if "目的地美食" in text_s:
-            return build_destination_picker(area_city)
         if "地方特色" in text_s:
             if area_city:
                 return build_city_specialties(area_city)
