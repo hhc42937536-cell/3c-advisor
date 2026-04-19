@@ -24,26 +24,8 @@ OUTPUT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "surprise
 
 
 def scrape_apple_music_chart(limit: int = 15) -> list[dict]:
-    """Apple Music 台灣熱門歌曲排行（公開 JSON API，無需認證）。"""
-    print("[Apple Music] 開始抓台灣排行榜...")
-    url = "https://rss.applemarketingtools.com/api/v2/tw/music/top-songs/25/songs.json"
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=12) as r:
-            data = json.loads(r.read().decode("utf-8"))
-        songs = []
-        for entry in data.get("feed", {}).get("results", [])[:limit]:
-            name = entry.get("name", "").strip()
-            artist = entry.get("artistName", "").strip()
-            if name and artist:
-                if len(artist) > 20:
-                    artist = artist[:18] + "…"
-                songs.append({"name": name, "artist": artist})
-        print(f"[Apple Music] 抓到 {len(songs)} 首")
-        return songs
-    except Exception as e:
-        print(f"[Apple Music] 錯誤: {e}")
-        return []
+    """已棄用，由 scrape_songs_via_serper 取代。"""
+    return []
 
 
 def scrape_kkbox_new_songs(limit: int = 15) -> list[dict]:
@@ -260,39 +242,48 @@ def scrape_deals_via_serper(limit: int = 20) -> list[dict]:
 
 
 def scrape_songs_via_serper(limit: int = 15) -> list[dict]:
-    """用 Serper 搜尋台灣近期熱門新歌。"""
+    """用 Serper 搜 KKBOX 台灣排行榜文章，從 snippet 抽歌名/歌手。"""
     serper_key = os.environ.get("SERPER_API_KEY", "")
     if not serper_key:
         return []
 
-    payload = json.dumps({
-        "q": f"台灣 華語 熱門新歌 排行榜 {datetime.now().strftime('%Y年%m月')}",
-        "gl": "tw", "hl": "zh-tw", "num": 5, "tbs": "qdr:m",
-    }).encode("utf-8")
+    ym = datetime.now().strftime("%Y年%m月")
+    queries = [
+        f"KKBOX 台灣 華語排行榜 {ym} 前十名",
+        f"Spotify 台灣 排行榜 熱門歌曲 {ym}",
+    ]
+    seen: set = set()
+    songs: list = []
 
-    songs = []
-    try:
-        req = urllib.request.Request(
-            "https://google.serper.dev/search",
-            data=payload,
-            headers={"X-API-KEY": serper_key, "Content-Type": "application/json"},
-        )
-        with urllib.request.urlopen(req, timeout=12) as r:
-            data = json.loads(r.read().decode("utf-8"))
+    for q in queries:
+        payload = json.dumps({
+            "q": q, "gl": "tw", "hl": "zh-tw", "num": 5, "tbs": "qdr:m",
+        }).encode("utf-8")
+        try:
+            req = urllib.request.Request(
+                "https://google.serper.dev/search",
+                data=payload,
+                headers={"X-API-KEY": serper_key, "Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=12) as r:
+                data = json.loads(r.read().decode("utf-8"))
 
-        # 從 snippet 裡用正則抽「歌名 - 歌手」或「歌名／歌手」格式
-        seen = set()
-        for item in data.get("organic", []):
-            snippet = item.get("snippet", "") + " " + item.get("title", "")
-            for m in re.finditer(r'[《〈「]([^》〉」]{2,20})[》〉」][^\S\r\n]*[-–—/／]\s*([^\s,，、。！\n]{2,15})', snippet):
-                name, artist = m.group(1).strip(), m.group(2).strip()
-                if name not in seen and len(name) >= 2:
-                    seen.add(name)
-                    songs.append({"name": name, "artist": artist})
-        print(f"[Serper歌單] 抓到 {len(songs)} 首")
-    except Exception as e:
-        print(f"[Serper歌單] 失敗: {e}")
+            for item in data.get("organic", []):
+                text = item.get("snippet", "") + " " + item.get("title", "")
+                # 格式：《歌名》- 歌手 或 「歌名」／歌手
+                for m in re.finditer(
+                    r'[《〈「]([^》〉」]{2,20})[》〉」]\s*[-–—/／]\s*([^\s,，、。！\n（(]{2,15})',
+                    text
+                ):
+                    name, artist = m.group(1).strip(), m.group(2).strip()
+                    if name not in seen:
+                        seen.add(name)
+                        songs.append({"name": name, "artist": artist})
+            time.sleep(0.3)
+        except Exception as e:
+            print(f"[Serper歌單] 失敗: {e}")
 
+    print(f"[Serper歌單] 抓到 {len(songs)} 首")
     return songs[:limit]
 
 
