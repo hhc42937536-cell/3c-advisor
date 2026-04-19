@@ -449,23 +449,34 @@ def _get_city_local_deal(city: str, user_id: str = "", seq: int = 0) -> tuple:
     """當地在地優惠（Accupass 活動 + 靜態優惠輪播）：(icon, title, body, url)"""
     pool: list[tuple] = []
 
-    # Accupass 活動（過濾冷門古典表演）
+    # Accupass 活動：優先吃喝玩樂 > 市集展覽 > 戶外踏青 > 親子同樂 > 表演音樂 > 文青咖啡
     _NICHE_KW = {
         "獨奏", "交響", "古典", "協奏", "弦樂", "管弦", "室內樂", "歌劇", "聲樂",
         "合唱", "詩歌", "講座", "研討", "座談", "論壇", "說明會", "工作坊",
-        "學術", "頒獎", "表揚", "公聽", "里民", "社區發展", "志工",
+        "學術", "頒獎", "表揚", "公聽", "里民", "社區發展", "志工", "繪本",
+    }
+    _CAT_PRIORITY = ["吃喝玩樂", "市集展覽", "戶外踏青", "親子同樂", "表演音樂", "文青咖啡"]
+    _CAT_ICON = {
+        "吃喝玩樂": "🍻", "市集展覽": "🛍️", "戶外踏青": "🌿",
+        "親子同樂": "🎠", "表演音樂": "🎵", "文青咖啡": "☕",
     }
     _ac = _get_accupass_cache()
+    priority_pool: list[tuple] = []
+    other_pool: list[tuple] = []
     if _ac:
         city_data = _ac.get("events", _ac).get(city, {})
-        for cat, evs in city_data.items():
-            if isinstance(evs, list):
-                for ev in evs:
-                    name = ev.get("name", "")
-                    if any(k in name for k in _NICHE_KW):
-                        continue
-                    pool.append(("🎉", f"{city}近期活動",
-                                 name or "精彩活動", ev.get("url", "")))
+        for cat in _CAT_PRIORITY:
+            for ev in city_data.get(cat, []):
+                name = ev.get("name", "")
+                if any(k in name for k in _NICHE_KW):
+                    continue
+                icon = _CAT_ICON.get(cat, "🎉")
+                entry = (icon, f"{city}{cat}", name or "精彩活動", ev.get("url", ""))
+                if cat in ("吃喝玩樂", "市集展覽"):
+                    priority_pool.append(entry)
+                else:
+                    other_pool.append(entry)
+    pool = priority_pool + other_pool
 
     # 靜態城市優惠 + tips
     for t in _CITY_LOCAL_DEALS.get(city, _GENERIC_LOCAL_DEALS):
