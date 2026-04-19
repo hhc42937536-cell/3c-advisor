@@ -2345,12 +2345,45 @@ def build_food_real_restaurants(style: str, city: str, user_id: str = "") -> lis
     if not places:
         return build_food_flex(style, city)  # fallback 靜態建議
 
+    all_places = places[:12]  # LINE carousel 上限 12
+    page1, page2 = all_places[:8], all_places[8:]
+
+    # 剩餘存 Redis 供分頁
+    if page2:
+        _redis_set(f"food_more:{style}:{city2}", json.dumps(page2), ttl=1800)
+
     eaten_set: set = set()
-    bubbles = []
-    for r in places[:8]:
-        b = _build_restaurant_bubble(r, u_lat, u_lon, city2, eaten_set,
-                                     subtitle=f"{icon} 附近{style}")
-        bubbles.append(b)
+    bubbles = [
+        _build_restaurant_bubble(r, u_lat, u_lon, city2, eaten_set,
+                                 subtitle=f"{icon} 附近{style}")
+        for r in page1
+    ]
+
+    if page2:
+        bubbles.append({
+            "type": "bubble", "size": "kilo",
+            "body": {
+                "type": "box", "layout": "vertical",
+                "justifyContent": "center", "alignItems": "center",
+                "paddingAll": "24px", "spacing": "sm",
+                "contents": [
+                    {"type": "text", "text": f"還有 {len(page2)} 間",
+                     "size": "xxl", "weight": "bold", "align": "center", "color": "#FF6B35"},
+                    {"type": "text", "text": f"{style}好店等你發掘",
+                     "size": "sm", "color": "#888888", "align": "center"},
+                ],
+            },
+            "footer": {
+                "type": "box", "layout": "vertical", "paddingAll": "8px",
+                "contents": [{
+                    "type": "button", "style": "primary", "color": "#FF6B35",
+                    "action": {"type": "message",
+                               "label": f"查看全部 {len(page2)} 間",
+                               "text": f"更多結果 {style} {city2}"},
+                }],
+            },
+        })
+
     return [{"type": "flex", "altText": f"{style}推薦 {city2}",
              "contents": {"type": "carousel", "contents": bubbles}}]
 
@@ -2537,6 +2570,25 @@ def build_food_area_picker(style: str, region: str = "") -> list:
 def build_food_message(text: str, user_id: str = None) -> list:
     """今天吃什麼 — 主路由"""
     text_s = text.strip()
+
+    # ── 更多結果分頁 ──
+    if text_s.startswith("更多結果 "):
+        parts = text_s[5:].split()          # "更多結果 港式 台南" → ["港式", "台南"]
+        if len(parts) >= 2:
+            more_style, more_city2 = parts[0], parts[1][:2]
+            cached = _redis_get(f"food_more:{more_style}:{more_city2}")
+            if cached:
+                remaining: list = json.loads(cached) if isinstance(cached, str) else cached
+                icon = _STYLE_ICON.get(more_style, "🍽️")
+                eaten_set: set = set()
+                bubbles = [
+                    _build_restaurant_bubble(r, None, None, more_city2, eaten_set,
+                                             subtitle=f"{icon} {more_style}推薦")
+                    for r in remaining
+                ]
+                return [{"type": "flex", "altText": f"{more_style}更多推薦 {more_city2}",
+                         "contents": {"type": "carousel", "contents": bubbles}}]
+            return [{"type": "text", "text": "資料已過期，請重新搜尋一次 😊"}]
 
     # ── 解析區域（支援全台 22 縣市）──
     area = ""
