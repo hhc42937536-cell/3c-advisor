@@ -2078,10 +2078,81 @@ def build_food_special_picker(city: str = "") -> list:
                               _btn3d("🎪 美食活動", "本週美食活動", "#6A1B9A", "#3E0B6B", flex=1),
                           ]},
                          _btn3d("🌏 地方特色小吃", f"地方特色{suf}", "#00695C", "#003D36"),
+                         _btn3d("🗺️ 目的地美食", f"目的地美食{suf}", "#1565C0", "#0D3F7A"),
                          {"type": "button", "style": "link", "height": "sm",
                           "action": {"type": "message", "label": "← 回主選單",
                                      "text": f"今天吃什麼{suf}"}},
                      ]},
+             }}]
+
+
+_CITY_DISTRICTS: dict[str, list[str]] = {
+    "台北": ["中正", "大同", "中山", "松山", "大安", "萬華", "信義", "士林", "北投", "內湖", "南港", "文山"],
+    "新北": ["板橋", "三重", "中和", "永和", "新莊", "新店", "樹林", "鶯歌", "三峽", "淡水", "汐止", "土城"],
+    "台中": ["中區", "東區", "南區", "西區", "北區", "北屯", "西屯", "南屯", "太平", "大里", "霧峰", "烏日"],
+    "台南": ["中西區", "東區", "南區", "北區", "安平區", "安南區", "永康區", "歸仁區", "新營區", "鹽水區"],
+    "高雄": ["楠梓", "左營", "鼓山", "三民", "鹽埕", "前金", "新興", "苓雅", "前鎮", "小港", "鳳山", "林園"],
+    "桃園": ["桃園區", "中壢區", "大溪區", "楊梅區", "蘆竹區", "龜山區", "八德區", "龍潭區", "平鎮區"],
+    "新竹": ["東區", "北區", "香山區"],
+    "基隆": ["仁愛區", "信義區", "中正區", "中山區", "安樂區", "暖暖區", "七堵區"],
+    "嘉義": ["東區", "西區"],
+    "花蓮": ["花蓮市", "吉安鄉", "壽豐鄉", "鳳林鎮", "光復鄉"],
+    "台東": ["台東市", "成功鎮", "關山鎮", "池上鄉"],
+}
+
+
+def build_destination_picker(city: str = "") -> list:
+    """目的地美食區選擇器：顯示行政區快捷按鈕"""
+    city2 = city[:2] if city else ""
+    districts = _CITY_DISTRICTS.get(city, _CITY_DISTRICTS.get(city2, []))
+
+    if not districts:
+        # 沒有該城市的行政區資料 → 提示直接輸入
+        return [{"type": "text",
+                 "text": "請輸入目的地行政區，例如：\n「台南東區餐廳」\n「高雄鳳山小吃」\n「板橋美食」"}]
+
+    city_label = city2 or "目的地"
+    # 每列最多 3 個按鈕
+    rows = []
+    row_size = 3
+    for i in range(0, len(districts), row_size):
+        chunk = districts[i:i + row_size]
+        rows.append({
+            "type": "box", "layout": "horizontal", "spacing": "sm",
+            "contents": [
+                {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
+                 "action": {"type": "message",
+                            "label": d if len(d) <= 6 else d[:5],
+                            "text": f"餐廳 {city2}{d}"}}
+                for d in chunk
+            ],
+        })
+
+    return [{"type": "flex", "altText": f"{city_label} 目的地美食",
+             "contents": {
+                 "type": "bubble", "size": "mega",
+                 "header": {
+                     "type": "box", "layout": "vertical",
+                     "backgroundColor": "#1565C0", "paddingAll": "12px",
+                     "contents": [
+                         {"type": "text", "text": "🗺️ 目的地美食查詢",
+                          "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                         {"type": "text",
+                          "text": f"選擇目的地行政區 → 預覽當地餐廳，出發前先備好",
+                          "color": "#BBDEFB", "size": "xs", "margin": "xs", "wrap": True},
+                     ]},
+                 "body": {
+                     "type": "box", "layout": "vertical", "paddingAll": "12px",
+                     "spacing": "sm", "contents": rows,
+                 },
+                 "footer": {
+                     "type": "box", "layout": "vertical", "paddingAll": "10px",
+                     "contents": [{
+                         "type": "text",
+                         "text": "💡 也可直接輸入，例如「板橋餐廳」「台南東區小吃」",
+                         "size": "xxs", "color": "#888888", "wrap": True,
+                     }],
+                 },
              }}]
 
 
@@ -2829,6 +2900,8 @@ def build_food_message(text: str, user_id: str = None) -> list:
             return build_food_type_picker(area_city)
         if "特殊需求" in text_s:
             return build_food_special_picker(area_city)
+        if "目的地美食" in text_s:
+            return build_destination_picker(area_city)
         if "地方特色" in text_s:
             if area_city:
                 return build_city_specialties(area_city)
