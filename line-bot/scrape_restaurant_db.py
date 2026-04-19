@@ -160,11 +160,6 @@ def build() -> None:
                 mention_count = post.get("count", 1)
                 sources = post.get("sources", [])
 
-                # 只有一個來源提及的店家可信度低，直接略過
-                if mention_count < 2:
-                    skip_count += 1
-                    continue
-
                 # 先嘗試用名稱比對現有資料，避免重查
                 if any(s["name"] == name for s in by_city.get(city2, [])):
                     skip_count += 1
@@ -195,8 +190,9 @@ def build() -> None:
                     continue
 
                 district = _extract_district(result.get("addr", ""), city2)
-                # 綜合分數 = 被提及次數（可信度）× Google 評分（品質）
-                score = round(mention_count * (rating or 3.0), 2)
+                # 綜合分數：Google 評分為主（0.7），出現次數為輔（0.3，上限 5 次）
+                # 新店不吃虧，老店多一點加分
+                score = round((rating or 3.0) * 0.7 + min(mention_count, 5) * 0.3, 2)
                 # desc：用來源列表產生有意義的說明
                 if len(sources) >= 2:
                     desc = f"{mention_count} 個來源推薦・{'、'.join(sources[:3])}"
