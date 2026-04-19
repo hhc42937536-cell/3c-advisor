@@ -391,6 +391,35 @@ def main() -> None:
                     "desc":    s.get("desc", ""),
                 }
 
+    # ── Step 0: 直接指定文章（最高品質，優先處理）─────────────────────────────
+    print("\n── 直接指定文章（高品質來源）──")
+    try:
+        with open(SOURCES_FILE, encoding="utf-8") as f:
+            _sources_all = json.load(f)
+        direct_articles: dict = _sources_all.get("direct_articles", {})
+        for city, articles in direct_articles.items():
+            if city not in counts:
+                continue
+            for article in articles:
+                url = article.get("url", "")
+                mode = article.get("mode", "trending")
+                source = article.get("source", "精選部落格")
+                if not url:
+                    continue
+                print(f"  {source}（{city}/{mode}）: {url[:60]}...")
+                raw = _fetch_url(url, timeout=15)
+                if not raw:
+                    time.sleep(0.5)
+                    continue
+                html = raw.decode("utf-8", errors="ignore")
+                names = _extract_store_names(html, city)
+                stores = [{"name": n, "desc": ""} for n in names]
+                _add_stores(city, mode, stores, source=source)
+                print(f"    → 抽到 {len(names)} 家：{', '.join(names[:5])}")
+                time.sleep(0.8)
+    except Exception as e:
+        print(f"直接文章處理失敗: {e}")
+
     # ── Step 1: Google News RSS 標題/摘要抽取店名 ────────────────────────────
     print("\n── Google News RSS 標題摘要抽取 ──")
     for city in CITIES:

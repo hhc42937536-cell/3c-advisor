@@ -1,180 +1,1698 @@
 {
   "_note": "各縣市代表性美食部落格 + Threads 帳號清單，供爬蟲使用。type: blog/threads/official。verify:true 者 URL 待人工確認。",
   "blogs": [
-    {"name": "Nash，神之領域",       "url": "https://nash.tw/",              "type": "blog",     "verify": false, "focus": "士林、北投、中山；評論直白",            "cities": ["台北", "嘉義", "花蓮", "台東"]},
-    {"name": "周花花，甲飽沒",       "url": "",                              "type": "blog",     "verify": false, "focus": "捷運沿線、平價小吃、咖啡廳",            "cities": ["台北"]},
-    {"name": "陳小可的吃喝玩樂",     "url": "",                              "type": "blog",     "verify": false, "focus": "三重、萬華、西門町",                    "cities": ["台北", "新北"]},
-    {"name": "大食女",               "url": "",                              "type": "blog",     "verify": false, "focus": "視覺吸睛、甜點、新開幕早午餐",          "cities": ["台北"]},
-    {"name": "PEKO 味蕾行",          "url": "",                              "type": "blog",     "verify": false, "focus": "板橋、萬華、西門町；韓式、泰式異國料理", "cities": ["台北", "新北"]},
-    {"name": "Ifunny 艾方妮",        "url": "",                              "type": "blog",     "verify": false, "focus": "東區、中山質感餐廳；土城、板橋深度食記", "cities": ["台北", "新北"]},
-    {"name": "軟西遊記",             "url": "",                              "type": "blog",     "verify": false, "focus": "完整捷運線美食懶人包",                  "cities": ["台北"]},
-    {"name": "台北旅遊網",           "url": "https://www.travel.taipei/",   "type": "official", "verify": false, "focus": "必比登、清真認證、老字號官方資料庫",    "cities": ["台北"]},
-    {"name": "瑪格。圖寫生活",       "url": "https://margaret.tw/",         "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["台北"]},
-    {"name": "鄉民食堂",             "url": "https://goodeat.tw/",          "type": "blog",     "verify": true,  "focus": "整合 PTT/Dcard 真實評價，非廣告文",     "cities": ["台北"]},
-    {"name": "fooder 台灣美食",      "url": "https://foodertw.com/",        "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["新北", "台北"]},
-    {"name": "安妮的天空",           "url": "",                              "type": "blog",     "verify": false, "focus": "板橋、新莊、中永和商圈",                "cities": ["新北"]},
-    {"name": "小可吃喝玩樂",         "url": "",                              "type": "blog",     "verify": false, "focus": "三重、蘆洲、五股深耕最強",              "cities": ["新北"]},
-    {"name": "新北美食網",           "url": "",                              "type": "blog",     "verify": false, "focus": "集合新北各區小吃，資料庫屬性強",        "cities": ["新北"]},
-    {"name": "民宿女王芽月",         "url": "https://cythia.net/",          "type": "blog",     "verify": true,  "focus": "板橋、土城、桃園",                      "cities": ["新北", "桃園"]},
-    {"name": "艾瑪吃喝玩樂札記",    "url": "https://almablog.tw/",         "type": "blog",     "verify": true,  "focus": "基隆小吃、特色餐廳",                    "cities": ["基隆"]},
-    {"name": "袁彬的吃喝玩樂",       "url": "",                              "type": "blog",     "verify": false, "focus": "基隆港區、廟口以外隱藏版美食",          "cities": ["基隆"]},
-    {"name": "基隆海鮮指南",         "url": "https://travel.klcg.gov.tw",  "type": "official", "verify": false, "focus": "漁港直送與特色小吃官方整理",            "cities": ["基隆"]},
-    {"name": "基隆人日常",           "url": "",                              "type": "blog",     "verify": false, "focus": "FB社團轉Threads，基隆在地人真實口碑",   "cities": ["基隆"]},
-    {"name": "小腹婆大世界",         "url": "https://fupo.tw/",             "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["基隆", "嘉義", "屏東", "宜蘭", "澎湖", "金門", "連江"]},
-    {"name": "VIVIYU小世界",         "url": "https://www.viviyu.com/",      "type": "blog",     "verify": false, "focus": "桃園市、中壢、平鎮深度在地文",          "cities": ["桃園", "新竹", "苗栗", "新北"]},
-    {"name": "大口老師的走跳學堂",   "url": "",                              "type": "blog",     "verify": false, "focus": "桃園、中壢商圈非常詳盡",                "cities": ["桃園"]},
-    {"name": "愛伯特吃喝玩樂",       "url": "",                              "type": "blog",     "verify": false, "focus": "大溪、八德、桃園市區",                  "cities": ["桃園"]},
-    {"name": "桃園觀光導覽網",       "url": "",                              "type": "official", "verify": false, "focus": "老街、觀光夜市官方清單",                "cities": ["桃園"]},
-    {"name": "艾瑪貪吃",             "url": "",                              "type": "blog",     "verify": false, "focus": "",                                      "cities": ["桃園"]},
-    {"name": "踢小米",               "url": "https://timmyblog.cc/",        "type": "blog",     "verify": true,  "focus": "竹北、城隍廟商圈、科學園區外送",        "cities": ["新竹"]},
-    {"name": "新竹菜園/花洛米",      "url": "",                              "type": "blog",     "verify": false, "focus": "上海菜、眷村美食、合菜",                "cities": ["新竹"]},
-    {"name": "阿輝的美食生活",       "url": "",                              "type": "blog",     "verify": false, "focus": "新竹市區各類餐廳深耕",                  "cities": ["新竹"]},
-    {"name": "牛牛肥滋滋",           "url": "",                              "type": "blog",     "verify": false, "focus": "新竹、竹北高質感下午茶與早午餐",        "cities": ["新竹"]},
-    {"name": "跟著華少吃吃吃",       "url": "https://foodiemap.tw/",        "type": "blog",     "verify": true,  "focus": "新竹與全台商圈地圖",                    "cities": ["台中", "新竹"]},
-    {"name": "Mika出走美食日誌",     "url": "https://mikatogo.tw/",         "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["苗栗", "雲林"]},
-    {"name": "飛天璇的口袋",         "url": "https://flyblog.cc/",          "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["台中", "台東", "金門", "連江"]},
-    {"name": "小高食記",             "url": "",                              "type": "blog",     "verify": false, "focus": "",                                      "cities": ["台中", "台南"]},
-    {"name": "13's幸福食光",         "url": "https://13blog.tw/",           "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["彰化", "南投", "雲林"]},
-    {"name": "Kiwi 樂活食旅",        "url": "https://ikiwi.tw/",            "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["彰化", "南投"]},
-    {"name": "台南Ke食旅",           "url": "",                              "type": "blog",     "verify": false, "focus": "",                                      "cities": ["台南"]},
-    {"name": "熱血玩台南",           "url": "https://decing.tw/",           "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["台南"]},
-    {"name": "倫敦男孩",             "url": "https://boylondon.tw/",        "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["台南"]},
-    {"name": "捲捲和土豆拿鐵",       "url": "https://nigi33.tw/",           "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["高雄"]},
-    {"name": "高雄小肥鼠",           "url": "",                              "type": "blog",     "verify": false, "focus": "",                                      "cities": ["高雄"]},
-    {"name": "虎麗笑嗨嗨",           "url": "https://hoolee.tw/",           "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["高雄", "屏東"]},
-    {"name": "跟著尼力吃喝玩樂",     "url": "https://nellydyu.tw/",         "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["屏東"]},
-    {"name": "小兔小安旅遊札記",     "url": "https://bunnyann.tw/",         "type": "blog",     "verify": true,  "focus": "60間以上宜蘭在地熱門餐廳、小吃",       "cities": ["嘉義", "宜蘭"]},
-    {"name": "紫色微笑",             "url": "",                              "type": "blog",     "verify": false, "focus": "宜蘭在地；羅東、礁溪、宜蘭市深度",     "cities": ["宜蘭", "南投"]},
-    {"name": "卡夫卡不吃魚",         "url": "",                              "type": "blog",     "verify": false, "focus": "宜蘭在地生活與美食最深度部落格",        "cities": ["宜蘭"]},
-    {"name": "宜蘭旅遊網",           "url": "",                              "type": "official", "verify": false, "focus": "官方資料庫，觀光區店家",                "cities": ["宜蘭"]},
-    {"name": "Tiss 玩味食尚",        "url": "https://tisshuang.com/",       "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["宜蘭"]},
-    {"name": "跳躍的宅男",           "url": "https://www.jumpman.tw/",      "type": "blog",     "verify": true,  "focus": "花蓮一哥",                              "cities": ["花蓮", "金門"]},
-    {"name": "D&W黑白雙搭",          "url": "https://dwplayboy.com/",       "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["澎湖", "金門", "連江"]},
-    {"name": "小虎食夢網",           "url": "https://www.foodtigertw.com/", "type": "blog",     "verify": true,  "focus": "",                                      "cities": ["連江"]},
-    {"name": "熱血台中",             "url": "",                              "type": "blog",     "verify": false, "focus": "中部最具影響力平台；台中、彰化懶人包",  "cities": ["台中", "彰化"]},
-    {"name": "愛食記台中頻道",       "url": "https://ifoodie.tw/",          "type": "blog",     "verify": false, "focus": "即時週榜月榜，監測爆紅餐廳",            "cities": ["台中"]},
-    {"name": "強生與小吠的玩樂地圖", "url": "",                              "type": "blog",     "verify": false, "focus": "早午餐、健身餐；西屯、南屯美食",         "cities": ["台中"]},
-    {"name": "糖糖's 享食生活",      "url": "",                              "type": "blog",     "verify": false, "focus": "一中、逢甲、勤美商圈新開幕打卡店",      "cities": ["台中"]},
-    {"name": "涼子是也",             "url": "",                              "type": "blog",     "verify": false, "focus": "聚餐、親子餐廳詳盡食記",                "cities": ["台中"]},
-    {"name": "棉花糖的天空",         "url": "",                              "type": "blog",     "verify": false, "focus": "台中甜點、夜市小吃、節慶美食特報",      "cities": ["台中"]},
-    {"name": "剎有其食",             "url": "",                              "type": "blog",     "verify": false, "focus": "台中燒肉、火鍋、異國料理商圈評比",      "cities": ["台中"]},
-    {"name": "純粹食記 Nini and Blue","url": "",                             "type": "blog",     "verify": false, "focus": "大里、霧峰、太平及台中捷運沿線",        "cities": ["台中"]},
-    {"name": "商妮吃喝遊樂",         "url": "",                              "type": "blog",     "verify": false, "focus": "西屯、南屯高 CP 值平價美食",            "cities": ["台中"]},
-    {"name": "那倆人玩樂人生",       "url": "",                              "type": "blog",     "verify": false, "focus": "溪湖、二林、社頭南彰化鄉鎮",           "cities": ["彰化"]},
-    {"name": "黑皮的旅遊筆記",       "url": "",                              "type": "blog",     "verify": false, "focus": "南投與雲林質感餐廳與咖啡廳",            "cities": ["南投", "雲林"]},
-    {"name": "寗好生活 Ning's Life", "url": "",                              "type": "blog",     "verify": false, "focus": "埔里商圈細緻在地推薦",                  "cities": ["南投"]},
-    {"name": "南投旅遊網",           "url": "",                              "type": "official", "verify": false, "focus": "景觀餐廳官方資料庫",                    "cities": ["南投"]},
-    {"name": "饗食客棧食堂",         "url": "",                              "type": "blog",     "verify": false, "focus": "雲林在地老字號美食清單整理",            "cities": ["雲林"]},
-    {"name": "阿mon台灣吃透透",      "url": "",                              "type": "blog",     "verify": false, "focus": "斗六、虎尾及台中學生圈美食",            "cities": ["雲林", "台中"]},
-    {"name": "苗栗玩透透",           "url": "",                              "type": "official", "verify": false, "focus": "各鄉鎮客家料理與伴手禮官方整理",        "cities": ["苗栗"]},
-    {"name": "跟著企鵝玩苗栗",       "url": "",                              "type": "blog",     "verify": false, "focus": "桃園、苗栗隱藏版小吃",                  "cities": ["苗栗", "桃園"]},
-    {"name": "熱血南臺灣",           "url": "",                              "type": "blog",     "verify": false, "focus": "熱血玩台南團隊延伸；台南、高雄、屏東",  "cities": ["台南", "高雄", "屏東"]},
-    {"name": "雲林食采網",           "url": "",                              "type": "blog",     "verify": false, "focus": "雲林在地美食與農特產入口網",             "cities": ["雲林"]},
-    {"name": "規小孫",               "url": "",                              "type": "blog",     "verify": false, "focus": "雲林、台南質感餐廳深度整理",             "cities": ["雲林", "台南"]},
-    {"name": "嘉義美食地圖",         "url": "",                              "type": "blog",     "verify": false, "focus": "嘉義在地最大美食社群",                  "cities": ["嘉義"]},
-    {"name": "進食的巨鼠",           "url": "",                              "type": "blog",     "verify": false, "focus": "台南在地視角；家常小吃、外送美食",       "cities": ["台南"]},
-    {"name": "台南人帶路",           "url": "",                              "type": "blog",     "verify": false, "focus": "只有在地老台南人才知道的店",             "cities": ["台南"]},
-    {"name": "阿捷的打狗美食筆記",   "url": "",                              "type": "blog",     "verify": false, "focus": "高雄新開幕、新商圈反應最快（岡山、橋頭）","cities": ["高雄"]},
-    {"name": "吃心絕對",             "url": "",                              "type": "blog",     "verify": false, "focus": "高雄各行政區及外島美食資料庫極大",      "cities": ["高雄"]},
-    {"name": "高雄旅遊網",           "url": "",                              "type": "official", "verify": false, "focus": "合法登記與觀光示範店官方資料",           "cities": ["高雄"]},
-    {"name": "阿君的玩食天堂",       "url": "",                              "type": "blog",     "verify": false, "focus": "屏東市區與巷弄美食深耕",                "cities": ["屏東"]},
-    {"name": "口袋吃吃五十味",       "url": "",                              "type": "blog",     "verify": false, "focus": "屏東在地年輕人；平價美食、早午餐",       "cities": ["屏東"]},
-    {"name": "墾丁攻略悠遊墾丁",     "url": "",                              "type": "blog",     "verify": false, "focus": "恆春半島最完整餐廳資料庫",              "cities": ["屏東"]},
-    {"name": "小涼的美食小天地",     "url": "",                              "type": "blog",     "verify": false, "focus": "雲林斗六、斗南傳統早餐小吃長期紀錄",   "cities": ["雲林", "台中"]},
-    {"name": "妳好南搞",             "url": "",                              "type": "blog",     "verify": false, "focus": "嘉義慢活美食、巷弄職人店高品質採訪",   "cities": ["嘉義"]},
-    {"name": "跟著曉帆吃喝玩樂",     "url": "",                              "type": "blog",     "verify": false, "focus": "嘉義大林、民雄等市區外行政區著墨深",   "cities": ["嘉義", "彰化"]},
-    {"name": "台南美食地圖",         "url": "",                              "type": "blog",     "verify": false, "focus": "依行政區與食物類型聚合台南在地美食",   "cities": ["台南"]},
-    {"name": "雞蛋貓異想世界",       "url": "",                              "type": "blog",     "verify": false, "focus": "台南在地資深；外食、開箱、連鎖真實評價","cities": ["台南"]},
-    {"name": "曼達愛吃鬼",           "url": "",                              "type": "blog",     "verify": false, "focus": "台南東區、南科；育兒友善餐廳與下午茶",  "cities": ["台南"]},
-    {"name": "台南飽芝林",           "url": "",                              "type": "blog",     "verify": false, "focus": "台南傳統桌菜、合菜與小吃大量紀錄",     "cities": ["台南"]},
-    {"name": "跟著左豪吃不胖",       "url": "",                              "type": "blog",     "verify": false, "focus": "高雄流量龍頭；鳳山、鳥松、岡山蛋白區", "cities": ["高雄"]},
-    {"name": "多肉動物",             "url": "",                              "type": "blog",     "verify": false, "focus": "高雄平價便當、傳統市場小吃精準掌握",   "cities": ["高雄"]},
-    {"name": "吃貨食間",             "url": "",                              "type": "blog",     "verify": false, "focus": "高雄鹽埕、鼓山巷弄老店發掘",           "cities": ["高雄"]},
-    {"name": "貪吃鬼熊熊",           "url": "",                              "type": "blog",     "verify": false, "focus": "屏東萬丹、潮州在地排隊店",             "cities": ["屏東", "高雄"]},
-    {"name": "薇樂莉 Love Viaggio",  "url": "",                              "type": "blog",     "verify": false, "focus": "屏東墾丁海景餐廳、質感咖啡；約會聖地", "cities": ["屏東"]},
-    {"name": "花蓮美食地圖",         "url": "",                              "type": "blog",     "verify": false, "focus": "經營10年；花蓮在地早餐與深夜食堂",      "cities": ["花蓮"]},
-    {"name": "台東製造",             "url": "",                              "type": "blog",     "verify": false, "focus": "台東必吃專欄；池上、關山縱谷線深入",   "cities": ["台東"]},
-    {"name": "沿著菊島旅行",         "url": "",                              "type": "blog",     "verify": false, "focus": "澎湖最強入口；馬公到跳島美食全包",     "cities": ["澎湖"]},
-    {"name": "金門旅遊網",           "url": "",                              "type": "official", "verify": false, "focus": "金門廣東粥、燒餅、石蚵料理官方資料庫", "cities": ["金門"]},
-    {"name": "馬祖資訊網",           "url": "",                              "type": "blog",     "verify": false, "focus": "馬祖在地人最真實口碑；老酒麵線",      "cities": ["連江"]},
-    {"name": "馬祖愛上網",           "url": "",                              "type": "official", "verify": false, "focus": "官方認證特色餐飲店家清單",             "cities": ["連江"]},
-    {"name": "Nana愛旅行札記",       "url": "",                              "type": "blog",     "verify": false, "focus": "綠島在地早餐店與深夜熱炒",             "cities": ["綠島"]},
-    {"name": "綠島旅遊網",           "url": "",                              "type": "official", "verify": false, "focus": "綠島合法登記餐廳官方清單",             "cities": ["綠島"]},
-    {"name": "蘭嶼阿文",             "url": "",                              "type": "blog",     "verify": false, "focus": "蘭嶼在地生活觀察；達悟族傳統飲食文化", "cities": ["蘭嶼"]},
-    {"name": "劈腿女孩 Cassie",      "url": "",                              "type": "blog",     "verify": false, "focus": "蘭嶼六大部落美食地圖完整整理",         "cities": ["蘭嶼"]},
-    {"name": "蘭嶼觀光旅遊網",       "url": "",                              "type": "official", "verify": false, "focus": "達悟族風味餐認證店家",                 "cities": ["蘭嶼"]},
-    {"name": "經濟部商圈入口網",     "url": "https://www.sba.gov.tw/",      "type": "official", "verify": true,  "focus": "全台22縣市認證商圈正式店家名單",       "cities": ["台北", "新北", "台中", "台南", "高雄"]},
-    {"name": "OpenRice 開飯喇",      "url": "https://www.openrice.com/zh/taiwan/", "type": "blog", "verify": false, "focus": "商圈分類邏輯清晰，適合 Bot 選單架構", "cities": ["台北", "新北", "台中", "台南", "高雄"]}
+    {
+      "name": "Nash，神之領域",
+      "url": "https://nash.tw/",
+      "type": "blog",
+      "verify": false,
+      "focus": "士林、北投、中山；評論直白",
+      "cities": [
+        "台北",
+        "嘉義",
+        "花蓮",
+        "台東"
+      ]
+    },
+    {
+      "name": "周花花，甲飽沒",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "捷運沿線、平價小吃、咖啡廳",
+      "cities": [
+        "台北"
+      ]
+    },
+    {
+      "name": "陳小可的吃喝玩樂",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "三重、萬華、西門町",
+      "cities": [
+        "台北",
+        "新北"
+      ]
+    },
+    {
+      "name": "大食女",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "視覺吸睛、甜點、新開幕早午餐",
+      "cities": [
+        "台北"
+      ]
+    },
+    {
+      "name": "PEKO 味蕾行",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "板橋、萬華、西門町；韓式、泰式異國料理",
+      "cities": [
+        "台北",
+        "新北"
+      ]
+    },
+    {
+      "name": "Ifunny 艾方妮",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "東區、中山質感餐廳；土城、板橋深度食記",
+      "cities": [
+        "台北",
+        "新北"
+      ]
+    },
+    {
+      "name": "軟西遊記",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "完整捷運線美食懶人包",
+      "cities": [
+        "台北"
+      ]
+    },
+    {
+      "name": "台北旅遊網",
+      "url": "https://www.travel.taipei/",
+      "type": "official",
+      "verify": false,
+      "focus": "必比登、清真認證、老字號官方資料庫",
+      "cities": [
+        "台北"
+      ]
+    },
+    {
+      "name": "瑪格。圖寫生活",
+      "url": "https://margaret.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "台北"
+      ]
+    },
+    {
+      "name": "鄉民食堂",
+      "url": "https://goodeat.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "整合 PTT/Dcard 真實評價，非廣告文",
+      "cities": [
+        "台北"
+      ]
+    },
+    {
+      "name": "fooder 台灣美食",
+      "url": "https://foodertw.com/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "新北",
+        "台北"
+      ]
+    },
+    {
+      "name": "安妮的天空",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "板橋、新莊、中永和商圈",
+      "cities": [
+        "新北"
+      ]
+    },
+    {
+      "name": "小可吃喝玩樂",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "三重、蘆洲、五股深耕最強",
+      "cities": [
+        "新北"
+      ]
+    },
+    {
+      "name": "新北美食網",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "集合新北各區小吃，資料庫屬性強",
+      "cities": [
+        "新北"
+      ]
+    },
+    {
+      "name": "民宿女王芽月",
+      "url": "https://cythia.net/",
+      "type": "blog",
+      "verify": true,
+      "focus": "板橋、土城、桃園",
+      "cities": [
+        "新北",
+        "桃園"
+      ]
+    },
+    {
+      "name": "艾瑪吃喝玩樂札記",
+      "url": "https://almablog.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "基隆小吃、特色餐廳",
+      "cities": [
+        "基隆"
+      ]
+    },
+    {
+      "name": "袁彬的吃喝玩樂",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "基隆港區、廟口以外隱藏版美食",
+      "cities": [
+        "基隆"
+      ]
+    },
+    {
+      "name": "基隆海鮮指南",
+      "url": "https://travel.klcg.gov.tw",
+      "type": "official",
+      "verify": false,
+      "focus": "漁港直送與特色小吃官方整理",
+      "cities": [
+        "基隆"
+      ]
+    },
+    {
+      "name": "基隆人日常",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "FB社團轉Threads，基隆在地人真實口碑",
+      "cities": [
+        "基隆"
+      ]
+    },
+    {
+      "name": "小腹婆大世界",
+      "url": "https://fupo.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "基隆",
+        "嘉義",
+        "屏東",
+        "宜蘭",
+        "澎湖",
+        "金門",
+        "連江"
+      ]
+    },
+    {
+      "name": "VIVIYU小世界",
+      "url": "https://www.viviyu.com/",
+      "type": "blog",
+      "verify": false,
+      "focus": "桃園市、中壢、平鎮深度在地文",
+      "cities": [
+        "桃園",
+        "新竹",
+        "苗栗",
+        "新北"
+      ]
+    },
+    {
+      "name": "大口老師的走跳學堂",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "桃園、中壢商圈非常詳盡",
+      "cities": [
+        "桃園"
+      ]
+    },
+    {
+      "name": "愛伯特吃喝玩樂",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "大溪、八德、桃園市區",
+      "cities": [
+        "桃園"
+      ]
+    },
+    {
+      "name": "桃園觀光導覽網",
+      "url": "",
+      "type": "official",
+      "verify": false,
+      "focus": "老街、觀光夜市官方清單",
+      "cities": [
+        "桃園"
+      ]
+    },
+    {
+      "name": "艾瑪貪吃",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "",
+      "cities": [
+        "桃園"
+      ]
+    },
+    {
+      "name": "踢小米",
+      "url": "https://timmyblog.cc/",
+      "type": "blog",
+      "verify": true,
+      "focus": "竹北、城隍廟商圈、科學園區外送",
+      "cities": [
+        "新竹"
+      ]
+    },
+    {
+      "name": "新竹菜園/花洛米",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "上海菜、眷村美食、合菜",
+      "cities": [
+        "新竹"
+      ]
+    },
+    {
+      "name": "阿輝的美食生活",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "新竹市區各類餐廳深耕",
+      "cities": [
+        "新竹"
+      ]
+    },
+    {
+      "name": "牛牛肥滋滋",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "新竹、竹北高質感下午茶與早午餐",
+      "cities": [
+        "新竹"
+      ]
+    },
+    {
+      "name": "跟著華少吃吃吃",
+      "url": "https://foodiemap.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "新竹與全台商圈地圖",
+      "cities": [
+        "台中",
+        "新竹"
+      ]
+    },
+    {
+      "name": "Mika出走美食日誌",
+      "url": "https://mikatogo.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "苗栗",
+        "雲林"
+      ]
+    },
+    {
+      "name": "飛天璇的口袋",
+      "url": "https://flyblog.cc/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "台中",
+        "台東",
+        "金門",
+        "連江"
+      ]
+    },
+    {
+      "name": "小高食記",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "",
+      "cities": [
+        "台中",
+        "台南"
+      ]
+    },
+    {
+      "name": "13's幸福食光",
+      "url": "https://13blog.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "彰化",
+        "南投",
+        "雲林"
+      ]
+    },
+    {
+      "name": "Kiwi 樂活食旅",
+      "url": "https://ikiwi.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "彰化",
+        "南投"
+      ]
+    },
+    {
+      "name": "台南Ke食旅",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "",
+      "cities": [
+        "台南"
+      ]
+    },
+    {
+      "name": "熱血玩台南",
+      "url": "https://decing.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "台南"
+      ]
+    },
+    {
+      "name": "倫敦男孩",
+      "url": "https://boylondon.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "台南"
+      ]
+    },
+    {
+      "name": "捲捲和土豆拿鐵",
+      "url": "https://nigi33.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "高雄"
+      ]
+    },
+    {
+      "name": "高雄小肥鼠",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "",
+      "cities": [
+        "高雄"
+      ]
+    },
+    {
+      "name": "虎麗笑嗨嗨",
+      "url": "https://hoolee.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "高雄",
+        "屏東"
+      ]
+    },
+    {
+      "name": "跟著尼力吃喝玩樂",
+      "url": "https://nellydyu.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "屏東"
+      ]
+    },
+    {
+      "name": "小兔小安旅遊札記",
+      "url": "https://bunnyann.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "60間以上宜蘭在地熱門餐廳、小吃",
+      "cities": [
+        "嘉義",
+        "宜蘭"
+      ]
+    },
+    {
+      "name": "紫色微笑",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "宜蘭在地；羅東、礁溪、宜蘭市深度",
+      "cities": [
+        "宜蘭",
+        "南投"
+      ]
+    },
+    {
+      "name": "卡夫卡不吃魚",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "宜蘭在地生活與美食最深度部落格",
+      "cities": [
+        "宜蘭"
+      ]
+    },
+    {
+      "name": "宜蘭旅遊網",
+      "url": "",
+      "type": "official",
+      "verify": false,
+      "focus": "官方資料庫，觀光區店家",
+      "cities": [
+        "宜蘭"
+      ]
+    },
+    {
+      "name": "Tiss 玩味食尚",
+      "url": "https://tisshuang.com/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "宜蘭"
+      ]
+    },
+    {
+      "name": "跳躍的宅男",
+      "url": "https://www.jumpman.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "花蓮一哥",
+      "cities": [
+        "花蓮",
+        "金門"
+      ]
+    },
+    {
+      "name": "D&W黑白雙搭",
+      "url": "https://dwplayboy.com/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "澎湖",
+        "金門",
+        "連江"
+      ]
+    },
+    {
+      "name": "小虎食夢網",
+      "url": "https://www.foodtigertw.com/",
+      "type": "blog",
+      "verify": true,
+      "focus": "",
+      "cities": [
+        "連江"
+      ]
+    },
+    {
+      "name": "熱血台中",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "中部最具影響力平台；台中、彰化懶人包",
+      "cities": [
+        "台中",
+        "彰化"
+      ]
+    },
+    {
+      "name": "愛食記台中頻道",
+      "url": "https://ifoodie.tw/",
+      "type": "blog",
+      "verify": false,
+      "focus": "即時週榜月榜，監測爆紅餐廳",
+      "cities": [
+        "台中"
+      ]
+    },
+    {
+      "name": "強生與小吠的玩樂地圖",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "早午餐、健身餐；西屯、南屯美食",
+      "cities": [
+        "台中"
+      ]
+    },
+    {
+      "name": "糖糖's 享食生活",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "一中、逢甲、勤美商圈新開幕打卡店",
+      "cities": [
+        "台中"
+      ]
+    },
+    {
+      "name": "涼子是也",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "聚餐、親子餐廳詳盡食記",
+      "cities": [
+        "台中"
+      ]
+    },
+    {
+      "name": "棉花糖的天空",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "台中甜點、夜市小吃、節慶美食特報",
+      "cities": [
+        "台中"
+      ]
+    },
+    {
+      "name": "剎有其食",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "台中燒肉、火鍋、異國料理商圈評比",
+      "cities": [
+        "台中"
+      ]
+    },
+    {
+      "name": "純粹食記 Nini and Blue",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "大里、霧峰、太平及台中捷運沿線",
+      "cities": [
+        "台中"
+      ]
+    },
+    {
+      "name": "商妮吃喝遊樂",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "西屯、南屯高 CP 值平價美食",
+      "cities": [
+        "台中"
+      ]
+    },
+    {
+      "name": "那倆人玩樂人生",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "溪湖、二林、社頭南彰化鄉鎮",
+      "cities": [
+        "彰化"
+      ]
+    },
+    {
+      "name": "黑皮的旅遊筆記",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "南投與雲林質感餐廳與咖啡廳",
+      "cities": [
+        "南投",
+        "雲林"
+      ]
+    },
+    {
+      "name": "寗好生活 Ning's Life",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "埔里商圈細緻在地推薦",
+      "cities": [
+        "南投"
+      ]
+    },
+    {
+      "name": "南投旅遊網",
+      "url": "",
+      "type": "official",
+      "verify": false,
+      "focus": "景觀餐廳官方資料庫",
+      "cities": [
+        "南投"
+      ]
+    },
+    {
+      "name": "饗食客棧食堂",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "雲林在地老字號美食清單整理",
+      "cities": [
+        "雲林"
+      ]
+    },
+    {
+      "name": "阿mon台灣吃透透",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "斗六、虎尾及台中學生圈美食",
+      "cities": [
+        "雲林",
+        "台中"
+      ]
+    },
+    {
+      "name": "苗栗玩透透",
+      "url": "",
+      "type": "official",
+      "verify": false,
+      "focus": "各鄉鎮客家料理與伴手禮官方整理",
+      "cities": [
+        "苗栗"
+      ]
+    },
+    {
+      "name": "跟著企鵝玩苗栗",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "桃園、苗栗隱藏版小吃",
+      "cities": [
+        "苗栗",
+        "桃園"
+      ]
+    },
+    {
+      "name": "熱血南臺灣",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "熱血玩台南團隊延伸；台南、高雄、屏東",
+      "cities": [
+        "台南",
+        "高雄",
+        "屏東"
+      ]
+    },
+    {
+      "name": "雲林食采網",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "雲林在地美食與農特產入口網",
+      "cities": [
+        "雲林"
+      ]
+    },
+    {
+      "name": "規小孫",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "雲林、台南質感餐廳深度整理",
+      "cities": [
+        "雲林",
+        "台南"
+      ]
+    },
+    {
+      "name": "嘉義美食地圖",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "嘉義在地最大美食社群",
+      "cities": [
+        "嘉義"
+      ]
+    },
+    {
+      "name": "進食的巨鼠",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "台南在地視角；家常小吃、外送美食",
+      "cities": [
+        "台南"
+      ]
+    },
+    {
+      "name": "台南人帶路",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "只有在地老台南人才知道的店",
+      "cities": [
+        "台南"
+      ]
+    },
+    {
+      "name": "阿捷的打狗美食筆記",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "高雄新開幕、新商圈反應最快（岡山、橋頭）",
+      "cities": [
+        "高雄"
+      ]
+    },
+    {
+      "name": "吃心絕對",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "高雄各行政區及外島美食資料庫極大",
+      "cities": [
+        "高雄"
+      ]
+    },
+    {
+      "name": "高雄旅遊網",
+      "url": "",
+      "type": "official",
+      "verify": false,
+      "focus": "合法登記與觀光示範店官方資料",
+      "cities": [
+        "高雄"
+      ]
+    },
+    {
+      "name": "阿君的玩食天堂",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "屏東市區與巷弄美食深耕",
+      "cities": [
+        "屏東"
+      ]
+    },
+    {
+      "name": "口袋吃吃五十味",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "屏東在地年輕人；平價美食、早午餐",
+      "cities": [
+        "屏東"
+      ]
+    },
+    {
+      "name": "墾丁攻略悠遊墾丁",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "恆春半島最完整餐廳資料庫",
+      "cities": [
+        "屏東"
+      ]
+    },
+    {
+      "name": "小涼的美食小天地",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "雲林斗六、斗南傳統早餐小吃長期紀錄",
+      "cities": [
+        "雲林",
+        "台中"
+      ]
+    },
+    {
+      "name": "妳好南搞",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "嘉義慢活美食、巷弄職人店高品質採訪",
+      "cities": [
+        "嘉義"
+      ]
+    },
+    {
+      "name": "跟著曉帆吃喝玩樂",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "嘉義大林、民雄等市區外行政區著墨深",
+      "cities": [
+        "嘉義",
+        "彰化"
+      ]
+    },
+    {
+      "name": "台南美食地圖",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "依行政區與食物類型聚合台南在地美食",
+      "cities": [
+        "台南"
+      ]
+    },
+    {
+      "name": "雞蛋貓異想世界",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "台南在地資深；外食、開箱、連鎖真實評價",
+      "cities": [
+        "台南"
+      ]
+    },
+    {
+      "name": "曼達愛吃鬼",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "台南東區、南科；育兒友善餐廳與下午茶",
+      "cities": [
+        "台南"
+      ]
+    },
+    {
+      "name": "台南飽芝林",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "台南傳統桌菜、合菜與小吃大量紀錄",
+      "cities": [
+        "台南"
+      ]
+    },
+    {
+      "name": "跟著左豪吃不胖",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "高雄流量龍頭；鳳山、鳥松、岡山蛋白區",
+      "cities": [
+        "高雄"
+      ]
+    },
+    {
+      "name": "多肉動物",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "高雄平價便當、傳統市場小吃精準掌握",
+      "cities": [
+        "高雄"
+      ]
+    },
+    {
+      "name": "吃貨食間",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "高雄鹽埕、鼓山巷弄老店發掘",
+      "cities": [
+        "高雄"
+      ]
+    },
+    {
+      "name": "貪吃鬼熊熊",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "屏東萬丹、潮州在地排隊店",
+      "cities": [
+        "屏東",
+        "高雄"
+      ]
+    },
+    {
+      "name": "薇樂莉 Love Viaggio",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "屏東墾丁海景餐廳、質感咖啡；約會聖地",
+      "cities": [
+        "屏東"
+      ]
+    },
+    {
+      "name": "花蓮美食地圖",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "經營10年；花蓮在地早餐與深夜食堂",
+      "cities": [
+        "花蓮"
+      ]
+    },
+    {
+      "name": "台東製造",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "台東必吃專欄；池上、關山縱谷線深入",
+      "cities": [
+        "台東"
+      ]
+    },
+    {
+      "name": "沿著菊島旅行",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "澎湖最強入口；馬公到跳島美食全包",
+      "cities": [
+        "澎湖"
+      ]
+    },
+    {
+      "name": "金門旅遊網",
+      "url": "",
+      "type": "official",
+      "verify": false,
+      "focus": "金門廣東粥、燒餅、石蚵料理官方資料庫",
+      "cities": [
+        "金門"
+      ]
+    },
+    {
+      "name": "馬祖資訊網",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "馬祖在地人最真實口碑；老酒麵線",
+      "cities": [
+        "連江"
+      ]
+    },
+    {
+      "name": "馬祖愛上網",
+      "url": "",
+      "type": "official",
+      "verify": false,
+      "focus": "官方認證特色餐飲店家清單",
+      "cities": [
+        "連江"
+      ]
+    },
+    {
+      "name": "Nana愛旅行札記",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "綠島在地早餐店與深夜熱炒",
+      "cities": [
+        "綠島"
+      ]
+    },
+    {
+      "name": "綠島旅遊網",
+      "url": "",
+      "type": "official",
+      "verify": false,
+      "focus": "綠島合法登記餐廳官方清單",
+      "cities": [
+        "綠島"
+      ]
+    },
+    {
+      "name": "蘭嶼阿文",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "蘭嶼在地生活觀察；達悟族傳統飲食文化",
+      "cities": [
+        "蘭嶼"
+      ]
+    },
+    {
+      "name": "劈腿女孩 Cassie",
+      "url": "",
+      "type": "blog",
+      "verify": false,
+      "focus": "蘭嶼六大部落美食地圖完整整理",
+      "cities": [
+        "蘭嶼"
+      ]
+    },
+    {
+      "name": "蘭嶼觀光旅遊網",
+      "url": "",
+      "type": "official",
+      "verify": false,
+      "focus": "達悟族風味餐認證店家",
+      "cities": [
+        "蘭嶼"
+      ]
+    },
+    {
+      "name": "經濟部商圈入口網",
+      "url": "https://www.sba.gov.tw/",
+      "type": "official",
+      "verify": true,
+      "focus": "全台22縣市認證商圈正式店家名單",
+      "cities": [
+        "台北",
+        "新北",
+        "台中",
+        "台南",
+        "高雄"
+      ]
+    },
+    {
+      "name": "OpenRice 開飯喇",
+      "url": "https://www.openrice.com/zh/taiwan/",
+      "type": "blog",
+      "verify": false,
+      "focus": "商圈分類邏輯清晰，適合 Bot 選單架構",
+      "cities": [
+        "台北",
+        "新北",
+        "台中",
+        "台南",
+        "高雄"
+      ]
+    },
+    {
+      "name": "微笑台灣旅遊網",
+      "url": "https://bjsmile.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "2026宜蘭伴手禮精選，含隱藏版名產",
+      "cities": [
+        "宜蘭"
+      ]
+    },
+    {
+      "name": "Go with Mark",
+      "url": "https://gowithmarkhazyl.com/",
+      "type": "blog",
+      "verify": true,
+      "focus": "宜蘭必買伴手禮完整清單",
+      "cities": [
+        "宜蘭"
+      ]
+    },
+    {
+      "name": "卡夫卡旅遊網",
+      "url": "https://kafu.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "2026宜蘭精選旅遊美食",
+      "cities": [
+        "宜蘭"
+      ]
+    },
+    {
+      "name": "天下居旅遊",
+      "url": "https://www.tianxiaju.tw/",
+      "type": "blog",
+      "verify": true,
+      "focus": "宜蘭伴手禮隱藏版推薦11間",
+      "cities": [
+        "宜蘭"
+      ]
+    }
   ],
   "threads": [
-    {"name": "凱倫吃貨日常",       "handle": "@zero.foodielife",        "focus": "雙北捷運美食",                         "cities": ["台北", "新北"]},
-    {"name": "傑尼 台北捷運美食",  "handle": "@gourmet_jenny",          "focus": "以捷運站分類，最適合 Line Bot",         "cities": ["台北"]},
-    {"name": "小林子",             "handle": "@lin_shihan",             "focus": "台北與桃園咖啡廳專注",                 "cities": ["台北", "桃園"]},
-    {"name": "食補台北",           "handle": "@taipeifoodie.guide",     "focus": "地圖和懶人包形式",                     "cities": ["台北"]},
-    {"name": "台北捷運美食地圖",   "handle": "@mrtfoodmap",             "focus": "以捷運站點發散，純美食",               "cities": ["台北"]},
-    {"name": "桃園小嘴巴",         "handle": "@taoyuan_mouth",          "focus": "桃園在地，含真實黑白榜",               "cities": ["桃園"]},
-    {"name": "桃園大小事",         "handle": "@tyinfo",                 "focus": "綜合新聞為主，常有在地美食爆料",       "cities": ["桃園"]},
-    {"name": "小高食記",           "handle": "@taiwanfood_kao",         "focus": "全台，台北/新北密度最高",              "cities": ["台北", "新北", "台中", "台南"]},
-    {"name": "Aii",                "handle": "@foodie_aii",             "focus": "新北西區（三重、蘆洲、新莊）真實評論", "cities": ["新北"]},
-    {"name": "高雄阿捷",           "handle": "@ajay.food",              "focus": "高雄、屏東美食第一線報導",              "cities": ["高雄", "屏東"]},
-    {"name": "台南Ke食旅",         "handle": "@kefoodlife",             "focus": "台南、嘉義質感店家",                   "cities": ["台南", "嘉義"]},
-    {"name": "高雄小肥鼠",         "handle": "@_place_for_eating",      "focus": "高屏美食短影音與最新食記",              "cities": ["高雄", "屏東"]},
-    {"name": "雲嘉南美食地圖",     "handle": "@ycm_foodie",             "focus": "雲林、嘉義、台南小眾推薦",             "cities": ["雲林", "嘉義", "台南"]},
-    {"name": "台南阿輝",           "handle": "@hui_foodie",             "focus": "台南在地小吃；常回覆地區提問",          "cities": ["台南"]},
-    {"name": "高雄美食。艾倫",     "handle": "@allen.food",             "focus": "高雄捷運美食，適合捷運搜尋功能",        "cities": ["高雄"]},
-    {"name": "嘉義肥肥",           "handle": "@chiayi_fatfat",          "focus": "嘉義大學生、年輕人銅板美食",           "cities": ["嘉義"]},
-    {"name": "屏東食記。尼爾",     "handle": "@neil_food",              "focus": "屏東市與內埔商圈",                     "cities": ["屏東"]},
-    {"name": "宜蘭食記Jenny",      "handle": "@yilan_foodie_jenny",     "focus": "宜蘭在地特色小吃與甜點",               "cities": ["宜蘭"]},
-    {"name": "花蓮foodie",         "handle": "@hualien.foodie",         "focus": "花蓮新開幕店家與質感咖啡廳",           "cities": ["花蓮"]},
-    {"name": "台東食記",           "handle": "@taitung_food",           "focus": "台東市區巷弄美食",                     "cities": ["台東"]},
-    {"name": "金門life",           "handle": "@kinmen.life",            "focus": "金門在地生活與隱藏版小吃",              "cities": ["金門"]},
-    {"name": "綠島美食",           "handle": "#綠島美食",               "focus": "Threads 標籤監測；即時新開小店",        "cities": ["綠島"]},
-    {"name": "蘭嶼旅遊",           "handle": "@lanyu_travel",           "focus": "蘭嶼即時動態；確認店家是否營業",       "cities": ["蘭嶼"]}
+    {
+      "name": "凱倫吃貨日常",
+      "handle": "@zero.foodielife",
+      "focus": "雙北捷運美食",
+      "cities": [
+        "台北",
+        "新北"
+      ]
+    },
+    {
+      "name": "傑尼 台北捷運美食",
+      "handle": "@gourmet_jenny",
+      "focus": "以捷運站分類，最適合 Line Bot",
+      "cities": [
+        "台北"
+      ]
+    },
+    {
+      "name": "小林子",
+      "handle": "@lin_shihan",
+      "focus": "台北與桃園咖啡廳專注",
+      "cities": [
+        "台北",
+        "桃園"
+      ]
+    },
+    {
+      "name": "食補台北",
+      "handle": "@taipeifoodie.guide",
+      "focus": "地圖和懶人包形式",
+      "cities": [
+        "台北"
+      ]
+    },
+    {
+      "name": "台北捷運美食地圖",
+      "handle": "@mrtfoodmap",
+      "focus": "以捷運站點發散，純美食",
+      "cities": [
+        "台北"
+      ]
+    },
+    {
+      "name": "桃園小嘴巴",
+      "handle": "@taoyuan_mouth",
+      "focus": "桃園在地，含真實黑白榜",
+      "cities": [
+        "桃園"
+      ]
+    },
+    {
+      "name": "桃園大小事",
+      "handle": "@tyinfo",
+      "focus": "綜合新聞為主，常有在地美食爆料",
+      "cities": [
+        "桃園"
+      ]
+    },
+    {
+      "name": "小高食記",
+      "handle": "@taiwanfood_kao",
+      "focus": "全台，台北/新北密度最高",
+      "cities": [
+        "台北",
+        "新北",
+        "台中",
+        "台南"
+      ]
+    },
+    {
+      "name": "Aii",
+      "handle": "@foodie_aii",
+      "focus": "新北西區（三重、蘆洲、新莊）真實評論",
+      "cities": [
+        "新北"
+      ]
+    },
+    {
+      "name": "高雄阿捷",
+      "handle": "@ajay.food",
+      "focus": "高雄、屏東美食第一線報導",
+      "cities": [
+        "高雄",
+        "屏東"
+      ]
+    },
+    {
+      "name": "台南Ke食旅",
+      "handle": "@kefoodlife",
+      "focus": "台南、嘉義質感店家",
+      "cities": [
+        "台南",
+        "嘉義"
+      ]
+    },
+    {
+      "name": "高雄小肥鼠",
+      "handle": "@_place_for_eating",
+      "focus": "高屏美食短影音與最新食記",
+      "cities": [
+        "高雄",
+        "屏東"
+      ]
+    },
+    {
+      "name": "雲嘉南美食地圖",
+      "handle": "@ycm_foodie",
+      "focus": "雲林、嘉義、台南小眾推薦",
+      "cities": [
+        "雲林",
+        "嘉義",
+        "台南"
+      ]
+    },
+    {
+      "name": "台南阿輝",
+      "handle": "@hui_foodie",
+      "focus": "台南在地小吃；常回覆地區提問",
+      "cities": [
+        "台南"
+      ]
+    },
+    {
+      "name": "高雄美食。艾倫",
+      "handle": "@allen.food",
+      "focus": "高雄捷運美食，適合捷運搜尋功能",
+      "cities": [
+        "高雄"
+      ]
+    },
+    {
+      "name": "嘉義肥肥",
+      "handle": "@chiayi_fatfat",
+      "focus": "嘉義大學生、年輕人銅板美食",
+      "cities": [
+        "嘉義"
+      ]
+    },
+    {
+      "name": "屏東食記。尼爾",
+      "handle": "@neil_food",
+      "focus": "屏東市與內埔商圈",
+      "cities": [
+        "屏東"
+      ]
+    },
+    {
+      "name": "宜蘭食記Jenny",
+      "handle": "@yilan_foodie_jenny",
+      "focus": "宜蘭在地特色小吃與甜點",
+      "cities": [
+        "宜蘭"
+      ]
+    },
+    {
+      "name": "花蓮foodie",
+      "handle": "@hualien.foodie",
+      "focus": "花蓮新開幕店家與質感咖啡廳",
+      "cities": [
+        "花蓮"
+      ]
+    },
+    {
+      "name": "台東食記",
+      "handle": "@taitung_food",
+      "focus": "台東市區巷弄美食",
+      "cities": [
+        "台東"
+      ]
+    },
+    {
+      "name": "金門life",
+      "handle": "@kinmen.life",
+      "focus": "金門在地生活與隱藏版小吃",
+      "cities": [
+        "金門"
+      ]
+    },
+    {
+      "name": "綠島美食",
+      "handle": "#綠島美食",
+      "focus": "Threads 標籤監測；即時新開小店",
+      "cities": [
+        "綠島"
+      ]
+    },
+    {
+      "name": "蘭嶼旅遊",
+      "handle": "@lanyu_travel",
+      "focus": "蘭嶼即時動態；確認店家是否營業",
+      "cities": [
+        "蘭嶼"
+      ]
+    }
   ],
   "districts": {
-    "台北": ["赤峰街", "永康街", "延三夜市", "民生社區", "饒河街", "士林夜市", "逢甲商圈", "西門町", "東區"],
-    "新北": ["湳雅夜市", "樂華夜市", "三峽老街", "三重", "蘆洲", "新莊", "板橋", "中和", "永和"],
-    "桃園": ["中原大學商圈", "中壢SOGO", "青埔", "大溪老街", "龍潭", "八德"],
-    "新竹": ["城隍廟口", "巨城周邊", "關新路商圈", "竹北", "竹東", "科學園區"],
-    "台中": ["勤美綠園道", "第二市場", "審計新村", "豐原廟東夜市", "一中商圈", "逢甲商圈", "西屯", "南屯", "北屯"],
-    "彰化": ["彰化火車站", "肉圓一條街", "鹿港老街", "員林", "溪湖", "二林"],
-    "南投": ["水社碼頭", "伊達邵老街", "草屯大成街", "清境", "日月潭", "埔里"],
-    "雲林": ["斗六太平老街", "虎尾合同廳舍", "北港朝天宮廟前", "西螺老街", "斗南"],
-    "嘉義": ["文化路夜市", "大雅路商圈", "東市場", "民雄鵝肉街", "後庄商圈"],
-    "台南": ["國華街", "保安路", "正興街", "神農街", "大東夜市", "武聖夜市", "花園夜市", "新營復興路", "麻豆代天府", "善化南科", "成大18巷"],
-    "高雄": ["瑞豐夜市", "漢神巨蛋商圈", "鹽埕駁二", "鳳山中山路", "三民市場", "自強夜市", "楠梓後勁", "仁武烤鴨周邊"],
-    "屏東": ["勝利星村", "屏東觀光夜市", "東港華僑市場", "潮州圓環", "恆春老街"],
-    "宜蘭": ["東門夜市", "羅東夜市", "頭城老街", "南方澳漁港"],
-    "花蓮": ["東大門夜市", "溝仔尾商圈", "玉里麵特區", "鳳林校長夢工廠"],
-    "台東": ["鐵花村商圈", "正氣路夜市", "富岡漁港", "池上大坡池"],
-    "澎湖": ["馬公中正路", "西嶼", "白沙"],
-    "金門": ["金城模範街", "金湖", "烈嶼"],
-    "連江": ["北竿芹壁", "南竿介壽村", "獅子市場"],
-    "綠島": ["南寮大街", "大白沙商圈", "公館村"],
-    "蘭嶼": ["東清部落", "紅頭部落", "漁人部落", "野銀部落", "朗島部落", "椰油部落"]
+    "台北": [
+      "赤峰街",
+      "永康街",
+      "延三夜市",
+      "民生社區",
+      "饒河街",
+      "士林夜市",
+      "逢甲商圈",
+      "西門町",
+      "東區"
+    ],
+    "新北": [
+      "湳雅夜市",
+      "樂華夜市",
+      "三峽老街",
+      "三重",
+      "蘆洲",
+      "新莊",
+      "板橋",
+      "中和",
+      "永和"
+    ],
+    "桃園": [
+      "中原大學商圈",
+      "中壢SOGO",
+      "青埔",
+      "大溪老街",
+      "龍潭",
+      "八德"
+    ],
+    "新竹": [
+      "城隍廟口",
+      "巨城周邊",
+      "關新路商圈",
+      "竹北",
+      "竹東",
+      "科學園區"
+    ],
+    "台中": [
+      "勤美綠園道",
+      "第二市場",
+      "審計新村",
+      "豐原廟東夜市",
+      "一中商圈",
+      "逢甲商圈",
+      "西屯",
+      "南屯",
+      "北屯"
+    ],
+    "彰化": [
+      "彰化火車站",
+      "肉圓一條街",
+      "鹿港老街",
+      "員林",
+      "溪湖",
+      "二林"
+    ],
+    "南投": [
+      "水社碼頭",
+      "伊達邵老街",
+      "草屯大成街",
+      "清境",
+      "日月潭",
+      "埔里"
+    ],
+    "雲林": [
+      "斗六太平老街",
+      "虎尾合同廳舍",
+      "北港朝天宮廟前",
+      "西螺老街",
+      "斗南"
+    ],
+    "嘉義": [
+      "文化路夜市",
+      "大雅路商圈",
+      "東市場",
+      "民雄鵝肉街",
+      "後庄商圈"
+    ],
+    "台南": [
+      "國華街",
+      "保安路",
+      "正興街",
+      "神農街",
+      "大東夜市",
+      "武聖夜市",
+      "花園夜市",
+      "新營復興路",
+      "麻豆代天府",
+      "善化南科",
+      "成大18巷"
+    ],
+    "高雄": [
+      "瑞豐夜市",
+      "漢神巨蛋商圈",
+      "鹽埕駁二",
+      "鳳山中山路",
+      "三民市場",
+      "自強夜市",
+      "楠梓後勁",
+      "仁武烤鴨周邊"
+    ],
+    "屏東": [
+      "勝利星村",
+      "屏東觀光夜市",
+      "東港華僑市場",
+      "潮州圓環",
+      "恆春老街"
+    ],
+    "宜蘭": [
+      "東門夜市",
+      "羅東夜市",
+      "頭城老街",
+      "南方澳漁港"
+    ],
+    "花蓮": [
+      "東大門夜市",
+      "溝仔尾商圈",
+      "玉里麵特區",
+      "鳳林校長夢工廠"
+    ],
+    "台東": [
+      "鐵花村商圈",
+      "正氣路夜市",
+      "富岡漁港",
+      "池上大坡池"
+    ],
+    "澎湖": [
+      "馬公中正路",
+      "西嶼",
+      "白沙"
+    ],
+    "金門": [
+      "金城模範街",
+      "金湖",
+      "烈嶼"
+    ],
+    "連江": [
+      "北竿芹壁",
+      "南竿介壽村",
+      "獅子市場"
+    ],
+    "綠島": [
+      "南寮大街",
+      "大白沙商圈",
+      "公館村"
+    ],
+    "蘭嶼": [
+      "東清部落",
+      "紅頭部落",
+      "漁人部落",
+      "野銀部落",
+      "朗島部落",
+      "椰油部落"
+    ]
   },
   "by_city": {
-    "台北": ["Nash，神之領域", "周花花，甲飽沒", "陳小可的吃喝玩樂", "大食女", "PEKO 味蕾行", "Ifunny 艾方妮", "軟西遊記", "台北旅遊網", "瑪格。圖寫生活", "鄉民食堂", "fooder 台灣美食"],
-    "新北": ["fooder 台灣美食", "安妮的天空", "小可吃喝玩樂", "新北美食網", "民宿女王芽月", "VIVIYU小世界", "陳小可的吃喝玩樂", "PEKO 味蕾行", "Ifunny 艾方妮"],
-    "基隆": ["艾瑪吃喝玩樂札記", "袁彬的吃喝玩樂", "基隆海鮮指南", "基隆人日常", "小腹婆大世界"],
-    "桃園": ["VIVIYU小世界", "大口老師的走跳學堂", "愛伯特吃喝玩樂", "桃園觀光導覽網", "艾瑪貪吃", "民宿女王芽月"],
-    "新竹": ["踢小米", "新竹菜園/花洛米", "阿輝的美食生活", "牛牛肥滋滋", "跟著華少吃吃吃", "VIVIYU小世界"],
-    "苗栗": ["Mika出走美食日誌", "VIVIYU小世界", "苗栗玩透透", "跟著企鵝玩苗栗"],
-    "台中": ["熱血台中", "愛食記台中頻道", "飛天璇的口袋", "糖糖's 享食生活", "涼子是也", "棉花糖的天空", "剎有其食", "純粹食記 Nini and Blue", "商妮吃喝遊樂", "強生與小吠的玩樂地圖", "小高食記", "阿mon台灣吃透透", "跟著華少吃吃吃"],
-    "彰化": ["熱血台中", "13's幸福食光", "Kiwi 樂活食旅", "那倆人玩樂人生"],
-    "南投": ["13's幸福食光", "Kiwi 樂活食旅", "紫色微笑", "黑皮的旅遊筆記", "寗好生活 Ning's Life", "南投旅遊網"],
-    "雲林": ["Mika出走美食日誌", "13's幸福食光", "黑皮的旅遊筆記", "饗食客棧食堂", "阿mon台灣吃透透"],
-    "嘉義": ["Nash，神之領域", "嘉義美食地圖", "妳好南搞", "跟著曉帆吃喝玩樂", "黑皮的旅遊筆記", "小腹婆大世界", "小兔小安旅遊札記"],
-    "台南": ["熱血玩台南", "熱血南臺灣", "倫敦男孩", "進食的巨鼠", "台南人帶路", "台南美食地圖", "雞蛋貓異想世界", "曼達愛吃鬼", "台南飽芝林", "規小孫", "台南Ke食旅", "小高食記"],
-    "高雄": ["跟著左豪吃不胖", "阿捷的打狗美食筆記", "捲捲和土豆拿鐵", "吃心絕對", "吃貨食間", "多肉動物", "虎麗笑嗨嗨", "高雄旅遊網", "高雄小肥鼠"],
-    "屏東": ["熱血南臺灣", "阿君的玩食天堂", "口袋吃吃五十味", "墾丁攻略悠遊墾丁", "貪吃鬼熊熊", "薇樂莉 Love Viaggio", "虎麗笑嗨嗨", "跟著尼力吃喝玩樂", "小腹婆大世界"],
-    "宜蘭": ["卡夫卡不吃魚", "紫色微笑", "宜蘭旅遊網", "Tiss 玩味食尚", "小腹婆大世界", "小兔小安旅遊札記"],
-    "花蓮": ["跳躍的宅男", "花蓮美食地圖", "大口老師的走跳學堂", "Nash，神之領域"],
-    "台東": ["台東製造", "Nash，神之領域", "飛天璇的口袋", "跟著尼力吃喝玩樂"],
-    "澎湖": ["沿著菊島旅行", "小腹婆大世界", "D&W黑白雙搭"],
-    "金門": ["金門旅遊網", "飛天璇的口袋", "跳躍的宅男", "D&W黑白雙搭"],
-    "連江": ["馬祖資訊網", "小虎食夢網", "馬祖愛上網", "飛天璇的口袋", "D&W黑白雙搭"],
-    "綠島": ["Nana愛旅行札記", "綠島旅遊網", "沿著菊島旅行", "卡夫卡不吃魚"],
-    "蘭嶼": ["蘭嶼阿文", "跳躍的宅男", "劈腿女孩 Cassie", "蘭嶼觀光旅遊網"]
+    "台北": [
+      "Nash，神之領域",
+      "周花花，甲飽沒",
+      "陳小可的吃喝玩樂",
+      "大食女",
+      "PEKO 味蕾行",
+      "Ifunny 艾方妮",
+      "軟西遊記",
+      "台北旅遊網",
+      "瑪格。圖寫生活",
+      "鄉民食堂",
+      "fooder 台灣美食"
+    ],
+    "新北": [
+      "fooder 台灣美食",
+      "安妮的天空",
+      "小可吃喝玩樂",
+      "新北美食網",
+      "民宿女王芽月",
+      "VIVIYU小世界",
+      "陳小可的吃喝玩樂",
+      "PEKO 味蕾行",
+      "Ifunny 艾方妮"
+    ],
+    "基隆": [
+      "艾瑪吃喝玩樂札記",
+      "袁彬的吃喝玩樂",
+      "基隆海鮮指南",
+      "基隆人日常",
+      "小腹婆大世界"
+    ],
+    "桃園": [
+      "VIVIYU小世界",
+      "大口老師的走跳學堂",
+      "愛伯特吃喝玩樂",
+      "桃園觀光導覽網",
+      "艾瑪貪吃",
+      "民宿女王芽月"
+    ],
+    "新竹": [
+      "踢小米",
+      "新竹菜園/花洛米",
+      "阿輝的美食生活",
+      "牛牛肥滋滋",
+      "跟著華少吃吃吃",
+      "VIVIYU小世界"
+    ],
+    "苗栗": [
+      "Mika出走美食日誌",
+      "VIVIYU小世界",
+      "苗栗玩透透",
+      "跟著企鵝玩苗栗"
+    ],
+    "台中": [
+      "熱血台中",
+      "愛食記台中頻道",
+      "飛天璇的口袋",
+      "糖糖's 享食生活",
+      "涼子是也",
+      "棉花糖的天空",
+      "剎有其食",
+      "純粹食記 Nini and Blue",
+      "商妮吃喝遊樂",
+      "強生與小吠的玩樂地圖",
+      "小高食記",
+      "阿mon台灣吃透透",
+      "跟著華少吃吃吃"
+    ],
+    "彰化": [
+      "熱血台中",
+      "13's幸福食光",
+      "Kiwi 樂活食旅",
+      "那倆人玩樂人生"
+    ],
+    "南投": [
+      "13's幸福食光",
+      "Kiwi 樂活食旅",
+      "紫色微笑",
+      "黑皮的旅遊筆記",
+      "寗好生活 Ning's Life",
+      "南投旅遊網"
+    ],
+    "雲林": [
+      "Mika出走美食日誌",
+      "13's幸福食光",
+      "黑皮的旅遊筆記",
+      "饗食客棧食堂",
+      "阿mon台灣吃透透"
+    ],
+    "嘉義": [
+      "Nash，神之領域",
+      "嘉義美食地圖",
+      "妳好南搞",
+      "跟著曉帆吃喝玩樂",
+      "黑皮的旅遊筆記",
+      "小腹婆大世界",
+      "小兔小安旅遊札記"
+    ],
+    "台南": [
+      "熱血玩台南",
+      "熱血南臺灣",
+      "倫敦男孩",
+      "進食的巨鼠",
+      "台南人帶路",
+      "台南美食地圖",
+      "雞蛋貓異想世界",
+      "曼達愛吃鬼",
+      "台南飽芝林",
+      "規小孫",
+      "台南Ke食旅",
+      "小高食記"
+    ],
+    "高雄": [
+      "跟著左豪吃不胖",
+      "阿捷的打狗美食筆記",
+      "捲捲和土豆拿鐵",
+      "吃心絕對",
+      "吃貨食間",
+      "多肉動物",
+      "虎麗笑嗨嗨",
+      "高雄旅遊網",
+      "高雄小肥鼠"
+    ],
+    "屏東": [
+      "熱血南臺灣",
+      "阿君的玩食天堂",
+      "口袋吃吃五十味",
+      "墾丁攻略悠遊墾丁",
+      "貪吃鬼熊熊",
+      "薇樂莉 Love Viaggio",
+      "虎麗笑嗨嗨",
+      "跟著尼力吃喝玩樂",
+      "小腹婆大世界"
+    ],
+    "宜蘭": [
+      "卡夫卡不吃魚",
+      "紫色微笑",
+      "宜蘭旅遊網",
+      "Tiss 玩味食尚",
+      "小腹婆大世界",
+      "小兔小安旅遊札記"
+    ],
+    "花蓮": [
+      "跳躍的宅男",
+      "花蓮美食地圖",
+      "大口老師的走跳學堂",
+      "Nash，神之領域"
+    ],
+    "台東": [
+      "台東製造",
+      "Nash，神之領域",
+      "飛天璇的口袋",
+      "跟著尼力吃喝玩樂"
+    ],
+    "澎湖": [
+      "沿著菊島旅行",
+      "小腹婆大世界",
+      "D&W黑白雙搭"
+    ],
+    "金門": [
+      "金門旅遊網",
+      "飛天璇的口袋",
+      "跳躍的宅男",
+      "D&W黑白雙搭"
+    ],
+    "連江": [
+      "馬祖資訊網",
+      "小虎食夢網",
+      "馬祖愛上網",
+      "飛天璇的口袋",
+      "D&W黑白雙搭"
+    ],
+    "綠島": [
+      "Nana愛旅行札記",
+      "綠島旅遊網",
+      "沿著菊島旅行",
+      "卡夫卡不吃魚"
+    ],
+    "蘭嶼": [
+      "蘭嶼阿文",
+      "跳躍的宅男",
+      "劈腿女孩 Cassie",
+      "蘭嶼觀光旅遊網"
+    ]
+  },
+  "direct_articles": {
+    "宜蘭": [
+      {
+        "url": "https://bjsmile.tw/yilan-souvenirs/",
+        "mode": "souvenir",
+        "source": "微笑台灣"
+      },
+      {
+        "url": "https://gowithmarkhazyl.com/what-to-buy-in-yilan/",
+        "mode": "souvenir",
+        "source": "Go with Mark"
+      },
+      {
+        "url": "https://kafu.tw/ys2026/",
+        "mode": "souvenir",
+        "source": "卡夫卡旅遊"
+      },
+      {
+        "url": "https://www.tianxiaju.tw/post/2026%E5%AE%9C%E8%98%AD%E4%BC%B4%E6%89%8B%E7%A6%AE%E6%8E%A8%E8%96%A6%E7%B2%BE%E9%81%B811%E9%96%93%E5%BF%85%E8%B2%B7%E5%90%8D%E7%94%A2%E5%AE%9C%E8%98%AD%E9%9A%B1%E8%97%8F%E7%89%88%E4%BC%B4%E6%89%8B%E7%A6%AE",
+        "mode": "souvenir",
+        "source": "天下居"
+      }
+    ]
   }
 }
