@@ -44,7 +44,7 @@ from utils.intent      import classify_intent
 # ─── modules ───────────────────────────────────────────────
 from modules.food     import (
     build_food_message, build_group_dining_message,
-    build_specialty_shops, build_city_specialties,
+    build_specialty_shops, build_city_specialties, build_trending_specialty,
     build_food_restaurant_flex,
     _set_user_loc, _get_user_loc,
     _ALL_CITIES, _STYLE_KEYWORDS, _ALL_FOOD_KEYWORDS,
@@ -921,9 +921,17 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     if "地方特色" in text:
         city_match = next((c for c in _ALL_CITIES if c in text), "")
         if not city_match:
-            # GPS 城市 fallback
             city_match = _get_user_city(user_id) or ""
         return build_city_specialties(city_match)
+
+    # 必買伴手禮 / 最新流行美食（直接路由，不走 intent 分類）
+    _souvenir_triggers = ["必買伴手禮", "伴手禮推薦", "伴手禮", "必買"]
+    _trending_triggers = ["最新流行", "流行美食", "最新美食", "打卡美食", "最新必吃"]
+    _city_match2 = next((c for c in _ALL_CITIES if c in text), "") or (_get_user_city(user_id) or "")
+    if any(t in text for t in _souvenir_triggers) and _city_match2:
+        return build_trending_specialty(_city_match2, "souvenir")
+    if any(t in text for t in _trending_triggers) and _city_match2:
+        return build_trending_specialty(_city_match2, "trending")
 
     if "我要分享位置找美食" in text:
         return build_food_message(text, user_id=user_id)

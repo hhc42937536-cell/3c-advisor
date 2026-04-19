@@ -2117,30 +2117,6 @@ def build_city_specialties(city: str) -> list:
             city_btn_rows.append({"type": "box", "layout": "horizontal",
                                    "spacing": "xs", "contents": row})
             row = []
-    # 快速入口卡（必買 / 最新流行）
-    bubbles.append({
-        "type": "bubble", "size": "kilo",
-        "header": {
-            "type": "box", "layout": "vertical",
-            "backgroundColor": "#1B5E20", "paddingAll": "10px",
-            "contents": [
-                {"type": "text", "text": f"🔍 深入探索 {city2}",
-                 "color": "#FFFFFF", "size": "sm", "weight": "bold"},
-                {"type": "text", "text": "即時抓取高評分熱門店家",
-                 "color": "#A5D6A7", "size": "xxs", "margin": "xs"},
-            ]},
-        "body": {
-            "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "12px",
-            "contents": [
-                {"type": "button", "style": "primary", "color": "#2E7D32", "height": "sm",
-                 "action": {"type": "message", "label": "🛍 必買伴手禮",
-                            "text": f"必買伴手禮 {city2}"}},
-                {"type": "button", "style": "primary", "color": "#F57F17", "height": "sm",
-                 "action": {"type": "message", "label": "🔥 最新流行美食",
-                            "text": f"最新流行 {city2}"}},
-            ]},
-    })
-
     # 換城市卡
     bubbles.append({
         "type": "bubble", "size": "kilo",
@@ -2309,22 +2285,22 @@ def build_trending_specialty(city: str, mode: str) -> list:
                                    "size": "full", "aspectRatio": "20:13", "aspectMode": "cover"}
             return bubble
 
-        bubbles = [_item_bubble(it, pl) for it, pl in zip(batch, place_data)]
-        return [{"type": "flex", "altText": alt,
-                 "contents": {"type": "carousel", "contents": [_nav_bubble()] + bubbles}}]
+        specialty_bubbles = [_item_bubble(it, pl) for it, pl in zip(batch, place_data)]
 
-    # ── 2. 部落格爬蟲快取 ────────────────────────────────────────────────────
-    blog_posts = _read_blog_cache(city2, mode)
-    if blog_posts:
-        blog_bubbles = []
-        for post in blog_posts[:6]:
+        # 整合部落格爬蟲文章（剩餘 bubble 空位補入，上限 12）
+        remaining_slots = 11 - len(specialty_bubbles)  # -1 for _nav_bubble
+        blog_posts = _read_blog_cache(city2, mode)
+        blog_bubbles: list = []
+        for post in blog_posts[:remaining_slots]:
             blog_bubbles.append({
                 "type": "bubble", "size": "kilo",
                 "body": {
                     "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "14px",
                     "contents": [
+                        {"type": "text", "text": "📰 部落格推薦",
+                         "size": "xxs", "color": color, "weight": "bold"},
                         {"type": "text", "text": post["title"], "wrap": True,
-                         "size": "sm", "weight": "bold", "maxLines": 3},
+                         "size": "sm", "weight": "bold", "maxLines": 3, "margin": "xs"},
                         {"type": "text", "text": post["source"],
                          "size": "xxs", "color": "#888888", "margin": "sm"},
                     ],
@@ -2332,14 +2308,46 @@ def build_trending_specialty(city: str, mode: str) -> list:
                 "footer": {
                     "type": "box", "layout": "vertical", "paddingAll": "8px",
                     "contents": [{
-                        "type": "button", "style": "primary", "height": "sm",
-                        "color": color,
+                        "type": "button", "style": "primary", "height": "sm", "color": color,
+                        "action": {"type": "uri", "label": "閱讀文章", "uri": post["url"]},
+                    }],
+                },
+            })
+
+        all_bubbles = specialty_bubbles + blog_bubbles
+        return [{"type": "flex", "altText": alt,
+                 "contents": {"type": "carousel",
+                              "contents": [_nav_bubble()] + all_bubbles}}]
+
+    # ── 2. 無 specialty 資料 → 部落格爬蟲快取 ───────────────────────────────
+    blog_posts = _read_blog_cache(city2, mode)
+    if blog_posts:
+        blog_bubbles = []
+        for post in blog_posts[:10]:
+            blog_bubbles.append({
+                "type": "bubble", "size": "kilo",
+                "body": {
+                    "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "14px",
+                    "contents": [
+                        {"type": "text", "text": "📰 部落格推薦",
+                         "size": "xxs", "color": color, "weight": "bold"},
+                        {"type": "text", "text": post["title"], "wrap": True,
+                         "size": "sm", "weight": "bold", "maxLines": 3, "margin": "xs"},
+                        {"type": "text", "text": post["source"],
+                         "size": "xxs", "color": "#888888", "margin": "sm"},
+                    ],
+                },
+                "footer": {
+                    "type": "box", "layout": "vertical", "paddingAll": "8px",
+                    "contents": [{
+                        "type": "button", "style": "primary", "height": "sm", "color": color,
                         "action": {"type": "uri", "label": "閱讀文章", "uri": post["url"]},
                     }],
                 },
             })
         return [{"type": "flex", "altText": alt,
-                 "contents": {"type": "carousel", "contents": [_nav_bubble()] + blog_bubbles}}]
+                 "contents": {"type": "carousel",
+                              "contents": [_nav_bubble()] + blog_bubbles}}]
 
     # ── 3. Google Places API fallback ────────────────────────────────────────
     query = (f"{city2} 必買 伴手禮 推薦" if is_souvenir
