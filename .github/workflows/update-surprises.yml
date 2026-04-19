@@ -22,7 +22,9 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Scrape KKBOX + PTT deals
+      - name: Scrape 新歌 + 即時優惠
+        env:
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
         run: python line-bot/scrape_surprises.py
 
       - name: Commit & push surprise_cache.json

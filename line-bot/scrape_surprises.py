@@ -207,6 +207,100 @@ def scrape_threads_deals(limit_per_account: int = 5) -> list:
     return all_deals
 
 
+def scrape_deals_via_serper(limit: int = 20) -> list[dict]:
+    """用 Serper.dev 搜尋台灣近期即時優惠（MUJI特賣、百貨周年慶等）。"""
+    serper_key = os.environ.get("SERPER_API_KEY", "")
+    if not serper_key:
+        print("[Serper] 缺少 SERPER_API_KEY，跳過")
+        return []
+
+    import urllib.parse as _up
+
+    _DEAL_QUERIES = [
+        "台灣 特賣 優惠 限時 折扣 本週",
+        "百貨公司 周年慶 特賣 優惠",
+        "品牌 大特價 開幕優惠 台灣",
+    ]
+    _SKIP_DOMAINS = {"youtube.com", "facebook.com", "instagram.com", "wikipedia.org"}
+    _DEAL_KW = {"特賣", "優惠", "折扣", "特價", "限時", "買一送一", "周年慶", "開幕", "大降價", "狂殺"}
+
+    seen, results = set(), []
+    for query in _DEAL_QUERIES:
+        payload = json.dumps({
+            "q": query, "gl": "tw", "hl": "zh-tw",
+            "num": 10, "tbs": "qdr:w",
+        }).encode("utf-8")
+        try:
+            req = urllib.request.Request(
+                "https://google.serper.dev/search",
+                data=payload,
+                headers={"X-API-KEY": serper_key, "Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=12) as r:
+                data = json.loads(r.read().decode("utf-8"))
+            for item in data.get("organic", []):
+                title = item.get("title", "").strip()
+                url = item.get("link", "")
+                snippet = item.get("snippet", "")
+                domain = urllib.request.Request(url).full_url if url else ""
+                try:
+                    from urllib.parse import urlparse
+                    domain = urlparse(url).netloc.lstrip("www.")
+                except Exception:
+                    pass
+                if any(s in domain for s in _SKIP_DOMAINS):
+                    continue
+                if not any(k in title or k in snippet for k in _DEAL_KW):
+                    continue
+                if title in seen:
+                    continue
+                seen.add(title)
+                results.append({"title": title[:60], "url": url, "tag": "優惠"})
+            time.sleep(0.5)
+        except Exception as e:
+            print(f"[Serper] 查詢失敗: {e}")
+
+    print(f"[Serper] 找到 {len(results)} 筆即時優惠")
+    return results[:limit]
+
+
+def scrape_songs_via_serper(limit: int = 15) -> list[dict]:
+    """用 Serper 搜尋台灣近期熱門新歌。"""
+    serper_key = os.environ.get("SERPER_API_KEY", "")
+    if not serper_key:
+        return []
+
+    payload = json.dumps({
+        "q": f"台灣 華語 熱門新歌 排行榜 {datetime.now().strftime('%Y年%m月')}",
+        "gl": "tw", "hl": "zh-tw", "num": 5, "tbs": "qdr:m",
+    }).encode("utf-8")
+
+    songs = []
+    try:
+        req = urllib.request.Request(
+            "https://google.serper.dev/search",
+            data=payload,
+            headers={"X-API-KEY": serper_key, "Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=12) as r:
+            data = json.loads(r.read().decode("utf-8"))
+
+        # 從 snippet 裡用正則抽「歌名 - 歌手」或「歌名／歌手」格式
+        seen = set()
+        for item in data.get("organic", []):
+            snippet = item.get("snippet", "") + " " + item.get("title", "")
+            for m in re.finditer(r'[《〈「]([^》〉」]{2,20})[》〉」][^\S\r\n]*[-–—/／]\s*([^\s,，、。！\n]{2,15})', snippet):
+                name, artist = m.group(1).strip(), m.group(2).strip()
+                if name not in seen and len(name) >= 2:
+                    seen.add(name)
+                    songs.append({"name": name, "artist": artist})
+        print(f"[Serper歌單] 抓到 {len(songs)} 首")
+    except Exception as e:
+        print(f"[Serper歌單] 失敗: {e}")
+
+    return songs[:limit]
+
+
 def main():
     print("=" * 50)
     print(f"今日小驚喜爬蟲 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
@@ -218,36 +312,37 @@ def main():
         "deals": [],
     }
 
-    # 爬 KKBOX
-    result["songs"] = scrape_kkbox_new_songs(limit=10)
+    # 歌單：先試 KKBOX，失敗改用 Serper
+    result["songs"] = scrape_kkbox_new_songs(limit=15)
+    if not result["songs"]:
+        print("[歌單] KKBOX 失敗，改用 Serper")
+        result["songs"] = scrape_songs_via_serper(limit=15)
     time.sleep(1)
 
-    # 爬 PTT + Dcard，合併去重後最多保留 20 筆
-    ptt = scrape_ptt_deals(limit=12)
+    # 優惠：Serper 即時優惠為主，PTT/Dcard 補充
+    serper_deals = scrape_deals_via_serper(limit=20)
     time.sleep(1)
-    dcard = scrape_dcard_deals(limit=10)
+    ptt = scrape_ptt_deals(limit=8)
     time.sleep(1)
-
-    # 爬 Threads 即時好康（非官方，失敗不影響整體）
+    dcard = scrape_dcard_deals(limit=8)
+    time.sleep(1)
     threads = scrape_threads_deals()
 
-    # 合併：Threads 最新鮮放最前，再接 PTT、Dcard，標題去重
-    seen_titles = set()
-    merged = []
-    for d in threads + ptt + dcard:
+    seen_titles: set = set()
+    merged: list = []
+    for d in serper_deals + threads + ptt + dcard:
         t = d.get("title", "").strip()
         if t and t not in seen_titles:
             seen_titles.add(t)
             merged.append(d)
     result["deals"] = merged[:25]
 
-    # 寫出
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
 
     print(f"\n✅ 已寫入 {OUTPUT_FILE}")
     print(f"   新歌: {len(result['songs'])} 首")
-    print(f"   好康: {len(result['deals'])} 篇（Threads {len(threads)} + PTT {len(ptt)} + Dcard {len(dcard)}）")
+    print(f"   優惠: {len(result['deals'])} 筆（Serper {len(serper_deals)} + PTT {len(ptt)} + Dcard {len(dcard)} + Threads {len(threads)}）")
 
 
 if __name__ == "__main__":
