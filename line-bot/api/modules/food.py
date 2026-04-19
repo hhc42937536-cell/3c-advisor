@@ -1356,6 +1356,14 @@ def _build_group_result(city: str, dining_type: str) -> list:
         bubbles.append(_build_restaurant_bubble(
             r, None, None, city[:2], eaten_set, subtitle="🌏 特色異國料理"))
 
+    # 部落格精選補充
+    blog_stores = _get_enriched_blog_stores(city[:2], "trending")
+    for bs in blog_stores[:3]:
+        if len(bubbles) >= 11:
+            break
+        bubbles.append(_build_restaurant_bubble(
+            bs, None, None, city[:2], eaten_set, subtitle="📰 部落格精選"))
+
     # LINE carousel 上限 12，保留最後一張給 action_bubble
     if len(bubbles) > 11:
         bubbles = bubbles[:11]
@@ -1628,6 +1636,8 @@ def build_food_flex(style: str, area: str = "") -> list:
         ]
         if i < len(picks)-1:
             items.append({"type": "separator", "margin": "sm"})
+    if area:
+        items += _blog_extra_items(area[:2], area)
     _style_list = list(_FOOD_DB.keys())
     _si = _style_list.index(style) if style in _style_list else 0
     next_style = _style_list[(_si + 1) % len(_style_list)]
@@ -1726,6 +1736,7 @@ def build_food_restaurant_flex(area: str, food_type: str = "", user_id: str = ""
                     ]},
                     {"type": "separator", "margin": "sm"},
                 ]
+            items += _blog_extra_items(area[:2], area)
             footer_contents = [
                 {"type": "box", "layout": "horizontal", "spacing": "sm", "contents": [
                     {"type": "button", "style": "primary", "color": color, "flex": 1,
@@ -1856,6 +1867,7 @@ def build_food_restaurant_flex(area: str, food_type: str = "", user_id: str = ""
         ]
         if i < len(picks) - 1:
             items.append({"type": "separator", "margin": "sm"})
+    items += _blog_extra_items(area2 or area[:2], area)
     available_types = list({r.get("type", "") for r in _RESTAURANT_CACHE.get(area, _RESTAURANT_CACHE.get(area2, []))})
     type_buttons = []
     for t in ["小吃", "中式", "日式", "海鮮", "火鍋"][:3]:
@@ -2473,6 +2485,62 @@ def _read_blog_cache(city2: str, mode: str) -> list[dict]:
         return data.get("by_city", {}).get(city2, {}).get(mode, [])
     except Exception:
         return []
+
+
+def _get_enriched_blog_stores(city2: str, mode: str) -> list[dict]:
+    """Blog cache + Google Places 座標補全；Redis 快取 7 天。"""
+    cache_key = f"blog_enriched:{city2}:{mode}"
+    cached = _redis_get(cache_key)
+    if cached:
+        return json.loads(cached) if isinstance(cached, str) else cached
+    posts = _read_blog_cache(city2, mode)
+    if not posts or not GOOGLE_PLACES_API_KEY:
+        return posts
+    enriched: list[dict] = []
+    for post in posts[:12]:
+        name = post.get("name") or post.get("title", "")
+        if not name:
+            continue
+        hits = _text_search_places(f"{city2} {name}", max_results=1)
+        if hits:
+            p = hits[0]
+            enriched.append({**p, "desc": post.get("desc", p.get("addr", "")), "_source": "blog"})
+        else:
+            enriched.append({
+                "name": name, "desc": post.get("desc", ""),
+                "lat": None, "lng": None, "place_id": "",
+                "rating": 0, "user_ratings_total": 0, "addr": "", "_source": "blog",
+            })
+    if enriched:
+        _redis_set(cache_key, json.dumps(enriched), ttl=7 * 86400)
+    return enriched
+
+
+def _blog_extra_items(city2: str, area: str) -> list:
+    """為餐廳 Bubble body 附加部落格精選項目（最多 2 筆）。"""
+    stores = _get_enriched_blog_stores(city2, "trending")[:2]
+    if not stores:
+        return []
+    out: list = [
+        {"type": "separator", "margin": "md"},
+        {"type": "text", "text": "📰 部落格精選", "size": "xs",
+         "color": "#E65100", "weight": "bold", "margin": "sm"},
+    ]
+    for bp in stores:
+        bname = bp.get("name", "")
+        bdesc = bp.get("desc", "")[:40]
+        bplace = bp.get("place_id", "")
+        maps_u = (f"https://maps.google.com/?q=place_id:{bplace}" if bplace
+                  else f"https://www.google.com/maps/search/{urllib.parse.quote(bname + ' ' + area)}")
+        out += [
+            {"type": "text", "text": f"• {bname}", "weight": "bold", "size": "sm",
+             "color": "#6D4C41", "wrap": True, "maxLines": 2, "margin": "xs"},
+            {"type": "text", "text": bdesc, "size": "xxs", "color": "#888888",
+             "margin": "xs"} if bdesc else {"type": "filler"},
+            {"type": "button", "style": "link", "height": "sm",
+             "action": {"type": "uri", "label": "📍 導航", "uri": maps_u}},
+        ]
+    return out
 
 
 _SOUVENIR_DESC_KW: list[str] = ["伴手禮", "必帶", "必買", "名產", "特產", "帶回家", "手信"]
