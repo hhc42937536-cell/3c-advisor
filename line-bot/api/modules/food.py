@@ -1686,8 +1686,8 @@ def build_food_restaurant_flex(area: str, food_type: str = "", user_id: str = ""
 
     # ── 行政區搜尋：直接用 text_search，不依賴 GPS ────────────────────────────
     if "區" in area and GOOGLE_PLACES_API_KEY:
-        kw = f"{area} {food_type} 美食 餐廳" if food_type else f"{area} 美食 餐廳 推薦"
-        cache_key = f"district_rest:{area}:{food_type}"
+        kw = f"{area} {food_type} 美食 小吃" if food_type else f"{area} 外帶 便當 小吃 熟食"
+        cache_key = f"district_rest2:{area}:{food_type}"
         _cached = _redis_get(cache_key)
         if _cached:
             places = json.loads(_cached) if isinstance(_cached, str) else _cached
