@@ -571,6 +571,7 @@ if not _CITY_SPECIALTIES:
         {"name": "鳳山鳳梨", "desc": "鳳山舊名鳳梨城，現烤鳳梨酥與新鮮金鑽鳳梨超甜", "key": "鳳山 鳳梨 鳳梨酥", "s": "hot"},
         {"name": "三鳳中街南北貨", "desc": "高雄乾貨集散地，年節採購滷包香料超豐富", "key": "高雄 三鳳中街 南北貨", "s": ""},
         {"name": "橋頭甘蔗汁", "desc": "橋頭糖廠旁現榨甘蔗汁，冰涼清甜消暑必喝", "key": "橋頭 甘蔗汁 糖廠", "s": "hot"},
+        {"name": "仁武烤鴨", "desc": "高雄仁武老字號烤鴨，皮脆肉嫩香氣四溢，在地人才知道的隱藏版", "key": "高雄 仁武 烤鴨", "s": ""},
     ],
     "屏東": [
         {"name": "潮州燒冷冰", "desc": "屏東潮州名物，熱湯澆剉冰獨特吃法超特別", "key": "屏東 潮州 燒冷冰", "s": "hot"},
@@ -592,6 +593,9 @@ if not _CITY_SPECIALTIES:
         {"name": "三星蔥餅", "desc": "宜蘭三星蔥現烤蔥餅，香氣撲鼻超誘人", "key": "宜蘭 三星蔥餅", "s": ""},
         {"name": "羅東夜市小吃", "desc": "羅東夜市炭烤、肉羹、蒜味肉排，夜晚必訪", "key": "羅東夜市 小吃", "s": ""},
         {"name": "蘇澳冷泉蝦", "desc": "蘇澳天然冷泉養殖蝦，鮮甜清甜口感細嫩", "key": "蘇澳 冷泉蝦", "s": ""},
+        {"name": "諾貝爾奶凍", "desc": "宜蘭老字號牛奶糖起家，奶凍綿密入口即化是必帶伴手禮", "key": "宜蘭 諾貝爾奶凍", "s": ""},
+        {"name": "礁溪溫泉饅頭", "desc": "礁溪溫泉水製作的Q彈饅頭，帶淡淡硫磺香氣超特別", "key": "礁溪 溫泉饅頭", "s": ""},
+        {"name": "員山豆腐", "desc": "員山埤塘旁豆腐農場，現做嫩豆腐與豆花香濃滑順", "key": "宜蘭 員山 豆腐", "s": ""},
     ],
     "花蓮": [
         {"name": "麻糬", "desc": "花蓮必帶伴手禮，芝麻花生口味人氣最高", "key": "花蓮 麻糬", "s": ""},
@@ -1992,6 +1996,8 @@ def build_food_special_picker(city: str = "") -> list:
 
 def build_city_specialties(city: str) -> list:
     """第一步：城市特色清單（點按後搜名店）"""
+    import concurrent.futures
+
     city2 = city[:2] if city else ""
     season = _tw_season(city2)
     pool = _CITY_SPECIALTIES.get(city, _CITY_SPECIALTIES.get(city2, []))
@@ -2001,10 +2007,57 @@ def build_city_specialties(city: str) -> list:
     if not items:
         items = pool
 
-    def _bubble(item):
+    def _fetch_place(key: str) -> dict:
+        """搜 Places API 取 photo_ref + rating，帶 7 天 Redis 快取"""
+        cache_key = f"specialty_place:{key}"
+        cached = _redis_get(cache_key)
+        if cached:
+            return json.loads(cached) if isinstance(cached, str) else cached
+        if not GOOGLE_PLACES_API_KEY:
+            return {}
+        results = _text_search_places(key, max_results=1)
+        data: dict = {}
+        if results:
+            r = results[0]
+            data = {
+                "photo_ref": r.get("photo_ref", ""),
+                "rating": r.get("rating", 0),
+                "reviews": r.get("user_ratings_total", 0),
+            }
+        _redis_set(cache_key, json.dumps(data), ttl=7 * 86400)
+        return data
+
+    def _bubble(item: dict, place: dict) -> dict:
         tag = ("🌞 夏季限定" if item.get("s") == "hot"
                else ("🧥 冬季限定" if item.get("s") == "cold" else "🗺️ 在地特色"))
-        return {
+        photo_url = _places_photo_url(place.get("photo_ref", "")) if place.get("photo_ref") else ""
+        rating = place.get("rating", 0)
+        reviews = place.get("reviews", 0)
+
+        if rating >= 4.5 and reviews >= 100:
+            rating_str = f"★{rating}  ({reviews}則)"
+            rating_color = "#E53935"
+        elif rating >= 4.0:
+            rating_str = f"★{rating}  ({reviews}則)" if reviews else f"★{rating}"
+            rating_color = "#F57C00"
+        elif rating:
+            rating_str = f"★{rating}"
+            rating_color = "#888888"
+        else:
+            rating_str = ""
+            rating_color = "#888888"
+
+        body_contents: list = [
+            {"type": "text", "text": item["desc"],
+             "size": "sm", "color": "#444444", "wrap": True},
+        ]
+        if rating_str:
+            body_contents.append(
+                {"type": "text", "text": rating_str, "size": "xs",
+                 "color": rating_color, "margin": "sm"}
+            )
+
+        bubble: dict = {
             "type": "bubble", "size": "kilo",
             "header": {
                 "type": "box", "layout": "vertical",
@@ -2017,10 +2070,8 @@ def build_city_specialties(city: str) -> list:
                 ]},
             "body": {
                 "type": "box", "layout": "vertical", "paddingAll": "12px",
-                "contents": [
-                    {"type": "text", "text": item["desc"],
-                     "size": "sm", "color": "#444444", "wrap": True},
-                ]},
+                "contents": body_contents,
+            },
             "footer": {
                 "type": "box", "layout": "vertical", "paddingAll": "10px",
                 "contents": [
@@ -2029,8 +2080,19 @@ def build_city_specialties(city: str) -> list:
                                 "text": f"特色名店 {city2} {item['name']}"}},
                 ]},
         }
+        if photo_url:
+            bubble["hero"] = {
+                "type": "image", "url": photo_url,
+                "size": "full", "aspectRatio": "20:13", "aspectMode": "cover",
+            }
+        return bubble
 
-    bubbles = [_bubble(item) for item in items[:8]]
+    batch = items[:8]
+    keys = [it.get("key", it["name"]) for it in batch]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
+        place_data = list(ex.map(_fetch_place, keys))
+
+    bubbles = [_bubble(item, place) for item, place in zip(batch, place_data)]
 
     # 換城市卡（讓 GPS 鎖定的使用者也能手動切換）
     specialty_cities = list(_CITY_SPECIALTIES.keys())
