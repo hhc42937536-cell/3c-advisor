@@ -2156,8 +2156,23 @@ def build_city_specialties(city: str) -> list:
              "contents": {"type": "carousel", "contents": bubbles}}]
 
 
+_BLOG_CACHE_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "..", "..", "food_blog_cache.json"
+)
+
+
+def _read_blog_cache(city2: str, mode: str) -> list[dict]:
+    """讀本地 food_blog_cache.json，找不到或過期回傳空列表"""
+    try:
+        with open(_BLOG_CACHE_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+        return data.get("by_city", {}).get(city2, {}).get(mode, [])
+    except Exception:
+        return []
+
+
 def build_trending_specialty(city: str, mode: str) -> list:
-    """必買伴手禮 / 最新流行美食 — Places API 即時搜，全台22縣市通用"""
+    """必買伴手禮 / 最新流行美食 — 優先讀部落格爬蟲快取，再 fallback 到 Places API"""
     city2 = city[:2] if city else ""
     if not city2:
         return []
@@ -2173,6 +2188,61 @@ def build_trending_specialty(city: str, mode: str) -> list:
         alt = f"{city2} 最新流行美食"
         color = "#F57F17"
 
+    # ── 優先讀部落格爬蟲快取 ──────────────────────────────────────────────────
+    blog_posts = _read_blog_cache(city2, mode)
+    if blog_posts:
+        source_label = "資料來源：美食部落格 / Dcard / PTT"
+        blog_bubbles = []
+        for post in blog_posts[:6]:
+            blog_bubbles.append({
+                "type": "bubble", "size": "kilo",
+                "body": {
+                    "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "14px",
+                    "contents": [
+                        {"type": "text", "text": post["title"], "wrap": True,
+                         "size": "sm", "weight": "bold", "maxLines": 3},
+                        {"type": "text", "text": post["source"],
+                         "size": "xxs", "color": "#888888", "margin": "sm"},
+                    ],
+                },
+                "footer": {
+                    "type": "box", "layout": "vertical", "paddingAll": "8px",
+                    "contents": [
+                        {"type": "button", "style": "primary", "height": "sm",
+                         "color": color,
+                         "action": {"type": "uri", "label": "閱讀文章", "uri": post["url"]}},
+                    ],
+                },
+            })
+
+        header_bubble: dict = {
+            "type": "bubble", "size": "kilo",
+            "header": {
+                "type": "box", "layout": "vertical",
+                "backgroundColor": color, "paddingAll": "12px",
+                "contents": [
+                    {"type": "text", "text": title,
+                     "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                    {"type": "text", "text": source_label,
+                     "color": "#FFFFFF", "size": "xxs", "margin": "xs"},
+                ]},
+            "body": {
+                "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "12px",
+                "contents": [
+                    {"type": "button", "style": "primary",
+                     "color": "#F57F17" if mode == "souvenir" else "#2E7D32", "height": "sm",
+                     "action": {"type": "message",
+                                "label": "🔥 最新流行" if mode == "souvenir" else "🛍 必買伴手禮",
+                                "text": f"{'最新流行' if mode == 'souvenir' else '必買伴手禮'} {city2}"}},
+                    {"type": "button", "style": "secondary", "height": "sm",
+                     "action": {"type": "message", "label": f"← {city2} 特色總覽",
+                                "text": f"地方特色 {city2}"}},
+                ]},
+        }
+        return [{"type": "flex", "altText": alt,
+                 "contents": {"type": "carousel", "contents": [header_bubble] + blog_bubbles}}]
+
+    # ── fallback：Google Places API ───────────────────────────────────────────
     cache_key = f"trending_specialty:{mode}:{city2}"
     cached = _redis_get(cache_key)
     places: list = []
@@ -2190,7 +2260,7 @@ def build_trending_specialty(city: str, mode: str) -> list:
     bubbles = [_build_restaurant_bubble(p, None, None, city2, set(), subtitle=title)
                for p in places]
 
-    header_bubble: dict = {
+    header_bubble = {
         "type": "bubble", "size": "kilo",
         "header": {
             "type": "box", "layout": "vertical",
