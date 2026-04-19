@@ -2104,31 +2104,26 @@ def build_city_specialties(city: str) -> list:
 
     item_bubbles = [_bubble(item, place) for item, place in zip(batch, place_data)]
 
-    # 快速入口卡放第二張（index 1），用戶一開即可點
-    quick_card: dict = {
-        "type": "bubble", "size": "kilo",
-        "header": {
-            "type": "box", "layout": "vertical",
-            "backgroundColor": "#1B5E20", "paddingAll": "10px",
+    # 在第一張卡的 footer 加第二排：必買伴手禮 + 最新流行（左右並排）
+    if item_bubbles:
+        first = item_bubbles[0]
+        first.setdefault("footer", {"type": "box", "layout": "vertical",
+                                     "paddingAll": "10px", "contents": []})
+        first["footer"]["contents"].append({
+            "type": "box", "layout": "horizontal", "spacing": "xs", "margin": "sm",
             "contents": [
-                {"type": "text", "text": f"🔍 {city2} 深入探索",
-                 "color": "#FFFFFF", "size": "sm", "weight": "bold"},
-                {"type": "text", "text": "整合在地資料精選推薦",
-                 "color": "#A5D6A7", "size": "xxs", "margin": "xs"},
-            ]},
-        "body": {
-            "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "12px",
-            "contents": [
-                {"type": "button", "style": "primary", "color": "#2E7D32", "height": "sm",
-                 "action": {"type": "message", "label": "🛍 必買伴手禮",
+                {"type": "button", "style": "primary", "flex": 1,
+                 "color": "#2E7D32", "height": "sm",
+                 "action": {"type": "message", "label": "🛍 必買",
                             "text": f"必買伴手禮 {city2}"}},
-                {"type": "button", "style": "primary", "color": "#E65100", "height": "sm",
-                 "action": {"type": "message", "label": "🔥 最新流行美食",
+                {"type": "button", "style": "primary", "flex": 1,
+                 "color": "#E65100", "height": "sm",
+                 "action": {"type": "message", "label": "🔥 最新流行",
                             "text": f"最新流行 {city2}"}},
-            ]},
-    }
-    # 第一張特色卡 + 快速入口 + 其餘特色卡
-    bubbles = [item_bubbles[0], quick_card] + item_bubbles[1:] if item_bubbles else [quick_card]
+            ],
+        })
+
+    bubbles = item_bubbles
 
     # 換城市卡
     specialty_cities = list(_CITY_SPECIALTIES.keys())
