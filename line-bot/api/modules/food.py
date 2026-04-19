@@ -2126,7 +2126,7 @@ def build_destination_picker(city: str = "") -> list:
                 {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
                  "action": {"type": "message",
                             "label": d if len(d) <= 6 else d[:5],
-                            "text": f"餐廳 {city2}{d}"}}
+                            "text": f"目的地美食 {city2}{d}"}}
                 for d in chunk
             ],
         })
@@ -2931,6 +2931,9 @@ def build_food_message(text: str, user_id: str = None) -> list:
     if "目的地美食換城市" in text_s:
         return build_destination_city_picker()
     if "目的地美食" in text_s:
+        _d_match = re.search(r'[\u4e00-\u9fff]{2,5}區', text_s)
+        if _d_match:
+            return build_food_restaurant_flex(_d_match.group(0), "", user_id=user_id)
         return build_destination_picker(area_city)
 
     # ── 純呼叫主選單 ──
