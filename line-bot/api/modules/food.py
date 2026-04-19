@@ -2527,24 +2527,30 @@ def build_trending_specialty(city: str, mode: str) -> list:
     if blog_posts:
         blog_bubbles = []
         for post in blog_posts[:10]:
+            name = post.get("name") or post.get("title", "")
+            desc = post.get("desc") or post.get("source", "")
+            maps_url = (
+                f"https://www.google.com/maps/search/"
+                + urllib.parse.quote(f"{city2} {name}")
+            )
             blog_bubbles.append({
                 "type": "bubble", "size": "kilo",
                 "body": {
                     "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "14px",
                     "contents": [
-                        {"type": "text", "text": "📰 部落格推薦",
+                        {"type": "text", "text": "📍 精選推薦",
                          "size": "xxs", "color": color, "weight": "bold"},
-                        {"type": "text", "text": post["title"], "wrap": True,
-                         "size": "sm", "weight": "bold", "maxLines": 3, "margin": "xs"},
-                        {"type": "text", "text": post["source"],
-                         "size": "xxs", "color": "#888888", "margin": "sm"},
+                        {"type": "text", "text": name, "wrap": True,
+                         "size": "sm", "weight": "bold", "maxLines": 2, "margin": "xs"},
+                        {"type": "text", "text": desc,
+                         "size": "xxs", "color": "#888888", "margin": "sm", "wrap": True},
                     ],
                 },
                 "footer": {
                     "type": "box", "layout": "vertical", "paddingAll": "8px",
                     "contents": [{
                         "type": "button", "style": "primary", "height": "sm", "color": color,
-                        "action": {"type": "uri", "label": "閱讀文章", "uri": post["url"]},
+                        "action": {"type": "uri", "label": "Google Maps 搜尋", "uri": maps_url},
                     }],
                 },
             })
