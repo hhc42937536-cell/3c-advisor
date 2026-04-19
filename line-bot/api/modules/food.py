@@ -2560,9 +2560,11 @@ def build_trending_specialty(city: str, mode: str) -> list:
     if cached:
         places = json.loads(cached) if isinstance(cached, str) else cached
     elif GOOGLE_PLACES_API_KEY:
-        places = _text_search_places(query, max_results=8)
-        places = [p for p in places if (p.get("rating") or 0) >= 3.8][:6]
-        _redis_set(cache_key, json.dumps(places), ttl=3 * 86400)
+        raw = _text_search_places(query, max_results=10)
+        filtered = [p for p in raw if (p.get("rating") or 0) >= 3.8]
+        places = (filtered or raw)[:6]  # 過濾後沒結果就直接用原始
+        if places:
+            _redis_set(cache_key, json.dumps(places), ttl=3 * 86400)
 
     if not places:
         return [{"type": "text",
