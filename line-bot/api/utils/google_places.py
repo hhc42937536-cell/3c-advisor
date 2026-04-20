@@ -1,5 +1,6 @@
 import json
 import os
+import time
 import urllib.parse
 import urllib.request
 
@@ -7,43 +8,61 @@ GOOGLE_PLACES_API_KEY = os.environ.get("GOOGLE_PLACES_API_KEY", "")
 
 
 def nearby_places(lat: float, lng: float, radius: int = 1500,
-                  keyword: str = "餐廳 小吃 美食") -> list:
-    """Google Places Nearby Search — 回傳半徑內餐廳清單"""
+                  keyword: str = "餐廳 小吃 美食",
+                  max_pages: int = 3) -> list:
+    """Google Places Nearby Search — 最多 3 頁（60 筆）"""
     if not GOOGLE_PLACES_API_KEY:
         return []
-    try:
-        url = (
-            "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
-            f"?location={lat},{lng}&radius={radius}"
-            f"&keyword={urllib.parse.quote(keyword)}"
-            "&language=zh-TW"
-            f"&key={GOOGLE_PLACES_API_KEY}"
-        )
-        req = urllib.request.Request(url, headers={"User-Agent": "LineBot/1.0"})
-        with urllib.request.urlopen(req, timeout=8) as r:
-            data = json.loads(r.read().decode("utf-8"))
-        results = []
+
+    def _parse(data: dict) -> list:
+        out = []
         for p in data.get("results", []):
             photo_ref = (p.get("photos") or [{}])[0].get("photo_reference", "")
-            plat = p["geometry"]["location"]["lat"]
-            plng = p["geometry"]["location"]["lng"]
-            results.append({
+            loc = p["geometry"]["location"]
+            out.append({
                 "name":               p.get("name", ""),
                 "addr":               p.get("vicinity", ""),
                 "rating":             p.get("rating", 0),
                 "user_ratings_total": p.get("user_ratings_total", 0),
-                "lat":                plat,
-                "lng":                plng,
+                "lat":                loc["lat"],
+                "lng":                loc["lng"],
                 "place_id":           p.get("place_id", ""),
                 "photo_ref":          photo_ref,
                 "open_now":           (p.get("opening_hours") or {}).get("open_now"),
                 "_source":            "google",
             })
-        print(f"[places] got {len(results)} results within {radius}m")
-        return results
-    except Exception as e:
-        print(f"[places] error: {e}")
-        return []
+        return out
+
+    results: list = []
+    base_url = (
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+        f"?location={lat},{lng}&radius={radius}"
+        f"&keyword={urllib.parse.quote(keyword)}"
+        "&language=zh-TW"
+        f"&key={GOOGLE_PLACES_API_KEY}"
+    )
+    url = base_url
+    for page in range(max_pages):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "LineBot/1.0"})
+            with urllib.request.urlopen(req, timeout=10) as r:
+                data = json.loads(r.read().decode("utf-8"))
+            results.extend(_parse(data))
+            token = data.get("next_page_token", "")
+            if not token:
+                break
+            # Google 要求等 2 秒才能用 next_page_token
+            time.sleep(2)
+            url = (
+                "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+                f"?pagetoken={token}&key={GOOGLE_PLACES_API_KEY}"
+            )
+        except Exception as e:
+            print(f"[places] page {page} error: {e}")
+            break
+
+    print(f"[places] got {len(results)} results within {radius}m ({page+1} pages)")
+    return results
 
 
 def text_search(query: str, max_results: int = 5) -> list:

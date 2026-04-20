@@ -2759,7 +2759,15 @@ def build_food_real_restaurants(style: str, city: str, user_id: str = "",
         u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
 
     if u_lat and u_lon and GOOGLE_PLACES_API_KEY:
-        raw = _nearby_places(u_lat, u_lon, radius=2000, keyword=kw)
+        # 先看 Redis 是否有完整池（24h 快取，含 60 筆）
+        _pool_key = f"food_pool:{u_lat:.4f},{u_lon:.4f}:{kw[:12]}"
+        _pool_cached = _redis_get(_pool_key)
+        if _pool_cached:
+            raw = json.loads(_pool_cached) if isinstance(_pool_cached, str) else _pool_cached
+        else:
+            raw = _nearby_places(u_lat, u_lon, radius=3000, keyword=kw, max_pages=3)
+            if raw:
+                _redis_set(_pool_key, json.dumps(raw), ttl=86400)  # 24h
         places = _filter_by_rating(raw)
     elif GOOGLE_PLACES_API_KEY:
         # 先用「在地 必吃」強化版，再 fallback 基本版
@@ -2796,10 +2804,12 @@ def build_food_real_restaurants(style: str, city: str, user_id: str = "",
             seen_bk_r.add(bk)
         deduped.append(p)
 
-    all_places = deduped[:12]  # LINE carousel 上限 12
+    # 隨機打亂後取前 8（換一組時拿到不同結果）
+    import random as _rnd
+    _rnd.shuffle(deduped)
+    all_places = deduped[:12]
     page1, page2 = all_places[:8], all_places[8:]
 
-    # 剩餘存 Redis 供分頁
     if page2:
         _redis_set(f"food_more:{style}:{city2}", json.dumps(page2), ttl=1800)
 
