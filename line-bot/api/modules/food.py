@@ -2759,7 +2759,7 @@ def build_food_real_restaurants(style: str, city: str, user_id: str = "",
         u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
 
     if u_lat and u_lon and GOOGLE_PLACES_API_KEY:
-        # 先看 Redis 是否有完整池（24h 快取，含 60 筆）
+        # 同一 session 內快取 30 分鐘（換一組不重打 API），下次分享位置就重抓
         _pool_key = f"food_pool:{u_lat:.4f},{u_lon:.4f}:{kw[:12]}"
         _pool_cached = _redis_get(_pool_key)
         if _pool_cached:
@@ -2767,7 +2767,7 @@ def build_food_real_restaurants(style: str, city: str, user_id: str = "",
         else:
             raw = _nearby_places(u_lat, u_lon, radius=3000, keyword=kw, max_pages=3)
             if raw:
-                _redis_set(_pool_key, json.dumps(raw), ttl=86400)  # 24h
+                _redis_set(_pool_key, json.dumps(raw), ttl=1800)  # 30 分鐘
         places = _filter_by_rating(raw)
     elif GOOGLE_PLACES_API_KEY:
         # 先用「在地 必吃」強化版，再 fallback 基本版
