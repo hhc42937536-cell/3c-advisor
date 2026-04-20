@@ -2744,9 +2744,8 @@ def build_food_real_restaurants(style: str, city: str, user_id: str = "",
                                 specific_kw: str = "") -> list:
     """使用者明確指定食物類型 → Google Places 搜附近真實店家（在地優先、評分 ≥4.0）"""
     city2 = city[:2] if city else ""
-    base_kw = _STYLE_GPLACE_KW.get(style, style)
-    # 若有更具體的食物詞（如「飯糰」），讓它成為搜尋主角，避免整類詞蓋掉它
-    kw = f"{specific_kw} {base_kw}" if specific_kw and specific_kw not in (style,) else base_kw
+    # specific_kw（如「飯糰」）直接當關鍵字，複合詞會讓 Places API 回傳極少結果
+    kw = specific_kw if specific_kw else _STYLE_GPLACE_KW.get(style, style)
     icon = _STYLE_ICON.get(style, "🍽️")
     u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
 
