@@ -3270,6 +3270,18 @@ def build_food_message(text: str, user_id: str = None) -> list:
             return build_food_menu(city=area_city, user_id=user_id or "")
         return _build_food_entry_region_picker(user_id or "")
 
+    # ── 換一組附近美食（不需重新定位，用快取 GPS 取不同隨機結果）──────────────
+    if "換一組附近美食" in text_s:
+        u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
+        if u_lat and u_lon:
+            return build_food_real_restaurants("美食", area_city, user_id or "")
+        if user_id:
+            _redis_set(f"food_locate:{user_id}", "1", ttl=180)
+        return [{"type": "text", "text": "📍 位置紀錄已過期，請重新分享位置",
+                 "quickReply": {"items": [
+                     {"type": "action", "action": {"type": "location", "label": "📍 分享我的位置"}},
+                 ]}}]
+
     # ── 地標附近意圖（「台電宜蘭附近的美食」「台北車站附近的拉麵」）──────────
     # 偵測 {2-10字地標}附近，且地標不是「我」也不是純城市名
     _landmark_m = re.search(r'^(.{2,12}?)附近', text_s)

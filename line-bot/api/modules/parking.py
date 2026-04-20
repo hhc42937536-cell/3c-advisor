@@ -1208,7 +1208,7 @@ def _build_post_parking_food(city: str, lat: float = None, lon: float = None,
     # ── 優先：Google Places Nearby Search ──
     picks = []
     if lat and lon and GOOGLE_PLACES_API_KEY:
-        gp = _nearby_places_google(lat, lon, radius=1500)
+        gp = _nearby_places_google(lat, lon, radius=3000)
         # 補充距離並由近到遠排序
         for r in gp:
             if r.get("lat") and r.get("lng"):
@@ -1294,8 +1294,8 @@ def _build_post_parking_food(city: str, lat: float = None, lon: float = None,
                  "size": "xxs", "align": "center", "color": "#AAAAAA", "margin": "xs"},
                 {"type": "button", "style": "primary", "color": "#FF6B35",
                  "margin": "md",
-                 "action": {"type": "message", "label": "📍 換一組（重新定位）",
-                            "text": "📍 我要分享位置找美食"}},
+                 "action": {"type": "message", "label": "🔄 換一組",
+                            "text": "換一組附近美食"}},
                 {"type": "button", "style": "primary", "color": "#1565C0", "margin": "sm",
                  "action": {"type": "message", "label": "🗺️ 目的地美食查詢",
                             "text": f"目的地美食 {city2}"}},
