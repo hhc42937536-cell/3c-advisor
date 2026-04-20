@@ -3255,7 +3255,7 @@ def build_food_message(text: str, user_id: str = None) -> list:
             return build_food_special_picker("")
         explicit_style = style and (style != "便當" or "便當" in text_s)
         if explicit_style and area_city:
-            return build_food_real_restaurants(style, area_city, user_id or "")
+            return build_food_real_restaurants(style, area_city, user_id or "", specific_kw=specific_kw)
         if area_city:
             return build_food_menu(city=area_city, user_id=user_id or "")
         return _build_food_entry_region_picker(user_id or "")
@@ -3280,7 +3280,7 @@ def build_food_message(text: str, user_id: str = None) -> list:
 
     # ── 有風格 + 有城市 → 直接推薦 ──
     if area:
-        return build_food_real_restaurants(style, area, user_id or "")
+        return build_food_real_restaurants(style, area, user_id or "", specific_kw=specific_kw)
 
     # ── 有風格 + 有地區 → 選城市 ──
     if region:
@@ -3292,4 +3292,4 @@ def build_food_message(text: str, user_id: str = None) -> list:
     if has_style_kw and not is_internal:
         return build_food_region_picker(style)
 
-    return build_food_real_restaurants(style, area, user_id or "") if area else build_food_flex(style, area)
+    return build_food_real_restaurants(style, area, user_id or "", specific_kw=specific_kw) if area else build_food_flex(style, area)
