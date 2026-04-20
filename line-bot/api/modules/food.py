@@ -3262,9 +3262,11 @@ def build_food_message(text: str, user_id: str = None) -> list:
         return _build_food_entry_region_picker(user_id or "")
 
     # ── 附近意圖（我附近的X / 附近有X）→ 永遠要求重新分享位置取得當下座標 ──
-    # 不使用快取座標（TTL 24h），避免使用者換地點後拿到舊位置的結果
+    # 不用快取座標或 saved city（避免換地點後拿到舊位置）
     _want_nearby = any(w in text_s for w in ["我附近", "附近的", "附近有", "附近找", "附近吃"])
-    if _want_nearby and not area:
+    # 只有當文字裡同時出現「台南」等明確城市時才不觸發（如「台南附近的飯糰」）
+    _nearby_city_explicit = bool(area_match)  # area_match = 文字內直接出現城市名
+    if _want_nearby and not _nearby_city_explicit:
         if user_id:
             _redis_set(f"food_locate:{user_id}", "1", ttl=180)
             _redis_set(f"food_style_pending:{user_id}", style, ttl=180)
