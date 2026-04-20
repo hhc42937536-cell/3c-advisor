@@ -2682,6 +2682,9 @@ def build_trending_by_district(district: str, city2: str, mode: str) -> list:
             if is_souvenir:
                 raw = [p for p in raw
                        if not any(ex in p.get("name", "") for ex in _souvenir_exclude)]
+            elif not is_souvenir:
+                # 最新流行：評論數 > 3000 通常是老字號，不適合放「最新」榜
+                raw = [p for p in raw if (p.get("user_ratings_total") or 9999) <= 3000]
             filtered = [p for p in raw if (p.get("rating") or 0) >= 3.8]
             places = (filtered or raw)[:8]
             if places:

@@ -113,7 +113,8 @@ def _fetch_city_mode(city: str, mode: str) -> list[dict]:
     if mode == "souvenir":
         query = f"{year} {city} 必買 伴手禮"
     else:
-        query = f"{year} {city} 最新流行 必吃店家"
+        # 「新開幕 年度推薦」比「最新流行 必吃」更容易找到近年才開的店
+        query = f"{year} {city} 新開幕 年度推薦 美食"
 
     print(f"  搜尋：{query}")
     data = _serper_search(query)
