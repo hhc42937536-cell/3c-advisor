@@ -2620,33 +2620,55 @@ def build_trending_by_district(district: str, city2: str, mode: str) -> list:
 
     bubbles: list[dict] = []
 
+    # ── 連鎖品牌去重（去除同名分店洗版）──────────────────────────────────────
+    def _brand_key(name: str) -> str:
+        """取品牌名稱前綴（去除店/分店/城市後綴），用於去重"""
+        # 去除括號及後半（奕順軒（宜蘭店）→ 奕順軒）
+        clean = re.sub(r'[（(【\[].*', '', name).strip()
+        # 去除尾端「XX店/館/分店」（奕順軒宜蘭店 → 奕順軒）
+        clean = re.sub(r'[\u4e00-\u9fff]{1,4}[店館分舖號]$', '', clean).strip()
+        return clean[:5] if clean else name[:5]
+
+    seen_brands: set[str] = set()
+
+    def _add_if_new_brand(p: dict, subtitle: str) -> None:
+        bk = _brand_key(p.get("name", ""))
+        if bk in seen_brands:
+            return
+        seen_brands.add(bk)
+        bubbles.append(_build_restaurant_bubble(p, None, None, city2, set(), subtitle=subtitle))
+
     # ── Google Places ────────────────────────────────────────────────────────
-    kw = f"{district} 伴手禮 名產 特產" if is_souvenir else f"{district} 人氣 必吃 新開"
+    # 伴手禮：指定「老店 禮盒 名產館」讓 Places 偏向實體特產店而非餐廳
+    kw = (f"{district} 伴手禮 老店 禮盒 名產館"
+          if is_souvenir else f"{district} 人氣 必吃 新開")
+    # 非伴手禮排除詞（避免健康餐盒/滷味/冰品混入伴手禮清單）
+    _souvenir_exclude = {"健康餐", "便當", "滷味", "鹹水雞", "剉冰", "冰品",
+                         "火鍋", "拉麵", "壽司", "健身", "輕食"}
     cache_key = f"trending_district:{mode}:{district}"
     cached = _redis_get(cache_key)
     places: list = []
     if cached:
         places = json.loads(cached) if isinstance(cached, str) else cached
     elif GOOGLE_PLACES_API_KEY:
-        raw = _text_search_places(kw, max_results=10)
+        raw = _text_search_places(kw, max_results=12)
+        if is_souvenir:
+            raw = [p for p in raw
+                   if not any(ex in p.get("name", "") for ex in _souvenir_exclude)]
         filtered = [p for p in raw if (p.get("rating") or 0) >= 3.8]
-        places = (filtered or raw)[:6]
+        places = (filtered or raw)[:8]
         if places:
             _redis_set(cache_key, json.dumps(places), ttl=3 * 86400)
 
     for p in places:
-        bubbles.append(_build_restaurant_bubble(p, None, None, city2, set(), subtitle=title))
+        _add_if_new_brand(p, title)
 
     # ── restaurant_db 補充（Places 驗證過的店，最多 5 筆）────────────────────
-    existing_names = {b.get("body", {}).get("contents", [{}])[0].get("text", "") for b in bubbles}
     db_stores = _get_db_stores(city2, district=district, mode=mode)
     if not db_stores:
         db_stores = _get_db_stores(city2, mode=mode)
     for store in db_stores[:5]:
-        sname = store.get("name", "")
-        if sname in existing_names:
-            continue
-        bubbles.append(_build_restaurant_bubble(store, None, None, city2, set(), subtitle=title))
+        _add_if_new_brand(store, title)
 
     if not bubbles:
         return [{"type": "text",
@@ -2714,7 +2736,21 @@ def build_food_real_restaurants(style: str, city: str, user_id: str = "") -> lis
     if not places:
         return build_food_flex(style, city)  # fallback 靜態建議
 
-    all_places = places[:12]  # LINE carousel 上限 12
+    # 連鎖品牌去重（同前綴品牌只保留最近/最高分那筆）
+    def _brand_key_r(name: str) -> str:
+        clean = re.sub(r'[（(【\[].*', '', name).strip()
+        clean = re.sub(r'[\u4e00-\u9fff]{1,4}[店館分舖號]$', '', clean).strip()
+        return clean[:5] if clean else name[:5]
+
+    seen_brands_r: set[str] = set()
+    deduped: list = []
+    for p in places:
+        bk = _brand_key_r(p.get("name", ""))
+        if bk not in seen_brands_r:
+            seen_brands_r.add(bk)
+            deduped.append(p)
+
+    all_places = deduped[:12]  # LINE carousel 上限 12
     page1, page2 = all_places[:8], all_places[8:]
 
     # 剩餘存 Redis 供分頁
