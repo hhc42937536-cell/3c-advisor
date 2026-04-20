@@ -47,7 +47,7 @@ def scrape_apple_music_chart(limit: int = 15) -> list[dict]:
                 continue
             if len(artist) > 20:
                 artist = artist[:18] + "…"
-            songs.append({"name": name, "artist": artist})
+            songs.append({"name": name, "artist": artist, "url": entry.get("url", "")})
             if len(songs) >= limit:
                 break
         print(f"[Apple Music] 抓到 {len(songs)} 首新歌（近180天）")

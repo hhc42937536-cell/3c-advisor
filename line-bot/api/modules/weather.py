@@ -427,17 +427,15 @@ def _get_daily_deal(city: str, seq: int = 0) -> tuple:
 
 
 def _get_today_song(seq: int = 0) -> tuple:
-    """今日歌單：(icon, title, body, url)"""
+    """今日新歌：(icon, title, body, url)"""
     sc = _get_surprise_cache()
     songs = sc.get("songs", []) if sc else []
     if not songs:
-        return ("🎵", "今日推薦歌單", "搜尋你喜歡的歌手，找首今天的心情歌",
-                "https://www.youtube.com/")
+        return ("🎵", "今日新歌推薦", "今天沒抓到新歌，點這裡去 Apple Music 探索",
+                "https://music.apple.com/tw/browse")
     song = songs[seq % len(songs)]
-    url = song.get("url", "") or (
-        "https://www.youtube.com/results?search_query="
-        + urllib.parse.quote(f"{song.get('name','')} {song.get('artist','')} official"))
-    return ("🎵", "今日推薦歌單", f"《{song.get('name','')}》— {song.get('artist','')}", url)
+    url = song.get("url", "") or "https://music.apple.com/tw/browse"
+    return ("🎵", "今日新歌推薦", f"《{song.get('name','')}》— {song.get('artist','')}", url)
 
 
 def _get_national_deal(city: str, user_id: str = "", seq: int = 0) -> tuple:
