@@ -2495,7 +2495,7 @@ def _get_enriched_blog_stores(city2: str, mode: str) -> list[dict]:
     # 3. 即時查詢 Google Places（Fallback，爬蟲尚未產生資料庫時）
     posts = _read_blog_cache(city2, mode)
     if not posts or not GOOGLE_PLACES_API_KEY:
-        return posts
+        return []  # 無 API key 則不顯示未驗證資料
     enriched: list[dict] = []
     for post in posts[:12]:
         name = post.get("name") or post.get("title", "")
@@ -2505,12 +2505,7 @@ def _get_enriched_blog_stores(city2: str, mode: str) -> list[dict]:
         if hits:
             p = hits[0]
             enriched.append({**p, "desc": post.get("desc", p.get("addr", "")), "_source": "blog"})
-        else:
-            enriched.append({
-                "name": name, "desc": post.get("desc", ""),
-                "lat": None, "lng": None, "place_id": "",
-                "rating": 0, "user_ratings_total": 0, "addr": "", "_source": "blog",
-            })
+        # 未找到就跳過，不顯示未驗證店名
     if enriched:
         _redis_set(cache_key, json.dumps(enriched), ttl=7 * 86400)
     return enriched
@@ -2642,34 +2637,16 @@ def build_trending_by_district(district: str, city2: str, mode: str) -> list:
     for p in places:
         bubbles.append(_build_restaurant_bubble(p, None, None, city2, set(), subtitle=title))
 
-    # ── Blog cache 補充（縣市層級，最多 5 筆）────────────────────────────────
-    blog_posts = _read_blog_cache(city2, mode)
-    for post in blog_posts[:5]:
-        name = post.get("name") or post.get("title", "")
-        desc = post.get("desc") or post.get("source", "")
-        maps_url = ("https://www.google.com/maps/search/"
-                    + urllib.parse.quote(f"{district} {name}"))
-        bubbles.append({
-            "type": "bubble", "size": "kilo",
-            "body": {
-                "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "14px",
-                "contents": [
-                    {"type": "text", "text": "📰 部落格精選",
-                     "size": "xxs", "color": color, "weight": "bold"},
-                    {"type": "text", "text": name, "wrap": True,
-                     "size": "sm", "weight": "bold", "maxLines": 2, "margin": "xs"},
-                    {"type": "text", "text": desc,
-                     "size": "xxs", "color": "#888888", "margin": "sm", "wrap": True},
-                ],
-            },
-            "footer": {
-                "type": "box", "layout": "vertical", "paddingAll": "8px",
-                "contents": [{
-                    "type": "button", "style": "primary", "height": "sm", "color": color,
-                    "action": {"type": "uri", "label": "Google Maps 搜尋", "uri": maps_url},
-                }],
-            },
-        })
+    # ── restaurant_db 補充（Places 驗證過的店，最多 5 筆）────────────────────
+    existing_names = {b.get("body", {}).get("contents", [{}])[0].get("text", "") for b in bubbles}
+    db_stores = _get_db_stores(city2, district=district, mode=mode)
+    if not db_stores:
+        db_stores = _get_db_stores(city2, mode=mode)
+    for store in db_stores[:5]:
+        sname = store.get("name", "")
+        if sname in existing_names:
+            continue
+        bubbles.append(_build_restaurant_bubble(store, None, None, city2, set(), subtitle=title))
 
     if not bubbles:
         return [{"type": "text",
