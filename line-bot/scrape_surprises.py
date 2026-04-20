@@ -24,7 +24,7 @@ OUTPUT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "surprise
 
 
 def scrape_apple_music_chart(limit: int = 15) -> list[dict]:
-    """Apple Music 台灣 most-played 榜，只保留近 180 天內發行的新歌。"""
+    """Apple Music 台灣 most-played 榜，優先取近 180 天新歌，不足時取榜單前幾名。"""
     print("[Apple Music] 開始抓台灣排行榜...")
     url = "https://rss.applemarketingtools.com/api/v2/tw/music/most-played/50/songs.json"
     try:
@@ -32,25 +32,32 @@ def scrape_apple_music_chart(limit: int = 15) -> list[dict]:
         with urllib.request.urlopen(req, timeout=12) as r:
             data = json.loads(r.read().decode("utf-8"))
         cutoff = datetime.now() - timedelta(days=180)
-        songs = []
+        songs: list[dict] = []
+        fallback: list[dict] = []  # 不限發行時間的備援池
         for entry in data.get("feed", {}).get("results", []):
-            release_str = entry.get("releaseDate", "")
-            try:
-                release_dt = datetime.fromisoformat(release_str)
-            except ValueError:
-                continue
-            if release_dt < cutoff:
-                continue
             name = entry.get("name", "").strip()
             artist = entry.get("artistName", "").strip()
             if not name or not artist:
                 continue
             if len(artist) > 20:
                 artist = artist[:18] + "…"
-            songs.append({"name": name, "artist": artist, "url": entry.get("url", "")})
+            item = {"name": name, "artist": artist, "url": entry.get("url", "")}
+            # 嘗試解析發行時間，無法解析則視為舊歌放 fallback
+            release_str = entry.get("releaseDate", "")
+            try:
+                release_dt = datetime.fromisoformat(release_str).replace(tzinfo=None)
+                if release_dt >= cutoff:
+                    songs.append(item)
+            except (ValueError, TypeError):
+                pass
+            if len(fallback) < limit:
+                fallback.append(item)
             if len(songs) >= limit:
                 break
-        print(f"[Apple Music] 抓到 {len(songs)} 首新歌（近180天）")
+        # 近180天無新歌時，備援取榜單前3名
+        if not songs:
+            songs = fallback[:3]
+        print(f"[Apple Music] 抓到 {len(songs)} 首（近180天新歌優先，備援取榜單前3）")
         return songs
     except Exception as e:
         print(f"[Apple Music] 錯誤: {e}")

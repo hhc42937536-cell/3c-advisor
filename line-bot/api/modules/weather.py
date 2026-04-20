@@ -438,6 +438,55 @@ def _get_today_song(seq: int = 0) -> tuple:
     return ("🎵", "今日新歌推薦", f"《{song.get('name','')}》— {song.get('artist','')}", url)
 
 
+# ─── 節慶活動年曆 ─────────────────────────────────────────
+# (月-日 格式，每年重複使用；空 cities = 全台皆顯示)
+_FESTIVAL_CALENDAR: list[tuple] = [
+    # name, start(MM-DD), end(MM-DD), cities, desc, url
+    ("台東炸寒單爺", "02-11", "02-14", ["台東"], "元宵肉身寒單接砲，震撼傳統勿錯過", ""),
+    ("鹽水蜂炮", "03-03", "03-04", ["台南"], "元宵夜萬蜂齊放，台南年度盛事", ""),
+    ("平溪天燈節", "03-03", "03-03", ["新北"], "千盞天燈升空，元宵最美夜晚", ""),
+    ("白沙屯媽祖繞境", "04-05", "04-15", ["苗栗", "台中"], "隨機起駕，萬人陪媽祖走路", ""),
+    ("大甲媽祖遶境", "05-06", "05-15", [], "全台最盛大宗教遶境，9天8夜進香", ""),
+    ("台南白河蓮花節", "06-01", "07-15", ["台南"], "蓮花盛開，田野賞蓮超療癒", ""),
+    ("端午龍舟競渡", "06-19", "06-21", [], "各地龍舟賽、粽香飄飄", ""),
+    ("台東南島文化節", "08-01", "08-10", ["台東"], "原住民歌舞、部落文化，夏季必看", ""),
+    ("雞籠中元祭（基隆）", "08-28", "09-07", ["基隆"], "百年中元文化祭，全台最盛大普渡", ""),
+    ("艋舺青山王祭", "11-18", "11-20", ["台北"], "萬華年度大廟會，神轎遶境萬人空巷", ""),
+]
+
+
+def _get_upcoming_festival(city: str, today: "_dt.date | None" = None, lookahead: int = 14) -> tuple | None:
+    """回傳未來 lookahead 天內（含進行中）符合城市的節慶，格式 (icon, title, body, url)；無則 None。"""
+    import datetime as _dt2
+    if today is None:
+        today = _dt2.date.today()
+    year = today.year
+    for name, start_md, end_md, cities, desc, url in _FESTIVAL_CALENDAR:
+        try:
+            sm, sd = int(start_md[:2]), int(start_md[3:])
+            em, ed = int(end_md[:2]), int(end_md[3:])
+            start = _dt2.date(year, sm, sd)
+            end = _dt2.date(year, em, ed)
+        except (ValueError, IndexError):
+            continue
+        if end < today:
+            continue
+        days_until = (start - today).days
+        if days_until > lookahead:
+            continue
+        if cities and not any(c[:2] in city for c in cities):
+            continue
+        if days_until <= 0:
+            label = f"進行中 {start.month}/{start.day}–{end.month}/{end.day}"
+        elif days_until == 1:
+            label = "明天開始！"
+        else:
+            label = f"還有 {days_until} 天（{start.month}/{start.day}）"
+        search_url = url or f"https://www.google.com/search?q={name}"
+        return ("🎊", f"近期節慶｜{name}", f"{label}｜{desc}", search_url)
+    return None
+
+
 def _get_national_deal(city: str, user_id: str = "", seq: int = 0) -> tuple:
     """保留向後相容，實際由 _get_daily_deal 取代"""
     return _get_daily_deal(city, seq)
@@ -968,6 +1017,7 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
     deal_icon, deal_title, deal_body, deal_url = _get_daily_deal(city, seq=_seq)
     song_icon, song_title, song_body, song_url  = _get_today_song(seq=_seq)
     loc_icon,  loc_title,  loc_body,  loc_url   = _get_city_local_deal(city, user_id, seq=_seq)
+    _festival = _get_upcoming_festival(city, today)
 
     _challenge_pool = _DAILY_CHALLENGES[str(today.weekday())]
     _challenge = _challenge_pool[_seq % len(_challenge_pool)]
@@ -1048,6 +1098,8 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
                           loc_body, _link(loc_url, f"{loc_title} {city}")),
                      _row(song_icon, f"{song_title}｜{song_body[:25]}",
                           song_body, _link(song_url, song_body)),
+                     *([_row(_festival[0], _festival[1], _festival[2], _festival[3])]
+                       if _festival else []),
                      _row(_find_icon, f"新發現：{_find_title}",
                           _find_body,
                           "https://www.google.com/search?q=" + _up.quote(_find_title)),
