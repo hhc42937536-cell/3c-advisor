@@ -46,6 +46,7 @@ from modules.food     import (
     build_food_message, build_group_dining_message,
     build_specialty_shops, build_city_specialties, build_trending_specialty,
     build_trending_by_district, build_food_restaurant_flex,
+    build_food_real_restaurants,
     _set_user_loc, _get_user_loc,
     _ALL_CITIES, _STYLE_KEYWORDS, _ALL_FOOD_KEYWORDS,
 )
@@ -2173,11 +2174,26 @@ class handler(BaseHTTPRequestHandler):
                     if user_id:
                         _set_user_loc(user_id, lat, lon)
 
-                    # ── 食物定位意圖（來自「吃什麼」Quick Reply）──
+                    # ── 食物定位意圖（來自「吃什麼」Quick Reply 或「我附近的X」）──
                     _food_flag = _redis_get(f"food_locate:{user_id}")
                     print(f"[food_locate] flag={_food_flag!r} city={_parking_city} lat={lat:.4f} lon={lon:.4f}")
                     if _food_flag:
                         _redis_set(f"food_locate:{user_id}", "", ttl=1)  # 清除 flag
+                        # 若有待處理的食物類型（來自「我附近的飯糰」等），優先搜該類型
+                        _pending_style = _redis_get(f"food_style_pending:{user_id}")
+                        if _pending_style:
+                            _redis_set(f"food_style_pending:{user_id}", "", ttl=1)
+                            try:
+                                food_cards = build_food_real_restaurants(
+                                    _pending_style, _parking_city or "", user_id=user_id)
+                                reply_message(reply_token, food_cards)
+                            except Exception as _fe:
+                                print(f"[food_style_pending] failed: {_fe}")
+                                reply_message(reply_token, build_food_message(
+                                    f"吃什麼 {_parking_city}" if _parking_city else "吃什麼",
+                                    user_id=user_id))
+                            log_usage(user_id, "food", sub_action="附近意圖定位", city=_parking_city)
+                            continue
                         try:
                             food_cards = _build_post_parking_food(
                                 _parking_city or "", lat, lon, user_id=user_id, addr=_addr_raw)

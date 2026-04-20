@@ -2658,7 +2658,7 @@ def build_trending_by_district(district: str, city2: str, mode: str) -> list:
 
 
 _STYLE_GPLACE_KW: dict = {
-    "台式早餐": "台式早餐 豆漿店 蛋餅 燒餅油條",
+    "台式早餐": "台式早餐 飯糰 豆漿店 蛋餅 燒餅油條",
     "西式早餐": "西式早餐 班尼迪克蛋 法式吐司 歐姆蛋",
     "便當":   "便當 滷肉飯 雞腿便當 自助餐 排骨飯",
     "麵食":   "牛肉麵 乾麵 陽春麵 擔仔麵 米粉 麵線",
@@ -3180,6 +3180,22 @@ def build_food_message(text: str, user_id: str = None) -> list:
         if area_city:
             return build_food_menu(city=area_city, user_id=user_id or "")
         return _build_food_entry_region_picker(user_id or "")
+
+    # ── 附近意圖（我附近的X / 附近有X）→ 優先用 GPS；無 GPS 才要求分享位置 ──
+    _want_nearby = any(w in text_s for w in ["我附近", "附近的", "附近有", "附近找", "附近吃"])
+    if _want_nearby and not area:
+        u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
+        if u_lat and u_lon:
+            return build_food_real_restaurants(style, "", user_id or "")
+        # 沒有 GPS → 請求分享位置，並記住目標食物類型
+        if user_id:
+            _redis_set(f"food_locate:{user_id}", "1", ttl=180)
+            _redis_set(f"food_style_pending:{user_id}", style, ttl=180)
+        return [{"type": "text",
+                 "text": f"📍 找「{style}」附近的店，需要你分享一下位置！",
+                 "quickReply": {"items": [
+                     {"type": "action", "action": {"type": "location", "label": "📍 分享我的位置"}},
+                 ]}}]
 
     # ── 有風格 + 有城市 → 直接推薦 ──
     if area:
