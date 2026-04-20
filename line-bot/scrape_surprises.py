@@ -16,7 +16,7 @@
 import sys, io, json, os, re, time
 import urllib.request
 import urllib.error
-from datetime import datetime
+from datetime import datetime, timedelta
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
@@ -24,8 +24,37 @@ OUTPUT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "surprise
 
 
 def scrape_apple_music_chart(limit: int = 15) -> list[dict]:
-    """已棄用，由 scrape_songs_via_serper 取代。"""
-    return []
+    """Apple Music 台灣 most-played 榜，只保留近 180 天內發行的新歌。"""
+    print("[Apple Music] 開始抓台灣排行榜...")
+    url = "https://rss.applemarketingtools.com/api/v2/tw/music/most-played/50/songs.json"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=12) as r:
+            data = json.loads(r.read().decode("utf-8"))
+        cutoff = datetime.now() - timedelta(days=180)
+        songs = []
+        for entry in data.get("feed", {}).get("results", []):
+            release_str = entry.get("releaseDate", "")
+            try:
+                release_dt = datetime.fromisoformat(release_str)
+            except ValueError:
+                continue
+            if release_dt < cutoff:
+                continue
+            name = entry.get("name", "").strip()
+            artist = entry.get("artistName", "").strip()
+            if not name or not artist:
+                continue
+            if len(artist) > 20:
+                artist = artist[:18] + "…"
+            songs.append({"name": name, "artist": artist})
+            if len(songs) >= limit:
+                break
+        print(f"[Apple Music] 抓到 {len(songs)} 首新歌（近180天）")
+        return songs
+    except Exception as e:
+        print(f"[Apple Music] 錯誤: {e}")
+        return []
 
 
 def scrape_kkbox_new_songs(limit: int = 15) -> list[dict]:
