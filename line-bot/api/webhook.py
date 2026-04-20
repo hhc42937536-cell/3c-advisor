@@ -2183,9 +2183,13 @@ class handler(BaseHTTPRequestHandler):
                         _pending_style = _redis_get(f"food_style_pending:{user_id}")
                         if _pending_style:
                             _redis_set(f"food_style_pending:{user_id}", "", ttl=1)
+                            _pending_kw = _redis_get(f"food_kw_pending:{user_id}") or ""
+                            if _pending_kw:
+                                _redis_set(f"food_kw_pending:{user_id}", "", ttl=1)
                             try:
                                 food_cards = build_food_real_restaurants(
-                                    _pending_style, _parking_city or "", user_id=user_id)
+                                    _pending_style, _parking_city or "", user_id=user_id,
+                                    specific_kw=_pending_kw)
                                 reply_message(reply_token, food_cards)
                             except Exception as _fe:
                                 print(f"[food_style_pending] failed: {_fe}")

@@ -2620,50 +2620,76 @@ def build_trending_by_district(district: str, city2: str, mode: str) -> list:
 
     bubbles: list[dict] = []
 
-    # ── 連鎖品牌去重（去除同名分店洗版）──────────────────────────────────────
-    def _brand_key(name: str) -> str:
-        """取品牌名稱前綴（去除店/分店/城市後綴），用於去重"""
-        # 去除括號及後半（奕順軒（宜蘭店）→ 奕順軒）
-        clean = re.sub(r'[（(【\[].*', '', name).strip()
-        # 去除尾端「XX店/館/分店」（奕順軒宜蘭店 → 奕順軒）
-        clean = re.sub(r'[\u4e00-\u9fff]{1,4}[店館分舖號]$', '', clean).strip()
-        return clean[:5] if clean else name[:5]
+    # ── 連鎖品牌去重（place_id 主要 + brand_key 次要）─────────────────────────
+    def _normalize_brand(name: str) -> str:
+        """取品牌純中文前3字，用於連鎖分店去重"""
+        for sep in ['|', '｜', '·', '•', '-', '－']:
+            name = name.split(sep)[0]
+        name = re.sub(r'[（(【\[].*', '', name)
+        # 去城市後綴（游饗·創意中式定食 宜蘭美食 → 游饗·創意中式定食）
+        name = re.sub(
+            r'\s*(?:台北|新北|基隆|桃園|新竹|苗栗|台中|彰化|南投|雲林'
+            r'|嘉義|台南|高雄|屏東|宜蘭|花蓮|台東|澎湖|金門|連江).*', '', name)
+        name = re.sub(r'[\u4e00-\u9fff]{1,4}[店館分舖號]$', '', name).strip()
+        cjk = re.sub(r'[^\u4e00-\u9fff]', '', name)  # 只留漢字
+        return cjk[:3]
 
+    seen_pids: set[str] = set()
     seen_brands: set[str] = set()
 
     def _add_if_new_brand(p: dict, subtitle: str) -> None:
-        bk = _brand_key(p.get("name", ""))
-        if bk in seen_brands:
+        pid = p.get("place_id", "")
+        bk = _normalize_brand(p.get("name", ""))
+        if (pid and pid in seen_pids) or (bk and bk in seen_brands):
             return
-        seen_brands.add(bk)
+        if pid:
+            seen_pids.add(pid)
+        if bk:
+            seen_brands.add(bk)
         bubbles.append(_build_restaurant_bubble(p, None, None, city2, set(), subtitle=subtitle))
 
-    # ── Google Places ────────────────────────────────────────────────────────
-    # 伴手禮：指定「老店 禮盒 名產館」讓 Places 偏向實體特產店而非餐廳
-    kw = (f"{district} 伴手禮 老店 禮盒 名產館"
-          if is_souvenir else f"{district} 人氣 必吃 新開")
-    # 非伴手禮排除詞（避免健康餐盒/滷味/冰品混入伴手禮清單）
+    # ── 1. Serper 預取快取（優先：結果等同 Google 搜尋）────────────────────────
+    _serper_cache_file = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "trending_stores_cache.json"
+    )
+    try:
+        with open(_serper_cache_file, encoding="utf-8") as _sf:
+            _sc = json.load(_sf)
+        _sc_mode = "souvenir" if is_souvenir else "trending"
+        # 匹配城市（district 可能是行政區，city2 是縣市）
+        _sc_stores = (_sc.get("by_city", {}).get(district, {}).get(_sc_mode)
+                      or _sc.get("by_city", {}).get(city2, {}).get(_sc_mode)
+                      or [])
+        for s in _sc_stores:
+            _add_if_new_brand(s, title)
+    except Exception:
+        pass  # 快取不存在時靜默降級到 Google Places
+
+    # ── 2. Google Places 補充（Serper 不足 4 筆時才呼叫）────────────────────
     _souvenir_exclude = {"健康餐", "便當", "滷味", "鹹水雞", "剉冰", "冰品",
                          "火鍋", "拉麵", "壽司", "健身", "輕食"}
-    cache_key = f"trending_district:{mode}:{district}"
-    cached = _redis_get(cache_key)
-    places: list = []
-    if cached:
-        places = json.loads(cached) if isinstance(cached, str) else cached
-    elif GOOGLE_PLACES_API_KEY:
-        raw = _text_search_places(kw, max_results=12)
-        if is_souvenir:
-            raw = [p for p in raw
-                   if not any(ex in p.get("name", "") for ex in _souvenir_exclude)]
-        filtered = [p for p in raw if (p.get("rating") or 0) >= 3.8]
-        places = (filtered or raw)[:8]
-        if places:
-            _redis_set(cache_key, json.dumps(places), ttl=3 * 86400)
+    if len(bubbles) < 4:
+        kw = (f"{district} 伴手禮 老店 禮盒 名產館"
+              if is_souvenir else f"{district} 人氣 必吃 新開")
+        cache_key = f"trending_district:{mode}:{district}"
+        cached = _redis_get(cache_key)
+        places: list = []
+        if cached:
+            places = json.loads(cached) if isinstance(cached, str) else cached
+        elif GOOGLE_PLACES_API_KEY:
+            raw = _text_search_places(kw, max_results=12)
+            if is_souvenir:
+                raw = [p for p in raw
+                       if not any(ex in p.get("name", "") for ex in _souvenir_exclude)]
+            filtered = [p for p in raw if (p.get("rating") or 0) >= 3.8]
+            places = (filtered or raw)[:8]
+            if places:
+                _redis_set(cache_key, json.dumps(places), ttl=3 * 86400)
+        for p in places:
+            _add_if_new_brand(p, title)
 
-    for p in places:
-        _add_if_new_brand(p, title)
-
-    # ── restaurant_db 補充（Places 驗證過的店，最多 5 筆）────────────────────
+    # ── 3. restaurant_db 補充（Places 驗證過的店，最多 5 筆）─────────────────
     db_stores = _get_db_stores(city2, district=district, mode=mode)
     if not db_stores:
         db_stores = _get_db_stores(city2, mode=mode)
@@ -2714,10 +2740,13 @@ def _filter_by_rating(places: list, prefer: float = 4.0, fallback: float = 3.8) 
     return high if len(high) >= 5 else [p for p in places if (p.get("rating") or 0) >= fallback]
 
 
-def build_food_real_restaurants(style: str, city: str, user_id: str = "") -> list:
+def build_food_real_restaurants(style: str, city: str, user_id: str = "",
+                                specific_kw: str = "") -> list:
     """使用者明確指定食物類型 → Google Places 搜附近真實店家（在地優先、評分 ≥4.0）"""
     city2 = city[:2] if city else ""
-    kw = _STYLE_GPLACE_KW.get(style, style)
+    base_kw = _STYLE_GPLACE_KW.get(style, style)
+    # 若有更具體的食物詞（如「飯糰」），讓它成為搜尋主角，避免整類詞蓋掉它
+    kw = f"{specific_kw} {base_kw}" if specific_kw and specific_kw not in (style,) else base_kw
     icon = _STYLE_ICON.get(style, "🍽️")
     u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
 
@@ -2736,19 +2765,27 @@ def build_food_real_restaurants(style: str, city: str, user_id: str = "") -> lis
     if not places:
         return build_food_flex(style, city)  # fallback 靜態建議
 
-    # 連鎖品牌去重（同前綴品牌只保留最近/最高分那筆）
-    def _brand_key_r(name: str) -> str:
-        clean = re.sub(r'[（(【\[].*', '', name).strip()
-        clean = re.sub(r'[\u4e00-\u9fff]{1,4}[店館分舖號]$', '', clean).strip()
-        return clean[:5] if clean else name[:5]
+    # 連鎖品牌去重（place_id 主要 + 純中文前3字 次要）
+    def _nb(name: str) -> str:
+        for sep in ['|', '｜', '·', '•', '-', '－']:
+            name = name.split(sep)[0]
+        name = re.sub(r'[（(【\[].*|[\s\S]*?(?=[\u4e00-\u9fff])', '', name, count=1)
+        cjk = re.sub(r'[^\u4e00-\u9fff]', '', name)
+        return cjk[:3]
 
-    seen_brands_r: set[str] = set()
+    seen_pids_r: set[str] = set()
+    seen_bk_r: set[str] = set()
     deduped: list = []
     for p in places:
-        bk = _brand_key_r(p.get("name", ""))
-        if bk not in seen_brands_r:
-            seen_brands_r.add(bk)
-            deduped.append(p)
+        pid = p.get("place_id", "")
+        bk = _nb(p.get("name", ""))
+        if (pid and pid in seen_pids_r) or (bk and bk in seen_bk_r):
+            continue
+        if pid:
+            seen_pids_r.add(pid)
+        if bk:
+            seen_bk_r.add(bk)
+        deduped.append(p)
 
     all_places = deduped[:12]  # LINE carousel 上限 12
     page1, page2 = all_places[:8], all_places[8:]
@@ -3083,11 +3120,18 @@ def build_food_message(text: str, user_id: str = None) -> list:
         )
         return build_food_flex(_random.choice(_rand_pool), area_city)
 
-    # ── 解析食物類型 ──
+    # ── 解析食物類型 + 記錄具體關鍵字（供 GPS 搜尋用）──
     style = ""
+    specific_kw = ""   # 比 style 更具體的食物詞（如「飯糰」vs「台式早餐」）
     for cat, kws in _STYLE_KEYWORDS.items():
-        if any(w in text_s for w in kws):
-            style = cat
+        for kw_word in kws:
+            if kw_word in text_s:
+                style = cat
+                # 具體詞：不等於分類名稱本身，且長度 ≥ 2 才有意義
+                if kw_word != cat and len(kw_word) >= 2:
+                    specific_kw = kw_word
+                break
+        if style:
             break
     if not style:
         style = "便當"
@@ -3222,13 +3266,17 @@ def build_food_message(text: str, user_id: str = None) -> list:
     if _want_nearby and not area:
         u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
         if u_lat and u_lon:
-            return build_food_real_restaurants(style, "", user_id or "")
-        # 沒有 GPS → 請求分享位置，並記住目標食物類型
+            # specific_kw 讓「飯糰」直接搜飯糰，而非豆漿店
+            return build_food_real_restaurants(style, "", user_id or "", specific_kw=specific_kw)
+        # 沒有 GPS → 請求分享位置，並記住目標食物類型 + 具體詞
         if user_id:
             _redis_set(f"food_locate:{user_id}", "1", ttl=180)
             _redis_set(f"food_style_pending:{user_id}", style, ttl=180)
+            if specific_kw:
+                _redis_set(f"food_kw_pending:{user_id}", specific_kw, ttl=180)
+        label = specific_kw or style
         return [{"type": "text",
-                 "text": f"📍 找「{style}」附近的店，需要你分享一下位置！",
+                 "text": f"📍 找「{label}」附近的店，需要你分享一下位置！",
                  "quickReply": {"items": [
                      {"type": "action", "action": {"type": "location", "label": "📍 分享我的位置"}},
                  ]}}]
