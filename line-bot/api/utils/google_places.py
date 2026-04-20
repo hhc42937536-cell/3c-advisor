@@ -83,6 +83,14 @@ def text_search(query: str, max_results: int = 5) -> list:
         return []
 
 
+def geocode_place(query: str) -> tuple[float | None, float | None]:
+    """用 Text Search 把地標名稱轉成 (lat, lng)，失敗回傳 (None, None)"""
+    results = text_search(query, max_results=1)
+    if results and results[0].get("lat"):
+        return results[0]["lat"], results[0]["lng"]
+    return None, None
+
+
 def photo_url(photo_ref: str, max_width: int = 400) -> str:
     """組合 Google Places Photo URL"""
     if not photo_ref or not GOOGLE_PLACES_API_KEY:

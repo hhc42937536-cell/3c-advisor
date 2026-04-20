@@ -14,7 +14,7 @@ import urllib.request
 # ── 外部工具（utils 模組）──
 from utils.redis import redis_get as _redis_get, redis_set as _redis_set
 from utils.line_api import push_message
-from utils.google_places import nearby_places as _nearby_places
+from utils.google_places import nearby_places as _nearby_places, geocode_place as _geocode_place
 
 # ── 環境變數 ──
 ADMIN_USER_ID        = os.environ.get("ADMIN_USER_ID", "")
@@ -2741,13 +2741,19 @@ def _filter_by_rating(places: list, prefer: float = 4.0, fallback: float = 3.8) 
 
 
 def build_food_real_restaurants(style: str, city: str, user_id: str = "",
-                                specific_kw: str = "") -> list:
+                                specific_kw: str = "",
+                                _lat: float | None = None,
+                                _lng: float | None = None) -> list:
     """使用者明確指定食物類型 → Google Places 搜附近真實店家（在地優先、評分 ≥4.0）"""
     city2 = city[:2] if city else ""
     # specific_kw（如「飯糰」）直接當關鍵字，複合詞會讓 Places API 回傳極少結果
     kw = specific_kw if specific_kw else _STYLE_GPLACE_KW.get(style, style)
     icon = _STYLE_ICON.get(style, "🍽️")
-    u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
+    # _lat/_lng 可由地標 geocode 覆寫，否則從 Redis 取用戶 GPS
+    if _lat and _lng:
+        u_lat, u_lon = _lat, _lng
+    else:
+        u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
 
     if u_lat and u_lon and GOOGLE_PLACES_API_KEY:
         raw = _nearby_places(u_lat, u_lon, radius=2000, keyword=kw)
@@ -3259,6 +3265,23 @@ def build_food_message(text: str, user_id: str = None) -> list:
         if area_city:
             return build_food_menu(city=area_city, user_id=user_id or "")
         return _build_food_entry_region_picker(user_id or "")
+
+    # ── 地標附近意圖（「台電宜蘭附近的美食」「台北車站附近的拉麵」）──────────
+    # 偵測 {2-10字地標}附近，且地標不是「我」也不是純城市名
+    _landmark_m = re.search(r'^(.{2,12}?)附近', text_s)
+    if _landmark_m:
+        _lm_raw = _landmark_m.group(1).strip()
+        _city_set = {c[:2] for c in _ALL_CITIES}
+        _is_me = _lm_raw == "我"
+        _is_city_only = _lm_raw[:2] in _city_set and len(_lm_raw) <= 2
+        if not _is_me and not _is_city_only:
+            _lm_lat, _lm_lng = _geocode_place(_lm_raw)
+            if _lm_lat and _lm_lng:
+                food_kw = specific_kw or (style if style != "便當" else "") or "美食"
+                _lm_style = style if style else "美食"
+                return build_food_real_restaurants(
+                    _lm_style, area_city, user_id or "",
+                    specific_kw=food_kw, _lat=_lm_lat, _lng=_lm_lng)
 
     # ── 附近意圖（我附近的X / 附近有X）→ 永遠要求重新分享位置取得當下座標 ──
     # 不用快取座標或 saved city（避免換地點後拿到舊位置）
