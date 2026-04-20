@@ -3261,14 +3261,10 @@ def build_food_message(text: str, user_id: str = None) -> list:
             return build_food_menu(city=area_city, user_id=user_id or "")
         return _build_food_entry_region_picker(user_id or "")
 
-    # ── 附近意圖（我附近的X / 附近有X）→ 優先用 GPS；無 GPS 才要求分享位置 ──
+    # ── 附近意圖（我附近的X / 附近有X）→ 永遠要求重新分享位置取得當下座標 ──
+    # 不使用快取座標（TTL 24h），避免使用者換地點後拿到舊位置的結果
     _want_nearby = any(w in text_s for w in ["我附近", "附近的", "附近有", "附近找", "附近吃"])
     if _want_nearby and not area:
-        u_lat, u_lon = _get_user_loc(user_id) if user_id else (None, None)
-        if u_lat and u_lon:
-            # specific_kw 讓「飯糰」直接搜飯糰，而非豆漿店
-            return build_food_real_restaurants(style, "", user_id or "", specific_kw=specific_kw)
-        # 沒有 GPS → 請求分享位置，並記住目標食物類型 + 具體詞
         if user_id:
             _redis_set(f"food_locate:{user_id}", "1", ttl=180)
             _redis_set(f"food_style_pending:{user_id}", style, ttl=180)
