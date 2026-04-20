@@ -2626,10 +2626,10 @@ def build_trending_by_district(district: str, city2: str, mode: str) -> list:
         for sep in ['|', '｜', '·', '•', '-', '－']:
             name = name.split(sep)[0]
         name = re.sub(r'[（(【\[].*', '', name)
-        # 去城市後綴（游饗·創意中式定食 宜蘭美食 → 游饗·創意中式定食）
+        # 去城市後綴（須有空白前置，避免「宜蘭餅」的「宜蘭」被誤刪）
         name = re.sub(
-            r'\s*(?:台北|新北|基隆|桃園|新竹|苗栗|台中|彰化|南投|雲林'
-            r'|嘉義|台南|高雄|屏東|宜蘭|花蓮|台東|澎湖|金門|連江).*', '', name)
+            r'\s+(?:台北|新北|基隆|桃園|新竹|苗栗|台中|彰化|南投|雲林'
+            r'|嘉義|台南|高雄|屏東|宜蘭|花蓮|台東|澎湖|金門|連江)\S*', '', name)
         name = re.sub(r'[\u4e00-\u9fff]{1,4}[店館分舖號]$', '', name).strip()
         cjk = re.sub(r'[^\u4e00-\u9fff]', '', name)  # 只留漢字
         return cjk[:3]
@@ -2777,7 +2777,8 @@ def build_food_real_restaurants(style: str, city: str, user_id: str = "",
     def _nb(name: str) -> str:
         for sep in ['|', '｜', '·', '•', '-', '－']:
             name = name.split(sep)[0]
-        name = re.sub(r'[（(【\[].*|[\s\S]*?(?=[\u4e00-\u9fff])', '', name, count=1)
+        name = re.sub(r'[（(【\[].*', '', name)
+        name = re.sub(r'[\u4e00-\u9fff]{1,4}[店館分舖號]$', '', name).strip()
         cjk = re.sub(r'[^\u4e00-\u9fff]', '', name)
         return cjk[:3]
 
