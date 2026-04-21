@@ -4,6 +4,7 @@ from modules.money_credit_cards import build_credit_card_result
 from modules.money_rates import build_exchange_rate
 from modules.money_rates import build_oil_price
 from modules.money_spending import build_spending_decision
+from modules.money_spending_cards import _spend_overspent
 
 import re
 
