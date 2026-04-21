@@ -72,9 +72,9 @@ def build_morning_summary(
 
     if wx_result.get("ok"):
         wx = wx_result
-        wx_icon = wx_icon(wx["wx"])
+        wx_icon_str = wx_icon(wx["wx"])
         pop = wx["pop"]
-        wx_main = f"{wx_icon} {wx['wx']}　{wx['min_t']}–{wx['max_t']}°C"
+        wx_main = f"{wx_icon_str} {wx['wx']}　{wx['min_t']}–{wx['max_t']}°C"
         if pop >= 70:
             wx_hint = "☂️ 降雨機率高，記得帶傘！"
         elif pop >= 40:
