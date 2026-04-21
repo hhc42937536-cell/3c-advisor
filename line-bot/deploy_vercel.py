@@ -184,8 +184,14 @@ def deploy():
             state = status_result.get("readyState", "UNKNOWN")
             print(f"  狀態: {state} ({attempt+1}/20)...")
             if state == "READY":
-                print(f"\n✅ 部署成功！")
-                print(f"   網址: https://{deploy_url}")
+                # 設定 production alias
+                try:
+                    alias_body = {"alias": "3c-advisor.vercel.app"}
+                    api_request("POST", f"/v2/deployments/{deploy_id}/aliases", alias_body)
+                    print(f"\n✅ 部署成功並已更新 production alias！")
+                except Exception as ae:
+                    print(f"\n✅ 部署成功！（alias 更新失敗: {ae}）")
+                print(f"   網址: https://3c-advisor.vercel.app")
                 return True
             elif state in ("ERROR", "CANCELED"):
                 print(f"\n❌ 部署失敗: {state}")
