@@ -1386,6 +1386,10 @@ class handler(BaseHTTPRequestHandler):
                             reply_message(reply_token, [{"type": "text", "text": "早安！系統忙碌中，請稍後再試 🙏"}])
                         continue
 
+                    # 停車意圖：清除食物定位旗標，避免分享位置時被誤判為食物查詢
+                    if any(w in user_text for w in ["找車位", "停車", "車位"]):
+                        _redis_set(f"food_locate:{user_id}", "", ttl=1)
+
                     # 判斷功能類別（用於 log，不影響路由）
                     _feature, _sub = _detect_feature(user_text)
 
