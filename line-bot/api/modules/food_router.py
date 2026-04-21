@@ -56,6 +56,10 @@ def build_food_message(
             region = r
             break
 
+    # ── 目的地美食查詢（忽略已存城市，讓用戶重新選擇目的地）──
+    if "目的地美食" in text_s and "我要分享位置找美食" not in text_s:
+        return build_food_entry_region_picker(user_id or "")
+
     # ── 必比登推介 ──
     if "必比登" in text_s or "米其林" in text_s:
         return build_bib_gourmand_flex(area)

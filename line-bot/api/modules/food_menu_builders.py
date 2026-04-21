@@ -38,6 +38,8 @@ def build_food_menu(city: str = "") -> list:
                                 f"吃什麼 隨機{suf}", "#27AE60", "#1A6E35"),
                          _btn3d("📍 分享位置，推薦附近美食",
                                 "📍 我要分享位置找美食", "#1565C0", "#0A3D8A"),
+                         _btn3d("🗺️ 目的地美食查詢",
+                                "目的地美食", "#00695C", "#003D36"),
                          {"type": "separator", "margin": "md", "color": "#E0E0E0"},
                          {"type": "box", "layout": "horizontal", "spacing": "sm",
                           "contents": [
