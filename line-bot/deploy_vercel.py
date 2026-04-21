@@ -45,22 +45,25 @@ VERCEL_TEAM_ID    = os.environ.get("VERCEL_TEAM_ID", _tk.get("VERCEL_TEAM_ID", "
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 要上傳的檔案清單（相對於 line-bot 目錄）
-DEPLOY_FILES = [
-    "api/webhook.py",
-    "requirements.txt",
-    "vercel.json",
-    "pyproject.toml",
-    "accupass_cache.json",
-    "restaurant_cache.json",
-    "liff/index.html",
-    "liff/images/ramen.jpg",
-    "liff/images/calendar.jpg",
-    "liff/images/coin.jpg",
-    "liff/images/dumbbell.jpg",
-    "liff/images/car.jpg",
-    "liff/images/wrench.jpg",
-]
+def _collect_deploy_files() -> list:
+    """自動掃描所有需要部署的檔案"""
+    files = []
+    # api/ 下所有 .py 和 .json（排除 __pycache__）
+    for root, dirs, fnames in os.walk(os.path.join(BASE_DIR, "api")):
+        dirs[:] = [d for d in dirs if d != "__pycache__"]
+        for f in fnames:
+            if f.endswith((".py", ".json")):
+                abs_path = os.path.join(root, f)
+                rel_path = os.path.relpath(abs_path, BASE_DIR).replace("\\", "/")
+                files.append(rel_path)
+    # 根目錄固定檔
+    for f in ["requirements.txt", "vercel.json", "pyproject.toml",
+              "accupass_cache.json", "restaurant_cache.json", "surprise_cache.json"]:
+        if os.path.exists(os.path.join(BASE_DIR, f)):
+            files.append(f)
+    return files
+
+DEPLOY_FILES = _collect_deploy_files()
 
 
 def api_request(method: str, path: str, body=None) -> dict:
