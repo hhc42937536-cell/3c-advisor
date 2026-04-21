@@ -21,7 +21,7 @@ from modules.safety_fraud import build_fraud_trends
 from modules.safety_legal import LEGAL_QA
 from modules.safety_legal import build_legal_answer
 from modules.safety_legal import build_legal_guide_intro
-from modules.safety_menu import build_tools_menu
+from modules.safety_menu import build_tools_menu, build_life_tools_menu
 
 
 # ════════════════════════════════════════════════
