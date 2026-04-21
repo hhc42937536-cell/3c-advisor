@@ -24,10 +24,24 @@ import io
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-# ── 設定（優先讀環境變數，否則用下方預設值）──────────
-VERCEL_TOKEN = os.environ.get("VERCEL_TOKEN", "")
-VERCEL_PROJECT_ID = os.environ.get("VERCEL_PROJECT_ID", "")
-VERCEL_TEAM_ID = os.environ.get("VERCEL_TEAM_ID", "")  # 個人帳號留空
+# ── Token 自動讀取（env var → 共用 token 檔 → 手動輸入）──
+def _load_tokens() -> dict:
+    data = {}
+    token_file = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+        ".tokens.json",
+    )
+    if os.path.exists(token_file):
+        try:
+            data = json.loads(open(token_file, encoding="utf-8").read())
+        except Exception:
+            pass
+    return data
+
+_tk = _load_tokens()
+VERCEL_TOKEN      = os.environ.get("VERCEL_TOKEN", _tk.get("VERCEL_TOKEN", ""))
+VERCEL_PROJECT_ID = os.environ.get("VERCEL_PROJECT_ID", _tk.get("VERCEL_PROJECT_ID_生活優轉", ""))
+VERCEL_TEAM_ID    = os.environ.get("VERCEL_TEAM_ID", _tk.get("VERCEL_TEAM_ID", ""))
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 

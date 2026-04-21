@@ -35,19 +35,32 @@ from utils.line_api    import broadcast_message as _broadcast_message
 from utils.line_api    import verify_signature
 from utils.supabase    import log_usage
 from utils.supabase    import record_eaten as _record_eaten, get_eaten as _get_eaten
-from utils.redis       import redis_get as _redis_get, redis_set as _redis_set, redis_lpush as _redis_lpush
+from utils.redis       import redis_get as _redis_get, redis_set as _redis_set
 from utils.google_places import nearby_places as _nearby_places_google
 from utils.google_places import text_search as _text_search_places
 from utils.google_places import photo_url as _places_photo_url
 from utils.intent      import classify_intent
+from handlers.static_messages import (
+    build_compare_price_message,
+    build_purchase_guide_message,
+    build_welcome_message,
+)
+from handlers.text_routes import route_static_text_sections
+from handlers.precise_text_routes import maybe_route_precise_text
+from handlers.wizard_routes import route_wizard_state
+from handlers.intent_routes import route_intent_dispatch
+from handlers.fallback_routes import route_device_budget_fallback
+from handlers.feedback_routes import (
+    build_feedback_intro,
+    handle_food_feedback as _handle_food_feedback,
+    handle_general_report as _handle_general_report,
+    handle_user_suggestion as _handle_user_suggestion,
+)
 
 # ─── modules ───────────────────────────────────────────────
 from modules.food     import (
     build_food_message, build_group_dining_message,
-    build_specialty_shops, build_city_specialties, build_trending_specialty,
-    build_trending_by_district, build_food_restaurant_flex,
-    build_food_real_restaurants,
-    _set_user_loc, _get_user_loc,
+    build_specialty_shops, build_city_specialties,
     _ALL_CITIES, _STYLE_KEYWORDS, _ALL_FOOD_KEYWORDS,
 )
 from modules.weather  import (
@@ -55,8 +68,6 @@ from modules.weather  import (
     build_morning_summary, _fetch_cwa_weather,
     _fetch_quick_oil, _fetch_quick_rates,
     _set_user_city, _get_user_city, _build_morning_city_picker,
-    build_switch_city_picker,
-    build_relax_message, build_daily_topic,
 )
 from modules.health   import build_health_message, build_mood_support, parse_height_weight
 from modules.money    import (
@@ -79,474 +90,22 @@ from modules.parking  import build_parking_flex, _build_post_parking_food
 
 
 # ── 使用者回饋機制 ──
-_FEEDBACK_LOG = []  # 暫存在記憶體，定期匯出
-
-
 def handle_food_feedback(text: str, user_id: str = "") -> list:
-    """處理使用者對餐廳的回饋（好吃/倒閉），並推播通知開發者"""
-    import datetime as _dt
-    ts = (_dt.datetime.utcnow() + _dt.timedelta(hours=8)).strftime("%Y-%m-%d %H:%M")
-
-    if "好吃" in text:
-        shop = text.replace("回報", "").replace("好吃", "").strip()
-        _FEEDBACK_LOG.append({"shop": shop, "type": "good", "time": ts})
-        if ADMIN_USER_ID:
-            push_message(ADMIN_USER_ID, [{"type": "text",
-                "text": f"👍 使用者回報好吃\n店家：{shop}\n時間：{ts}\nUID：{user_id[:10]}..."}])
-        return [{"type": "text", "text":
-                 f"👍 感謝推薦！已記錄「{shop}」為好吃店家 🎉\n"
-                 f"你的回饋會幫助其他使用者找到更好的餐廳！"}]
-    elif "倒閉" in text or "歇業" in text:
-        shop = text.replace("回報", "").replace("倒閉", "").replace("歇業", "").strip()
-        _FEEDBACK_LOG.append({"shop": shop, "type": "closed", "time": ts})
-        if ADMIN_USER_ID:
-            push_message(ADMIN_USER_ID, [{"type": "text",
-                "text": f"❌ 使用者回報歇業\n店家：{shop}\n時間：{ts}\nUID：{user_id[:10]}..."}])
-        return [{"type": "text", "text":
-                 f"❌ 感謝回報！已標記「{shop}」可能歇業 📝\n"
-                 f"我們會在下次更新時確認並移除，謝謝你！"}]
-    return []
+    return _handle_food_feedback(text, user_id, admin_user_id=ADMIN_USER_ID, push_message=push_message)
 
 
-# ── 通用回報（bug / 功能異常 / 錯誤）──
 def handle_general_report(text: str, user_id: str = "") -> list:
-    """處理通用回報，推播通知開發者"""
-    import datetime as _dt
-    ts = (_dt.datetime.utcnow() + _dt.timedelta(hours=8)).strftime("%Y-%m-%d %H:%M")
-
-    content = text.replace("回報", "").strip()
-    if len(content) < 2:
-        return build_feedback_intro()
-
-    # 自動分類
-    if any(w in content for w in ["bug", "壞", "錯誤", "失敗", "沒反應", "當掉", "跑不出來", "無法", "不能"]):
-        tag = "🐛 Bug"
-    elif any(w in content for w in ["慢", "卡", "lag", "等很久", "超時", "timeout"]):
-        tag = "🐌 效能"
-    else:
-        tag = "📋 回報"
-
-    # 推播通知開發者
-    if ADMIN_USER_ID:
-        push_message(ADMIN_USER_ID, [{"type": "flex", "altText": f"{tag} 使用者回報",
-            "contents": {
-                "type": "bubble", "size": "mega",
-                "header": {"type": "box", "layout": "vertical",
-                           "backgroundColor": "#E74C3C", "paddingAll": "16px",
-                           "contents": [
-                               {"type": "text", "text": f"{tag} 使用者回報",
-                                "color": "#FFFFFF", "size": "lg", "weight": "bold"}
-                           ]},
-                "body": {"type": "box", "layout": "vertical", "spacing": "md",
-                         "paddingAll": "20px",
-                         "contents": [
-                             {"type": "text", "text": content,
-                              "wrap": True, "size": "md", "weight": "bold"},
-                             {"type": "separator", "margin": "md"},
-                             {"type": "box", "layout": "vertical", "margin": "md",
-                              "spacing": "sm", "contents": [
-                                  {"type": "text", "size": "xs", "color": "#888888",
-                                   "text": f"👤 {user_id[:10]}..."},
-                                  {"type": "text", "size": "xs", "color": "#888888",
-                                   "text": f"🕐 {ts}"},
-                              ]},
-                         ]},
-            }}])
-
-    return [{"type": "text", "text":
-             f"📋 收到你的回報！\n\n"
-             f"「{content}」\n\n"
-             f"已通知開發者，會盡快處理 🙏"}]
-
-
-# ── 使用者功能建議 / 許願回饋 ──
-def build_feedback_intro() -> list:
-    """顯示回饋/許願引導卡片"""
-    return [{"type": "flex", "altText": "💡 許願 & 回報",
-             "contents": {
-                 "type": "bubble", "size": "mega",
-                 "header": {"type": "box", "layout": "vertical",
-                            "backgroundColor": "#6C5CE7", "paddingAll": "16px",
-                            "contents": [
-                                {"type": "text", "text": "💡 許願池 & 問題回報",
-                                 "color": "#FFFFFF", "size": "lg", "weight": "bold"}
-                            ]},
-                 "body": {"type": "box", "layout": "vertical", "spacing": "md",
-                          "paddingAll": "20px",
-                          "contents": [
-                              {"type": "text", "text": "想要新功能？遇到問題？都可以告訴我！",
-                               "wrap": True, "size": "sm", "color": "#555555"},
-                              {"type": "separator", "margin": "md"},
-                              {"type": "text", "text": "✨ 許願（想要新功能）", "weight": "bold",
-                               "size": "sm", "margin": "md", "color": "#6C5CE7"},
-                              {"type": "text", "wrap": True, "size": "xs", "color": "#888888",
-                               "text": "建議 希望有記帳功能\n建議 天氣可以顯示紫外線"},
-                              {"type": "text", "text": "🐛 回報（功能異常）", "weight": "bold",
-                               "size": "sm", "margin": "md", "color": "#E74C3C"},
-                              {"type": "text", "wrap": True, "size": "xs", "color": "#888888",
-                               "text": "回報 吃什麼沒反應\n回報 天氣顯示錯誤"},
-                          ]},
-             }}]
+    return _handle_general_report(text, user_id, admin_user_id=ADMIN_USER_ID, push_message=push_message)
 
 
 def handle_user_suggestion(text: str, user_id: str, display_name: str = "") -> list:
-    """處理使用者功能建議，推播通知給開發者"""
-    import datetime as _dt
-    ts = (_dt.datetime.utcnow() + _dt.timedelta(hours=8)).strftime("%Y-%m-%d %H:%M")
-
-    # 提取建議內容
-    content = text
-    for kw in ["建議", "許願", "功能建議", "我想要", "希望有", "回饋"]:
-        content = content.replace(kw, "").strip()
-
-    if len(content) < 2:
-        return build_feedback_intro()
-
-    # 回覆使用者
-    reply = [{"type": "text", "text":
-              f"💡 收到你的建議！\n\n"
-              f"「{content}」\n\n"
-              f"已送達開發者，感謝你讓生活優轉變得更好 🙏"}]
-
-    # 推播通知給開發者
-    if ADMIN_USER_ID:
-        name_str = f"（{display_name}）" if display_name else ""
-        push_message(ADMIN_USER_ID, [{"type": "flex", "altText": "💡 新功能建議",
-            "contents": {
-                "type": "bubble", "size": "mega",
-                "header": {"type": "box", "layout": "vertical",
-                           "backgroundColor": "#6C5CE7", "paddingAll": "16px",
-                           "contents": [
-                               {"type": "text", "text": "💡 新功能建議",
-                                "color": "#FFFFFF", "size": "lg", "weight": "bold"}
-                           ]},
-                "body": {"type": "box", "layout": "vertical", "spacing": "md",
-                         "paddingAll": "20px",
-                         "contents": [
-                             {"type": "text", "text": content,
-                              "wrap": True, "size": "md", "weight": "bold"},
-                             {"type": "separator", "margin": "md"},
-                             {"type": "box", "layout": "vertical", "margin": "md",
-                              "spacing": "sm", "contents": [
-                                  {"type": "text", "size": "xs", "color": "#888888",
-                                   "text": f"👤 {user_id[:10]}...{name_str}"},
-                                  {"type": "text", "size": "xs", "color": "#888888",
-                                   "text": f"🕐 {ts}"},
-                              ]},
-                         ]},
-            }}])
-
-    return reply
-
-
-
-def build_welcome_message() -> list:
-    """歡迎訊息 + 快速選單（精美磚塊版）"""
-
-    def _tile(icon, name, line1, line2, color, light_bg, action_text):
-        """功能磚塊 helper — 可點擊的彩色卡片"""
-        return {
-            "type": "box", "layout": "vertical", "flex": 1,
-            "backgroundColor": light_bg,
-            "cornerRadius": "12px",
-            "paddingAll": "8px",
-            "spacing": "xs",
-            "action": {"type": "message", "label": name, "text": action_text},
-            "contents": [
-                {"type": "text", "text": icon, "size": "xxl", "align": "center"},
-                {"type": "text", "text": name, "size": "xs", "weight": "bold",
-                 "color": color, "align": "center", "margin": "xs"},
-                {"type": "text", "text": line1, "size": "xxs",
-                 "color": "#888888", "align": "center"},
-                {"type": "text", "text": line2, "size": "xxs",
-                 "color": "#888888", "align": "center"},
-            ]
-        }
-
-    return [{
-        "type": "flex",
-        "altText": "嗨！我是你的生活優轉，你的日常心靈小夥伴",
-        "contents": {
-            "type": "bubble",
-            "size": "mega",
-            # ── Header：溫暖明亮風格 ──────────────────────────
-            "header": {
-                "type": "box", "layout": "vertical",
-                "backgroundColor": "#FFFDE7",
-                "paddingTop": "20px", "paddingBottom": "14px",
-                "paddingStart": "16px", "paddingEnd": "16px",
-                "contents": [
-                    # 品牌名稱列
-                    {
-                        "type": "box", "layout": "horizontal", "spacing": "md",
-                        "contents": [
-                            {"type": "text", "text": "🌟", "size": "xxl",
-                             "flex": 0, "gravity": "center"},
-                            {
-                                "type": "box", "layout": "vertical", "flex": 1,
-                                "contents": [
-                                    {"type": "text", "text": "生活優轉",
-                                     "color": "#E65100", "size": "xl", "weight": "bold"},
-                                    {"type": "text", "text": "想輕鬆、想吃好、想出去玩，都可以找我 🌱",
-                                     "color": "#8D6E63", "size": "xs", "margin": "xs"},
-                                ]
-                            }
-                        ]
-                    },
-                    # 功能快標籤
-                    {
-                        "type": "box", "layout": "horizontal", "spacing": "sm",
-                        "margin": "md",
-                        "contents": [
-                            {"type": "box", "layout": "vertical", "flex": 1,
-                             "backgroundColor": "#FFCCBC", "cornerRadius": "6px",
-                             "paddingAll": "5px",
-                             "contents": [{"type": "text", "text": "🍽️ 吃什麼",
-                                           "size": "xxs", "color": "#BF360C",
-                                           "align": "center"}]},
-                            {"type": "box", "layout": "vertical", "flex": 1,
-                             "backgroundColor": "#C5CAE9", "cornerRadius": "6px",
-                             "paddingAll": "5px",
-                             "contents": [{"type": "text", "text": "🗓️ 週末活動",
-                                           "size": "xxs", "color": "#283593",
-                                           "align": "center"}]},
-                            {"type": "box", "layout": "vertical", "flex": 1,
-                             "backgroundColor": "#C8E6C9", "cornerRadius": "6px",
-                             "paddingAll": "5px",
-                             "contents": [{"type": "text", "text": "🌱 心情小站",
-                                           "size": "xxs", "color": "#1B5E20",
-                                           "align": "center"}]},
-                            {"type": "box", "layout": "vertical", "flex": 1,
-                             "backgroundColor": "#FFF9C4", "cornerRadius": "6px",
-                             "paddingAll": "5px",
-                             "action": {"type": "message", "label": "今天想輕鬆一下",
-                                        "text": "今天想輕鬆一下"},
-                             "contents": [{"type": "text", "text": "💛 輕鬆一下",
-                                           "size": "xxs", "color": "#F57F17",
-                                           "align": "center"}]},
-                        ]
-                    }
-                ]
-            },
-            # ── Body：2×3 功能磚塊 ──────────────────────────────
-            "body": {
-                "type": "box", "layout": "vertical",
-                "spacing": "sm", "paddingAll": "12px",
-                "contents": [
-                    {"type": "text", "text": "👇 點選功能，馬上開始",
-                     "size": "xs", "color": "#777777", "margin": "xs"},
-                    # Row 1
-                    {
-                        "type": "box", "layout": "horizontal", "spacing": "sm",
-                        "margin": "sm",
-                        "contents": [
-                            _tile("🍽️", "吃什麼",  "3秒決定", "今天吃啥",
-                                  "#BF360C", "#FFF0E6", "今天吃什麼"),
-                            _tile("🌤️", "天氣穿搭", "出門必看", "要帶傘嗎",
-                                  "#0277BD", "#E1F5FE", "天氣"),
-                            _tile("🗓️", "近期活動", "周末",   "去哪玩",
-                                  "#3949AB", "#ECEDFF", "近期活動"),
-                        ]
-                    },
-                    # Row 2
-                    {
-                        "type": "box", "layout": "horizontal", "spacing": "sm",
-                        "margin": "sm",
-                        "contents": [
-                            _tile("🍻", "聚餐地點", "選地點", "幾個人",
-                                  "#E65100", "#FFF3EE", "聚餐"),
-                            _tile("🌿", "情緒支援", "好累嗎", "說說看",
-                                  "#2E7D32", "#E8F5E9", "好累"),
-                            _tile("🛡️", "防詐辨識", "可疑訊息", "貼過來",
-                                  "#C62828", "#FFEBEE", "防詐辨識"),
-                        ]
-                    },
-                    # 早安 / 今日熱話題提示
-                    {
-                        "type": "box", "layout": "horizontal",
-                        "backgroundColor": "#FFFBEA",
-                        "cornerRadius": "8px",
-                        "paddingAll": "8px",
-                        "margin": "md",
-                        "action": {"type": "message", "label": "早安", "text": "早安"},
-                        "contents": [
-                            {"type": "text", "text": "☀️",
-                             "size": "sm", "flex": 0, "gravity": "center"},
-                            {"type": "text",
-                             "text": " 打「早安」→ 天氣＋今日小驚喜，每天一個好梗跟朋友聊",
-                             "size": "xxs", "color": "#B45309", "flex": 1,
-                             "gravity": "center", "wrap": True},
-                        ]
-                    },
-                    {
-                        "type": "box", "layout": "horizontal",
-                        "backgroundColor": "#F0F4FF",
-                        "cornerRadius": "8px",
-                        "paddingAll": "8px",
-                        "margin": "sm",
-                        "action": {"type": "message", "label": "好累", "text": "好累"},
-                        "contents": [
-                            {"type": "text", "text": "🌿",
-                             "size": "sm", "flex": 0, "gravity": "center"},
-                            {"type": "text",
-                             "text": " 好累、不知道幹嘛、心情不太對，都可以找我說說 🌱",
-                             "size": "xxs", "color": "#3949AB", "flex": 1,
-                             "gravity": "center", "wrap": True},
-                        ]
-                    },
-                    {
-                        "type": "box", "layout": "horizontal",
-                        "backgroundColor": "#F5F5F5",
-                        "cornerRadius": "8px",
-                        "paddingAll": "8px",
-                        "margin": "sm",
-                        "action": {"type": "message", "label": "其他工具", "text": "其他工具"},
-                        "contents": [
-                            {"type": "text", "text": "🛠️",
-                             "size": "sm", "flex": 0, "gravity": "center"},
-                            {"type": "text",
-                             "text": " 下方選單 →「所有工具」有防詐騙、法律常識、勞工權益等更多功能",
-                             "size": "xxs", "color": "#555555", "flex": 1,
-                             "gravity": "center", "wrap": True},
-                        ]
-                    },
-                    {"type": "separator", "margin": "md"},
-                    # 底部小工具列
-                    {
-                        "type": "box", "layout": "horizontal",
-                        "margin": "sm", "paddingTop": "4px",
-                        "contents": [
-                            {"type": "box", "flex": 1, "layout": "vertical",
-                             "action": {"type": "message", "label": "早安", "text": "早安"},
-                             "contents": [
-                                 {"type": "text", "text": "☀️", "align": "center", "size": "md"},
-                                 {"type": "text", "text": "早安", "size": "xxs",
-                                  "color": "#B45309", "align": "center"},
-                             ]},
-                            {"type": "box", "flex": 1, "layout": "vertical",
-                             "action": {"type": "message", "label": "天氣", "text": "天氣"},
-                             "contents": [
-                                 {"type": "text", "text": "🌤️", "align": "center", "size": "md"},
-                                 {"type": "text", "text": "天氣", "size": "xxs",
-                                  "color": "#0288D1", "align": "center"},
-                             ]},
-                            {"type": "box", "flex": 1, "layout": "vertical",
-                             "action": {"type": "message", "label": "防詐", "text": "防詐騙"},
-                             "contents": [
-                                 {"type": "text", "text": "🔍", "align": "center", "size": "md"},
-                                 {"type": "text", "text": "防詐", "size": "xxs",
-                                  "color": "#C62828", "align": "center"},
-                             ]},
-                            {"type": "box", "flex": 1, "layout": "vertical",
-                             "action": {"type": "message", "label": "法律", "text": "法律常識"},
-                             "contents": [
-                                 {"type": "text", "text": "⚖️", "align": "center", "size": "md"},
-                                 {"type": "text", "text": "法律", "size": "xxs",
-                                  "color": "#4527A0", "align": "center"},
-                             ]},
-                            {"type": "box", "flex": 1, "layout": "vertical",
-                             "action": {"type": "message", "label": "回報", "text": "回報"},
-                             "contents": [
-                                 {"type": "text", "text": "💡", "align": "center", "size": "md"},
-                                 {"type": "text", "text": "回報", "size": "xxs",
-                                  "color": "#6C5CE7", "align": "center"},
-                             ]},
-                        ]
-                    }
-                ]
-            }
-        }
-    }]
-
-
-def build_purchase_guide_message() -> list:
-    """購買指南 Flex 訊息"""
-    return [{
-        "type": "flex",
-        "altText": "3C 購買指南",
-        "contents": {
-            "type": "bubble",
-            "size": "mega",
-            "header": {
-                "type": "box", "layout": "vertical",
-                "backgroundColor": "#5B9BD5",
-                "contents": [
-                    {"type": "text", "text": "📖 購買指南", "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                    {"type": "text", "text": "買 3C 前一定要知道的事", "color": "#FFFFFFCC", "size": "sm"},
-                ]
-            },
-            "body": {
-                "type": "box", "layout": "vertical", "spacing": "md",
-                "contents": [
-                    {"type": "text", "text": "✅ 購買前確認清單", "size": "sm", "weight": "bold", "color": "#3E2723"},
-                    {"type": "text", "text": "1. 確認是「台灣公司貨」還是「平行輸入」\n   → 公司貨保固 1 年，平行輸入需自行送修", "size": "xs", "color": "#5D4037", "wrap": True},
-                    {"type": "text", "text": "2. 比較至少 3 個平台的價格\n   → PChome、蝦皮、momo 價差可達 10%", "size": "xs", "color": "#5D4037", "wrap": True, "margin": "sm"},
-                    {"type": "text", "text": "3. 注意贈品是否有需要（通常不值錢）", "size": "xs", "color": "#5D4037", "wrap": True, "margin": "sm"},
-                    {"type": "text", "text": "4. 查看近 30 天歷史價格，避免買在高點", "size": "xs", "color": "#5D4037", "wrap": True, "margin": "sm"},
-                    {"type": "separator", "margin": "lg"},
-                    {"type": "text", "text": "⚠️ 常見銷售話術 別被騙", "size": "sm", "weight": "bold", "color": "#E53935", "margin": "md"},
-                    {"type": "text", "text": "❌「今天最後一天優惠」→ 通常明天還有\n❌「只剩最後一台」→ 庫存管理話術\n❌「加購配件才有保固」→ 不合法，保固不需額外付費", "size": "xs", "color": "#5D4037", "wrap": True},
-                    {"type": "separator", "margin": "lg"},
-                    {"type": "text", "text": "💡 買回來第一件事", "size": "sm", "weight": "bold", "color": "#2E7D32", "margin": "md"},
-                    {"type": "text", "text": "1. 開機檢查外觀是否有刮痕\n2. 測試所有按鍵、連接埠\n3. 拍照存證（出問題時有憑有據）\n4. 登記原廠保固", "size": "xs", "color": "#5D4037", "wrap": True},
-                ]
-            },
-            "footer": {
-                "type": "box", "layout": "vertical",
-                "contents": [
-                    {"type": "button", "style": "primary", "color": "#5B9BD5",
-                     "action": {"type": "message", "label": "📱 幫我推薦手機", "text": "推薦手機"}},
-                    {"type": "button", "style": "secondary", "margin": "sm",
-                     "action": {"type": "message", "label": "🔄 回主選單", "text": "你好"}},
-                ]
-            }
-        }
-    }]
-
-
-def build_compare_price_message(text: str) -> list:
-    """比價查詢 — 引導用戶說出商品名稱，或直接給 BigGo 連結"""
-    import urllib.parse
-    # 如果包含具體商品名稱（去掉「幫我比價」後還有內容）
-    keyword = text.replace("幫我比價", "").replace("比價", "").strip()
-    if len(keyword) >= 2:
-        q = urllib.parse.quote(keyword)
-        biggo_url = f"https://biggo.com.tw/s/{q}"
-        feebee_url = f"https://feebee.com.tw/search/?q={q}"
-        return [{
-            "type": "flex",
-            "altText": f"比價：{keyword}",
-            "contents": {
-                "type": "bubble",
-                "header": {
-                    "type": "box", "layout": "vertical",
-                    "backgroundColor": "#4CAF50",
-                    "contents": [
-                        {"type": "text", "text": "💰 比價結果", "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                        {"type": "text", "text": keyword, "color": "#FFFFFFCC", "size": "sm", "wrap": True},
-                    ]
-                },
-                "body": {
-                    "type": "box", "layout": "vertical", "spacing": "sm",
-                    "contents": [
-                        {"type": "text", "text": "點下方按鈕，查看各平台最低價 👇", "size": "sm", "color": "#3E2723", "wrap": True},
-                        {"type": "text", "text": "涵蓋 PChome、蝦皮、momo、Yahoo 等", "size": "xs", "color": "#8D6E63"},
-                    ]
-                },
-                "footer": {
-                    "type": "box", "layout": "vertical", "spacing": "sm",
-                    "contents": [
-                        {"type": "button", "style": "primary", "color": "#4CAF50",
-                         "action": {"type": "uri", "label": "💰 BigGo 跨平台比價", "uri": biggo_url}},
-                        {"type": "button", "style": "secondary",
-                         "action": {"type": "uri", "label": "🔍 飛比價格", "uri": feebee_url}},
-                    ]
-                }
-            }
-        }]
-    else:
-        # 沒有商品名稱 → 引導輸入
-        return [{"type": "text", "text": "請告訴我要比價的商品名稱 😊\n\n例如：\n「幫我比價 iPhone 16」\n「幫我比價 MacBook Air M3」"}]
+    return _handle_user_suggestion(
+        text,
+        user_id,
+        display_name,
+        admin_user_id=ADMIN_USER_ID,
+        push_message=push_message,
+    )
 
 
 def _detect_feature(text: str) -> tuple:
@@ -621,485 +180,72 @@ def handle_text_message(text: str, user_id: str = "") -> list:
         return handle_general_report(text, user_id)
 
     # ── 0. 問卷狀態解析（優先處理，避免被其他規則攔截）──────
-    state = parse_wizard_state(text)
-    if state:
-        device_name = state["device_name"]
-        if "budget" in state:
-            # 所有資訊齊全 → 顯示個人化推薦
-            who = state.get("who", "自己")
-            use = state.get("use", "日常")
-            budget = state["budget"]
-            # 將問卷用途對應到 filter_products 的 uses 清單
-            use_map = {
-                "拍照": ["拍照"], "遊戲": ["遊戲"], "追劇": ["追劇"],
-                "工作": ["工作"], "學習": ["學生"], "創作": ["創作"],
-                "日常": ["日常"], "閱讀": ["閱讀"],
-            }
-            uses = use_map.get(use, [])
-            if who == "長輩":
-                uses.append("長輩")
-            elif who == "學生":
-                uses.append("學生")
-            msgs = build_recommendation_message(state["device"], budget, uses)
-            # 在推薦結果前加一行個人化說明
-            who_label = {"自己": "你", "長輩": "長輩", "學生": "學生", "小孩": "小孩"}.get(who, who)
-            use_label = {"日常": "日常使用", "拍照": "拍照攝影", "遊戲": "玩遊戲",
-                         "追劇": "追劇看片", "學習": "學校作業", "工作": "工作文書",
-                         "創作": "影片剪輯", "閱讀": "閱讀電子書"}.get(use, use)
-            budget_text = "不限預算" if budget >= 999999 else f"NT${budget:,} 以內"
-            intro = {"type": "text",
-                     "text": f"根據你的需求幫你找到最適合的 {device_name} 👇\n\n"
-                             f"👤 使用者：{who_label}\n"
-                             f"🎯 主要用途：{use_label}\n"
-                             f"💰 預算：{budget_text}"}
-            return [intro] + msgs
-        elif "use" in state:
-            # 有裝置 + 使用者 + 用途 → 問預算
-            return build_wizard_budget(device_name, state["who"], state["use"])
-        elif "who" in state:
-            # 有裝置 + 使用者 → 問用途
-            return build_wizard_use(device_name, state["who"])
-        else:
-            # 只有裝置 → 問使用者（理論上不會到這裡）
-            return build_wizard_who(device_name)
-
-    # ── 1. 打招呼 / 幫助 ────────────────────────────
-    greetings = ["你好", "嗨", "hi", "hello", "哈囉", "安安", "開始", "幫助", "help", "選單", "功能"]
-    if any(text_lower == g or text_lower.startswith(g) for g in greetings):
-        return build_welcome_message()
-
-    # ── 1.5 情緒觸發（比功能路由早，讓日常抱怨被接住）──────────
-    _mood_kws = ["心情不好", "心情差", "好煩", "煩死", "煩透了", "超煩",
-                 "好累", "累死", "累透了", "超累", "好疲憊", "疲憊",
-                 "難過", "不開心", "很鬱悶", "鬱悶", "低落", "很喪",
-                 "不想出門", "不想動", "沒動力", "提不起勁",
-                 "無聊死", "好無聊", "超無聊", "不知道幹嘛", "沒事幹",
-                 "焦慮", "壓力大", "壓力好大", "很有壓力", "喘不過氣",
-                 "沒目標", "沒有目標", "人生沒目標", "不知道目標",
-                 "什麼都不想做", "甚麼都不想做", "什麼都不想", "甚麼都不想",
-                 "活著沒意思", "沒意思", "沒意義", "人生無聊", "迷茫", "迷失",
-                 "被罵", "被念", "被嗆", "被兇", "被罵慘", "被罵死",
-                 "吵架", "吵起來", "跟他吵", "跟她吵", "又吵", "大吵",
-                 "被說", "被批評", "被否定", "被嫌", "被討厭",
-                 "被欺負", "被霸凌", "被排擠", "被孤立", "沒有朋友",
-                 "考不好", "考差了", "成績差", "成績不好", "考砸了", "被當掉",
-                 "被老師罵", "老師罵我", "作業寫不完", "功課好難", "不想上學",
-                 "讀書好累", "唸書好累", "考試壓力"]
-    if any(w in text for w in _mood_kws):
-        log_usage(user_id, "mood_support")
-        return build_mood_support(text)
-
-    # ── 2. 情境推薦 ──────────────────────────────────
-    if any(w in text for w in ["情境推薦", "不知道", "幫我選", "給誰用", "哪種適合"]):
-        return build_scenario_menu()
-
-    # ── 3. 看懂規格 ──────────────────────────────────
-    if any(w in text for w in ["看懂規格", "規格", "處理器", "記憶體", "儲存", "螢幕", "電池",
-                                "cpu", "ram", "ssd", "oled", "hz", "mah", "什麼意思", "看不懂"]):
-        return build_spec_explainer(text)
-
-    # ── 4. 購買指南 ──────────────────────────────────
-    if any(w in text for w in ["購買指南", "購買須知", "買之前", "注意事項", "怎麼買"]):
-        return build_purchase_guide_message()
-
-    # ── 4.5 消費決策（最優先，避免被食物/3C handler 搶走）──
-    _spend_kws = ["划算嗎", "划算", "值得買嗎", "值得買", "要買嗎", "該買嗎", "值得嗎",
-                  "貴嗎", "太貴嗎", "消費決策", "信用卡還是現金", "刷卡還是現金",
-                  "刷卡或現金", "要不要買", "可以買嗎", "買得起嗎"]
-    _spend_items = ["手機", "筆電", "平板", "電視", "冷氣", "冰箱", "洗衣機",
-                    "耳機", "相機", "沙發", "包包", "課程", "保險",
-                    "iphone", "ipad", "macbook"]
-    _has_amount = bool(re.search(r"\d{3,}", text))
-    if (any(w in text_lower for w in _spend_kws) or
-            (any(w in text_lower for w in _spend_items) and _has_amount)):
-        return build_spending_decision(text)
-
-    # ── 4.5 比價查詢 ─────────────────────────────────
-    if any(w in text for w in ["比價", "最便宜", "哪裡買便宜", "價格比較", "biggo", "飛比"]):
-        return build_compare_price_message(text)
-
-    # ── 精確格式先判斷（不進評分，避免破壞特殊流程）──────
-
-    # ── 今日話題 ──────────────────────────────────────
-    if any(k in text for k in ["今日話題", "話題", "跟朋友聊什麼", "聊什麼好", "聊天話題"]):
-        log_usage(user_id, "daily_topic")
-        return build_daily_topic(user_id)
-
-    # ── 放鬆一下 ──────────────────────────────────────
-    if any(k in text for k in ["放鬆一下", "放鬆", "我要放鬆", "放空", "休息一下"]):
-        log_usage(user_id, "relax")
-        return build_relax_message(user_id)
-
-    # ── 生活工具選單 ───────────────────────────────────
-    if any(k in text for k in ["生活工具", "工具選單", "查工具"]):
-        return [{"type": "flex", "altText": "生活工具",
-                 "contents": {
-                     "type": "bubble",
-                     "header": {"type": "box", "layout": "vertical",
-                                "backgroundColor": "#37474F", "paddingAll": "14px",
-                                "contents": [
-                                    {"type": "text", "text": "🛠️ 生活工具",
-                                     "color": "#FFFFFF", "size": "md", "weight": "bold"},
-                                    {"type": "text", "text": "健康・金錢・3C・法律",
-                                     "color": "#B0BEC5", "size": "xs", "margin": "xs"},
-                                ]},
-                     "body": {"type": "box", "layout": "vertical",
-                              "spacing": "sm", "paddingAll": "12px",
-                              "contents": [
-                         {"type": "box", "layout": "horizontal", "spacing": "sm",
-                          "contents": [
-                              {"type": "button", "style": "secondary", "flex": 1,
-                               "action": {"type": "message", "label": "💚 健康", "text": "健康小幫手"}},
-                              {"type": "button", "style": "secondary", "flex": 1,
-                               "action": {"type": "message", "label": "💰 金錢", "text": "金錢小幫手"}},
-                         ]},
-                         {"type": "box", "layout": "horizontal", "spacing": "sm", "margin": "sm",
-                          "contents": [
-                              {"type": "button", "style": "secondary", "flex": 1,
-                               "action": {"type": "message", "label": "📱 3C", "text": "推薦手機"}},
-                              {"type": "button", "style": "secondary", "flex": 1,
-                               "action": {"type": "message", "label": "⚖️ 法律", "text": "法律常識"}},
-                         ]},
-                     ]},
-                 }}]
-
-    # ── 更多功能選單 ───────────────────────────────────
-    if any(k in text for k in ["更多功能", "所有功能", "功能列表", "其他功能"]):
-        return [{"type": "flex", "altText": "更多功能",
-                 "contents": {
-                     "type": "bubble",
-                     "header": {"type": "box", "layout": "vertical",
-                                "backgroundColor": "#1A1F3A", "paddingAll": "14px",
-                                "contents": [
-                                    {"type": "text", "text": "✨ 更多功能",
-                                     "color": "#FFFFFF", "size": "md", "weight": "bold"},
-                                    {"type": "text", "text": "所有功能一覽",
-                                     "color": "#8892B0", "size": "xs", "margin": "xs"},
-                                ]},
-                     "body": {"type": "box", "layout": "vertical",
-                              "spacing": "sm", "paddingAll": "12px",
-                              "contents": [
-                         {"type": "text", "text": "🌈 每日陪伴",
-                          "size": "xs", "weight": "bold", "color": "#5C6BC0"},
-                         {"type": "box", "layout": "horizontal", "spacing": "sm", "margin": "xs",
-                          "contents": [
-                              {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
-                               "action": {"type": "message", "label": "今日話題", "text": "今日話題"}},
-                              {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
-                               "action": {"type": "message", "label": "放鬆一下", "text": "放鬆一下"}},
-                         ]},
-                         {"type": "separator", "margin": "md"},
-                         {"type": "text", "text": "🛡️ 防護工具",
-                          "size": "xs", "weight": "bold", "color": "#5C6BC0", "margin": "md"},
-                         {"type": "box", "layout": "horizontal", "spacing": "sm", "margin": "xs",
-                          "contents": [
-                              {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
-                               "action": {"type": "message", "label": "防詐辨識", "text": "防詐辨識"}},
-                              {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
-                               "action": {"type": "message", "label": "防詐趨勢", "text": "防詐趨勢"}},
-                         ]},
-                         {"type": "separator", "margin": "md"},
-                         {"type": "text", "text": "📊 我的記錄",
-                          "size": "xs", "weight": "bold", "color": "#5C6BC0", "margin": "md"},
-                         {"type": "button", "style": "secondary", "height": "sm", "margin": "xs",
-                          "action": {"type": "message", "label": "我的記錄", "text": "我的記錄"}},
-                         {"type": "separator", "margin": "md"},
-                         {"type": "text", "text": "💌 回饋給我們",
-                          "size": "xs", "weight": "bold", "color": "#5C6BC0", "margin": "md"},
-                         {"type": "box", "layout": "horizontal", "spacing": "sm", "margin": "xs",
-                          "contents": [
-                              {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
-                               "action": {"type": "message", "label": "✨ 許願", "text": "許願"}},
-                              {"type": "button", "style": "secondary", "flex": 1, "height": "sm",
-                               "action": {"type": "message", "label": "🚨 回報", "text": "回報"}},
-                         ]},
-                     ]},
-                 }}]
-
-    if any(k in text for k in ["我的記錄", "我的統計", "打卡天數", "我的成就", "探索記錄"]):
-        pref = _redis_get(f"user_pref:{user_id}") or {}
-        streak  = pref.get("streak", 0)
-        visited = pref.get("visited_count", 0)
-        city    = _get_user_city(user_id) or "未設定"
-        streak_msg  = f"🔥 連續打卡：{streak} 天" if streak else "🔥 還沒開始打卡，明天說「早安」試試！"
-        visited_msg = f"🍽️ 已探索餐廳：{visited} 家" if visited else "🍽️ 還沒記錄，下次吃完按「吃過了」！"
-        lines = [
-            "📊 你的生活優轉記錄",
-            "",
-            streak_msg,
-            visited_msg,
-            f"📍 常用城市：{city}",
-        ]
-        if streak >= 7:
-            lines.append("\n🏆 連續一週！你的生活在優轉中 💪")
-        elif streak >= 3:
-            lines.append("\n👏 很棒！保持下去")
-        return [{"type": "text", "text": "\n".join(lines)}]
-
-    # ── 許願 ──────────────────────────────────────────────
-    if text.strip() == "許願":
-        return [{"type": "text", "text": (
-            "✨ 許願池開啟！\n\n"
-            "請輸入你想要的功能，格式：\n"
-            "許願 [你的想法]\n\n"
-            "例如：許願 我想要查捷運時刻表"
-        )}]
-
-    _wish_m = re.match(r"^許願[\s　:：]+(.+)$", text, re.DOTALL)
-    if _wish_m:
-        wish = _wish_m.group(1).strip()
-        if wish and user_id:
-            import time as _ft
-            _redis_lpush("feedback:wishes", {"uid": user_id, "msg": wish, "ts": int(_ft.time())})
-            if ADMIN_USER_ID:
-                push_message(ADMIN_USER_ID, [{"type": "text",
-                    "text": f"✨ 新許願\n\n{wish}\n\nUID: {user_id}"}])
-        return [{"type": "text", "text": (
-            f"✨ 收到你的許願：「{wish}」\n\n"
-            "已記錄！感謝你讓生活優轉越來越好 🙏"
-        )}]
-
-    # ── 回報（明確指令 + 自然語言偵測）──────────────────────
-    if text.strip() == "回報":
-        return [{"type": "text", "text": (
-            "🚨 功能回報\n\n"
-            "請說明哪個功能出了問題，格式：\n"
-            "回報 [問題描述]\n\n"
-            "例如：回報 找車位一直轉圈沒反應\n"
-            "例如：回報 天氣查詢顯示錯誤"
-        )}]
-
-    _report_m = re.match(r"^回報[\s　:：]+(.+)$", text, re.DOTALL)
-    # 自然語言觸發：「找車位沒反應」「天氣卡住了」「美食失效」等
-    _auto_report_m = (
-        not _report_m
-        and re.search(r"(沒反應|卡住了?|失效了?|壞了|不能用|出錯了?|一直轉|跑不出來|沒有結果)", text)
-    )
-    if _report_m or _auto_report_m:
-        report = _report_m.group(1).strip() if _report_m else text.strip()
-        source = "明確回報" if _report_m else "自動偵測"
-        if report and user_id:
-            import time as _ft
-            _redis_lpush("feedback:reports", {"uid": user_id, "msg": report, "ts": int(_ft.time())})
-            if ADMIN_USER_ID:
-                push_message(ADMIN_USER_ID, [{"type": "text",
-                    "text": f"🚨 功能回報（{source}）\n\n{report}\n\nUID: {user_id}"}])
-        return [{"type": "text", "text": (
-            f"🚨 收到回報：「{report}」\n\n"
-            "已記錄！我們會盡快確認修復 🛠️\n"
-            "感謝你幫助改善生活優轉 💪"
-        )}]
-
-    if text in ("換城市", "切換城市", "設定城市", "更換城市"):
-        current = _get_user_city(user_id) if user_id else ""
-        return build_switch_city_picker(current)
-
-    # 切換城市確認（格式：切換城市 台北）
-    _SWITCH_CITY_PAT = re.compile(r"^切換城市\s*(.+)$")
-    _sc_m = _SWITCH_CITY_PAT.match(text)
-    if _sc_m:
-        new_city = _sc_m.group(1).strip()
-        if user_id:
-            _set_user_city(user_id, new_city)
-            _redis_set(f"user_loc:{user_id}", "", ttl=1)  # 清除舊 GPS
-        return [{"type": "text", "text": f"✅ 已切換到 {new_city}\n\n接下來美食、天氣、活動都會以 {new_city} 為主。\n如果到了目的地可以分享位置，會自動偵測更精確的範圍 📍"}]
-
-    # 活動＋城市前綴（如「活動台南」）
-    if text.startswith("活動") and len(text) > 2:
-        return build_activity_message(text, user_id=user_id)
-
-    # 聚餐子功能
-    if any(w in text for w in ["聚餐", "約飯", "朋友聚", "家庭聚", "公司聚", "同學聚",
-                                "包廂", "圍爐", "尾牙", "春酒", "生日餐廳",
-                                "辦桌", "大桌", "多人聚餐", "找餐廳"]):
-        return build_group_dining_message(text)
-
-    if text.startswith("特色名店 "):
-        parts = text[5:].strip().split(" ", 1)
-        if len(parts) == 2:
-            return build_specialty_shops(parts[0], parts[1])
-
-    if "地方特色" in text:
-        city_match = next((c for c in _ALL_CITIES if c in text), "")
-        if not city_match:
-            city_match = _get_user_city(user_id) or ""
-        return build_city_specialties(city_match)
-
-    # 必買伴手禮 / 最新流行美食（直接路由，不走 intent 分類）
-    _souvenir_triggers = ["必買伴手禮", "伴手禮推薦", "伴手禮", "必買"]
-    _trending_triggers = ["最新流行", "流行美食", "最新美食", "打卡美食", "最新必吃"]
-    _city_match2 = next((c for c in _ALL_CITIES if c in text), "") or (_get_user_city(user_id) or "")
-    # 換縣市 picker
-    if "必買伴手禮換縣市" in text:
-        return build_trending_specialty(_city_match2, "souvenir")
-    if "最新流行換縣市" in text:
-        return build_trending_specialty(_city_match2, "trending")
-    # 行政區直接查詢（按鈕送出「必買伴手禮 台中西屯區」）
-    import re as _re
-    _dp = _re.search(
-        r"(必買伴手禮|伴手禮|最新流行|流行美食|打卡美食)"
-        r"(台北|新北|基隆|桃園|新竹|苗栗|台中|彰化|南投|雲林|嘉義|台南|高雄|屏東|宜蘭|花蓮|台東|澎湖|金門|連江)?"
-        r"([^\s]{2,6}[區市鄉鎮])",
+    wizard_route = route_wizard_state(
         text,
+        parse_wizard_state=parse_wizard_state,
+        build_recommendation_message=build_recommendation_message,
+        build_wizard_budget=build_wizard_budget,
+        build_wizard_use=build_wizard_use,
+        build_wizard_who=build_wizard_who,
     )
-    if _dp:
-        _dp_mode = "souvenir" if any(kw in _dp.group(1) for kw in ["伴手禮", "必買"]) else "trending"
-        _dp_city = (_dp.group(2) or _city_match2 or "")[:2]
-        return build_trending_by_district(_dp.group(3), _dp_city, _dp_mode)
-    if any(t in text for t in _souvenir_triggers) and _city_match2:
-        return build_trending_specialty(_city_match2, "souvenir")
-    if any(t in text for t in _trending_triggers) and _city_match2:
-        return build_trending_specialty(_city_match2, "trending")
+    if wizard_route is not None:
+        return wizard_route
+    static_route = route_static_text_sections(
+        text,
+        text_lower,
+        user_id,
+        build_welcome_message=build_welcome_message,
+        log_usage=log_usage,
+        build_mood_support=build_mood_support,
+        build_scenario_menu=build_scenario_menu,
+        build_spec_explainer=build_spec_explainer,
+        build_purchase_guide_message=build_purchase_guide_message,
+        build_spending_decision=build_spending_decision,
+        build_compare_price_message=build_compare_price_message,
+    )
+    if static_route is not None:
+        return static_route
 
-    if "我要分享位置找美食" in text or "目的地美食" in text or "特殊需求換縣市" in text:
-        return build_food_message(text, user_id=user_id)
+    precise_route = maybe_route_precise_text(
+        text,
+        user_id,
+        all_cities=_ALL_CITIES,
+        build_weather_region_picker=build_weather_region_picker,
+        build_activity_message=build_activity_message,
+        build_group_dining_message=build_group_dining_message,
+        build_specialty_shops=build_specialty_shops,
+        build_city_specialties=build_city_specialties,
+        build_food_message=build_food_message,
+        build_feedback_intro=build_feedback_intro,
+        handle_user_suggestion=handle_user_suggestion,
+        channel_access_token=CHANNEL_ACCESS_TOKEN,
+    )
+    if precise_route is not None:
+        return precise_route
 
-    # 防詐+法律合併入口（Rich Menu 按鈕，精確指令）
-    if text.strip() in ["防詐法律", "防詐&法律", "防詐與法律"]:
-        return [{
-            "type": "flex", "altText": "防詐騙 ＆ 法律常識",
-            "contents": {
-                "type": "bubble", "size": "mega",
-                "header": {
-                    "type": "box", "layout": "vertical",
-                    "backgroundColor": "#1A1F3A", "paddingAll": "16px",
-                    "contents": [
-                        {"type": "text", "text": "🛡️⚖️ 防詐騙 ＆ 法律常識",
-                         "color": "#FFFFFF", "size": "lg", "weight": "bold"},
-                        {"type": "text", "text": "選擇你需要的功能",
-                         "color": "#8892B0", "size": "xs", "margin": "xs"},
-                    ]
-                },
-                "body": {
-                    "type": "box", "layout": "vertical",
-                    "spacing": "md", "paddingAll": "14px",
-                    "contents": [
-                        {"type": "box", "layout": "vertical", "spacing": "xs",
-                         "contents": [
-                             {"type": "button", "style": "primary", "color": "#C0392B",
-                              "action": {"type": "message", "label": "🛡️ 防詐騙辨識", "text": "防詐辨識"}},
-                             {"type": "text", "text": "貼上可疑訊息讓我分析",
-                              "color": "#888888", "size": "xs", "align": "center"},
-                         ]},
-                        {"type": "box", "layout": "vertical", "spacing": "xs",
-                         "contents": [
-                             {"type": "button", "style": "primary", "color": "#3949AB",
-                              "action": {"type": "message", "label": "⚖️ 法律常識", "text": "法律常識"}},
-                             {"type": "text", "text": "租屋／勞資／消費糾紛",
-                              "color": "#888888", "size": "xs", "align": "center"},
-                         ]},
-                    ]
-                }
-            }
-        }]
-
-    # 功能建議 / 許願池（精確指令）
-    if text in ("回報", "許願", "許願池", "功能建議", "功能回報", "意見回報"):
-        return build_feedback_intro()
-
-    if any(w in text for w in ["我想要功能", "希望有功能"]) or \
-       (text.startswith("建議") and len(text) >= 4):
-        _fb_name = ""
-        try:
-            _fb_profile_req = urllib.request.Request(
-                f"https://api.line.me/v2/bot/profile/{user_id}",
-                headers={"Authorization": f"Bearer {CHANNEL_ACCESS_TOKEN}"},
-            )
-            _fb_profile = json.loads(urllib.request.urlopen(_fb_profile_req, timeout=5).read())
-            _fb_name = _fb_profile.get("displayName", "")
-        except Exception:
-            pass
-        return handle_user_suggestion(text, user_id, _fb_name)
-
-    # ══ 評分制意圖分類 ════════════════════════════════════
-    # 每個關鍵字帶權重（3/2/1），分數最高者獲勝。
-    # 「165 55」→ health+5（身高體重信號），不再被 safety 搶走。
-    # 新功能只需在 utils/intent.py 加關鍵字，不用管順序。
-    _intent = classify_intent(text, parse_height_weight, list(_ALL_FOOD_KEYWORDS))
-
-    if _intent == "weather":
-        return build_weather_message(text, user_id=user_id)
-    if _intent == "food":
-        return build_food_message(text, user_id=user_id)
-    if _intent == "health":
-        return build_health_message(text)
-    if _intent == "overspent":
-        return _spend_overspent()
-    if _intent == "money":
-        return build_money_message(text)
-    if _intent == "activity":
-        return build_activity_message(text, user_id=user_id)
-    if _intent == "tech":
-        return build_upgrade_message(text)
-    if _intent == "safety":
-        if "最新" in text or "手法" in text or "排行" in text:
-            return build_fraud_trends()
-        stripped = text
-        for kw in ["防詐辨識", "幫我看", "這是詐騙嗎", "防詐", "詐騙"]:
-            stripped = stripped.replace(kw, "").strip()
-        return build_fraud_result(stripped) if len(stripped) >= 10 else build_fraud_intro()
-    if _intent == "legal":
-        for topic in LEGAL_QA.keys():
-            if topic in text:
-                return build_legal_answer(topic)
-        return build_legal_guide_intro()
-    if _intent == "consumer":
-        return build_legal_answer("消費者保護")
-    if _intent == "labor":
-        return build_legal_answer("勞資糾紛")
-    if _intent == "emergency":
-        return [{
-            "type": "flex", "altText": "緊急求助管道",
-            "contents": {
-                "type": "bubble",
-                "header": {
-                    "type": "box", "layout": "vertical",
-                    "backgroundColor": "#C0392B",
-                    "contents": [
-                        {"type": "text", "text": "🆘 緊急求助管道", "color": "#FFFFFF",
-                         "size": "lg", "weight": "bold"}
-                    ]
-                },
-                "body": {
-                    "type": "box", "layout": "vertical", "spacing": "md",
-                    "contents": [
-                        {"type": "text", "text": "📞 165 反詐騙專線（24小時）", "size": "sm", "weight": "bold", "color": "#C0392B"},
-                        {"type": "text", "text": "📞 110 警察報案", "size": "sm", "weight": "bold"},
-                        {"type": "text", "text": "📞 113 家暴/跟蹤騷擾保護（24小時）", "size": "sm"},
-                        {"type": "text", "text": "📞 1955 勞工申訴專線", "size": "sm"},
-                        {"type": "text", "text": "📞 412-8518 法律扶助基金會", "size": "sm"},
-                        {"type": "text", "text": "📞 1950 消費者服務", "size": "sm"},
-                    ]
-                },
-                "footer": {
-                    "type": "box", "layout": "vertical", "spacing": "sm",
-                    "contents": [
-                        {"type": "button", "style": "primary", "color": "#C0392B",
-                         "action": {"type": "message", "label": "🔍 防詐辨識", "text": "防詐辨識"}},
-                        {"type": "button", "style": "secondary",
-                         "action": {"type": "message", "label": "⚖️ 法律常識", "text": "法律常識"}},
-                    ]
-                }
-            }
-        }]
-    if _intent == "parking":
-        if user_id:
-            _redis_set(f"food_locate:{user_id}", "", ttl=1)  # 清除食物定位 flag，避免互相干擾
-        return [{
-            "type": "text",
-            "text": "🅿️ 點下方「📍 分享位置」，我立刻幫你找附近停車場！",
-            "quickReply": {
-                "items": [{
-                    "type": "action",
-                    "action": {
-                        "type": "location",
-                        "label": "📍 分享我的位置"
-                    }
-                }]
-            }
-        }]
-    if _intent == "tools":
-        return build_tools_menu()
+    intent_route = route_intent_dispatch(
+        text,
+        user_id,
+        classify_intent=classify_intent,
+        parse_height_weight=parse_height_weight,
+        food_keywords=_ALL_FOOD_KEYWORDS,
+        build_weather_message=build_weather_message,
+        build_food_message=build_food_message,
+        build_health_message=build_health_message,
+        spend_overspent=_spend_overspent,
+        build_money_message=build_money_message,
+        build_activity_message=build_activity_message,
+        build_upgrade_message=build_upgrade_message,
+        build_fraud_trends=build_fraud_trends,
+        build_fraud_result=build_fraud_result,
+        build_fraud_intro=build_fraud_intro,
+        legal_qa=LEGAL_QA,
+        build_legal_answer=build_legal_answer,
+        build_legal_guide_intro=build_legal_guide_intro,
+        build_tools_menu=build_tools_menu,
+    )
+    if intent_route is not None:
+        return intent_route
 
     # ── 8. 頁籤切換訊息（點到已啟用頁籤 → 顯示對應選單）──────
     if text.startswith("tab:"):
@@ -1116,63 +262,15 @@ def handle_text_message(text: str, user_id: str = "") -> list:
         result = analyze_fraud(text)
         if result["risk"] in ("high", "medium"):
             return build_fraud_result(text)
+    return route_device_budget_fallback(
+        text,
+        detect_device=detect_device,
+        parse_budget=parse_budget,
+        detect_use=detect_use,
+        build_recommendation_message=build_recommendation_message,
+        build_wizard_who=build_wizard_who,
+    )
 
-    # ── 6. 偵測裝置 → 啟動問卷 ──────────────────────
-    device = detect_device(text)
-    if device:
-        device_name = {"phone": "手機", "laptop": "筆電", "tablet": "平板", "desktop": "桌機"}.get(device, "")
-        budget = parse_budget(text)
-        uses = detect_use(text)
-        # 有足夠資訊（自然語言直接說出來）→ 直接推薦
-        if budget or uses:
-            return build_recommendation_message(device, budget, uses)
-        # 只說了裝置類型 → 啟動問卷 Step 1
-        return build_wizard_who(device_name)
-
-    # ── 7. 只說了預算 → 問裝置類型 ──────────────────
-    budget = parse_budget(text)
-    if budget:
-        return [{
-            "type": "flex", "altText": "你想買什麼？",
-            "contents": {
-                "type": "bubble",
-                "body": {
-                    "type": "box", "layout": "vertical", "spacing": "sm",
-                    "contents": [
-                        {"type": "text", "text": "你想買哪種裝置？",
-                         "size": "md", "weight": "bold", "color": "#3E2723"},
-                    ]
-                },
-                "footer": {
-                    "type": "box", "layout": "vertical", "spacing": "sm",
-                    "contents": [
-                        {"type": "button", "style": "primary", "color": "#FF8C42",
-                         "action": {"type": "message", "label": "📱 手機",
-                                    "text": f"手機|自己|日常|{budget}"}},
-                        {"type": "button", "style": "primary", "color": "#E07838",
-                         "action": {"type": "message", "label": "💻 筆電",
-                                    "text": f"筆電|自己|工作|{budget}"}},
-                        {"type": "button", "style": "primary", "color": "#C96830",
-                         "action": {"type": "message", "label": "📟 平板",
-                                    "text": f"平板|自己|追劇|{budget}"}},
-                    ]
-                }
-            }
-        }]
-
-    # ── 8. 完全看不懂 → 友善引導 ────────────────────
-    return [{
-        "type": "text",
-        "text": "嗨！我是生活優轉 👋\n\n"
-                "我可以幫你：\n"
-                "🍜 今天吃什麼\n"
-                "🎨 近期活動 / 天氣穿搭\n"
-                "🅿️ 找車位（即時空位）\n"
-                "📱 3C 推薦 / 信用卡比較\n"
-                "💪 健康小幫手 / 金錢小幫手\n"
-                "🛡️ 防詐騙 / 法律常識\n\n"
-                "可以點下方選單，或直接跟我說你想做什麼 😊"
-    }]
 
 
 _tdx_token_cache  = {"token": "", "expires": 0.0}
@@ -1950,27 +1048,31 @@ class handler(BaseHTTPRequestHandler):
                 old_id = menus[0]["richMenuId"] if menus else None
                 log.append(f"old_id={old_id}")
 
-                # 2. 建新 Rich Menu（6 格 2 排，上排=每日、下排=工具）
+                # 2. 建新 Rich Menu（同版型，前三個改 message）
                 new_menu = {
                     "size": {"width": 2500, "height": 1686},
                     "selected": True,
-                    "name": "生活優轉選單 v2",
+                    "name": "生活優轉選單（無LIFF版）",
                     "chatBarText": "✨ 點我開啟功能選單",
                     "areas": [
-                        # 上排：每天都會來
-                        {"bounds": {"x": 0,    "y": 0, "width": 833,  "height": 843},
-                         "action": {"type": "message", "label": "早安・今日好料", "text": "早安"}},
-                        {"bounds": {"x": 833,  "y": 0, "width": 834,  "height": 843},
+                        {"bounds": {"x": 0,    "y": 0,    "width": 833,  "height": 562},
                          "action": {"type": "message", "label": "今天吃什麼", "text": "今天吃什麼"}},
-                        {"bounds": {"x": 1667, "y": 0, "width": 833,  "height": 843},
-                         "action": {"type": "message", "label": "近期活動", "text": "近期活動"}},
-                        # 下排：有需要才找
-                        {"bounds": {"x": 0,    "y": 843, "width": 833,  "height": 843},
-                         "action": {"type": "message", "label": "找車位", "text": "找車位"}},
-                        {"bounds": {"x": 833,  "y": 843, "width": 834,  "height": 843},
-                         "action": {"type": "message", "label": "生活工具", "text": "生活工具"}},
-                        {"bounds": {"x": 1667, "y": 843, "width": 833,  "height": 843},
-                         "action": {"type": "message", "label": "更多功能", "text": "更多功能"}},
+                        {"bounds": {"x": 833,  "y": 0,    "width": 834,  "height": 562},
+                         "action": {"type": "message", "label": "近期活動",  "text": "近期活動"}},
+                        {"bounds": {"x": 1667, "y": 0,    "width": 833,  "height": 562},
+                         "action": {"type": "message", "label": "天氣+穿搭", "text": "天氣"}},
+                        {"bounds": {"x": 0,    "y": 562,  "width": 833,  "height": 562},
+                         "action": {"type": "message", "label": "健康小幫手", "text": "健康小幫手"}},
+                        {"bounds": {"x": 833,  "y": 562,  "width": 834,  "height": 562},
+                         "action": {"type": "message", "label": "金錢小幫手", "text": "金錢小幫手"}},
+                        {"bounds": {"x": 1667, "y": 562,  "width": 833,  "height": 562},
+                         "action": {"type": "message", "label": "找車位",    "text": "找車位"}},
+                        {"bounds": {"x": 0,    "y": 1124, "width": 833,  "height": 562},
+                         "action": {"type": "message", "label": "3C 推薦",   "text": "推薦手機"}},
+                        {"bounds": {"x": 833,  "y": 1124, "width": 834,  "height": 562},
+                         "action": {"type": "message", "label": "防詐騙",    "text": "防詐辨識"}},
+                        {"bounds": {"x": 1667, "y": 1124, "width": 833,  "height": 562},
+                         "action": {"type": "message", "label": "法律常識",  "text": "法律常識"}},
                     ]
                 }
                 body = json.dumps(new_menu, ensure_ascii=False).encode("utf-8")
@@ -2144,13 +1246,8 @@ class handler(BaseHTTPRequestHandler):
                         rname = parts[0]
                         rcity = parts[1] if len(parts) > 1 else ""
                         _record_eaten(user_id, rname, rcity)
-                        _pref = _redis_get(f"user_pref:{user_id}") or {}
-                        _new_visited = _pref.get("visited_count", 0) + 1
-                        _redis_set(f"user_pref:{user_id}",
-                                   {**_pref, "visited_count": _new_visited},
-                                   ttl=7_776_000)
                         reply_message(reply_token, [{"type": "text",
-                            "text": f"✅ 記住了！\n下次不再推薦「{rname}」給你 😊\n\n累計探索：{_new_visited} 家餐廳 🍽️"}])
+                            "text": f"✅ 記住了！\n下次不再推薦「{rname}」給你 😊"}])
                         log_usage(user_id, "food", sub_action="吃過了", city=rcity)
                     continue
 
@@ -2171,112 +1268,52 @@ class handler(BaseHTTPRequestHandler):
                         _parking_city = _city_from_coords(lat, lon)
                     if _parking_city:
                         _set_user_city(user_id, _parking_city)
-                    if user_id:
-                        _set_user_loc(user_id, lat, lon)
 
-                    # ── 食物定位意圖（來自「吃什麼」Quick Reply 或「我附近的X」）──
+                    # ── 食物定位意圖（來自「吃什麼」Quick Reply）──
                     _food_flag = _redis_get(f"food_locate:{user_id}")
                     print(f"[food_locate] flag={_food_flag!r} city={_parking_city} lat={lat:.4f} lon={lon:.4f}")
                     if _food_flag:
                         _redis_set(f"food_locate:{user_id}", "", ttl=1)  # 清除 flag
-                        # 若有待處理的食物類型（來自「我附近的飯糰」等），優先搜該類型
-                        _pending_style = _redis_get(f"food_style_pending:{user_id}")
-                        if _pending_style:
-                            _redis_set(f"food_style_pending:{user_id}", "", ttl=1)
-                            _pending_kw = _redis_get(f"food_kw_pending:{user_id}") or ""
-                            if _pending_kw:
-                                _redis_set(f"food_kw_pending:{user_id}", "", ttl=1)
-                            try:
-                                food_cards = build_food_real_restaurants(
-                                    _pending_style, _parking_city or "", user_id=user_id,
-                                    specific_kw=_pending_kw)
-                                reply_message(reply_token, food_cards)
-                            except Exception as _fe:
-                                print(f"[food_style_pending] failed: {_fe}")
-                                reply_message(reply_token, build_food_message(
-                                    f"吃什麼 {_parking_city}" if _parking_city else "吃什麼",
-                                    user_id=user_id))
-                            log_usage(user_id, "food", sub_action="附近意圖定位", city=_parking_city)
-                            continue
                         try:
                             food_cards = _build_post_parking_food(
-                                _parking_city or "", lat, lon, user_id=user_id, addr=_addr_raw)
-                            if not food_cards and _parking_city:
-                                # fallback: 直接顯示城市餐廳卡（"餐廳 台南" 不觸發主選單路由）
-                                food_cards = build_food_message(
-                                    f"餐廳 {_parking_city}", user_id=user_id)
+                                _parking_city or "", lat, lon, user_id=user_id)
                             if not food_cards:
-                                food_cards = build_food_message("餐廳", user_id=user_id)
+                                food_cards = [{"type": "text",
+                                    "text": f"📍 已定位！輸入「吃什麼 {_parking_city or ''}」查看附近美食 🍜"}]
                             reply_message(reply_token, food_cards)
                         except Exception as _fe:
                             import traceback; traceback.print_exc()
                             print(f"[food_locate] build failed: {_fe}")
-                            _fb_city = _parking_city or ""
-                            reply_message(reply_token,
-                                build_food_message(f"餐廳 {_fb_city}" if _fb_city else "餐廳",
-                                                   user_id=user_id))
+                            reply_message(reply_token, [{"type": "text",
+                                "text": f"📍 已定位到{_parking_city or '附近'}！\n輸入「吃什麼」查看附近美食 🍜"}])
                         log_usage(user_id, "food", sub_action="位置定位", city=_parking_city)
                         continue
                     print(f"[webhook] location: {lat},{lon} city={_parking_city} addr={_addr_raw[:20]!r}")
 
                     def _build_food_inline(_city, _lat, _lon, _uid):
                         try:
-                            return _build_post_parking_food(_city, _lat, _lon, user_id=_uid, addr=_addr_raw)
+                            return _build_post_parking_food(_city, _lat, _lon, user_id=_uid)
                         except Exception as _fe:
                             import traceback; traceback.print_exc()
                             print(f"[food_inline] FAILED: {_fe}")
                             return []
 
-                    # 停車後問候卡片（附近美食 / 活動 選一）
-                    _city2 = _parking_city[:2] if _parking_city else ""
-                    _after_parking_card = {"type": "flex", "altText": "需要推薦附近美食或活動嗎？",
-                        "contents": {"type": "bubble", "size": "kilo",
-                            "body": {"type": "box", "layout": "vertical",
-                                "paddingAll": "16px", "spacing": "sm",
-                                "contents": [
-                                    {"type": "text", "text": "需要順便幫你推薦嗎？ 😊",
-                                     "weight": "bold", "size": "sm", "color": "#1A1F3A"},
-                                    {"type": "text", "text": "選一個，馬上幫你找",
-                                     "size": "xs", "color": "#888888", "margin": "xs"},
-                                ]},
-                            "footer": {"type": "box", "layout": "vertical",
-                                "spacing": "sm", "paddingAll": "12px",
-                                "contents": [
-                                    {"type": "button", "style": "primary", "color": "#FF6B35",
-                                     "height": "sm",
-                                     "action": {"type": "message",
-                                                "label": "🍜 附近美食推薦",
-                                                "text": "📍 我要分享位置找美食"}},
-                                    {"type": "button", "style": "primary", "color": "#1565C0",
-                                     "height": "sm",
-                                     "action": {"type": "message",
-                                                "label": "🗺️ 目的地美食查詢",
-                                                "text": f"目的地美食 {_city2}" if _city2 else "目的地美食"}},
-                                    {"type": "box", "layout": "horizontal", "spacing": "sm",
-                                     "contents": [
-                                         {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                                          "action": {"type": "message",
-                                                     "label": "🎉 附近活動",
-                                                     "text": f"近期活動 {_city2}" if _city2 else "近期活動"}},
-                                         {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                                          "action": {"type": "message",
-                                                     "label": "🗓️ 目的地活動",
-                                                     "text": "近期活動"}},
-                                     ]},
-                                ]}}}
-
-                    # 快速路徑：快取命中
+                    # 快速路徑：快取命中 → reply 停車 + push 美食（緊接在後）
                     cached = _peek_parking_cache(lat, lon)
                     if cached:
                         reply_message(reply_token, cached)
-                        push_message(user_id, [_after_parking_card])
+                        if _parking_city:
+                            food_msgs = _build_food_inline(_parking_city, lat, lon, user_id)
+                            if food_msgs:
+                                push_message(user_id, food_msgs)
                         log_usage(user_id, "parking", sub_action="傳位置_cached", city=city_hint)
                     else:
                         reply_message(reply_token, [{"type": "text",
-                            "text": "📍 定位成功！\n🔍 正在搜尋附近車位..."}])
+                            "text": "📍 定位成功！\n🔍 正在搜尋附近車位與美食..."}])
                         try:
                             messages = build_parking_flex(lat, lon, city=_parking_city)
-                            push_message(user_id, messages + [_after_parking_card])
+                            food_msgs = _build_food_inline(_parking_city or "", lat, lon, user_id)
+                            push_message(user_id, messages + food_msgs)
                             log_usage(user_id, "parking", sub_action="傳位置", city=city_hint)
                         except Exception as pe:
                             import traceback; traceback.print_exc()
@@ -2319,51 +1356,18 @@ class handler(BaseHTTPRequestHandler):
                             # 快速路徑：快取命中 → 直接 reply 卡片
                             cached = _peek_parking_cache(lat, lon)
                             _liff_city = _get_user_city(user_id) or _city_from_coords(lat, lon)
-                            _liff_city2 = _liff_city[:2] if _liff_city else ""
-                            _liff_after_card = {"type": "flex", "altText": "需要推薦附近美食或活動嗎？",
-                                "contents": {"type": "bubble", "size": "kilo",
-                                    "body": {"type": "box", "layout": "vertical",
-                                        "paddingAll": "16px", "spacing": "sm",
-                                        "contents": [
-                                            {"type": "text", "text": "需要順便幫你推薦嗎？ 😊",
-                                             "weight": "bold", "size": "sm", "color": "#1A1F3A"},
-                                            {"type": "text", "text": "選一個，馬上幫你找",
-                                             "size": "xs", "color": "#888888", "margin": "xs"},
-                                        ]},
-                                    "footer": {"type": "box", "layout": "vertical",
-                                        "spacing": "sm", "paddingAll": "12px",
-                                        "contents": [
-                                            {"type": "button", "style": "primary", "color": "#FF6B35",
-                                             "height": "sm",
-                                             "action": {"type": "message",
-                                                        "label": "🍜 附近美食推薦",
-                                                        "text": "📍 我要分享位置找美食"}},
-                                            {"type": "button", "style": "primary", "color": "#1565C0",
-                                             "height": "sm",
-                                             "action": {"type": "message",
-                                                        "label": "🗺️ 目的地美食查詢",
-                                                        "text": f"目的地美食 {_liff_city2}" if _liff_city2 else "目的地美食"}},
-                                            {"type": "box", "layout": "horizontal", "spacing": "sm",
-                                             "contents": [
-                                                 {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                                                  "action": {"type": "message",
-                                                             "label": "🎉 附近活動",
-                                                             "text": f"近期活動 {_liff_city2}" if _liff_city2 else "近期活動"}},
-                                                 {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
-                                                  "action": {"type": "message",
-                                                             "label": "🗓️ 目的地活動",
-                                                             "text": "近期活動"}},
-                                             ]},
-                                        ]}}}
                             if cached:
                                 reply_message(reply_token, cached)
-                                push_message(user_id, [_liff_after_card])
+                                if _liff_city:
+                                    push_message(user_id, _build_post_parking_food(_liff_city))
                                 log_usage(user_id, "parking", sub_action="liff_cached")
                             else:
                                 reply_message(reply_token, [{"type": "text",
                                     "text": "📍 定位成功！\n🔍 正在搜尋附近車位..."}])
                                 messages = build_parking_flex(lat, lon, city=_liff_city)
-                                push_message(user_id, messages + [_liff_after_card])
+                                push_message(user_id, messages)
+                                if _liff_city:
+                                    push_message(user_id, _build_post_parking_food(_liff_city))
                                 log_usage(user_id, "parking", sub_action="liff_auto")
                         except Exception as pe:
                             import traceback; traceback.print_exc()
