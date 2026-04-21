@@ -42,6 +42,7 @@ from modules.weather_morning_helpers import get_national_deal as _shared_get_nat
 from modules.weather_advice import estimate_uvi as _shared_estimate_uvi
 from modules.weather_advice import outfit_advice as _shared_outfit_advice
 from modules.weather_advice import wx_icon as _shared_wx_icon
+from modules.weather_morning_summary import build_morning_summary as _shared_build_morning_summary
 from modules.weather_pickers import build_morning_city_picker as _shared_build_morning_city_picker
 from modules.weather_pickers import build_weather_city_picker as _shared_build_weather_city_picker
 from modules.weather_pickers import build_weather_region_picker as _shared_build_weather_region_picker
