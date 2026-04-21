@@ -7,6 +7,7 @@
       "config": {
         "includeFiles": [
           "api/modules/**",
+          "api/handlers/**",
           "api/utils/**",
           "api/data/**",
           "accupass_cache.json",
