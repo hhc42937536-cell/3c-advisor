@@ -3,6 +3,40 @@
 from __future__ import annotations
 
 
+def build_life_tools_menu() -> list:
+    """生活工具選單 — 精簡版（3C推薦、防詐、法律）。"""
+    return [{
+        "type": "flex", "altText": "🛠️ 生活小幫手工具箱",
+        "contents": {
+            "type": "bubble", "size": "mega",
+            "header": {
+                "type": "box", "layout": "vertical",
+                "backgroundColor": "#2D2D2D",
+                "contents": [
+                    {"type": "text", "text": "🛠️ 生活小幫手工具箱",
+                     "color": "#FFFFFF", "size": "lg", "weight": "bold"},
+                    {"type": "text", "text": "選擇你需要的服務",
+                     "color": "#FFFFFFCC", "size": "sm"},
+                ]
+            },
+            "body": {
+                "type": "box", "layout": "vertical", "spacing": "sm",
+                "contents": [
+                    {"type": "button", "style": "primary", "color": "#FF8C42",
+                     "action": {"type": "message", "label": "📱 3C 推薦小幫手", "text": "推薦手機"}},
+                    {"type": "button", "style": "primary", "color": "#C0392B",
+                     "action": {"type": "message", "label": "🔍 防詐辨識", "text": "防詐辨識"}},
+                    {"type": "button", "style": "primary", "color": "#1C2B4A",
+                     "action": {"type": "message", "label": "⚖️ 法律常識小幫手", "text": "法律常識"}},
+                    {"type": "separator", "margin": "md"},
+                    {"type": "button", "style": "secondary",
+                     "action": {"type": "message", "label": "🗃️ 所有功能", "text": "更多功能"}},
+                ]
+            }
+        }
+    }]
+
+
 def build_tools_menu() -> list:
     """生活工具箱選單 — 磚塊格版（4排×3格）。"""
 

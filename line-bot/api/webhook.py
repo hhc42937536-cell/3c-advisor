@@ -83,7 +83,7 @@ from modules.tech     import (
 )
 from modules.safety   import (
     analyze_fraud, build_fraud_intro, build_fraud_trends, build_fraud_result,
-    build_legal_guide_intro, build_legal_answer, build_tools_menu, LEGAL_QA,
+    build_legal_guide_intro, build_legal_answer, build_tools_menu, build_life_tools_menu, LEGAL_QA,
 )
 from modules.parking  import build_parking_flex, _build_post_parking_food
 
@@ -250,7 +250,7 @@ def handle_text_message(text: str, user_id: str = "") -> list:
     # ── 8. 頁籤切換訊息（點到已啟用頁籤 → 顯示對應選單）──────
     if text.startswith("tab:"):
         if "生活" in text:
-            return build_tools_menu()   # 已在生活自保頁 → 顯示工具箱
+            return build_life_tools_menu()   # 已在生活自保頁 → 顯示生活工具精簡選單
         return build_welcome_message()  # 已在3C推薦頁 → 顯示歡迎選單
 
     # ── (舊路由保留) 其他工具 ────────────────────────
