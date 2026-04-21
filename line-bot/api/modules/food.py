@@ -36,6 +36,7 @@ from handlers.feedback_routes import handle_food_feedback as _shared_handle_food
 from handlers.feedback_routes import handle_general_report as _shared_handle_general_report
 from handlers.feedback_routes import handle_user_suggestion as _shared_handle_user_suggestion
 from modules.food_data import _ALL_CITIES
+from modules.food_data import _ALL_FOOD_KEYWORDS
 from modules.food_data import _BIB_GOURMAND
 from modules.food_data import _CITY_SPECIALTIES
 from modules.food_data import _FOOD_DB
