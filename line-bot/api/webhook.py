@@ -1390,6 +1390,75 @@ class handler(BaseHTTPRequestHandler):
                     if any(w in user_text for w in ["找車位", "停車", "車位"]):
                         _redis_set(f"food_locate:{user_id}", "", ttl=1)
 
+                    # ── 目的地美食：地址輸入模式 ──────────────────────────
+                    _dest_flag = _redis_get(f"food_destination:{user_id}")
+                    if _dest_flag and user_text and not any(
+                        w in user_text for w in [
+                            "今天吃什麼", "找車位", "早安", "天氣", "目的地美食",
+                            "防詐", "法律", "推薦手機", "更多功能",
+                        ]
+                    ):
+                        _redis_set(f"food_destination:{user_id}", "", ttl=1)
+                        # 快速城市按鈕（格式：目的地美食地址:台南）
+                        _dest_addr = (
+                            user_text.split(":", 1)[1]
+                            if user_text.startswith("目的地美食地址:")
+                            else user_text
+                        )
+                        # 呼叫 Google Geocoding API
+                        _dlat, _dlon = 0.0, 0.0
+                        if GOOGLE_PLACES_API_KEY:
+                            try:
+                                import urllib.parse as _up2
+                                _gc_url = (
+                                    "https://maps.googleapis.com/maps/api/geocode/json"
+                                    f"?address={_up2.quote(_dest_addr + ' 台灣')}"
+                                    "&language=zh-TW"
+                                    f"&key={GOOGLE_PLACES_API_KEY}"
+                                )
+                                with urllib.request.urlopen(
+                                    urllib.request.Request(_gc_url), timeout=8
+                                ) as _gcr:
+                                    _gcdata = json.loads(_gcr.read())
+                                if _gcdata.get("results"):
+                                    _loc = _gcdata["results"][0]["geometry"]["location"]
+                                    _dlat, _dlon = float(_loc["lat"]), float(_loc["lng"])
+                                    print(f"[geocode] {_dest_addr!r} → {_dlat:.4f},{_dlon:.4f}")
+                            except Exception as _ge:
+                                print(f"[geocode] error: {_ge}")
+                        if _dlat and _dlon:
+                            _dcity = _city_from_coords(_dlat, _dlon)
+                            if _dcity:
+                                _set_user_city(user_id, _dcity)
+                            try:
+                                _dfood = _build_post_parking_food(
+                                    _dcity or "", _dlat, _dlon, user_id=user_id
+                                )
+                                if not _dfood:
+                                    _dfood = [{"type": "text",
+                                        "text": f"📍 {_dest_addr} 附近沒找到美食資料，試試輸入城市名稱"}]
+                            except Exception as _dfe:
+                                print(f"[dest_food] error: {_dfe}")
+                                _dfood = [{"type": "text",
+                                    "text": "搜尋目的地美食時發生錯誤，請稍後再試 🙏"}]
+                            reply_message(reply_token, _dfood)
+                            log_usage(user_id, "food", sub_action="目的地美食", city=_dcity)
+                            continue
+                        else:
+                            # Geocoding 失敗 → 嘗試從文字提取城市
+                            _dc = next((_c for _c in _ALL_CITIES if _c in _dest_addr), "")
+                            if _dc:
+                                _redis_set(f"food_destination:{user_id}", "", ttl=1)
+                                _msgs = handle_text_message(f"今天吃什麼 {_dc}", user_id=user_id)
+                                reply_message(reply_token, _msgs)
+                                log_usage(user_id, "food", sub_action="目的地美食", city=_dc)
+                                continue
+                            # 真的找不到 → 重新提示
+                            reply_message(reply_token, [{"type": "text",
+                                "text": f"找不到「{_dest_addr}」的位置 😢\n請輸入城市名稱，例如：台南、高雄"}])
+                            _redis_set(f"food_destination:{user_id}", "1", ttl=300)
+                            continue
+
                     # 判斷功能類別（用於 log，不影響路由）
                     _feature, _sub = _detect_feature(user_text)
 
