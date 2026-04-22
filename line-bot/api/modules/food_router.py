@@ -56,9 +56,33 @@ def build_food_message(
             region = r
             break
 
-    # ── 目的地美食查詢（忽略已存城市，讓用戶重新選擇目的地）──
+    # ── 目的地美食查詢：顯示地址輸入提示 ──
     if "目的地美食" in text_s and "我要分享位置找美食" not in text_s:
-        return build_food_entry_region_picker(user_id or "")
+        if user_id:
+            redis_set(f"food_destination:{user_id}", "1", ttl=300)
+        _dest_cities = ["台北", "台南", "高雄", "台中", "桃園", "新北"]
+        return [{
+            "type": "text",
+            "text": (
+                "🗺️ 目的地美食查詢\n\n"
+                "請直接輸入地址或城市，例如：\n"
+                "・台南市東區\n"
+                "・高雄左營區文自路\n"
+                "・台北信義區\n\n"
+                "或點下方按鈕快速選城市 👇"
+            ),
+            "quickReply": {
+                "items": [
+                    {"type": "action", "action": {"type": "location", "label": "📍 分享位置"}},
+                    *[
+                        {"type": "action", "action": {
+                            "type": "message", "label": c, "text": f"目的地美食地址:{c}"
+                        }}
+                        for c in _dest_cities
+                    ],
+                ]
+            }
+        }]
 
     # ── 必比登推介 ──
     if "必比登" in text_s or "米其林" in text_s:
