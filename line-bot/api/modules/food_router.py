@@ -29,6 +29,8 @@ def build_food_message(
     build_food_menu,
     build_food_entry_city_picker,
     build_food_entry_region_picker,
+    build_trending_specialty=None,
+    build_trending_by_district=None,
 ) -> list:
     """今天吃什麼 — 主路由"""
     text_s = text.strip()
@@ -83,6 +85,35 @@ def build_food_message(
                 ]
             }
         }]
+
+    # ── 必買伴手禮 / 最新流行美食 ──
+    if build_trending_specialty and build_trending_by_district:
+        _souvenir_kw = ["必買伴手禮", "伴手禮推薦", "伴手禮", "必買"]
+        _trending_kw = ["最新流行", "最新美食", "最新必吃", "流行美食", "打卡美食"]
+        _is_souvenir = any(kw in text_s for kw in _souvenir_kw)
+        _is_trending = any(kw in text_s for kw in _trending_kw)
+        if not (_is_souvenir or _is_trending):
+            if re.search(r'20\d\d', text_s) and "必買" in text_s:
+                _is_souvenir = True
+            if re.search(r'20\d\d', text_s) and any(w in text_s for w in ["推薦", "流行", "打卡"]):
+                _is_trending = True
+        if _is_souvenir or _is_trending:
+            _district_pat = re.compile(
+                r"(必買伴手禮|伴手禮|最新流行|流行美食|打卡美食)\s*"
+                r"(台北|新北|基隆|桃園|新竹|苗栗|台中|彰化|南投|雲林"
+                r"|嘉義|台南|高雄|屏東|宜蘭|花蓮|台東|澎湖|金門|連江)?"
+                r"([^\s]{2,6}[區市鄉鎮])"
+            )
+            _dm = _district_pat.search(text_s)
+            if _dm:
+                _d_mode = "souvenir" if any(kw in _dm.group(1) for kw in ["伴手禮", "必買"]) else "trending"
+                _d_city = (_dm.group(2) or area_city or "")[:2]
+                _d_dist = _dm.group(3)
+                return build_trending_by_district(_d_dist, _d_city, _d_mode)
+            if _is_souvenir and area_city:
+                return build_trending_specialty(area_city, "souvenir")
+            if _is_trending and area_city:
+                return build_trending_specialty(area_city, "trending")
 
     # ── 必比登推介 ──
     if "必比登" in text_s or "米其林" in text_s:

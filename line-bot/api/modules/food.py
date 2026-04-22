@@ -21,6 +21,8 @@ from modules.food_menu_builders import build_food_special_picker as _shared_buil
 from modules.food_menu_builders import build_food_type_picker as _shared_build_food_type_picker
 from modules.food_specialties import build_city_specialties as _shared_build_city_specialties
 from modules.food_specialties import build_specialty_shops as _shared_build_specialty_shops
+from modules.food_specialties import build_trending_specialty as _shared_build_trending_specialty
+from modules.food_specialties import build_trending_by_district as _shared_build_trending_by_district
 from modules.food_restaurants import build_food_restaurant_flex as _shared_build_food_restaurant_flex
 from modules.food_restaurants import build_restaurant_bubble as _shared_build_restaurant_bubble
 from modules.food_restaurants import places_photo_url as _shared_places_photo_url
@@ -47,6 +49,7 @@ from modules.food_runtime import GOOGLE_PLACES_API_KEY
 from modules.food_runtime import _RESTAURANT_CACHE
 from modules.food_runtime import _food_recent
 from modules.food_runtime import _get_user_city
+from modules.food_runtime import _redis_get
 from modules.food_runtime import _redis_set
 from modules.food_runtime import _set_user_city
 from modules.food_runtime import _tw_season
@@ -178,7 +181,25 @@ def build_food_area_picker(style: str, region: str = "") -> list:
 
 def build_city_specialties(city: str) -> list:
     return _shared_build_city_specialties(
-        city, _CITY_SPECIALTIES, _tw_season, build_food_restaurant_flex
+        city, _CITY_SPECIALTIES, _tw_season, build_food_restaurant_flex,
+        text_search_places=_text_search_places,
+        places_photo_url=_places_photo_url,
+        redis_get=_redis_get,
+        redis_set=_redis_set,
+    )
+
+
+def build_trending_specialty(city: str, mode: str) -> list:
+    return _shared_build_trending_specialty(
+        city, mode, _text_search_places, _build_restaurant_bubble,
+        redis_get=_redis_get, redis_set=_redis_set,
+    )
+
+
+def build_trending_by_district(district: str, city2: str, mode: str) -> list:
+    return _shared_build_trending_by_district(
+        district, city2, mode, _text_search_places, _build_restaurant_bubble,
+        redis_get=_redis_get, redis_set=_redis_set,
     )
 
 
@@ -215,4 +236,6 @@ def build_food_message(text: str, user_id: str = None) -> list:
         build_food_menu=build_food_menu,
         build_food_entry_city_picker=_build_food_entry_city_picker,
         build_food_entry_region_picker=_build_food_entry_region_picker,
+        build_trending_specialty=build_trending_specialty,
+        build_trending_by_district=build_trending_by_district,
     )
