@@ -61,6 +61,7 @@ from handlers.feedback_routes import (
 from modules.food     import (
     build_food_message, build_group_dining_message,
     build_specialty_shops, build_city_specialties,
+    build_trending_specialty, build_trending_by_district,
     _ALL_CITIES, _STYLE_KEYWORDS, _ALL_FOOD_KEYWORDS,
 )
 from modules.weather  import (
