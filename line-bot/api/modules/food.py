@@ -23,6 +23,7 @@ from modules.food_specialties import build_city_specialties as _shared_build_cit
 from modules.food_specialties import build_specialty_shops as _shared_build_specialty_shops
 from modules.food_specialties import build_trending_specialty as _shared_build_trending_specialty
 from modules.food_specialties import build_trending_by_district as _shared_build_trending_by_district
+from modules.food_specialties import build_new_shops as _shared_build_new_shops
 from modules.food_restaurants import build_food_restaurant_flex as _shared_build_food_restaurant_flex
 from modules.food_restaurants import build_restaurant_bubble as _shared_build_restaurant_bubble
 from modules.food_restaurants import places_photo_url as _shared_places_photo_url
@@ -209,6 +210,13 @@ def build_specialty_shops(city: str, food_name: str) -> list:
     )
 
 
+def build_new_shops(city: str) -> list:
+    return _shared_build_new_shops(
+        city, _text_search_places, _build_restaurant_bubble,
+        redis_get=_redis_get, redis_set=_redis_set,
+    )
+
+
 # ─── 地區/城市選擇器 ──────────────────────────────────────
 
 
@@ -238,4 +246,5 @@ def build_food_message(text: str, user_id: str = None) -> list:
         build_food_entry_region_picker=_build_food_entry_region_picker,
         build_trending_specialty=build_trending_specialty,
         build_trending_by_district=build_trending_by_district,
+        build_new_shops=build_new_shops,
     )
