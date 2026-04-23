@@ -1,6 +1,11 @@
 {
-  "updated_at": "2026-04-22 22:53",
+  "updated_at": "2026-04-23 22:54",
   "songs": [
+    {
+      "name": "REDRED",
+      "artist": "CORTIS",
+      "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
+    },
     {
       "name": "SWIM",
       "artist": "防彈少年團",
@@ -10,11 +15,6 @@
       "name": "drop dead",
       "artist": "Olivia Rodrigo",
       "url": "https://music.apple.com/tw/album/drop-dead/1889992111?i=1889992113"
-    },
-    {
-      "name": "REDRED",
-      "artist": "CORTIS",
-      "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
     },
     {
       "name": "那天下雨了",
@@ -47,19 +47,14 @@
       "url": "https://music.apple.com/tw/album/who-is-she/1886385269?i=1886385270"
     },
     {
-      "name": "Body to Body",
-      "artist": "防彈少年團",
-      "url": "https://music.apple.com/tw/album/body-to-body/1868862375?i=1868862376"
-    },
-    {
-      "name": "Stick With You",
-      "artist": "TOMORROW X TOGETHER",
-      "url": "https://music.apple.com/tw/album/stick-with-you/1886536327?i=1886536332"
-    },
-    {
       "name": "幸福在歌唱 (電影《陽光女子合唱團》幸福版主題曲)",
       "artist": "A-Lin",
       "url": "https://music.apple.com/tw/album/%E5%B9%B8%E7%A6%8F%E5%9C%A8%E6%AD%8C%E5%94%B1-%E9%9B%BB%E5%BD%B1-%E9%99%BD%E5%85%89%E5%A5%B3%E5%AD%90%E5%90%88%E5%94%B1%E5%9C%98-%E5%B9%B8%E7%A6%8F%E7%89%88%E4%B8%BB%E9%A1%8C%E6%9B%B2/1861431707?i=1861431711"
+    },
+    {
+      "name": "Body to Body",
+      "artist": "防彈少年團",
+      "url": "https://music.apple.com/tw/album/body-to-body/1868862375?i=1868862376"
     },
     {
       "name": "2.0",
@@ -67,25 +62,35 @@
       "url": "https://music.apple.com/tw/album/2-0/1868862375?i=1868862380"
     },
     {
+      "name": "Stick With You",
+      "artist": "TOMORROW X TOGETHER",
+      "url": "https://music.apple.com/tw/album/stick-with-you/1886536327?i=1886536332"
+    },
+    {
+      "name": "BANG BANG",
+      "artist": "IVE",
+      "url": "https://music.apple.com/tw/album/bang-bang/1872627662?i=1872628039"
+    },
+    {
       "name": "清清如我(電視劇《逐玉》抒情主題曲)",
       "artist": "郁可唯",
       "url": "https://music.apple.com/tw/album/%E6%B8%85%E6%B8%85%E5%A6%82%E6%88%91-%E9%9B%BB%E8%A6%96%E5%8A%87-%E9%80%90%E7%8E%89-%E6%8A%92%E6%83%85%E4%B8%BB%E9%A1%8C%E6%9B%B2/1884873979?i=1884873983"
-    },
-    {
-      "name": "愛琴海",
-      "artist": "周杰倫",
-      "url": "https://music.apple.com/tw/album/%E6%84%9B%E7%90%B4%E6%B5%B7/1887246588?i=1887246595"
     }
   ],
   "deals": [
     {
-      "title": "折扣很多耶 - Threads",
-      "url": "https://www.threads.com/@crispy22waffle/post/DXZIkeVmtED/%E6%8A%98%E6%89%A3%E5%BE%88%E5%A4%9A%E8%80%B6",
+      "title": "全聯連續5天「21元民生品」限時優惠！飲料、咖啡、衛生紙都有 - ETtoday",
+      "url": "https://www.ettoday.net/news/20260421/3152989.htm",
       "tag": "優惠"
     },
     {
-      "title": "台中最猛內衣店一定要來逛過！！ 全館價位$399~890 現在母親節 ...",
-      "url": "https://www.threads.com/@edele_w/post/DXY4XXkAt9c/%E5%8F%B0%E4%B8%AD%E6%9C%80%E7%8C%9B%E5%85%A7%E8%A1%A3%E5%BA%97%E4%B8%80%E5%AE%9A%E8%A6%81%E4%BE%86%E9%80%9B%E9%81%8E%E5%85%A8%E9%A4%A8%E5%83%B9%E4%BD%8D399890-%E7%8F%BE%E5%9C%A8%E6%AF%8D%E8%A6%AA%E7%AF%80%E6%B4%BB%E5%8B%95%E6%8A%98%E6%89%A3%E4%B8%8B%E4%BE%86-%E6%AF%94%E7%89%B9%E8%B3%A3%E6%9C%83%E9%82%84%E8%A6%81%E4%BE%BF%E5%AE%9C%E6%AC%B8",
+      "title": "Costco好市多(新品/優惠)最速報– Telegram",
+      "url": "https://t.me/s/daybuy?before=17174",
+      "tag": "優惠"
+    },
+    {
+      "title": "24力會員日母親節預購會最高回饋21%【PChome24h購物】",
+      "url": "https://24h.pchome.com.tw/activity/24power?srsltid=AfmBOoptJhA6IiIBfJSyptH_Ty69gjtl1zHsiVKBzbBmm_z2MUPH9wZ6",
       "tag": "優惠"
     },
     {
@@ -94,23 +99,8 @@
       "tag": "優惠"
     },
     {
-      "title": "札幌藥妝直送商城《5週年特賣》倒數一週～",
-      "url": "https://global-satudora.com/blogs/promotion/%F0%9F%92%96%E6%9C%AD%E5%B9%8C%E8%97%A5%E5%A6%9D%E7%9B%B4%E9%80%81%E5%95%86%E5%9F%8E-5%E9%80%B1%E5%B9%B4%E7%89%B9%E8%B3%A3-%E5%80%92%E6%95%B8%E4%B8%80%E9%80%B1?srsltid=AfmBOoorlR-1OvAkLhORBhbcxsOABpay3dIsZGujMDWF5RZ5LeXO4Vj8",
-      "tag": "優惠"
-    },
-    {
       "title": "2025週年慶美妝攻略彩妝保養組合、女星同款、質感香氛 - 新光三越",
       "url": "https://www.skm.com.tw/skmmedia/beauty/beautynews/beauty0925",
-      "tag": "優惠"
-    },
-    {
-      "title": "Mega City 板橋大遠百-線上DM - 遠東百貨",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=54",
-      "tag": "優惠"
-    },
-    {
-      "title": "新竹店 - 遠東SOGO百貨",
-      "url": "https://info.sogo.com.tw/hcbc",
       "tag": "優惠"
     },
     {
@@ -119,28 +109,38 @@
       "tag": "優惠"
     },
     {
-      "title": "新竹大遠百-線上DM - 遠東百貨",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=42",
+      "title": "札幌藥妝直送商城《5週年特賣》倒數一週～",
+      "url": "https://global-satudora.com/blogs/promotion/%F0%9F%92%96%E6%9C%AD%E5%B9%8C%E8%97%A5%E5%A6%9D%E7%9B%B4%E9%80%81%E5%95%86%E5%9F%8E-5%E9%80%B1%E5%B9%B4%E7%89%B9%E8%B3%A3-%E5%80%92%E6%95%B8%E4%B8%80%E9%80%B1?srsltid=AfmBOoqMQiuQF8W1iLXx49g5jvp67iDDzrtVvZUgLMnOqJRjV2Yuftuq",
       "tag": "優惠"
     },
     {
-      "title": "明天信義莊敬店盛大開幕有連續5天的優惠活動哦   - Threads",
-      "url": "https://www.threads.com/@dailybreakfast.official/post/DXLZt3wj05T/%E6%98%8E%E5%A4%A9%E4%BF%A1%E7%BE%A9%E8%8E%8A%E6%95%AC%E5%BA%97%E7%9B%9B%E5%A4%A7%E9%96%8B%E5%B9%95-%E6%9C%89%E9%80%A3%E7%BA%8C5%E5%A4%A9%E7%9A%84%E5%84%AA%E6%83%A0%E6%B4%BB%E5%8B%95%E5%93%A6",
+      "title": "遠百板橋-線上DM - 遠東百貨",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=50",
+      "tag": "優惠"
+    },
+    {
+      "title": "台北復興館 - 遠東SOGO百貨",
+      "url": "https://info.sogo.com.tw/tp2",
+      "tag": "優惠"
+    },
+    {
+      "title": "愛麗絲夢遊仙境！D+AF牡蠣寶寶主題店中山開幕免費拍貼送購物袋",
+      "url": "https://www.nownews.com/amp/news/6809743?srsltid=AfmBOoofV-gvv2FemNVpxFls-lUmlWHHdei06wKyvCUnxHwPOR-3x6wg",
+      "tag": "優惠"
+    },
+    {
+      "title": "Laline 台北概念店開幕推限定體驗與滿額優惠迎母親節",
+      "url": "https://news.pchome.com.tw/living/morenews/20260423/index-77693997794822350009.html",
+      "tag": "優惠"
+    },
+    {
+      "title": "母親節拚買氣百貨滿額贈、抽獎快閃全出籠",
+      "url": "https://tw.news.yahoo.com/%E6%AF%8D%E8%A6%AA%E7%AF%80%E6%8B%9A%E8%B2%B7%E6%B0%A3-%E7%99%BE%E8%B2%A8%E6%BB%BF%E9%A1%8D%E8%B4%88-%E6%8A%BD%E7%8D%8E%E5%BF%AB%E9%96%83%E5%85%A8%E5%87%BA%E7%B1%A0-050333773.html",
       "tag": "優惠"
     },
     {
       "title": "日本50年名店麵條直送來台烏龍麵新品牌「食悅」開幕買一送一 - MSN",
       "url": "https://www.msn.com/zh-tw/news/other/%E6%97%A5%E6%9C%AC50%E5%B9%B4%E5%90%8D%E5%BA%97%E9%BA%B5%E6%A2%9D%E7%9B%B4%E9%80%81%E4%BE%86%E5%8F%B0-%E7%83%8F%E9%BE%8D%E9%BA%B5%E6%96%B0%E5%93%81%E7%89%8C-%E9%A3%9F%E6%82%85-%E9%96%8B%E5%B9%95%E8%B2%B7%E4%B8%80%E9%80%81%E4%B8%80/ar-AA215UUV",
-      "tag": "優惠"
-    },
-    {
-      "title": "愛麗絲夢遊仙境！D+AF牡蠣寶寶主題店中山開幕免費拍貼送購物袋",
-      "url": "https://www.nownews.com/amp/news/6809743?srsltid=AfmBOop5gFK6ZYL78jtxgp-yBeIl6TXaxSal-eVNeF6as3de7j4ZGvdQ",
-      "tag": "優惠"
-    },
-    {
-      "title": "2026新光三越台南新天地初夏購物節｜百貨折扣、滿額贈與豐富活動 ...",
-      "url": "https://www.skm.com.tw/page/summer-shopping-tainan",
       "tag": "優惠"
     },
     {
