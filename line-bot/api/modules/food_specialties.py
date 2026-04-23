@@ -186,6 +186,9 @@ def build_city_specialties(
             {"type": "action", "action": {
                 "type": "message", "label": "🔥 最新流行美食",
                 "text": f"最新流行 {city2}"}},
+            {"type": "action", "action": {
+                "type": "message", "label": "🆕 最新店家",
+                "text": f"最新店家 {city2}"}},
         ]
     }
     return [{"type": "flex", "altText": f"{city2} 特色美食",
@@ -197,7 +200,9 @@ def build_specialty_shops(city: str, food_name: str, text_search_places, restaur
     """第二步：用 Google Places Text Search 搜該城市的食物名店。"""
     city2 = city[:2] if city else ""
     query = f"{city2} {food_name}"
-    shops = text_search_places(query, max_results=5)
+    raw_shops = text_search_places(query, max_results=8)
+    shops = [s for s in raw_shops if (s.get("rating") or 0) >= 4.0] or raw_shops[:5]
+    shops = shops[:5]
     if not shops:
         gmap_uri = f"https://www.google.com/maps/search/{urllib.parse.quote(query)}/"
         return [{"type": "text",
@@ -355,3 +360,74 @@ def build_trending_specialty(
             "text": f"{swap_mode} {city2}"}})
         msgs[0]["quickReply"] = {"items": quick_items[:13]}
     return msgs
+
+
+def build_new_shops(
+    city: str,
+    text_search_places,
+    restaurant_bubble_builder,
+    redis_get=None,
+    redis_set=None,
+) -> list:
+    """搜尋城市最新開張店家（評分 4.0+）。"""
+    city2 = city[:2] if city else ""
+    if not city2:
+        return []
+
+    cache_key = f"new_shops:{city2}"
+    places: list = []
+    if redis_get:
+        cached = redis_get(cache_key)
+        if cached:
+            try:
+                places = json.loads(cached) if isinstance(cached, str) else cached
+            except Exception:
+                pass
+
+    if not places:
+        kw = f"{city2} 新開 必吃 美食 2024 2025"
+        raw = text_search_places(kw, max_results=12)
+        filtered = [p for p in raw if (p.get("rating") or 0) >= 4.0]
+        places = (filtered or raw)[:8]
+        if places and redis_set:
+            redis_set(cache_key, json.dumps(places), ttl=2 * 86400)
+
+    if not places:
+        return [{"type": "text", "text": f"目前找不到 {city2} 最新店家資料，試試「地方特色 {city2}」"}]
+
+    title = f"🆕 {city2} 最新店家"
+    nav_bubble: dict = {
+        "type": "bubble", "size": "kilo",
+        "header": {
+            "type": "box", "layout": "vertical",
+            "backgroundColor": "#1565C0", "paddingAll": "12px",
+            "contents": [
+                {"type": "text", "text": title, "color": "#FFFFFF", "size": "md", "weight": "bold"},
+                {"type": "text", "text": "Google Maps 即時搜尋 · 評分 4.0+",
+                 "color": "#BBDEFB", "size": "xxs", "margin": "xs"},
+            ]},
+        "body": {
+            "type": "box", "layout": "vertical", "spacing": "sm", "paddingAll": "12px",
+            "contents": [
+                {"type": "button", "style": "secondary", "height": "sm",
+                 "action": {"type": "message", "label": "🗺️ 地方特色",
+                            "text": f"地方特色 {city2}"}},
+                {"type": "button", "style": "secondary", "height": "sm",
+                 "action": {"type": "message", "label": "🔥 最新流行美食",
+                            "text": f"最新流行 {city2}"}},
+            ]},
+    }
+
+    seen_pids: set[str] = set()
+    bubbles: list[dict] = []
+    for p in places:
+        pid = p.get("place_id", "")
+        if pid and pid in seen_pids:
+            continue
+        if pid:
+            seen_pids.add(pid)
+        bubbles.append(restaurant_bubble_builder(p, None, None, city2, set(), subtitle=title))
+
+    return [{"type": "flex", "altText": title,
+             "contents": {"type": "carousel",
+                          "contents": [nav_bubble] + bubbles[:9]}}]

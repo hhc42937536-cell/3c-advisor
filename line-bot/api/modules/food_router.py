@@ -31,6 +31,7 @@ def build_food_message(
     build_food_entry_region_picker,
     build_trending_specialty=None,
     build_trending_by_district=None,
+    build_new_shops=None,
 ) -> list:
     """今天吃什麼 — 主路由"""
     text_s = text.strip()
@@ -85,6 +86,10 @@ def build_food_message(
                 ]
             }
         }]
+
+    # ── 最新店家 ──
+    if build_new_shops and "最新店家" in text_s and area_city:
+        return build_new_shops(area_city)
 
     # ── 必買伴手禮 / 最新流行美食 ──
     if build_trending_specialty and build_trending_by_district:
