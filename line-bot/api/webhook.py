@@ -1280,14 +1280,13 @@ class handler(BaseHTTPRequestHandler):
                             food_cards = _build_post_parking_food(
                                 _parking_city or "", lat, lon, user_id=user_id)
                             if not food_cards:
-                                food_cards = [{"type": "text",
-                                    "text": f"📍 已定位！輸入「吃什麼 {_parking_city or ''}」查看附近美食 🍜"}]
+                                food_cards = build_food_message(f"吃什麼 {_parking_city or ''}", user_id)
                             reply_message(reply_token, food_cards)
                         except Exception as _fe:
                             import traceback; traceback.print_exc()
                             print(f"[food_locate] build failed: {_fe}")
-                            reply_message(reply_token, [{"type": "text",
-                                "text": f"📍 已定位到{_parking_city or '附近'}！\n輸入「吃什麼」查看附近美食 🍜"}])
+                            reply_message(reply_token, build_food_message(
+                                f"吃什麼 {_parking_city or ''}", user_id))
                         log_usage(user_id, "food", sub_action="位置定位", city=_parking_city)
                         continue
                     print(f"[webhook] location: {lat},{lon} city={_parking_city} addr={_addr_raw[:20]!r}")
