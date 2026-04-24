@@ -60,6 +60,7 @@ from handlers.feedback_routes import (
 # ─── modules ───────────────────────────────────────────────
 from modules.food     import (
     build_food_message, build_group_dining_message,
+    build_food_restaurant_flex,
     build_specialty_shops, build_city_specialties,
     build_trending_specialty, build_trending_by_district,
     build_new_shops,
@@ -1279,42 +1280,29 @@ class handler(BaseHTTPRequestHandler):
                         try:
                             food_cards = _build_post_parking_food(
                                 _parking_city or "", lat, lon, user_id=user_id)
-                            if not food_cards:
-                                food_cards = build_food_message(f"吃什麼 {_parking_city or ''}", user_id)
-                            reply_message(reply_token, food_cards)
+                            if not food_cards and _parking_city:
+                                food_cards = build_food_restaurant_flex(_parking_city, "")
+                            reply_message(reply_token, food_cards or [{"type": "text", "text": f"📍 已定位到 {_parking_city}，附近美食資料暫時無法取得"}])
                         except Exception as _fe:
                             import traceback; traceback.print_exc()
                             print(f"[food_locate] build failed: {_fe}")
-                            reply_message(reply_token, build_food_message(
-                                f"吃什麼 {_parking_city or ''}", user_id))
+                            _fb = build_food_restaurant_flex(_parking_city, "") if _parking_city else []
+                            reply_message(reply_token, _fb or [{"type": "text", "text": f"📍 已定位到 {_parking_city or '附近'}，附近美食資料暫時無法取得"}])
                         log_usage(user_id, "food", sub_action="位置定位", city=_parking_city)
                         continue
                     print(f"[webhook] location: {lat},{lon} city={_parking_city} addr={_addr_raw[:20]!r}")
 
-                    def _build_food_inline(_city, _lat, _lon, _uid):
-                        try:
-                            return _build_post_parking_food(_city, _lat, _lon, user_id=_uid)
-                        except Exception as _fe:
-                            import traceback; traceback.print_exc()
-                            print(f"[food_inline] FAILED: {_fe}")
-                            return []
-
-                    # 快速路徑：快取命中 → reply 停車 + push 美食（緊接在後）
+                    # 快速路徑：快取命中 → 直接 reply
                     cached = _peek_parking_cache(lat, lon)
                     if cached:
                         reply_message(reply_token, cached)
-                        if _parking_city:
-                            food_msgs = _build_food_inline(_parking_city, lat, lon, user_id)
-                            if food_msgs:
-                                push_message(user_id, food_msgs)
                         log_usage(user_id, "parking", sub_action="傳位置_cached", city=city_hint)
                     else:
                         reply_message(reply_token, [{"type": "text",
-                            "text": "📍 定位成功！\n🔍 正在搜尋附近車位與美食..."}])
+                            "text": "📍 定位成功！\n🔍 正在搜尋附近車位..."}])
                         try:
-                            messages = build_parking_flex(lat, lon, city=_parking_city)
-                            food_msgs = _build_food_inline(_parking_city or "", lat, lon, user_id)
-                            push_message(user_id, messages + food_msgs)
+                            messages = build_parking_flex(lat, lon, _parking_city)
+                            push_message(user_id, messages)
                             log_usage(user_id, "parking", sub_action="傳位置", city=city_hint)
                         except Exception as pe:
                             import traceback; traceback.print_exc()
@@ -1359,16 +1347,12 @@ class handler(BaseHTTPRequestHandler):
                             _liff_city = _get_user_city(user_id) or _city_from_coords(lat, lon)
                             if cached:
                                 reply_message(reply_token, cached)
-                                if _liff_city:
-                                    push_message(user_id, _build_post_parking_food(_liff_city))
                                 log_usage(user_id, "parking", sub_action="liff_cached")
                             else:
                                 reply_message(reply_token, [{"type": "text",
                                     "text": "📍 定位成功！\n🔍 正在搜尋附近車位..."}])
                                 messages = build_parking_flex(lat, lon, city=_liff_city)
                                 push_message(user_id, messages)
-                                if _liff_city:
-                                    push_message(user_id, _build_post_parking_food(_liff_city))
                                 log_usage(user_id, "parking", sub_action="liff_auto")
                         except Exception as pe:
                             import traceback; traceback.print_exc()
@@ -1397,6 +1381,7 @@ class handler(BaseHTTPRequestHandler):
                         w in user_text for w in [
                             "今天吃什麼", "找車位", "早安", "天氣", "目的地美食",
                             "防詐", "法律", "推薦手機", "更多功能",
+                            "分享位置", "我要分享", "地方特色", "必買伴手禮", "最新流行",
                         ]
                     ):
                         _redis_set(f"food_destination:{user_id}", "", ttl=1)
