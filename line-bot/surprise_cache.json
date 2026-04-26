@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-25 22:44",
+  "updated_at": "2026-04-26 22:46",
   "songs": [
     {
       "name": "REDRED",
@@ -42,6 +42,11 @@
       "url": "https://music.apple.com/tw/album/%E4%B8%80%E5%BF%B5-%E9%9B%BB%E8%A6%96%E5%8A%87-%E9%80%90%E7%8E%89-%E6%8F%92%E6%9B%B2/1884874214?i=1884874215"
     },
     {
+      "name": "CELEBRATION",
+      "artist": "LE SSERAFIM",
+      "url": "https://music.apple.com/tw/album/celebration/1894802719?i=1894803122"
+    },
+    {
       "name": "Who is she",
       "artist": "KISS OF LIFE",
       "url": "https://music.apple.com/tw/album/who-is-she/1886385269?i=1886385270"
@@ -52,19 +57,9 @@
       "url": "https://music.apple.com/tw/album/%E5%B9%B8%E7%A6%8F%E5%9C%A8%E6%AD%8C%E5%94%B1-%E9%9B%BB%E5%BD%B1-%E9%99%BD%E5%85%89%E5%A5%B3%E5%AD%90%E5%90%88%E5%94%B1%E5%9C%98-%E5%B9%B8%E7%A6%8F%E7%89%88%E4%B8%BB%E9%A1%8C%E6%9B%B2/1861431707?i=1861431711"
     },
     {
-      "name": "CELEBRATION",
-      "artist": "LE SSERAFIM",
-      "url": "https://music.apple.com/tw/album/celebration/1894802719?i=1894803122"
-    },
-    {
       "name": "Stick With You",
       "artist": "TOMORROW X TOGETHER",
       "url": "https://music.apple.com/tw/album/stick-with-you/1886536327?i=1886536332"
-    },
-    {
-      "name": "Body to Body",
-      "artist": "防彈少年團",
-      "url": "https://music.apple.com/tw/album/body-to-body/1868862375?i=1868862376"
     },
     {
       "name": "陪你到這",
@@ -75,6 +70,11 @@
       "name": "繞路",
       "artist": "A-Lin",
       "url": "https://music.apple.com/tw/album/%E7%B9%9E%E8%B7%AF/1893279797?i=1893279800"
+    },
+    {
+      "name": "Body to Body",
+      "artist": "防彈少年團",
+      "url": "https://music.apple.com/tw/album/body-to-body/1868862375?i=1868862376"
     }
   ],
   "deals": [
@@ -84,38 +84,33 @@
       "tag": "優惠"
     },
     {
+      "title": "全聯連續5天「21元民生品」限時優惠！飲料、咖啡、衛生紙都有 - ETtoday",
+      "url": "https://www.ettoday.net/news/20260421/3152989.htm",
+      "tag": "優惠"
+    },
+    {
       "title": "本檔最殺- 買一送一大集合| 來全聯方便又省錢",
       "url": "https://www.pxmart.com.tw/campaign/life-will/best-buy/%E8%B2%B7%E4%B8%80%E9%80%81%E4%B8%80%E5%A4%A7%E9%9B%86%E5%90%88",
       "tag": "優惠"
     },
     {
       "title": "家樂福被統一收購「自有品牌掰了」限時特價中他曬必囤清單：超划算快買",
-      "url": "https://www.mirrormedia.mg/external/mirrordaily_57442",
+      "url": "https://today.line.me/tw/v3/article/OpMMaVD",
       "tag": "優惠"
     },
     {
-      "title": "Costco好市多(新品/優惠)最速報– Telegram",
-      "url": "https://t.me/s/daybuy?before=17174",
+      "title": "COSTCO好市多本週限時隱藏優惠懶人包2025 05.05(一) - 今購百科",
+      "url": "https://www.daybuy.tw/costco/186061/",
       "tag": "優惠"
     },
     {
-      "title": "大特價一次看！記得下載截圖！享優惠福勝亭！多吉懶人包",
-      "url": "https://vocus.cc/article/69e6c6adfd89780001cbb034",
+      "title": "歡迎光臨LOPIA  新北中和店勞動朋友們辛苦了  熟食特價不要錯過囉！",
+      "url": "https://www.threads.com/@lopia_tw_ntpc_zd_official/post/DXlIx3yAfp6/%E6%AD%A1%E8%BF%8E%E5%85%89%E8%87%A8lopia%E6%96%B0%E5%8C%97%E4%B8%AD%E5%92%8C%E5%BA%97%E5%8B%9E%E5%8B%95%E6%9C%8B%E5%8F%8B%E5%80%91%E8%BE%9B%E8%8B%A6%E4%BA%86%E7%86%9F%E9%A3%9F%E7%89%B9%E5%83%B9%E4%B8%8D%E8%A6%81%E9%8C%AF%E9%81%8E%E5%9B%89%E4%B8%80%E6%97%A5%E9%99%90%E5%AE%9A51%E6%BB%BF%E6%BB%BF%E7%8E%89%E7%B1%B3%E7%BE%8E%E4%B9%83%E6%BB%8B%E7%99%BD%E9%86%AC%E5%9F%B9%E6%A0%B9%E8%9F%B9%E5%91%B3%E7%B5%B2%E7%89%B9%E5%83%B9%E5%85%83%E5%8E%9F%E5%83%B9250%E5%85%835153-%E7%82%B8%E7%89%A1%E8%A0%A3%E7%89%B9%E5%83%B910%E5%85%A5%E5%85%83%E8%B6%85%E7%B4%9A%E5%A4%8F%E5%A8%81%E5%A4%B7%E6%8A%AB",
       "tag": "優惠"
     },
     {
-      "title": "周年慶特賣: r/BambuLab - Reddit",
-      "url": "https://www.reddit.com/r/BambuLab/comments/1sthnqe/anniversary_sale/?tl=zh-hant",
-      "tag": "優惠"
-    },
-    {
-      "title": "ORIHICA六個月週年慶感恩節促銷活動現已開啟！ ！ | MITSUI ...",
+      "title": "ORIHICA六個月週年慶感恩節促銷活動現已開啟！ ！ | MITSUI OUTLET ...",
       "url": "https://mitsui-shopping-park.com/tw/mop/okazaki/shopnews/3381148.html",
-      "tag": "優惠"
-    },
-    {
-      "title": "Mega City 板橋大遠百-線上DM - 遠東百貨",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=54",
       "tag": "優惠"
     },
     {
@@ -124,18 +119,28 @@
       "tag": "優惠"
     },
     {
+      "title": "台北復興館 - 遠東SOGO百貨",
+      "url": "https://info.sogo.com.tw/tp2",
+      "tag": "優惠"
+    },
+    {
+      "title": "周年慶特賣: r/BambuLab - Reddit",
+      "url": "https://www.reddit.com/r/BambuLab/comments/1sthnqe/anniversary_sale/?tl=zh-hant",
+      "tag": "優惠"
+    },
+    {
+      "title": "活動訊息| 廣三SOGO百貨",
+      "url": "https://www.kssogo.com.tw/news.php",
+      "tag": "優惠"
+    },
+    {
       "title": "5 折入手不同的韓國潮牌     那一定要衝這間全韓首間MUSINSA ...",
       "url": "https://www.threads.com/@kitto.tw/post/DXbsyV9lcMJ/video-%E9%A6%96%E7%88%BE%E6%9C%80%E6%96%B0%E6%8C%96%E5%AF%B6%E8%81%96%E5%9C%B0musinsa-outlet%E6%83%B3%E7%94%A8-3-%E6%8A%985-%E6%8A%98%E5%85%A5%E6%89%8B%E4%B8%8D%E5%90%8C%E7%9A%84%E9%9F%93%E5%9C%8B%E6%BD%AE%E7%89%8C%E9%82%A3%E4%B8%80%E5%AE%9A%E8%A6%81%E8%A1%9D%E9%80%99%E9%96%93%E5%85%A8%E9%9F%93%E9%A6%96%E9%96%93musinsa-outlet-%E4%B8%8D%E7%AE%A1%E6%98%AF%E8%A6%81%E6%89%BE%E9%9F%93%E7%B3%BB%E8%A8%AD%E8%A8%88%E5%B8%AB%E5%93%81%E7%89%8C%E5%9C%8B%E9%9A%9B",
       "tag": "優惠"
     },
     {
-      "title": "歡慶總部開幕．母親節暖身慶   - W.Korea 正韓服飾",
-      "url": "https://www.wkorea.com.tw/post.php?action=view&id=231",
-      "tag": "優惠"
-    },
-    {
-      "title": "Laline 台北概念店開幕推限定體驗與滿額優惠迎母親節 - 蕃新聞",
-      "url": "https://n.yam.com/Article/20260423771381",
+      "title": "官宣了! 台中最大購物廣場4/10開幕營運500大型品牌逛不完 - MSN",
+      "url": "https://www.msn.com/zh-tw/news/other/%E5%AE%98%E5%AE%A3%E4%BA%86-%E5%8F%B0%E4%B8%AD%E6%9C%80%E5%A4%A7%E8%B3%BC%E7%89%A9%E5%BB%A3%E5%A0%B44-10%E9%96%8B%E5%B9%95%E7%87%9F%E9%81%8B-500%E5%A4%A7%E5%9E%8B%E5%93%81%E7%89%8C%E9%80%9B%E4%B8%8D%E5%AE%8C/ar-AA1XOFl0?apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1&bundles=feat-es2020-t",
       "tag": "優惠"
     },
     {
@@ -144,13 +149,13 @@
       "tag": "優惠"
     },
     {
-      "title": "「I'm donut ?」台灣首店7／4開幕！ 日本同步12款＋台灣限定3口味",
-      "url": "https://www.msn.com/zh-tw/news/living/i-m-donut-%E5%8F%B0%E7%81%A3%E9%A6%96%E5%BA%977-4%E9%96%8B%E5%B9%95-%E6%97%A5%E6%9C%AC%E5%90%8C%E6%AD%A512%E6%AC%BE-%E5%8F%B0%E7%81%A3%E9%99%90%E5%AE%9A3%E5%8F%A3%E5%91%B3/ar-AA1HJyzY?apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1",
+      "title": "歡慶總部開幕．母親節暖身慶   - W.Korea 正韓服飾",
+      "url": "https://www.wkorea.com.tw/post.php?action=view&id=231",
       "tag": "優惠"
     },
     {
-      "title": "母親節拚買氣百貨滿額贈、折扣、抽獎、快閃全出籠",
-      "url": "https://www.nownews.com/news/6808834?srsltid=AfmBOorQEfcIBDjxIC-V-oAB8vGAdJ0AshJHtxyyBcIb6fEMBna3UAu3",
+      "title": "Laline 台北概念店開幕推限定體驗與滿額優惠迎母親節",
+      "url": "https://news.pchome.com.tw/living/morenews/20260423/index-77693997794822350009.html",
       "tag": "優惠"
     }
   ]
