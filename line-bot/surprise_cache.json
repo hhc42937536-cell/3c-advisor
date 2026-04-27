@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-26 22:46",
+  "updated_at": "2026-04-27 22:57",
   "songs": [
     {
       "name": "REDRED",
@@ -27,14 +27,14 @@
       "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
     },
     {
-      "name": "I Do",
-      "artist": "周杰倫",
-      "url": "https://music.apple.com/tw/album/i-do/1887246588?i=1887247016"
-    },
-    {
       "name": "我對緣分小心翼翼 (劇集《逐玉》主題曲)",
       "artist": "林俊傑",
       "url": "https://music.apple.com/tw/album/%E6%88%91%E5%B0%8D%E7%B7%A3%E5%88%86%E5%B0%8F%E5%BF%83%E7%BF%BC%E7%BF%BC-%E5%8A%87%E9%9B%86-%E9%80%90%E7%8E%89-%E4%B8%BB%E9%A1%8C%E6%9B%B2/1874801991?i=1874801993"
+    },
+    {
+      "name": "I Do",
+      "artist": "周杰倫",
+      "url": "https://music.apple.com/tw/album/i-do/1887246588?i=1887247016"
     },
     {
       "name": "一念(電視劇《逐玉》插曲)",
@@ -52,9 +52,9 @@
       "url": "https://music.apple.com/tw/album/who-is-she/1886385269?i=1886385270"
     },
     {
-      "name": "幸福在歌唱 (電影《陽光女子合唱團》幸福版主題曲)",
+      "name": "繞路",
       "artist": "A-Lin",
-      "url": "https://music.apple.com/tw/album/%E5%B9%B8%E7%A6%8F%E5%9C%A8%E6%AD%8C%E5%94%B1-%E9%9B%BB%E5%BD%B1-%E9%99%BD%E5%85%89%E5%A5%B3%E5%AD%90%E5%90%88%E5%94%B1%E5%9C%98-%E5%B9%B8%E7%A6%8F%E7%89%88%E4%B8%BB%E9%A1%8C%E6%9B%B2/1861431707?i=1861431711"
+      "url": "https://music.apple.com/tw/album/%E7%B9%9E%E8%B7%AF/1893279797?i=1893279800"
     },
     {
       "name": "Stick With You",
@@ -67,27 +67,17 @@
       "url": "https://music.apple.com/tw/album/%E9%99%AA%E4%BD%A0%E5%88%B0%E9%80%99/1891683682?i=1891683695"
     },
     {
-      "name": "繞路",
-      "artist": "A-Lin",
-      "url": "https://music.apple.com/tw/album/%E7%B9%9E%E8%B7%AF/1893279797?i=1893279800"
-    },
-    {
       "name": "Body to Body",
       "artist": "防彈少年團",
       "url": "https://music.apple.com/tw/album/body-to-body/1868862375?i=1868862376"
+    },
+    {
+      "name": "幸福在歌唱 (電影《陽光女子合唱團》幸福版主題曲)",
+      "artist": "A-Lin",
+      "url": "https://music.apple.com/tw/album/%E5%B9%B8%E7%A6%8F%E5%9C%A8%E6%AD%8C%E5%94%B1-%E9%9B%BB%E5%BD%B1-%E9%99%BD%E5%85%89%E5%A5%B3%E5%AD%90%E5%90%88%E5%94%B1%E5%9C%98-%E5%B9%B8%E7%A6%8F%E7%89%88%E4%B8%BB%E9%A1%8C%E6%9B%B2/1861431707?i=1861431711"
     }
   ],
   "deals": [
-    {
-      "title": "10萬包特價蔬菜開搶！超市量販週末優惠食品、禮盒買1送1",
-      "url": "https://tw.news.yahoo.com/10%E8%90%AC%E5%8C%85%E7%89%B9%E5%83%B9%E8%94%AC%E8%8F%9C%E9%96%8B%E6%90%B6-%E8%B6%85%E5%B8%82%E9%87%8F%E8%B2%A9%E9%80%B1%E6%9C%AB%E5%84%AA%E6%83%A0-%E9%A3%9F%E5%93%81-%E7%A6%AE%E7%9B%92%E8%B2%B71%E9%80%811-071900634.html",
-      "tag": "優惠"
-    },
-    {
-      "title": "全聯連續5天「21元民生品」限時優惠！飲料、咖啡、衛生紙都有 - ETtoday",
-      "url": "https://www.ettoday.net/news/20260421/3152989.htm",
-      "tag": "優惠"
-    },
     {
       "title": "本檔最殺- 買一送一大集合| 來全聯方便又省錢",
       "url": "https://www.pxmart.com.tw/campaign/life-will/best-buy/%E8%B2%B7%E4%B8%80%E9%80%81%E4%B8%80%E5%A4%A7%E9%9B%86%E5%90%88",
@@ -95,12 +85,7 @@
     },
     {
       "title": "家樂福被統一收購「自有品牌掰了」限時特價中他曬必囤清單：超划算快買",
-      "url": "https://today.line.me/tw/v3/article/OpMMaVD",
-      "tag": "優惠"
-    },
-    {
-      "title": "COSTCO好市多本週限時隱藏優惠懶人包2025 05.05(一) - 今購百科",
-      "url": "https://www.daybuy.tw/costco/186061/",
+      "url": "https://tw.news.yahoo.com/%E5%AE%B6%E6%A8%82%E7%A6%8F%E8%A2%AB%E7%B5%B1-%E6%94%B6%E8%B3%BC-%E8%87%AA%E6%9C%89%E5%93%81%E7%89%8C%E6%8E%B0%E4%BA%86-%E9%99%90%E6%99%82%E7%89%B9%E5%83%B9%E4%B8%AD-%E4%BB%96%E6%9B%AC%E5%BF%85%E5%9B%A4%E6%B8%85%E5%96%AE-041100843.html",
       "tag": "優惠"
     },
     {
@@ -109,7 +94,17 @@
       "tag": "優惠"
     },
     {
-      "title": "ORIHICA六個月週年慶感恩節促銷活動現已開啟！ ！ | MITSUI OUTLET ...",
+      "title": "最新消息 - 愛買量販",
+      "url": "http://www.fe-amart.com.tw/index.php/news",
+      "tag": "優惠"
+    },
+    {
+      "title": "活動時間：即日起～5/10 新光三越南西店一館9F - Threads",
+      "url": "https://www.threads.com/@do_.you.know/post/DXeORfWD-m3/%E6%B4%BB%E5%8B%95%E6%99%82%E9%96%93%E5%8D%B3%E6%97%A5%E8%B5%B7510%E6%96%B0%E5%85%89%E4%B8%89%E8%B6%8A%E5%8D%97%E8%A5%BF%E5%BA%97-%E4%B8%80%E9%A4%A89f",
+      "tag": "優惠"
+    },
+    {
+      "title": "ORIHICA六個月週年慶感恩節促銷活動現已開啟！ ！ | MITSUI ...",
       "url": "https://mitsui-shopping-park.com/tw/mop/okazaki/shopnews/3381148.html",
       "tag": "優惠"
     },
@@ -119,18 +114,18 @@
       "tag": "優惠"
     },
     {
-      "title": "台北復興館 - 遠東SOGO百貨",
-      "url": "https://info.sogo.com.tw/tp2",
+      "title": "2026母親節檔期表！新光三越、101、SOGO等全台百貨公司完整時間",
+      "url": "https://www.marieclaire.com.tw/beauty/news/92370",
+      "tag": "優惠"
+    },
+    {
+      "title": "活動訊息| 廣三SOGO百貨",
+      "url": "https://www.kssogo.com.tw/news.php?cID=5",
       "tag": "優惠"
     },
     {
       "title": "周年慶特賣: r/BambuLab - Reddit",
       "url": "https://www.reddit.com/r/BambuLab/comments/1sthnqe/anniversary_sale/?tl=zh-hant",
-      "tag": "優惠"
-    },
-    {
-      "title": "活動訊息| 廣三SOGO百貨",
-      "url": "https://www.kssogo.com.tw/news.php",
       "tag": "優惠"
     },
     {
@@ -140,12 +135,7 @@
     },
     {
       "title": "官宣了! 台中最大購物廣場4/10開幕營運500大型品牌逛不完 - MSN",
-      "url": "https://www.msn.com/zh-tw/news/other/%E5%AE%98%E5%AE%A3%E4%BA%86-%E5%8F%B0%E4%B8%AD%E6%9C%80%E5%A4%A7%E8%B3%BC%E7%89%A9%E5%BB%A3%E5%A0%B44-10%E9%96%8B%E5%B9%95%E7%87%9F%E9%81%8B-500%E5%A4%A7%E5%9E%8B%E5%93%81%E7%89%8C%E9%80%9B%E4%B8%8D%E5%AE%8C/ar-AA1XOFl0?apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1&bundles=feat-es2020-t",
-      "tag": "優惠"
-    },
-    {
-      "title": "Dyson 與MOVA 智慧家電一次看，全台門祭優惠同慶開幕 - News Pie",
-      "url": "https://www.newspie.com.tw/hengstyle-20260423/",
+      "url": "http://www.msn.com/zh-tw/news/other/%E5%AE%98%E5%AE%A3%E4%BA%86-%E5%8F%B0%E4%B8%AD%E6%9C%80%E5%A4%A7%E8%B3%BC%E7%89%A9%E5%BB%A3%E5%A0%B44-10%E9%96%8B%E5%B9%95%E7%87%9F%E9%81%8B-500%E5%A4%A7%E5%9E%8B%E5%93%81%E7%89%8C%E9%80%9B%E4%B8%8D%E5%AE%8C/ar-AA1XOFl0?apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1&bundles=feat-es2020-t",
       "tag": "優惠"
     },
     {
@@ -154,8 +144,8 @@
       "tag": "優惠"
     },
     {
-      "title": "Laline 台北概念店開幕推限定體驗與滿額優惠迎母親節",
-      "url": "https://news.pchome.com.tw/living/morenews/20260423/index-77693997794822350009.html",
+      "title": "高雄大立母親節檔期啟動大創百貨同步開幕",
+      "url": "https://tw.news.yahoo.com/%E9%AB%98%E9%9B%84%E5%A4%A7%E7%AB%8B%E6%AF%8D%E8%A6%AA%E7%AF%80%E6%AA%94%E6%9C%9F%E5%95%9F%E5%8B%95-%E5%A4%A7%E5%89%B5%E7%99%BE%E8%B2%A8%E5%90%8C%E6%AD%A5%E9%96%8B%E5%B9%95-085858897.html",
       "tag": "優惠"
     }
   ]
