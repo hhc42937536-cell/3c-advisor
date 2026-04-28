@@ -1253,6 +1253,13 @@ class handler(BaseHTTPRequestHandler):
                         log_usage(user_id, "food", sub_action="吃過了", city=rcity)
                     continue
 
+                # 診斷：非 text 的 message 事件，用 push 回報型別（不耗 replyToken）
+                if event.get("type") == "message" and event.get("message", {}).get("type") not in ("text", None):
+                    _diag_type = event.get("message", {}).get("type", "unknown")
+                    push_message(user_id, [{"type": "text", "text": f"🔍 msg type={_diag_type}"}])
+                    if _diag_type != "location":
+                        continue
+
                 # 位置訊息 → 食物定位 or 找車位
                 if event.get("type") == "message" and event.get("message", {}).get("type") == "location":
                     reply_token = event.get("replyToken", "")
