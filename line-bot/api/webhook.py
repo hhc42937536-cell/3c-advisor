@@ -1275,7 +1275,7 @@ class handler(BaseHTTPRequestHandler):
                     print(f"[food_locate] flag={_food_flag!r} city={_parking_city} lat={lat:.4f} lon={lon:.4f}")
                     if _food_flag:
                         _redis_set(f"food_locate:{user_id}", "", ttl=1)  # 清除 flag
-                        food_cards = build_food_message(f"吃什麼 {_parking_city or ''}", user_id)
+                        food_cards = build_food_message(f"幫我決定 {_parking_city or ''}", user_id)
                         reply_message(reply_token, food_cards if food_cards else [{"type": "text", "text": "找不到附近美食，請換個地區試試 😅"}])
                         log_usage(user_id, "food", sub_action="位置定位", city=_parking_city)
                         continue
