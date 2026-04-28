@@ -15,6 +15,7 @@
           "api/data/**",
           "accupass_cache.json",
           "restaurant_cache.json",
+          "restaurant_db.json",
           "surprise_cache.json"
         ]
       }

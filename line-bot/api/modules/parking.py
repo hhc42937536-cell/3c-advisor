@@ -226,7 +226,7 @@ def build_food_by_location(city: str, lat: float, lon: float, user_id: str = "")
     from modules.parking_food import build_restaurant_bubble
 
     db_path = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
         "restaurant_db.json",
     )
     try:
