@@ -1231,6 +1231,7 @@ class handler(BaseHTTPRequestHandler):
                 print(f"[webhook] event type={event.get('type')}")
 
                 user_id = event.get("source", {}).get("userId", "unknown")
+                push_message(user_id, [{"type": "text", "text": f"[DEBUG] 收到事件 type={event.get('type')} msg_type={event.get('message',{}).get('type','')}"}])
 
                 # 加好友或解除封鎖 → 發送歡迎訊息
                 if event.get("type") == "follow":
