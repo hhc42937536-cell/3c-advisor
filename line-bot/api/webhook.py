@@ -1277,39 +1277,88 @@ class handler(BaseHTTPRequestHandler):
                         _redis_set(f"food_locate:{user_id}", "", ttl=1)
                         try:
                             import json as _jf, os as _of, random as _rf, urllib.parse as _uf
+                            import urllib.request as _ur
                             from modules.food_data import _BIB_GOURMAND as _BIB
                             _gkey = os.environ.get("GOOGLE_PLACES_API_KEY", "")
                             _c2 = (_parking_city or "")[:2]
 
-                            # ── restaurant_db.json（靜態，無 API 呼叫）──
+                            def _dist(r):
+                                try:
+                                    return (abs(float(r.get("lat") or lat) - lat)
+                                            + abs(float(r.get("lng") or lon) - lon))
+                                except Exception:
+                                    return 9999
+
+                            # ── Google Places Nearby（5s timeout，單頁，最近的真實店家）──
+                            _gp_picks = []
+                            if lat and lon and _gkey:
+                                try:
+                                    _gpurl = (
+                                        "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+                                        f"?location={lat},{lon}&radius=1500"
+                                        f"&keyword={_uf.quote('餐廳 小吃 美食')}"
+                                        "&language=zh-TW"
+                                        f"&key={_gkey}")
+                                    _req = _ur.Request(_gpurl, headers={"User-Agent": "LineBot/1.0"})
+                                    with _ur.urlopen(_req, timeout=5) as _resp:
+                                        _gpdata = _jf.loads(_resp.read().decode("utf-8"))
+                                    for _p in _gpdata.get("results", []):
+                                        if float(_p.get("rating") or 0) < 4.0:
+                                            continue
+                                        _loc = _p["geometry"]["location"]
+                                        _gp_picks.append({
+                                            "name": _p.get("name", ""),
+                                            "addr": _p.get("vicinity", ""),
+                                            "rating": _p.get("rating", 0),
+                                            "user_ratings_total": _p.get("user_ratings_total", 0),
+                                            "lat": _loc["lat"], "lng": _loc["lng"],
+                                            "photo_ref": (_p.get("photos") or [{}])[0].get("photo_reference", ""),
+                                        })
+                                    _gp_picks.sort(key=_dist)
+                                except Exception as _ge:
+                                    print(f"[food_locate] places err: {_ge}")
+
+                            # ── bib_gourmand 距離篩選 ──
+                            _bib_all = _BIB.get(_c2, [])
+                            _bib_near = [b for b in _bib_all
+                                         if b.get("lat") and b.get("lng")
+                                         and _dist(b) < 0.045] or _bib_all
+                            _bib_near.sort(key=_dist)
+                            _bib_picks = _bib_near[:3]
+
+                            # ── restaurant_db fallback ──
                             _db_path = _of.path.join(
                                 _of.path.dirname(_of.path.dirname(_of.path.abspath(__file__))),
                                 "restaurant_db.json")
                             _db = _jf.load(open(_db_path, encoding="utf-8"))
                             _by_city = _db.get("by_city") or {}
                             _pool = _by_city.get(_parking_city or "") or _by_city.get(_c2, [])
-                            _candidates = [r for r in _pool if float(r.get("rating") or 0) >= 4.0]
-                            for _r in _candidates:
-                                _r["_d"] = (abs(float(_r.get("lat") or lat) - lat)
-                                            + abs(float(_r.get("lng") or lon) - lon))
-                            _candidates.sort(key=lambda r: r["_d"])
-                            _picks = _candidates[:8]
+                            _db_picks = sorted(
+                                [r for r in _pool if float(r.get("rating") or 0) >= 4.0],
+                                key=_dist)[:6]
 
-                            # ── bib_gourmand（已有座標）──
-                            _bib_all = _BIB.get(_c2, [])
-                            if lat and lon:
-                                _bib_near = [b for b in _bib_all
-                                             if b.get("lat") and b.get("lng")
-                                             and abs(float(b["lat"]) - lat) + abs(float(b["lng"]) - lon) < 0.045]
-                                if not _bib_near:
-                                    _bib_near = _bib_all
-                            else:
-                                _bib_near = _bib_all
-                            _bib_picks = _rf.sample(_bib_near, min(3, len(_bib_near)))
+                            # ── 合併去重（Google > db，bib 插頭幾張）──
+                            _seen = set()
+                            _merged = []
+                            for _item in (_bib_picks + _gp_picks + _db_picks):
+                                _nm = _item.get("name", "")
+                                if _nm and _nm not in _seen:
+                                    _seen.add(_nm)
+                                    _merged.append(_item)
+                            _merged = _merged[:10]
 
                             # ── 建 bubbles ──
-                            def _fb(nm, rt, rv, ad, gmap, photo_ref="", tag=""):
-                                _top = tag or (f"⭐ {rt}（{rv}則）" if rv else f"⭐ {rt}" if rt else "👥 在地推薦")
+                            def _fb(r, tag=""):
+                                _nm = r.get("name", "") or "未命名"
+                                _rt = r.get("rating", "")
+                                _rv = r.get("user_ratings_total", "")
+                                _ad = (r.get("addr") or r.get("desc") or r.get("district") or "")[:28]
+                                _photo = r.get("photo_ref", "")
+                                if r.get("lat") and r.get("lng"):
+                                    _gmap = f"https://maps.google.com/?q={r['lat']},{r['lng']}"
+                                else:
+                                    _gmap = f"https://www.google.com/maps/search/{_uf.quote(_nm + ' ' + _c2)}"
+                                _top = tag or (f"⭐ {_rt}（{_rv}則）" if _rv else f"⭐ {_rt}" if _rt else "👥 在地推薦")
                                 _col = "#B8860B" if tag else "#E65100"
                                 _bub = {
                                     "type": "bubble", "size": "kilo",
@@ -1318,56 +1367,33 @@ class handler(BaseHTTPRequestHandler):
                                              "contents": [
                                                  {"type": "text", "text": _top, "size": "xxs",
                                                   "weight": "bold", "color": _col},
-                                                 {"type": "text", "text": nm or "未命名",
-                                                  "size": "md", "weight": "bold",
-                                                  "wrap": True, "maxLines": 2, "margin": "xs"},
-                                                 {"type": "text", "text": ad or "", "size": "xs",
-                                                  "color": "#888888", "wrap": True, "maxLines": 1,
-                                                  "margin": "xs"},
+                                                 {"type": "text", "text": _nm, "size": "md",
+                                                  "weight": "bold", "wrap": True, "maxLines": 2, "margin": "xs"},
+                                                 {"type": "text", "text": _ad, "size": "xs",
+                                                  "color": "#888888", "wrap": True, "maxLines": 1, "margin": "xs"},
                                              ]},
                                     "footer": {"type": "box", "layout": "vertical",
                                                "paddingAll": "10px", "contents": [
                                                    {"type": "button", "style": "primary",
                                                     "height": "sm", "color": "#FF6B35",
                                                     "action": {"type": "uri", "label": "📍 導航前往",
-                                                               "uri": gmap}}]},
+                                                               "uri": _gmap}}]},
                                 }
-                                if photo_ref and _gkey:
+                                if _photo and _gkey:
                                     _bub["hero"] = {
                                         "type": "image",
                                         "url": (f"https://maps.googleapis.com/maps/api/place/photo"
-                                                f"?maxwidth=400&photo_reference={photo_ref}&key={_gkey}"),
+                                                f"?maxwidth=400&photo_reference={_photo}&key={_gkey}"),
                                         "size": "full", "aspectRatio": "20:13", "aspectMode": "cover"}
                                 return _bub
 
-                            _bubbles = []
-                            for _b in _bib_picks:
-                                _bnm = _b.get("name", "")
-                                _gmap = (f"https://maps.google.com/?q={_b['lat']},{_b['lng']}"
-                                         if _b.get("lat") and _b.get("lng")
-                                         else f"https://www.google.com/maps/search/"
-                                              f"{_uf.quote(_bnm + ' ' + _c2)}")
-                                _bubbles.append(_fb(_bnm, "", "", _b.get("desc", "")[:25],
-                                                    _gmap, _b.get("photo_ref", ""),
-                                                    tag="⭐ 米其林必比登"))
-                            for _r in _picks:
-                                if len(_bubbles) >= 10:
-                                    break
-                                _rnm = _r.get("name", "")
-                                _gmap = (f"https://maps.google.com/?q={_r['lat']},{_r['lng']}"
-                                         if _r.get("lat") and _r.get("lng")
-                                         else f"https://www.google.com/maps/search/"
-                                              f"{_uf.quote(_rnm + ' ' + _c2)}")
-                                _bubbles.append(_fb(
-                                    _rnm, _r.get("rating", ""), _r.get("user_ratings_total", ""),
-                                    (_r.get("addr") or _r.get("district", ""))[:28],
-                                    _gmap, _r.get("photo_ref", "")))
+                            _bubbles = [_fb(r, tag="⭐ 米其林必比登" if r in _bib_picks else "")
+                                        for r in _merged]
 
                             if _bubbles:
-                                _alt = f"{_c2 or '附近'}美食推薦（必比登+高評分）"
-                                _msgs = [{"type": "flex", "altText": _alt,
-                                          "contents": {"type": "carousel",
-                                                       "contents": _bubbles}}]
+                                _msgs = [{"type": "flex",
+                                          "altText": f"{_c2 or '附近'}美食推薦",
+                                          "contents": {"type": "carousel", "contents": _bubbles}}]
                             else:
                                 _msgs = [{"type": "text",
                                           "text": f"找不到{_c2 or '附近'}的餐廳資料 😅"}]
