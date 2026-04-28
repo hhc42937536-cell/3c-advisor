@@ -1275,14 +1275,42 @@ class handler(BaseHTTPRequestHandler):
                     print(f"[food_locate] flag={_food_flag!r} city={_parking_city} lat={lat:.4f} lon={lon:.4f}")
                     if _food_flag:
                         _redis_set(f"food_locate:{user_id}", "", ttl=1)
+                        # 先 reply，保證使用者有回應
+                        reply_message(reply_token, [{"type": "text",
+                            "text": f"📍 正在找{_parking_city or '附近'}高評分餐廳..."}])
+                        # 直接讀 restaurant_db.json，不走任何額外 import
                         try:
-                            food_cards = build_food_by_location(_parking_city or "", lat, lon, user_id)
-                            if not food_cards:
-                                food_cards = [{"type": "text", "text": f"找不到{_parking_city or '附近'}的高評分餐廳資料 😅"}]
+                            import json as _json, os as _os, random as _rnd
+                            _db_path = _os.path.join(
+                                _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))),
+                                "restaurant_db.json")
+                            _db = _json.load(open(_db_path, encoding="utf-8"))
+                            _c2 = (_parking_city or "")[:2]
+                            _pool = _db.get("by_city", {}).get(_parking_city or "", _db.get("by_city", {}).get(_c2, []))
+                            _picks = sorted(
+                                [r for r in _pool if float(r.get("rating") or 0) >= 4.0],
+                                key=lambda r: abs(float(r.get("lat") or lat) - lat) + abs(float(r.get("lng") or lon) - lon)
+                            )[:5]
+                            if _picks:
+                                _bubbles = []
+                                for _r in _picks:
+                                    _nm = _r.get("name","")
+                                    _rt = _r.get("rating","")
+                                    _ad = (_r.get("addr") or _r.get("district",""))[:20]
+                                    _gmap = f"https://maps.google.com/?q={_r.get('lat')},{_r.get('lng')}"
+                                    _bubbles.append({"type":"bubble","body":{"type":"box","layout":"vertical","contents":[
+                                        {"type":"text","text":f"⭐ {_rt}","size":"sm","color":"#E65100"},
+                                        {"type":"text","text":_nm,"weight":"bold","size":"md","wrap":True},
+                                        {"type":"text","text":_ad,"size":"xs","color":"#888888"},
+                                    ]},"footer":{"type":"box","layout":"vertical","contents":[
+                                        {"type":"button","style":"primary","action":{"type":"uri","label":"📍 導航","uri":_gmap},"color":"#FF6B35"}
+                                    ]}})
+                                push_message(user_id, [{"type":"flex","altText":f"{_parking_city or '附近'}高評分餐廳","contents":{"type":"carousel","contents":_bubbles}}])
+                            else:
+                                push_message(user_id, [{"type":"text","text":f"[DEBUG] pool={len(_pool)} city={_parking_city!r} db_keys={list(_db.get('by_city',{}).keys())[:5]}"}])
                         except Exception as _fe:
                             import traceback; traceback.print_exc()
-                            food_cards = [{"type": "text", "text": f"[ERR] {type(_fe).__name__}: {str(_fe)[:80]}"}]
-                        reply_message(reply_token, food_cards)
+                            push_message(user_id, [{"type":"text","text":f"[ERR] {type(_fe).__name__}: {str(_fe)[:100]}"}])
                         log_usage(user_id, "food", sub_action="位置定位", city=_parking_city)
                         continue
                     print(f"[webhook] location: {lat},{lon} city={_parking_city} addr={_addr_raw[:20]!r}")
