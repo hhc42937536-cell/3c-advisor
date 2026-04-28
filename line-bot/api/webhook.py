@@ -1281,6 +1281,9 @@ class handler(BaseHTTPRequestHandler):
                         # 直接讀 restaurant_db.json，不走任何額外 import
                         try:
                             import json as _json, os as _os, random as _rnd
+                            from modules.food_data import _BIB_GOURMAND as _BIB
+                            _gkey = os.environ.get("GOOGLE_PLACES_API_KEY","")
+                            # 讀 restaurant_db：4星以上按距離排序
                             _db_path = _os.path.join(
                                 _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))),
                                 "restaurant_db.json")
@@ -1290,29 +1293,39 @@ class handler(BaseHTTPRequestHandler):
                             _picks = sorted(
                                 [r for r in _pool if float(r.get("rating") or 0) >= 4.0],
                                 key=lambda r: abs(float(r.get("lat") or lat) - lat) + abs(float(r.get("lng") or lon) - lon)
-                            )[:8]
-                            if _picks:
-                                _gkey = os.environ.get("GOOGLE_PLACES_API_KEY","")
-                                _bubbles = []
-                                for _r in _picks:
-                                    _nm = _r.get("name","")
-                                    _rt = _r.get("rating","")
-                                    _rv = _r.get("user_ratings_total","")
-                                    _ad = (_r.get("addr") or _r.get("district",""))[:25]
-                                    _gmap = f"https://maps.google.com/?q={_r.get('lat')},{_r.get('lng')}"
-                                    _bub = {"type":"bubble",
-                                        "body":{"type":"box","layout":"vertical","spacing":"sm","paddingAll":"12px","contents":[
-                                            {"type":"text","text":f"⭐ {_rt}  ({_rv}則)","size":"xs","color":"#E65100"},
-                                            {"type":"text","text":_nm,"weight":"bold","size":"md","wrap":True,"maxLines":2},
-                                            {"type":"text","text":_ad,"size":"xs","color":"#888888","wrap":True},
-                                        ]},
-                                        "footer":{"type":"box","layout":"vertical","contents":[
-                                            {"type":"button","style":"primary","height":"sm","action":{"type":"uri","label":"📍 導航前往","uri":_gmap},"color":"#FF6B35"}
-                                        ]}}
-                                    _pr = _r.get("photo_ref","")
-                                    if _pr and _gkey:
-                                        _bub["hero"] = {"type":"image","url":f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference={_pr}&key={_gkey}","size":"full","aspectRatio":"20:13","aspectMode":"cover"}
-                                    _bubbles.append(_bub)
+                            )[:10]
+                            # 必比登（補到最多 12 張）
+                            _bib_pool = _rnd.sample(_BIB.get(_c2, []), min(4, len(_BIB.get(_c2, []))))
+                            _bubbles = []
+                            def _make_bubble(nm, rt, rv, ad, gmap, photo_ref="", tag=""):
+                                _bub = {"type":"bubble",
+                                    "body":{"type":"box","layout":"vertical","spacing":"sm","paddingAll":"12px","contents":[
+                                        {"type":"text","text": tag or (f"⭐ {rt}  ({rv}則)" if rv else f"⭐ {rt}"),"size":"xs","color":"#B8860B" if "必比登" in (tag or "") else "#E65100"},
+                                        {"type":"text","text":nm,"weight":"bold","size":"md","wrap":True,"maxLines":2},
+                                        {"type":"text","text":ad,"size":"xs","color":"#888888","wrap":True},
+                                    ]},
+                                    "footer":{"type":"box","layout":"vertical","contents":[
+                                        {"type":"button","style":"primary","height":"sm","action":{"type":"uri","label":"📍 導航前往","uri":gmap},"color":"#FF6B35"}
+                                    ]}}
+                                if photo_ref and _gkey:
+                                    _bub["hero"] = {"type":"image","url":f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference={photo_ref}&key={_gkey}","size":"full","aspectRatio":"20:13","aspectMode":"cover"}
+                                return _bub
+                            for _r in _picks:
+                                _bubbles.append(_make_bubble(
+                                    _r.get("name",""), _r.get("rating",""), _r.get("user_ratings_total",""),
+                                    (_r.get("addr") or _r.get("district",""))[:25],
+                                    f"https://maps.google.com/?q={_r.get('lat')},{_r.get('lng')}",
+                                    _r.get("photo_ref","")
+                                ))
+                            for _b in _bib_pool:
+                                if len(_bubbles) >= 12: break
+                                _bnm = _b.get("name","")
+                                _bubbles.append(_make_bubble(
+                                    _bnm, "", "", _b.get("desc","")[:25],
+                                    f"https://www.google.com/maps/search/{_bnm.replace(' ','+')}+{_parking_city or ''}",
+                                    tag="🍽 米其林必比登"
+                                ))
+                            if _bubbles:
                                 push_message(user_id, [{"type":"flex","altText":f"{_parking_city or '附近'}高評分餐廳","contents":{"type":"carousel","contents":_bubbles}}])
                             else:
                                 push_message(user_id, [{"type":"text","text":f"找不到{_parking_city or '附近'}的高評分餐廳 😅"}])
