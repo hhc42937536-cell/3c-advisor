@@ -1282,7 +1282,7 @@ class handler(BaseHTTPRequestHandler):
                         try:
                             import json as _json, os as _os, random as _rnd
                             _db_path = _os.path.join(
-                                _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))),
+                                _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))),
                                 "restaurant_db.json")
                             _db = _json.load(open(_db_path, encoding="utf-8"))
                             _c2 = (_parking_city or "")[:2]
