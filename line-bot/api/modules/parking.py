@@ -199,14 +199,10 @@ def _build_restaurant_bubble(r: dict, lat: float, lon: float, city: str,
 
 def _build_post_parking_food(city: str, lat: float = None, lon: float = None,
                               user_id: str = "") -> list:
-    try:
-        import webhook as _wh
-        get_eaten = _wh._get_eaten
-        build_food_restaurant_flex = _wh.build_food_restaurant_flex
-        restaurant_cache = _wh._RESTAURANT_CACHE
-        bib_gourmand = _wh._BIB_GOURMAND
-    except Exception:
-        return []
+    from utils.supabase import get_eaten as _get_eaten
+    from modules.food import build_food_restaurant_flex
+    from modules.food_runtime import _RESTAURANT_CACHE
+    from modules.food_data import _BIB_GOURMAND
 
     return _shared_build_post_parking_food(
         city,
@@ -217,10 +213,10 @@ def _build_post_parking_food(city: str, lat: float = None, lon: float = None,
         nearby_places_google=_nearby_places_google,
         places_photo_url=_places_photo_url,
         haversine=_haversine,
-        get_eaten=get_eaten,
+        get_eaten=_get_eaten,
         build_food_restaurant_flex=build_food_restaurant_flex,
-        restaurant_cache=restaurant_cache,
-        bib_gourmand=bib_gourmand,
+        restaurant_cache=_RESTAURANT_CACHE,
+        bib_gourmand=_BIB_GOURMAND,
     )
 
 
