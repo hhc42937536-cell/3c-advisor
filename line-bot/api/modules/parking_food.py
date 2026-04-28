@@ -192,9 +192,11 @@ def build_post_parking_food(
                     bib_with_dist.append((distance, item))
         bib_with_dist.sort(key=lambda item: item[0])
         bib_pool_near = [item for _, item in bib_with_dist]
+        if not bib_pool_near:  # 沒座標資料，直接用城市全部
+            bib_pool_near = bib_pool
     else:
         bib_pool_near = bib_pool
-    bib_picks = bib_pool_near[:2] if bib_pool_near else []
+    bib_picks = random.sample(bib_pool_near, min(3, len(bib_pool_near))) if bib_pool_near else []
     for item in bib_picks:
         item.setdefault("_source", "bib")
 
