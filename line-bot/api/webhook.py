@@ -1290,24 +1290,32 @@ class handler(BaseHTTPRequestHandler):
                             _picks = sorted(
                                 [r for r in _pool if float(r.get("rating") or 0) >= 4.0],
                                 key=lambda r: abs(float(r.get("lat") or lat) - lat) + abs(float(r.get("lng") or lon) - lon)
-                            )[:5]
+                            )[:8]
                             if _picks:
+                                _gkey = os.environ.get("GOOGLE_PLACES_API_KEY","")
                                 _bubbles = []
                                 for _r in _picks:
                                     _nm = _r.get("name","")
                                     _rt = _r.get("rating","")
-                                    _ad = (_r.get("addr") or _r.get("district",""))[:20]
+                                    _rv = _r.get("user_ratings_total","")
+                                    _ad = (_r.get("addr") or _r.get("district",""))[:25]
                                     _gmap = f"https://maps.google.com/?q={_r.get('lat')},{_r.get('lng')}"
-                                    _bubbles.append({"type":"bubble","body":{"type":"box","layout":"vertical","contents":[
-                                        {"type":"text","text":f"⭐ {_rt}","size":"sm","color":"#E65100"},
-                                        {"type":"text","text":_nm,"weight":"bold","size":"md","wrap":True},
-                                        {"type":"text","text":_ad,"size":"xs","color":"#888888"},
-                                    ]},"footer":{"type":"box","layout":"vertical","contents":[
-                                        {"type":"button","style":"primary","action":{"type":"uri","label":"📍 導航","uri":_gmap},"color":"#FF6B35"}
-                                    ]}})
+                                    _bub = {"type":"bubble",
+                                        "body":{"type":"box","layout":"vertical","spacing":"sm","paddingAll":"12px","contents":[
+                                            {"type":"text","text":f"⭐ {_rt}  ({_rv}則)","size":"xs","color":"#E65100"},
+                                            {"type":"text","text":_nm,"weight":"bold","size":"md","wrap":True,"maxLines":2},
+                                            {"type":"text","text":_ad,"size":"xs","color":"#888888","wrap":True},
+                                        ]},
+                                        "footer":{"type":"box","layout":"vertical","contents":[
+                                            {"type":"button","style":"primary","height":"sm","action":{"type":"uri","label":"📍 導航前往","uri":_gmap},"color":"#FF6B35"}
+                                        ]}}
+                                    _pr = _r.get("photo_ref","")
+                                    if _pr and _gkey:
+                                        _bub["hero"] = {"type":"image","url":f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference={_pr}&key={_gkey}","size":"full","aspectRatio":"20:13","aspectMode":"cover"}
+                                    _bubbles.append(_bub)
                                 push_message(user_id, [{"type":"flex","altText":f"{_parking_city or '附近'}高評分餐廳","contents":{"type":"carousel","contents":_bubbles}}])
                             else:
-                                push_message(user_id, [{"type":"text","text":f"[DEBUG] pool={len(_pool)} city={_parking_city!r} db_keys={list(_db.get('by_city',{}).keys())[:5]}"}])
+                                push_message(user_id, [{"type":"text","text":f"找不到{_parking_city or '附近'}的高評分餐廳 😅"}])
                         except Exception as _fe:
                             import traceback; traceback.print_exc()
                             push_message(user_id, [{"type":"text","text":f"[ERR] {type(_fe).__name__}: {str(_fe)[:100]}"}])
