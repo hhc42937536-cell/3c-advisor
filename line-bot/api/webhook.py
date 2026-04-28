@@ -1256,8 +1256,10 @@ class handler(BaseHTTPRequestHandler):
                 # 位置訊息 → 食物定位 or 找車位
                 if event.get("type") == "message" and event.get("message", {}).get("type") == "location":
                     reply_token = event.get("replyToken", "")
-                    lat = float(event["message"].get("latitude", 0))
-                    lon = float(event["message"].get("longitude", 0))
+                    # 診斷：立即確認收到，排除路由問題
+                    reply_message(reply_token, [{"type": "text", "text": "📍 收到位置！處理中..."}])
+                    lat = float(event["message"].get("latitude", 0) or 0)
+                    lon = float(event["message"].get("longitude", 0) or 0)
                     _addr_raw = event["message"].get("address", "")
                     city_hint = _addr_raw[:6]
                     # 從地址解析城市，address 空白時用座標反查
@@ -1304,27 +1306,20 @@ class handler(BaseHTTPRequestHandler):
                             print(f"[food_inline] FAILED: {_fe}")
                             return []
 
-                    # 快速路徑：快取命中 → reply 停車 + push 美食（緊接在後）
+                    # 停車 / 美食路徑（reply token 已在頂部用掉，改全用 push）
                     cached = _peek_parking_cache(lat, lon)
-                    if cached:
-                        reply_message(reply_token, cached)
-                        if _parking_city:
-                            food_msgs = _build_food_inline(_parking_city, lat, lon, user_id)
-                            if food_msgs:
-                                push_message(user_id, food_msgs)
-                        log_usage(user_id, "parking", sub_action="傳位置_cached", city=city_hint)
-                    else:
-                        reply_message(reply_token, [{"type": "text",
-                            "text": "📍 定位成功！\n🔍 正在搜尋附近車位與美食..."}])
-                        try:
+                    try:
+                        if cached:
+                            push_message(user_id, cached)
+                        else:
                             messages = build_parking_flex(lat, lon, city=_parking_city)
                             food_msgs = _build_food_inline(_parking_city or "", lat, lon, user_id)
                             push_message(user_id, messages + food_msgs)
-                            log_usage(user_id, "parking", sub_action="傳位置", city=city_hint)
-                        except Exception as pe:
-                            import traceback; traceback.print_exc()
-                            push_message(user_id, [{"type": "text", "text": "找車位時發生錯誤，請稍後再試 🙏"}])
-                            log_usage(user_id, "parking", sub_action="傳位置", is_success=False)
+                        log_usage(user_id, "parking", sub_action="傳位置", city=city_hint)
+                    except Exception as pe:
+                        import traceback; traceback.print_exc()
+                        push_message(user_id, [{"type": "text", "text": "找車位時發生錯誤，請稍後再試 🙏"}])
+                        log_usage(user_id, "parking", sub_action="傳位置", is_success=False)
                     continue
 
                 # 文字訊息
