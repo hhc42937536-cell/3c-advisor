@@ -1279,8 +1279,11 @@ class handler(BaseHTTPRequestHandler):
                             print(f"[food_inline] FAILED: {_fe}")
                             return []
 
-                    reply_message(reply_token, [{"type": "text",
-                        "text": "📍 定位成功！\n🔍 正在幫你找附近美食與車位..."}])
+                    _ack = [{"type": "text", "text": "📍 定位成功！\n🔍 正在幫你找附近美食與車位..."}]
+                    if reply_token:
+                        reply_message(reply_token, _ack)
+                    else:
+                        push_message(user_id, _ack)
                     cached = _peek_parking_cache(lat, lon)
                     try:
                         if cached:
