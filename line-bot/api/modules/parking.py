@@ -221,25 +221,51 @@ def _build_post_parking_food(city: str, lat: float = None, lon: float = None,
 
 
 def build_food_by_location(city: str, lat: float, lon: float, user_id: str = "") -> list:
-    """用靜態資料（必比登 + restaurant_cache）推薦附近美食，不呼叫 Google Places 或 Supabase。"""
-    from modules.food import build_food_restaurant_flex
-    from modules.food_runtime import _RESTAURANT_CACHE
-    from modules.food_data import _BIB_GOURMAND
+    """從 restaurant_db.json 找 4 星以上餐廳，按距離排序後建立 Flex 卡片。"""
+    import json, os, random as _random
+    from modules.parking_food import build_restaurant_bubble
 
-    return _shared_build_post_parking_food(
-        city,
-        lat,
-        lon,
-        "",                                # 不傳 user_id，跳過 get_eaten Supabase 查詢
-        google_places_api_key="",          # 跳過 Google Places
-        nearby_places_google=_nearby_places_google,
-        places_photo_url=_places_photo_url,
-        haversine=_haversine,
-        get_eaten=lambda uid: set(),       # 不查吃過記錄
-        build_food_restaurant_flex=build_food_restaurant_flex,
-        restaurant_cache=_RESTAURANT_CACHE,
-        bib_gourmand=_BIB_GOURMAND,
+    db_path = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "restaurant_db.json",
     )
+    try:
+        db = json.load(open(db_path, encoding="utf-8"))
+        city2 = city[:2] if city else ""
+        pool = db.get("by_city", {}).get(city, db.get("by_city", {}).get(city2, []))
+    except Exception:
+        pool = []
+
+    # 過濾 4 星以上
+    candidates = [r for r in pool if float(r.get("rating") or 0) >= 4.0]
+
+    # 按距離排序
+    if lat and lon:
+        for r in candidates:
+            if r.get("lat") and r.get("lng"):
+                r["_dist"] = _shared_haversine(lat, lon, float(r["lat"]), float(r["lng"]))
+            else:
+                r["_dist"] = 9999
+        candidates.sort(key=lambda r: r["_dist"])
+    else:
+        _random.shuffle(candidates)
+
+    picks = candidates[:5]
+    if not picks:
+        return []
+
+    bubbles = []
+    for r in picks:
+        bubble = build_restaurant_bubble(
+            r, lat, lon, city, set(),
+            haversine=_shared_haversine,
+            places_photo_url=_places_photo_url,
+            subtitle="⭐ Google 4星以上",
+        )
+        bubbles.append(bubble)
+
+    return [{"type": "flex", "altText": f"{city or '附近'}高評分餐廳推薦",
+             "contents": {"type": "carousel", "contents": bubbles}}]
 
 
 def build_parking_flex(lat: float, lon: float, city: str = "") -> list:
