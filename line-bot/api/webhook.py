@@ -1256,8 +1256,9 @@ class handler(BaseHTTPRequestHandler):
                 # 位置訊息 → 食物定位 or 找車位
                 if event.get("type") == "message" and event.get("message", {}).get("type") == "location":
                     reply_token = event.get("replyToken", "")
-                    lat = float(event["message"].get("latitude", 0))
-                    lon = float(event["message"].get("longitude", 0))
+                    lat = float(event["message"].get("latitude", 0) or 0)
+                    lon = float(event["message"].get("longitude", 0) or 0)
+                    push_message(user_id, [{"type": "text", "text": f"[DEBUG] 收到位置 lat={lat:.4f} lon={lon:.4f}"}])
                     _addr_raw = event["message"].get("address", "")
                     city_hint = _addr_raw[:6]
                     # 從地址解析城市，address 空白時用座標反查
