@@ -1275,10 +1275,15 @@ class handler(BaseHTTPRequestHandler):
                     print(f"[food_locate] flag={_food_flag!r} city={_parking_city} lat={lat:.4f} lon={lon:.4f}")
                     if _food_flag:
                         _redis_set(f"food_locate:{user_id}", "", ttl=1)
+                        reply_message(reply_token, [{"type": "text",
+                            "text": f"📍 收到！正在找{_parking_city or '附近'}的必比登和高評分餐廳..."}])
                         food_cards = build_food_by_location(_parking_city or "", lat, lon, user_id)
                         if not food_cards:
                             food_cards = build_food_message(f"幫我決定 {_parking_city or ''}", user_id)
-                        reply_message(reply_token, food_cards if food_cards else [{"type": "text", "text": "找不到附近美食，請換個地區試試 😅"}])
+                        if food_cards:
+                            push_message(user_id, food_cards)
+                        else:
+                            push_message(user_id, [{"type": "text", "text": "找不到附近必比登，試試選類型看看 😅"}])
                         log_usage(user_id, "food", sub_action="位置定位", city=_parking_city)
                         continue
                     print(f"[webhook] location: {lat},{lon} city={_parking_city} addr={_addr_raw[:20]!r}")
