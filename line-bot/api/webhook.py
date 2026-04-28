@@ -87,7 +87,7 @@ from modules.safety   import (
     analyze_fraud, build_fraud_intro, build_fraud_trends, build_fraud_result,
     build_legal_guide_intro, build_legal_answer, build_tools_menu, build_life_tools_menu, LEGAL_QA,
 )
-from modules.parking  import build_parking_flex, _build_post_parking_food
+from modules.parking  import build_parking_flex, _build_post_parking_food, build_food_by_location
 
 
 
@@ -1274,8 +1274,10 @@ class handler(BaseHTTPRequestHandler):
                     _food_flag = _redis_get(f"food_locate:{user_id}")
                     print(f"[food_locate] flag={_food_flag!r} city={_parking_city} lat={lat:.4f} lon={lon:.4f}")
                     if _food_flag:
-                        _redis_set(f"food_locate:{user_id}", "", ttl=1)  # 清除 flag
-                        food_cards = build_food_message(f"幫我決定 {_parking_city or ''}", user_id)
+                        _redis_set(f"food_locate:{user_id}", "", ttl=1)
+                        food_cards = build_food_by_location(_parking_city or "", lat, lon, user_id)
+                        if not food_cards:
+                            food_cards = build_food_message(f"幫我決定 {_parking_city or ''}", user_id)
                         reply_message(reply_token, food_cards if food_cards else [{"type": "text", "text": "找不到附近美食，請換個地區試試 😅"}])
                         log_usage(user_id, "food", sub_action="位置定位", city=_parking_city)
                         continue
