@@ -221,8 +221,7 @@ def _build_post_parking_food(city: str, lat: float = None, lon: float = None,
 
 
 def build_food_by_location(city: str, lat: float, lon: float, user_id: str = "") -> list:
-    """用靜態資料（必比登 + restaurant_cache）推薦附近美食，不呼叫 Google Places。"""
-    from utils.supabase import get_eaten as _get_eaten
+    """用靜態資料（必比登 + restaurant_cache）推薦附近美食，不呼叫 Google Places 或 Supabase。"""
     from modules.food import build_food_restaurant_flex
     from modules.food_runtime import _RESTAURANT_CACHE
     from modules.food_data import _BIB_GOURMAND
@@ -231,12 +230,12 @@ def build_food_by_location(city: str, lat: float, lon: float, user_id: str = "")
         city,
         lat,
         lon,
-        user_id,
-        google_places_api_key="",          # 刻意跳過 Google Places
+        "",                                # 不傳 user_id，跳過 get_eaten Supabase 查詢
+        google_places_api_key="",          # 跳過 Google Places
         nearby_places_google=_nearby_places_google,
         places_photo_url=_places_photo_url,
         haversine=_haversine,
-        get_eaten=_get_eaten,
+        get_eaten=lambda uid: set(),       # 不查吃過記錄
         build_food_restaurant_flex=build_food_restaurant_flex,
         restaurant_cache=_RESTAURANT_CACHE,
         bib_gourmand=_BIB_GOURMAND,
