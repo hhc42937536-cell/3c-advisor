@@ -1303,9 +1303,7 @@ class handler(BaseHTTPRequestHandler):
                                     with _ur.urlopen(_req, timeout=5) as _resp:
                                         _gpdata = _jf.loads(_resp.read().decode("utf-8"))
                                     for _p in _gpdata.get("results", []):
-                                        if float(_p.get("rating") or 0) < 4.0:
-                                            continue
-                                        _loc = _p["geometry"]["location"]
+                                        _loc = _p.get("geometry", {}).get("location", {})
                                         _gp_picks.append({
                                             "name": _p.get("name", ""),
                                             "addr": _p.get("vicinity", ""),
@@ -1335,7 +1333,7 @@ class handler(BaseHTTPRequestHandler):
                             _pool = _by_city.get(_parking_city or "") or _by_city.get(_c2, [])
                             _db_picks = sorted(
                                 [r for r in _pool if float(r.get("rating") or 0) >= 4.0],
-                                key=_dist)[:6]
+                                key=_dist)[:8]
 
                             # ── 合併去重（Google > db，bib 插頭幾張）──
                             _seen = set()
@@ -1345,7 +1343,7 @@ class handler(BaseHTTPRequestHandler):
                                 if _nm and _nm not in _seen:
                                     _seen.add(_nm)
                                     _merged.append(_item)
-                            _merged = _merged[:10]
+                            _merged = _merged[:12]
 
                             # ── 建 bubbles ──
                             def _fb(r, tag=""):
