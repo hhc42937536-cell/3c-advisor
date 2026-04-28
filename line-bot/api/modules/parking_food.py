@@ -151,7 +151,7 @@ def build_post_parking_food(
     picks = []
 
     if lat and lon and google_places_api_key:
-        google_places = nearby_places_google(lat, lon, radius=1500)
+        google_places = nearby_places_google(lat, lon, radius=1500, max_pages=1)
         for restaurant in google_places:
             if restaurant.get("lat") and restaurant.get("lng"):
                 restaurant["dist"] = haversine(lat, lon, restaurant["lat"], restaurant["lng"])
