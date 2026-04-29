@@ -1566,26 +1566,28 @@ class handler(BaseHTTPRequestHandler):
                         # Places Text Search → 取得座標（支援地標名稱）
                         _dlat, _dlon = 0.0, 0.0
                         if GOOGLE_PLACES_API_KEY:
-                            try:
-                                import urllib.parse as _up2
-                                _ts_url = (
-                                    "https://maps.googleapis.com/maps/api/place/textsearch/json"
-                                    f"?query={_up2.quote(_dest_addr + ' 台灣')}"
-                                    "&language=zh-TW"
-                                    f"&key={GOOGLE_PLACES_API_KEY}"
-                                )
-                                with urllib.request.urlopen(
-                                    urllib.request.Request(_ts_url,
-                                        headers={"User-Agent": "LineBot/1.0"}),
-                                    timeout=6
-                                ) as _tsr:
-                                    _tsdata = json.loads(_tsr.read())
-                                if _tsdata.get("results"):
-                                    _loc = _tsdata["results"][0]["geometry"]["location"]
-                                    _dlat, _dlon = float(_loc["lat"]), float(_loc["lng"])
-                                    print(f"[dest_food] {_dest_addr!r} → {_dlat:.4f},{_dlon:.4f}")
-                            except Exception as _ge:
-                                print(f"[dest_food] geocode error: {_ge}")
+                            import urllib.parse as _up2
+                            for _q in (_dest_addr, _dest_addr + " 台灣"):
+                                try:
+                                    _ts_url = (
+                                        "https://maps.googleapis.com/maps/api/place/textsearch/json"
+                                        f"?query={_up2.quote(_q)}"
+                                        "&language=zh-TW"
+                                        f"&key={GOOGLE_PLACES_API_KEY}"
+                                    )
+                                    with urllib.request.urlopen(
+                                        urllib.request.Request(_ts_url,
+                                            headers={"User-Agent": "LineBot/1.0"}),
+                                        timeout=6
+                                    ) as _tsr:
+                                        _tsdata = json.loads(_tsr.read())
+                                    if _tsdata.get("results"):
+                                        _loc = _tsdata["results"][0]["geometry"]["location"]
+                                        _dlat, _dlon = float(_loc["lat"]), float(_loc["lng"])
+                                        print(f"[dest_food] {_q!r} → {_dlat:.4f},{_dlon:.4f}")
+                                        break
+                                except Exception as _ge:
+                                    print(f"[dest_food] geocode error: {_ge}")
 
                         if _dlat and _dlon:
                             _dcity = _city_from_coords(_dlat, _dlon)
@@ -1641,11 +1643,50 @@ class handler(BaseHTTPRequestHandler):
                             log_usage(user_id, "food", sub_action="目的地美食", city=_dcity)
                             continue
                         else:
-                            # 找不到座標 → 提示重新輸入
-                            reply_message(reply_token, [{"type": "text",
-                                "text": f"找不到「{_dest_addr}」的位置 😢\n"
-                                        f"請輸入更詳細的地址，例如：高雄苓雅區、台南中西區"}])
-                            _redis_set(f"food_destination:{user_id}", "1", ttl=300)
+                            # 找不到座標 → 從輸入抽城市，展示該城市餐廳
+                            _dc_fb = next((_c for _c in _ALL_CITIES if _c in _dest_addr), "")
+                            if _dc_fb:
+                                import urllib.parse as _ufd2
+                                from modules.food_data import _BIB_GOURMAND as _BIBfb
+                                import json as _jfb, os as _ofb
+                                _dc2fb = _dc_fb[:2]
+                                _bib_fb = (_BIBfb.get(_dc2fb) or [])[:3]
+                                _db_fb_path = _ofb.path.join(
+                                    _ofb.path.dirname(_ofb.path.dirname(
+                                        _ofb.path.abspath(__file__))),
+                                    "restaurant_db.json")
+                                _db_fb = _jfb.load(open(_db_fb_path, encoding="utf-8"))
+                                _pool_fb = ((_db_fb.get("by_city") or {}).get(_dc_fb)
+                                            or (_db_fb.get("by_city") or {}).get(_dc2fb, []))
+                                import random as _rfb
+                                _db_fb_picks = _rfb.sample(
+                                    [r for r in _pool_fb if r.get("lat") and r.get("lng")],
+                                    min(20, len(_pool_fb)))
+                                _cands_fb = []
+                                _seen_fb: set = set()
+                                for _it in (_bib_fb + _db_fb_picks):
+                                    _n = _it.get("name", "")
+                                    if _n and _n not in _seen_fb:
+                                        _seen_fb.add(_n)
+                                        _cands_fb.append(_it)
+                                _redis_set(f"food_page:{user_id}", {
+                                    "candidates": _cands_fb,
+                                    "bib_names": [b.get("name","") for b in _bib_fb],
+                                    "city": _dc2fb,
+                                }, ttl=600)
+                                _dfb_msgs = _build_food_page(
+                                    _cands_fb, _bib_fb, _dc2fb,
+                                    GOOGLE_PLACES_API_KEY, _ufd2, 0)
+                                reply_message(reply_token, [
+                                    {"type": "text",
+                                     "text": f"找不到「{_dest_addr}」的精確位置，"
+                                             f"改為顯示{_dc2fb}附近餐廳 😊"}
+                                ] + _dfb_msgs)
+                            else:
+                                reply_message(reply_token, [{"type": "text",
+                                    "text": f"找不到「{_dest_addr}」的位置 😢\n"
+                                            f"請輸入城市＋地區，例如：台北信義區、高雄苓雅區"}])
+                                _redis_set(f"food_destination:{user_id}", "1", ttl=300)
                             continue
 
                     # 判斷功能類別（用於 log，不影響路由）
