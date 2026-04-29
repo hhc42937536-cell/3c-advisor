@@ -1563,10 +1563,12 @@ class handler(BaseHTTPRequestHandler):
                             if user_text.startswith("目的地美食地址:")
                             else user_text
                         )
-                        # Places Text Search → 取得座標（支援地標名稱）
+                        # 座標查詢：Google Places → Nominatim(OSM) 雙重備援
                         _dlat, _dlon = 0.0, 0.0
-                        if GOOGLE_PLACES_API_KEY:
-                            import urllib.parse as _up2
+                        import urllib.parse as _up2
+
+                        # ① Google Places Text Search
+                        if GOOGLE_PLACES_API_KEY and not (_dlat and _dlon):
                             for _q in (_dest_addr, _dest_addr + " 台灣"):
                                 try:
                                     _ts_url = (
@@ -1578,16 +1580,37 @@ class handler(BaseHTTPRequestHandler):
                                     with urllib.request.urlopen(
                                         urllib.request.Request(_ts_url,
                                             headers={"User-Agent": "LineBot/1.0"}),
-                                        timeout=6
+                                        timeout=5
                                     ) as _tsr:
                                         _tsdata = json.loads(_tsr.read())
                                     if _tsdata.get("results"):
                                         _loc = _tsdata["results"][0]["geometry"]["location"]
                                         _dlat, _dlon = float(_loc["lat"]), float(_loc["lng"])
-                                        print(f"[dest_food] {_q!r} → {_dlat:.4f},{_dlon:.4f}")
+                                        print(f"[dest_food] Google: {_q!r} → {_dlat:.4f},{_dlon:.4f}")
                                         break
                                 except Exception as _ge:
-                                    print(f"[dest_food] geocode error: {_ge}")
+                                    print(f"[dest_food] Google err: {_ge}")
+
+                        # ② Nominatim (OpenStreetMap) 備援 — 免費、無 quota 限制
+                        if not (_dlat and _dlon):
+                            try:
+                                _nom_url = (
+                                    "https://nominatim.openstreetmap.org/search"
+                                    f"?q={_up2.quote(_dest_addr)}"
+                                    "&format=json&limit=1&countrycodes=tw"
+                                )
+                                with urllib.request.urlopen(
+                                    urllib.request.Request(_nom_url,
+                                        headers={"User-Agent": "LifeUturnLineBot/1.0"}),
+                                    timeout=5
+                                ) as _nomr:
+                                    _nomdata = json.loads(_nomr.read())
+                                if _nomdata:
+                                    _dlat = float(_nomdata[0]["lat"])
+                                    _dlon = float(_nomdata[0]["lon"])
+                                    print(f"[dest_food] OSM: {_dest_addr!r} → {_dlat:.4f},{_dlon:.4f}")
+                            except Exception as _nome:
+                                print(f"[dest_food] OSM err: {_nome}")
 
                         if _dlat and _dlon:
                             _dcity = _city_from_coords(_dlat, _dlon)
