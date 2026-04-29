@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-28 23:00",
+  "updated_at": "2026-04-29 23:01",
   "songs": [
     {
       "name": "REDRED",
@@ -52,19 +52,14 @@
       "url": "https://music.apple.com/tw/album/who-is-she/1886385269?i=1886385270"
     },
     {
-      "name": "陪你到這",
-      "artist": "陳華",
-      "url": "https://music.apple.com/tw/album/%E9%99%AA%E4%BD%A0%E5%88%B0%E9%80%99/1891683682?i=1891683695"
-    },
-    {
       "name": "繞路",
       "artist": "A-Lin",
       "url": "https://music.apple.com/tw/album/%E7%B9%9E%E8%B7%AF/1893279797?i=1893279800"
     },
     {
-      "name": "Stick With You",
-      "artist": "TOMORROW X TOGETHER",
-      "url": "https://music.apple.com/tw/album/stick-with-you/1886536327?i=1886536332"
+      "name": "陪你到這",
+      "artist": "陳華",
+      "url": "https://music.apple.com/tw/album/%E9%99%AA%E4%BD%A0%E5%88%B0%E9%80%99/1891683682?i=1891683695"
     },
     {
       "name": "幸福在歌唱 (電影《陽光女子合唱團》幸福版主題曲)",
@@ -75,6 +70,11 @@
       "name": "Body to Body",
       "artist": "防彈少年團",
       "url": "https://music.apple.com/tw/album/body-to-body/1868862375?i=1868862376"
+    },
+    {
+      "name": "Stick With You",
+      "artist": "TOMORROW X TOGETHER",
+      "url": "https://music.apple.com/tw/album/stick-with-you/1886536327?i=1886536332"
     }
   ],
   "deals": [
@@ -84,18 +84,13 @@
       "tag": "優惠"
     },
     {
+      "title": "好康情報誌(@info.talk_tw) - Threads",
+      "url": "https://www.threads.com/@info.talk_tw",
+      "tag": "優惠"
+    },
+    {
       "title": "本檔最殺- 買一送一大集合| 來全聯方便又省錢",
       "url": "https://www.pxmart.com.tw/campaign/life-will/best-buy/%E8%B2%B7%E4%B8%80%E9%80%81%E4%B8%80%E5%A4%A7%E9%9B%86%E5%90%88",
-      "tag": "優惠"
-    },
-    {
-      "title": "7-ELEVEN 綁定uniopen 抽購物金4/27～5/2 通通有獎，最高$50，抽完 ...",
-      "url": "https://www.threads.com/@savemoneylab/post/DXogeq9k1Jk/7-eleven-%E7%B6%81%E5%AE%9A-uniopen-%E6%8A%BD%E8%B3%BC%E7%89%A9%E9%87%9142752-%E9%80%9A%E9%80%9A%E6%9C%89%E7%8D%8E%E6%9C%80%E9%AB%98-50%E6%8A%BD%E5%AE%8C%E7%82%BA%E6%AD%A2-httpswoootw4qun0ff-uniopen-%E9%AA%B0-op-%E9%BB%9E%E6%B4%BB%E5%8B%95%E5%88%B0",
-      "tag": "優惠"
-    },
-    {
-      "title": "Costco好市多(新品/優惠)最速報",
-      "url": "https://t.me/s/daybuy?before=17229",
       "tag": "優惠"
     },
     {
@@ -104,8 +99,23 @@
       "tag": "優惠"
     },
     {
+      "title": "Costco好市多(新品/優惠)最速報– Telegram",
+      "url": "https://t.me/s/daybuy?before=17227",
+      "tag": "優惠"
+    },
+    {
+      "title": "CFK 黃金週特賣活動正式開跑Steam、Switch 平台限定最高8 折 ...",
+      "url": "https://gnn.gamer.com.tw/detail.php?sn=304256",
+      "tag": "優惠"
+    },
+    {
       "title": "關於周年慶特賣和目前的優惠問題: r/deadbydaylight - Reddit",
       "url": "https://www.reddit.com/r/deadbydaylight/comments/1sv4zpf/question_about_the_anniversary_sale_and_the/?tl=zh-hant",
+      "tag": "優惠"
+    },
+    {
+      "title": "活動時間：即日起～5/10 新光三越南西店一館9F - Threads",
+      "url": "https://www.threads.com/@do_.you.know/post/DXeORfWD-m3/%E6%B4%BB%E5%8B%95%E6%99%82%E9%96%93%E5%8D%B3%E6%97%A5%E8%B5%B7510%E6%96%B0%E5%85%89%E4%B8%89%E8%B6%8A%E5%8D%97%E8%A5%BF%E5%BA%97-%E4%B8%80%E9%A4%A89f",
       "tag": "優惠"
     },
     {
@@ -114,57 +124,47 @@
       "tag": "優惠"
     },
     {
-      "title": "比大創還便宜！ 39元平價百貨「達樂星」無預警全台收攤最後一家「清倉 ...",
-      "url": "https://travel.udn.com/travel/story/7160/9468852",
+      "title": "百貨公司週年慶有時候會有優惠去年在南紡買主機+保護貼+2塊遊戲片 ...",
+      "url": "https://www.threads.com/@yunnie_9382/post/DXjn1JtAd9f/%E7%99%BE%E8%B2%A8%E5%85%AC%E5%8F%B8%E9%80%B1%E5%B9%B4%E6%85%B6%E6%9C%89%E6%99%82%E5%80%99%E6%9C%83%E6%9C%89%E5%84%AA%E6%83%A0-%E5%8E%BB%E5%B9%B4%E5%9C%A8%E5%8D%97%E7%B4%A1%E8%B2%B7%E4%B8%BB%E6%A9%9F%E4%BF%9D%E8%AD%B7%E8%B2%BC2%E5%A1%8A%E9%81%8A%E6%88%B2%E7%89%87%E6%94%9D%E5%BD%B1%E6%A9%9F-%E9%82%84%E6%9C%89%E5%95%A5%E4%B9%9F%E5%BF%98%E4%BA%8618000%E5%B7%A6%E5%8F%B3-%E7%AE%97%E4%B8%80%E7%AE%97%E8%A6%BA%E5%BE%97%E9%82%84%E5%8F%AF%E4%BB%A5%E7%AC%AC%E4%B8%80%E5%A4%A9%E5%B0%B1%E8%A1%9D%E5%8E%BB%E5%B0%B1%E8%B2%B7%E4%BA%86",
       "tag": "優惠"
     },
     {
-      "title": "新竹大遠百-線上DM - 遠東百貨",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=42",
+      "title": "周年慶特賣: r/BambuLab - Reddit",
+      "url": "https://www.reddit.com/r/BambuLab/comments/1sthnqe/anniversary_sale/?tl=zh-hant",
       "tag": "優惠"
     },
     {
       "title": "活動訊息| 廣三SOGO百貨",
-      "url": "https://www.kssogo.com.tw/news.php",
+      "url": "https://www.kssogo.com.tw/news.php?cID=5",
       "tag": "優惠"
     },
     {
-      "title": "高雄大統百貨公司 - TikTok",
-      "url": "https://www.tiktok.com/content/%E9%AB%98%E9%9B%84%E5%A4%A7%E7%B5%B1%E7%99%BE%E8%B2%A8%E5%85%AC%E5%8F%B8",
+      "title": "聖水新開幕超大間Musinsa真的太好逛現在還有好多活動還可以免費領 ...",
+      "url": "https://www.threads.com/@ccc_eat/post/DXi232sD4g4/%E8%81%96%E6%B0%B4%E6%96%B0%E9%96%8B%E5%B9%95%E8%B6%85%E5%A4%A7%E9%96%93musinsa%E7%9C%9F%E7%9A%84%E5%A4%AA%E5%A5%BD%E9%80%9B%E7%8F%BE%E5%9C%A8%E9%82%84%E6%9C%89%E5%A5%BD%E5%A4%9A%E6%B4%BB%E5%8B%95%E9%82%84%E5%8F%AF%E4%BB%A5%E5%85%8D%E8%B2%BB%E9%A0%98%E7%A6%AE%E7%89%A9%E6%B6%88%E8%B2%BB%E6%BB%BF5%E8%90%AC%E5%8F%88%E8%83%BD%E7%8D%B2%E5%BE%97%E7%A1%AC%E5%B9%A3%E5%8F%AF%E4%BB%A5%E6%8A%BD%E6%89%AD%E8%9B%8B%E5%9B%9B%E6%A8%93%E7%94%9A%E8%87%B3%E9%82%84%E6%9C%89%E7%BE%8E%E9%A3%9F%E8%A1%97%E5%89%9B%E6%BB%BF%E4%BA%86%E5%9C%96%E4%B8%89mucent%E5%92%96%E5%95%A1%E8%89%B2%E7%9A%84%E5%8C%85%E7%B5%90%E5%B8%B3%E6%89%8D",
       "tag": "優惠"
     },
     {
-      "title": "桃園超狂7-11試營運     整間DAISO大創搬進去！ 4/25開幕蔬菜買1送1",
-      "url": "https://www.threads.com/@nownews/post/DXafXU5iKl1/%E8%A9%A6%E7%87%9F%E9%81%8B%E9%96%8B%E5%B9%95%E5%84%AA%E6%83%A0%E4%B8%80%E6%AC%A1%E7%9C%8Bhttpswwwnownewscomnews6809132utm_sourceinstagramutm_mediumnnutm_campai",
+      "title": "漢神洲際購物廣場開幕！特色空間、150 家獨家品牌、免費停車完全 ...",
+      "url": "https://hanshinarena.com.tw/%E6%BC%A2%E7%A5%9E%E6%B4%B2%E9%9A%9B/tw/News/%E5%85%A8%E9%A4%A8%E6%B4%BB%E5%8B%95/%E6%BC%A2%E7%A5%9E%E6%B4%B2%E9%9A%9B%E8%B3%BC%E7%89%A9%E5%BB%A3%E5%A0%B4_Grand_Opening",
       "tag": "優惠"
     },
     {
       "title": "官宣了! 台中最大購物廣場4/10開幕營運500大型品牌逛不完 - MSN",
-      "url": "https://www.msn.com/zh-tw/news/other/%E5%AE%98%E5%AE%A3%E4%BA%86-%E5%8F%B0%E4%B8%AD%E6%9C%80%E5%A4%A7%E8%B3%BC%E7%89%A9%E5%BB%A3%E5%A0%B44-10%E9%96%8B%E5%B9%95%E7%87%9F%E9%81%8B-500%E5%A4%A7%E5%9E%8B%E5%93%81%E7%89%8C%E9%80%9B%E4%B8%8D%E5%AE%8C/ar-AA1XOFl0?apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1&bundles=feat-es2020-t",
+      "url": "http://www.msn.com/zh-tw/news/other/%E5%AE%98%E5%AE%A3%E4%BA%86-%E5%8F%B0%E4%B8%AD%E6%9C%80%E5%A4%A7%E8%B3%BC%E7%89%A9%E5%BB%A3%E5%A0%B44-10%E9%96%8B%E5%B9%95%E7%87%9F%E9%81%8B-500%E5%A4%A7%E5%9E%8B%E5%93%81%E7%89%8C%E9%80%9B%E4%B8%8D%E5%AE%8C/ar-AA1XOFl0?apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1&bundles=feat-es2020-t",
       "tag": "優惠"
     },
     {
-      "title": "Dyson 與MOVA 智慧家電一次看，全台門祭優惠同慶開幕 - News Pie",
-      "url": "https://www.newspie.com.tw/hengstyle-20260423/",
+      "title": "vivo 板橋大遠百體驗店正式開幕，同步攜手遠傳電信推V70 系列與 ...",
+      "url": "https://today.line.me/tw/v3/article/9m66jaK",
       "tag": "優惠"
     },
     {
-      "title": "2026世界地球日「咖啡、飲料」優惠！4/22星巴克買一送一、7-11第 ...",
-      "url": "https://www.elle.com/tw/life/hot-news/g71066968/earthday-discount-2026/",
+      "title": "A5和牛肋條特價198元燒肉新品牌「和庵燒肉株式會社」今開幕",
+      "url": "https://travel.ettoday.net/article/3156611.htm",
       "tag": "優惠"
     },
     {
-      "title": "Laline 台北概念店開幕推限定體驗與滿額優惠迎母親節 - 台灣獨家傳媒",
-      "url": "https://www.penghunews.com/%E7%94%9F%E6%B4%BB/94971/",
-      "tag": "優惠"
-    },
-    {
-      "title": "歡慶總部開幕．母親節暖身慶   - W.Korea 正韓服飾",
-      "url": "https://www.wkorea.com.tw/post.php?action=view&id=231",
-      "tag": "優惠"
-    },
-    {
-      "title": "Laline 台北概念店開幕推限定體驗與滿額優惠迎母親節",
+      "title": "Laline 台北概念店開幕推限定體驗與滿額優惠迎母親節- 生活新聞",
       "url": "https://news.pchome.com.tw/living/morenews/20260423/index-77693997794822350009.html",
       "tag": "優惠"
     }
