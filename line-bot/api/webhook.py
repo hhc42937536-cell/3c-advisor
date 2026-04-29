@@ -1563,57 +1563,88 @@ class handler(BaseHTTPRequestHandler):
                             if user_text.startswith("目的地美食地址:")
                             else user_text
                         )
-                        # 呼叫 Google Geocoding API
+                        # Places Text Search → 取得座標（支援地標名稱）
                         _dlat, _dlon = 0.0, 0.0
                         if GOOGLE_PLACES_API_KEY:
                             try:
                                 import urllib.parse as _up2
-                                _gc_url = (
-                                    "https://maps.googleapis.com/maps/api/geocode/json"
-                                    f"?address={_up2.quote(_dest_addr + ' 台灣')}"
+                                _ts_url = (
+                                    "https://maps.googleapis.com/maps/api/place/textsearch/json"
+                                    f"?query={_up2.quote(_dest_addr + ' 台灣')}"
                                     "&language=zh-TW"
                                     f"&key={GOOGLE_PLACES_API_KEY}"
                                 )
                                 with urllib.request.urlopen(
-                                    urllib.request.Request(_gc_url), timeout=8
-                                ) as _gcr:
-                                    _gcdata = json.loads(_gcr.read())
-                                if _gcdata.get("results"):
-                                    _loc = _gcdata["results"][0]["geometry"]["location"]
+                                    urllib.request.Request(_ts_url,
+                                        headers={"User-Agent": "LineBot/1.0"}),
+                                    timeout=6
+                                ) as _tsr:
+                                    _tsdata = json.loads(_tsr.read())
+                                if _tsdata.get("results"):
+                                    _loc = _tsdata["results"][0]["geometry"]["location"]
                                     _dlat, _dlon = float(_loc["lat"]), float(_loc["lng"])
-                                    print(f"[geocode] {_dest_addr!r} → {_dlat:.4f},{_dlon:.4f}")
+                                    print(f"[dest_food] {_dest_addr!r} → {_dlat:.4f},{_dlon:.4f}")
                             except Exception as _ge:
-                                print(f"[geocode] error: {_ge}")
+                                print(f"[dest_food] geocode error: {_ge}")
+
                         if _dlat and _dlon:
                             _dcity = _city_from_coords(_dlat, _dlon)
                             if _dcity:
                                 _set_user_city(user_id, _dcity)
+                            _dc2 = (_dcity or "")[:2]
+                            # 同 food_locate：用本地 restaurant_db 按距離排序
                             try:
-                                _dfood = _build_post_parking_food(
-                                    _dcity or "", _dlat, _dlon, user_id=user_id
-                                )
-                                if not _dfood:
-                                    _dfood = [{"type": "text",
-                                        "text": f"📍 {_dest_addr} 附近沒找到美食資料，試試輸入城市名稱"}]
+                                import json as _jfd, os as _ofd, urllib.parse as _ufd
+                                from modules.food_data import _BIB_GOURMAND as _BIBd
+                                _bib_all_d = _BIBd.get(_dc2, [])
+
+                                def _ddist(r):
+                                    try:
+                                        return (abs(float(r.get("lat") or _dlat) - _dlat)
+                                                + abs(float(r.get("lng") or _dlon) - _dlon))
+                                    except Exception:
+                                        return 9999
+
+                                _bib_near_d = sorted(
+                                    [b for b in _bib_all_d if b.get("lat") and b.get("lng")
+                                     and _ddist(b) < 0.045] or _bib_all_d,
+                                    key=_ddist)[:3]
+                                _db2_path = _ofd.path.join(
+                                    _ofd.path.dirname(_ofd.path.dirname(
+                                        _ofd.path.abspath(__file__))),
+                                    "restaurant_db.json")
+                                _db2 = _jfd.load(open(_db2_path, encoding="utf-8"))
+                                _pool2 = ((_db2.get("by_city") or {}).get(_dcity or "")
+                                          or (_db2.get("by_city") or {}).get(_dc2, []))
+                                _db2_picks = sorted(
+                                    [r for r in _pool2 if r.get("lat") and r.get("lng")],
+                                    key=_ddist)[:20]
+                                _seen2, _cands2 = set(), []
+                                for _it in (_bib_near_d + _db2_picks):
+                                    _n2 = _it.get("name", "")
+                                    if _n2 and _n2 not in _seen2:
+                                        _seen2.add(_n2)
+                                        _cands2.append(_it)
+                                _redis_set(f"food_page:{user_id}", {
+                                    "candidates": _cands2,
+                                    "bib_names": [b.get("name","") for b in _bib_near_d],
+                                    "city": _dc2,
+                                }, ttl=600)
+                                _dfood = _build_food_page(
+                                    _cands2, _bib_near_d, _dc2,
+                                    GOOGLE_PLACES_API_KEY, _ufd, 0)
                             except Exception as _dfe:
-                                print(f"[dest_food] error: {_dfe}")
+                                import traceback; traceback.print_exc()
                                 _dfood = [{"type": "text",
-                                    "text": "搜尋目的地美食時發生錯誤，請稍後再試 🙏"}]
+                                    "text": f"搜尋{_dest_addr}附近美食時發生錯誤 🙏"}]
                             reply_message(reply_token, _dfood)
                             log_usage(user_id, "food", sub_action="目的地美食", city=_dcity)
                             continue
                         else:
-                            # Geocoding 失敗 → 嘗試從文字提取城市
-                            _dc = next((_c for _c in _ALL_CITIES if _c in _dest_addr), "")
-                            if _dc:
-                                _redis_set(f"food_destination:{user_id}", "", ttl=1)
-                                _msgs = handle_text_message(f"今天吃什麼 {_dc}", user_id=user_id)
-                                reply_message(reply_token, _msgs)
-                                log_usage(user_id, "food", sub_action="目的地美食", city=_dc)
-                                continue
-                            # 真的找不到 → 重新提示
+                            # 找不到座標 → 提示重新輸入
                             reply_message(reply_token, [{"type": "text",
-                                "text": f"找不到「{_dest_addr}」的位置 😢\n請輸入城市名稱，例如：台南、高雄"}])
+                                "text": f"找不到「{_dest_addr}」的位置 😢\n"
+                                        f"請輸入更詳細的地址，例如：高雄苓雅區、台南中西區"}])
                             _redis_set(f"food_destination:{user_id}", "1", ttl=300)
                             continue
 
