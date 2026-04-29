@@ -1289,32 +1289,8 @@ class handler(BaseHTTPRequestHandler):
                                 except Exception:
                                     return 9999
 
-                            # ── Google Places Nearby（5s timeout，單頁，最近的真實店家）──
-                            _gp_picks = []
-                            if lat and lon and _gkey:
-                                try:
-                                    _gpurl = (
-                                        "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
-                                        f"?location={lat},{lon}&radius=1500"
-                                        f"&keyword={_uf.quote('餐廳 小吃 美食')}"
-                                        "&language=zh-TW"
-                                        f"&key={_gkey}")
-                                    _req = _ur.Request(_gpurl, headers={"User-Agent": "LineBot/1.0"})
-                                    with _ur.urlopen(_req, timeout=5) as _resp:
-                                        _gpdata = _jf.loads(_resp.read().decode("utf-8"))
-                                    for _p in _gpdata.get("results", []):
-                                        _loc = _p.get("geometry", {}).get("location", {})
-                                        _gp_picks.append({
-                                            "name": _p.get("name", ""),
-                                            "addr": _p.get("vicinity", ""),
-                                            "rating": _p.get("rating", 0),
-                                            "user_ratings_total": _p.get("user_ratings_total", 0),
-                                            "lat": _loc["lat"], "lng": _loc["lng"],
-                                            "photo_ref": (_p.get("photos") or [{}])[0].get("photo_reference", ""),
-                                        })
-                                    _gp_picks.sort(key=_dist)
-                                except Exception as _ge:
-                                    print(f"[food_locate] places err: {_ge}")
+                            # ── restaurant_db 主資料（本地，無 API，已有數百筆）──
+                            _gp_picks = []  # 不走即時 API，全用本地資料
 
                             # ── bib_gourmand 距離篩選 ──
                             _bib_all = _BIB.get(_c2, [])
@@ -1332,8 +1308,8 @@ class handler(BaseHTTPRequestHandler):
                             _by_city = _db.get("by_city") or {}
                             _pool = _by_city.get(_parking_city or "") or _by_city.get(_c2, [])
                             _db_picks = sorted(
-                                [r for r in _pool if float(r.get("rating") or 0) >= 4.0],
-                                key=_dist)[:8]
+                                [r for r in _pool if r.get("lat") and r.get("lng")],
+                                key=_dist)[:20]
 
                             # ── 合併去重（Google > db，bib 插頭幾張）──
                             _seen = set()
