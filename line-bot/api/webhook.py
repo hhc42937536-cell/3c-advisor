@@ -702,6 +702,99 @@ new Chart(document.getElementById('dailyChart'),{{
 </html>"""
 
 
+def _build_food_page(candidates: list, bib_objs: list, city: str,
+                     gkey: str, uf, page: int) -> list:
+    """從 candidates 取第 page 頁（每頁 11 筆），最後加翻頁 bubble。"""
+    import urllib.parse as _ufp2  # noqa
+    PAGE_SIZE = 11
+    bib_names = {b.get("name", "") for b in bib_objs}
+    start = page * PAGE_SIZE
+    batch = candidates[start: start + PAGE_SIZE]
+    if not batch:
+        return [{"type": "text", "text": "已經是最後一頁了 😊"}]
+
+    def _make_bub(r):
+        nm = r.get("name", "") or "未命名"
+        rt = r.get("rating", "")
+        rv = r.get("user_ratings_total", "")
+        ad = (r.get("addr") or r.get("desc") or r.get("district") or "")[:28]
+        photo = r.get("photo_ref", "")
+        if r.get("lat") and r.get("lng"):
+            gmap = f"https://maps.google.com/?q={r['lat']},{r['lng']}"
+        else:
+            gmap = (f"https://www.google.com/maps/search/"
+                    f"{uf.quote(nm + ' ' + city)}")
+        tag = "⭐ 米其林必比登" if nm in bib_names else ""
+        top = tag or (f"⭐ {rt}（{rv}則）" if rv else f"⭐ {rt}" if rt else "👥 在地推薦")
+        col = "#B8860B" if tag else "#E65100"
+        bub = {
+            "type": "bubble", "size": "kilo",
+            "body": {"type": "box", "layout": "vertical",
+                     "spacing": "none", "paddingAll": "14px",
+                     "contents": [
+                         {"type": "text", "text": top, "size": "xxs",
+                          "weight": "bold", "color": col},
+                         {"type": "text", "text": nm, "size": "md",
+                          "weight": "bold", "wrap": True, "maxLines": 2, "margin": "xs"},
+                         {"type": "text", "text": ad, "size": "xs",
+                          "color": "#888888", "wrap": True, "maxLines": 1, "margin": "xs"},
+                     ]},
+            "footer": {"type": "box", "layout": "vertical",
+                       "paddingAll": "10px", "contents": [
+                           {"type": "button", "style": "primary", "height": "sm",
+                            "color": "#FF6B35",
+                            "action": {"type": "uri", "label": "📍 導航前往",
+                                       "uri": gmap}}]},
+        }
+        if photo and gkey:
+            bub["hero"] = {
+                "type": "image",
+                "url": (f"https://maps.googleapis.com/maps/api/place/photo"
+                        f"?maxwidth=400&photo_reference={photo}&key={gkey}"),
+                "size": "full", "aspectRatio": "20:13", "aspectMode": "cover"}
+        return bub
+
+    bubbles = [_make_bub(r) for r in batch]
+
+    # 翻頁 bubble
+    has_next = len(candidates) > start + PAGE_SIZE
+    total = len(candidates)
+    page_label = f"第 {page + 1} 頁 / 共 {(total - 1) // PAGE_SIZE + 1} 頁"
+    nav_bubble = {
+        "type": "bubble", "size": "kilo",
+        "body": {"type": "box", "layout": "vertical",
+                 "justifyContent": "center", "paddingAll": "16px",
+                 "contents": [
+                     {"type": "text", "text": page_label, "size": "xs",
+                      "color": "#888888", "align": "center"},
+                     {"type": "text", "text": f"共 {total} 間餐廳", "size": "sm",
+                      "weight": "bold", "align": "center", "margin": "sm"},
+                 ]},
+        "footer": {"type": "box", "layout": "vertical", "spacing": "sm",
+                   "paddingAll": "10px", "contents": ([
+                       {"type": "button", "style": "primary", "height": "sm",
+                        "color": "#FF6B35",
+                        "action": {"type": "postback",
+                                   "label": f"下一頁 →（第 {page + 2} 頁）",
+                                   "data": f"food_page:{page + 1}",
+                                   "displayText": f"看第 {page + 2} 頁餐廳"}}
+                   ] if has_next else []) + ([
+                       {"type": "button", "style": "secondary", "height": "sm",
+                        "action": {"type": "postback",
+                                   "label": f"← 上一頁（第 {page} 頁）",
+                                   "data": f"food_page:{page - 1}",
+                                   "displayText": f"看第 {page} 頁餐廳"}}
+                   ] if page > 0 else []) + [
+                       {"type": "button", "style": "secondary", "height": "sm",
+                        "action": {"type": "message", "label": "📍 重新定位",
+                                   "text": "📍 我要分享位置找美食"}}
+                   ]},
+    }
+    bubbles.append(nav_bubble)
+    return [{"type": "flex", "altText": f"{city or '附近'}美食（第 {page + 1} 頁）",
+             "contents": {"type": "carousel", "contents": bubbles}}]
+
+
 # ─── Vercel Handler ───────────────────────────────
 
 class handler(BaseHTTPRequestHandler):
@@ -1178,7 +1271,7 @@ class handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps({"status": "ok", "bot": "生活優轉 LifeUturn"}).encode())
 
-    def do_POST(self):
+    def do_POST(self):  # noqa: C901
         """接收 LINE Webhook"""
         from urllib.parse import urlparse as _up
 
@@ -1238,7 +1331,7 @@ class handler(BaseHTTPRequestHandler):
                     log_usage(user_id, "follow")
                     continue
 
-                # Postback → 吃過了記錄
+                # Postback → 吃過了 / 美食翻頁
                 if event.get("type") == "postback":
                     reply_token = event.get("replyToken", "")
                     pdata = event.get("postback", {}).get("data", "")
@@ -1250,6 +1343,22 @@ class handler(BaseHTTPRequestHandler):
                         reply_message(reply_token, [{"type": "text",
                             "text": f"✅ 記住了！\n下次不再推薦「{rname}」給你 😊"}])
                         log_usage(user_id, "food", sub_action="吃過了", city=rcity)
+                    elif pdata.startswith("food_page:"):
+                        _page_no = int(pdata.split(":")[1])
+                        _pstate = _redis_get(f"food_page:{user_id}")
+                        if _pstate:
+                            import urllib.parse as _ufp
+                            _candidates = _pstate.get("candidates", [])
+                            _bib_names  = set(_pstate.get("bib_names", []))
+                            _pcity      = _pstate.get("city", "")
+                            _pgkey      = os.environ.get("GOOGLE_PLACES_API_KEY", "")
+                            _bib_objs   = [c for c in _candidates if c.get("name","") in _bib_names]
+                            _pmsgs = _build_food_page(_candidates, _bib_objs,
+                                                      _pcity, _pgkey, _ufp, _page_no)
+                            reply_message(reply_token, _pmsgs)
+                        else:
+                            reply_message(reply_token, [{"type": "text",
+                                "text": "定位資料已過期，請重新分享位置 📍"}])
                     continue
 
                 # 位置訊息 → 食物定位 or 找車位
@@ -1311,66 +1420,24 @@ class handler(BaseHTTPRequestHandler):
                                 [r for r in _pool if r.get("lat") and r.get("lng")],
                                 key=_dist)[:20]
 
-                            # ── 合併去重（Google > db，bib 插頭幾張）──
+                            # ── 合併去重（bib 優先，db 依距離）──
                             _seen = set()
-                            _merged = []
-                            for _item in (_bib_picks + _gp_picks + _db_picks):
+                            _all_candidates = []
+                            for _item in (_bib_picks + _db_picks):
                                 _nm = _item.get("name", "")
                                 if _nm and _nm not in _seen:
                                     _seen.add(_nm)
-                                    _merged.append(_item)
-                            _merged = _merged[:12]
+                                    _all_candidates.append(_item)
 
-                            # ── 建 bubbles ──
-                            def _fb(r, tag=""):
-                                _nm = r.get("name", "") or "未命名"
-                                _rt = r.get("rating", "")
-                                _rv = r.get("user_ratings_total", "")
-                                _ad = (r.get("addr") or r.get("desc") or r.get("district") or "")[:28]
-                                _photo = r.get("photo_ref", "")
-                                if r.get("lat") and r.get("lng"):
-                                    _gmap = f"https://maps.google.com/?q={r['lat']},{r['lng']}"
-                                else:
-                                    _gmap = f"https://www.google.com/maps/search/{_uf.quote(_nm + ' ' + _c2)}"
-                                _top = tag or (f"⭐ {_rt}（{_rv}則）" if _rv else f"⭐ {_rt}" if _rt else "👥 在地推薦")
-                                _col = "#B8860B" if tag else "#E65100"
-                                _bub = {
-                                    "type": "bubble", "size": "kilo",
-                                    "body": {"type": "box", "layout": "vertical",
-                                             "spacing": "none", "paddingAll": "14px",
-                                             "contents": [
-                                                 {"type": "text", "text": _top, "size": "xxs",
-                                                  "weight": "bold", "color": _col},
-                                                 {"type": "text", "text": _nm, "size": "md",
-                                                  "weight": "bold", "wrap": True, "maxLines": 2, "margin": "xs"},
-                                                 {"type": "text", "text": _ad, "size": "xs",
-                                                  "color": "#888888", "wrap": True, "maxLines": 1, "margin": "xs"},
-                                             ]},
-                                    "footer": {"type": "box", "layout": "vertical",
-                                               "paddingAll": "10px", "contents": [
-                                                   {"type": "button", "style": "primary",
-                                                    "height": "sm", "color": "#FF6B35",
-                                                    "action": {"type": "uri", "label": "📍 導航前往",
-                                                               "uri": _gmap}}]},
-                                }
-                                if _photo and _gkey:
-                                    _bub["hero"] = {
-                                        "type": "image",
-                                        "url": (f"https://maps.googleapis.com/maps/api/place/photo"
-                                                f"?maxwidth=400&photo_reference={_photo}&key={_gkey}"),
-                                        "size": "full", "aspectRatio": "20:13", "aspectMode": "cover"}
-                                return _bub
+                            # 存入 Redis 供翻頁（TTL 10 分鐘）
+                            _redis_set(f"food_page:{user_id}", {
+                                "candidates": _all_candidates,
+                                "bib_names": [b.get("name","") for b in _bib_picks],
+                                "city": _c2,
+                            }, ttl=600)
 
-                            _bubbles = [_fb(r, tag="⭐ 米其林必比登" if r in _bib_picks else "")
-                                        for r in _merged]
-
-                            if _bubbles:
-                                _msgs = [{"type": "flex",
-                                          "altText": f"{_c2 or '附近'}美食推薦",
-                                          "contents": {"type": "carousel", "contents": _bubbles}}]
-                            else:
-                                _msgs = [{"type": "text",
-                                          "text": f"找不到{_c2 or '附近'}的餐廳資料 😅"}]
+                            _msgs = _build_food_page(_all_candidates, _bib_picks,
+                                                     _c2, _gkey, _uf, 0)
                         except Exception as _fe:
                             import traceback; traceback.print_exc()
                             _msgs = [{"type": "text",
