@@ -230,16 +230,33 @@ def build_food_message(
                      ]},
                  }}]
 
-    # ── 分享位置快捷 ──
+    # ── 分享位置快捷（先選餐期）──
+    _MEAL_EMOJIS = {"早餐": "🌅", "午餐": "☀️", "晚餐": "🌙", "消夜": "🌛"}
     if "我要分享位置找美食" in text_s:
-        if user_id:
-            redis_set(f"food_locate:{user_id}", "1", ttl=180)
         return [{
             "type": "text",
-            "text": "好的！請分享你的位置，我馬上幫你找附近美食 📍",
+            "text": "想找哪一餐？選好再分享位置 🍽️",
             "quickReply": {
                 "items": [
-                    {"type": "action", "action": {"type": "location", "label": "📍 分享我的位置"}},
+                    {"type": "action", "action": {"type": "message",
+                     "label": f"{e} {m}", "text": f"定位找{m}"}}
+                    for m, e in _MEAL_EMOJIS.items()
+                ]
+            }
+        }]
+
+    if text_s in {f"定位找{m}" for m in _MEAL_EMOJIS}:
+        meal = text_s.replace("定位找", "")
+        if user_id:
+            redis_set(f"food_locate:{user_id}", meal, ttl=300)
+        emoji = _MEAL_EMOJIS.get(meal, "🍽️")
+        return [{
+            "type": "text",
+            "text": f"好的！請分享你的位置，馬上找附近{meal} {emoji}",
+            "quickReply": {
+                "items": [
+                    {"type": "action", "action": {"type": "location",
+                     "label": f"📍 分享位置找{meal}"}},
                 ]
             }
         }]

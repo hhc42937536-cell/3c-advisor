@@ -703,7 +703,7 @@ new Chart(document.getElementById('dailyChart'),{{
 
 
 def _build_food_page(candidates: list, bib_objs: list, city: str,
-                     gkey: str, uf, page: int) -> list:
+                     gkey: str, uf, page: int, meal_label: str = "") -> list:
     """從 candidates 取第 page 頁（每頁 11 筆），最後加翻頁 bubble。"""
     import urllib.parse as _ufp2  # noqa
     PAGE_SIZE = 11
@@ -760,6 +760,7 @@ def _build_food_page(candidates: list, bib_objs: list, city: str,
     has_next = len(candidates) > start + PAGE_SIZE
     total = len(candidates)
     page_label = f"第 {page + 1} 頁 / 共 {(total - 1) // PAGE_SIZE + 1} 頁"
+    _title_text = f"{meal_label}推薦 共 {total} 間" if meal_label else f"共 {total} 間餐廳"
     nav_bubble = {
         "type": "bubble", "size": "kilo",
         "body": {"type": "box", "layout": "vertical",
@@ -767,7 +768,7 @@ def _build_food_page(candidates: list, bib_objs: list, city: str,
                  "contents": [
                      {"type": "text", "text": page_label, "size": "xs",
                       "color": "#888888", "align": "center"},
-                     {"type": "text", "text": f"共 {total} 間餐廳", "size": "sm",
+                     {"type": "text", "text": _title_text, "size": "sm",
                       "weight": "bold", "align": "center", "margin": "sm"},
                  ]},
         "footer": {"type": "box", "layout": "vertical", "spacing": "sm",
@@ -791,7 +792,8 @@ def _build_food_page(candidates: list, bib_objs: list, city: str,
                    ]},
     }
     bubbles.append(nav_bubble)
-    return [{"type": "flex", "altText": f"{city or '附近'}美食（第 {page + 1} 頁）",
+    _alt = f"{city or '附近'}{meal_label or '美食'}（第 {page + 1} 頁）"
+    return [{"type": "flex", "altText": _alt,
              "contents": {"type": "carousel", "contents": bubbles}}]
 
 
@@ -1353,8 +1355,12 @@ class handler(BaseHTTPRequestHandler):
                             _pcity      = _pstate.get("city", "")
                             _pgkey      = os.environ.get("GOOGLE_PLACES_API_KEY", "")
                             _bib_objs   = [c for c in _candidates if c.get("name","") in _bib_names]
+                            _pmt = _pstate.get("meal_type", "")
+                            _MEAL_EMOJIS_PB = {"早餐": "🌅", "午餐": "☀️", "晚餐": "🌙", "消夜": "🌛"}
+                            _pml = (_pmt + _MEAL_EMOJIS_PB.get(_pmt, "")) if _pmt else ""
                             _pmsgs = _build_food_page(_candidates, _bib_objs,
-                                                      _pcity, _pgkey, _ufp, _page_no)
+                                                      _pcity, _pgkey, _ufp, _page_no,
+                                                      meal_label=_pml)
                             reply_message(reply_token, _pmsgs)
                         else:
                             reply_message(reply_token, [{"type": "text",
@@ -1384,6 +1390,9 @@ class handler(BaseHTTPRequestHandler):
                     print(f"[food_locate] flag={_food_flag!r} city={_parking_city} lat={lat:.4f} lon={lon:.4f}")
                     if _food_flag:
                         _redis_set(f"food_locate:{user_id}", "", ttl=1)
+                        _MEAL_IDX = {"早餐": 0, "午餐": 1, "晚餐": 2, "消夜": 3}
+                        _MEAL_EMOJIS = {"早餐": "🌅", "午餐": "☀️", "晚餐": "🌙", "消夜": "🌛"}
+                        _meal_type = _food_flag if _food_flag in _MEAL_IDX else ""
                         try:
                             import json as _jf, os as _of, random as _rf, urllib.parse as _uf
                             import urllib.request as _ur
@@ -1409,16 +1418,21 @@ class handler(BaseHTTPRequestHandler):
                             _bib_near.sort(key=_dist)
                             _bib_picks = _bib_near[:3]
 
-                            # ── restaurant_db fallback ──
+                            # ── restaurant_db：取最近 80 筆，按餐期輪流取（四路交錯）──
                             _db_path = _of.path.join(
                                 _of.path.dirname(_of.path.dirname(_of.path.abspath(__file__))),
                                 "restaurant_db.json")
                             _db = _jf.load(open(_db_path, encoding="utf-8"))
                             _by_city = _db.get("by_city") or {}
                             _pool = _by_city.get(_parking_city or "") or _by_city.get(_c2, [])
-                            _db_picks = sorted(
+                            _sorted80 = sorted(
                                 [r for r in _pool if r.get("lat") and r.get("lng")],
-                                key=_dist)[:20]
+                                key=_dist)[:80]
+                            if _meal_type and len(_sorted80) > 4:
+                                _mi = _MEAL_IDX[_meal_type]
+                                _db_picks = _sorted80[_mi::4][:20]
+                            else:
+                                _db_picks = _sorted80[:20]
 
                             # ── 合併去重（bib 優先，db 依距離）──
                             _seen = set()
@@ -1434,10 +1448,13 @@ class handler(BaseHTTPRequestHandler):
                                 "candidates": _all_candidates,
                                 "bib_names": [b.get("name","") for b in _bib_picks],
                                 "city": _c2,
+                                "meal_type": _meal_type,
                             }, ttl=600)
 
+                            _meal_label = (_meal_type + _MEAL_EMOJIS.get(_meal_type, "")) if _meal_type else ""
                             _msgs = _build_food_page(_all_candidates, _bib_picks,
-                                                     _c2, _gkey, _uf, 0)
+                                                     _c2, _gkey, _uf, 0,
+                                                     meal_label=_meal_label)
                         except Exception as _fe:
                             import traceback; traceback.print_exc()
                             _msgs = [{"type": "text",
