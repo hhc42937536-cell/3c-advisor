@@ -8,7 +8,7 @@ import os
 import re
 import urllib.parse
 
-from utils.redis import redis_set as _redis_set_raw
+from utils.redis import redis_set as _redis_set
 
 
 def _load_accupass_cache() -> dict:
