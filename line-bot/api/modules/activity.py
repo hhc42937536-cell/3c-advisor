@@ -35,7 +35,9 @@ import re
 
 def build_activity_message(text: str, user_id: str = None) -> list:
     """近期活動 — 主路由"""
+    import traceback as _tb
     text_s = text.strip()
+    print(f"[activity] text={text_s!r} user_id={user_id!r}")
 
     # 解析類別
     category = None
@@ -65,7 +67,10 @@ def build_activity_message(text: str, user_id: str = None) -> list:
     area_match = re.search(rf'({all_cities_pattern})', text_s)
     if area_match:
         area = area_match.group(0)
-        _set_user_city(user_id, area[:2])  # 記住用戶明確指定的城市
+        try:
+            _set_user_city(user_id, area[:2])
+        except Exception as _e:
+            print(f"[activity] _set_user_city failed: {_e}")
 
     # 解析地區（北部/中部/南部/東部離島）
     region = ""
@@ -74,16 +79,19 @@ def build_activity_message(text: str, user_id: str = None) -> list:
             region = r
             break
 
-    if not category:
-        # 沒指定類別 → 有城市先選類型，沒城市先選城市
+    print(f"[activity] category={category!r} area={area!r} region={region!r}")
+
+    try:
+        if not category:
+            if area:
+                return build_activity_menu(area)
+            return build_activity_city_picker()
         if area:
-            return build_activity_menu(area)
-        return build_activity_city_picker()
-    # 有類別 + 有城市 → 直接顯示活動
-    if area:
-        return build_activity_flex(category, area)
-    # 有類別 + 有地區 → 顯示該地區城市選擇
-    if region:
-        return build_activity_area_picker(category, region)
-    # 有類別但沒地區 → 先問城市
-    return build_activity_city_picker(category)
+            return build_activity_flex(category, area)
+        if region:
+            return build_activity_area_picker(category, region)
+        return build_activity_city_picker(category)
+    except Exception as _e:
+        print(f"[activity] build failed: {_e}")
+        _tb.print_exc()
+        raise
