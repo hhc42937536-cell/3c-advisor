@@ -749,11 +749,10 @@ def _build_food_page(candidates: list, bib_objs: list, city: str,
                             "action": {"type": "uri", "label": "📍 導航前往",
                                        "uri": gmap}}]},
         }
-        if photo and gkey:
+        if photo:
             bub["hero"] = {
                 "type": "image",
-                "url": (f"https://maps.googleapis.com/maps/api/place/photo"
-                        f"?maxwidth=400&photo_reference={photo}&key={gkey}"),
+                "url": f"https://3c-advisor.vercel.app/api/photo?ref={photo}",
                 "size": "full", "aspectRatio": "20:13", "aspectMode": "cover"}
         return bub
 

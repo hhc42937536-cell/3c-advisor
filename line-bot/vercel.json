@@ -5,6 +5,10 @@
   },
   "builds": [
     {
+      "src": "api/photo.py",
+      "use": "@vercel/python"
+    },
+    {
       "src": "api/webhook.py",
       "use": "@vercel/python",
       "config": {
@@ -22,6 +26,10 @@
     }
   ],
   "routes": [
+    {
+      "src": "/api/photo",
+      "dest": "api/photo.py"
+    },
     {
       "src": "/api/webhook",
       "dest": "api/webhook.py"
