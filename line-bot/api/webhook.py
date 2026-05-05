@@ -719,8 +719,11 @@ def _build_food_page(candidates: list, bib_objs: list, city: str,
         rv = r.get("user_ratings_total", "")
         ad = (r.get("addr") or r.get("desc") or r.get("district") or "")[:28]
         photo = r.get("photo_ref", "")
-        if r.get("lat") and r.get("lng"):
-            gmap = f"https://maps.google.com/?q={r['lat']},{r['lng']}"
+        if r.get("place_id"):
+            gmap = f"https://www.google.com/maps/place/?q=place_id:{r['place_id']}"
+        elif r.get("lat") and r.get("lng"):
+            gmap = (f"https://www.google.com/maps/search/"
+                    f"{uf.quote(nm)}/@{r['lat']},{r['lng']},17z")
         else:
             gmap = (f"https://www.google.com/maps/search/"
                     f"{uf.quote(nm + ' ' + city)}")
