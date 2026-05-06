@@ -37,7 +37,6 @@ def build_activity_message(text: str, user_id: str = None) -> list:
     """近期活動 — 主路由"""
     import traceback as _tb
     text_s = text.strip()
-    print(f"[activity] text={text_s!r} user_id={user_id!r}")
 
     # 解析類別
     category = None
@@ -78,8 +77,6 @@ def build_activity_message(text: str, user_id: str = None) -> list:
         if r in text_s:
             region = r
             break
-
-    print(f"[activity] category={category!r} area={area!r} region={region!r}")
 
     try:
         if not category:
