@@ -149,8 +149,8 @@ def build_restaurant_bubble(r: dict, lat, lon, city: str, eaten_set: set, havers
             ],
         },
     }
-    photo_url = ""
-    if r.get("photo_ref"):
+    photo_url = r.get("cover_url", "")  # ifoodie 直接 CDN URL
+    if not photo_url and r.get("photo_ref"):
         photo_url = photo_url_builder(r["photo_ref"])
     if photo_url:
         bubble["hero"] = {

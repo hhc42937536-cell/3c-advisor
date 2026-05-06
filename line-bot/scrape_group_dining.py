@@ -56,7 +56,7 @@ CITIES: list[tuple[str, str]] = [
     ("基隆",   "基隆"),
 ]
 
-# ── 類型 → ifoodie 分類關鍵字 ────────────────────────────
+# ── 聚餐類型 → ifoodie 分類 ──────────────────────────────
 CATEGORY_MAP: dict[str, str] = {
     "火鍋":    "火鍋",
     "燒肉":    "燒肉",
@@ -66,6 +66,12 @@ CATEGORY_MAP: dict[str, str] = {
     "熱炒":    "熱炒",
     "鍋物":    "薑母鴨",
     "不限":    "合菜",
+}
+
+# ── 必買伴手禮 / 最新流行 → ifoodie 分類 ──────────────────
+SPECIALTY_MAP: dict[str, str] = {
+    "souvenir": "伴手禮",
+    "trending": "人氣美食",
 }
 
 _HEADERS = {
@@ -165,13 +171,22 @@ def main() -> None:
         if save_key not in by_city:
             by_city[save_key] = {}
         print(f"\n【{save_key}（查詢名：{ifoodie_city}）】")
+        # 聚餐類型
         for dining_type, ifoodie_cat in CATEGORY_MAP.items():
             print(f"  {dining_type} ({ifoodie_cat}) ...", end=" ", flush=True)
             rests = scrape_ifoodie(ifoodie_city, ifoodie_cat)
             by_city[save_key][dining_type] = rests
             print(f"{len(rests)} 筆")
             total += len(rests)
-            time.sleep(1.0)  # polite delay
+            time.sleep(1.0)
+        # 必買伴手禮 / 最新流行
+        for mode, ifoodie_cat in SPECIALTY_MAP.items():
+            print(f"  {mode} ({ifoodie_cat}) ...", end=" ", flush=True)
+            rests = scrape_ifoodie(ifoodie_city, ifoodie_cat)
+            by_city[save_key][mode] = rests
+            print(f"{len(rests)} 筆")
+            total += len(rests)
+            time.sleep(1.0)
 
     output = {
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),

@@ -218,6 +218,21 @@ def build_specialty_shops(city: str, food_name: str, text_search_places, restaur
              "contents": {"type": "carousel", "contents": bubbles}}]
 
 
+def _load_specialty_cache(city: str, mode: str) -> list:
+    """從 group_dining_cache.json 讀取 souvenir/trending 資料。"""
+    import os as _os, json as _json
+    try:
+        here = _os.path.dirname(_os.path.abspath(__file__))
+        path = _os.path.join(here, "..", "..", "group_dining_cache.json")
+        with open(path, encoding="utf-8") as f:
+            cache = _json.load(f)
+        city_data = cache.get("by_city", {})
+        entries = city_data.get(city) or city_data.get(city[:2]) or {}
+        return entries.get(mode, [])
+    except Exception:
+        return []
+
+
 def build_trending_by_district(
     district: str,
     city2: str,
@@ -227,7 +242,7 @@ def build_trending_by_district(
     redis_get=None,
     redis_set=None,
 ) -> list:
-    """行政區層級：必買伴手禮 / 最新流行 — Google Places 即時搜尋。"""
+    """行政區層級：必買伴手禮 / 最新流行 — 優先用快取，不即時打 API。"""
     is_souvenir = mode == "souvenir"
     color = "#2E7D32" if is_souvenir else "#E65100"
     mode_label = "必買伴手禮" if is_souvenir else "最新流行美食"
@@ -287,30 +302,47 @@ def build_trending_by_district(
             seen_brands.add(bk)
         bubbles.append(restaurant_bubble_builder(p, None, None, city2, set(), subtitle=title))
 
-    # Google Places 搜尋（帶 Redis 快取 3 天）
-    _souvenir_exclude = {"健康餐", "便當", "滷味", "鹹水雞", "剉冰", "冰品", "火鍋", "拉麵", "壽司"}
-    kw = (f"{district} 伴手禮 老店 禮盒 名產館"
-          if is_souvenir else f"{district} 人氣 必吃 新開")
-    cache_key = f"trending_district:{mode}:{district}"
+    # 優先用 ifoodie 預爬快取
+    cache_entries = _load_specialty_cache(city2, mode)
     places: list = []
-    if redis_get:
-        cached = redis_get(cache_key)
-        if cached:
-            try:
-                places = json.loads(cached) if isinstance(cached, str) else cached
-            except Exception:
-                pass
+    if cache_entries:
+        for e in cache_entries[:10]:
+            places.append({
+                "name": e.get("name", ""),
+                "rating": e.get("rating") or 0,
+                "user_ratings_total": e.get("review_cnt") or 0,
+                "addr": e.get("addr", ""),
+                "lat": e.get("lat"),
+                "lng": e.get("lng"),
+                "cover_url": e.get("cover", ""),
+                "place_id": "",
+                "ifoodie_url": e.get("url", ""),
+            })
+
+    # 若快取空，才走 Google Places（帶 Redis 快取 3 天）
     if not places:
-        raw = text_search_places(kw, max_results=12)
-        if is_souvenir:
-            raw = [p for p in raw
-                   if not any(ex in p.get("name", "") for ex in _souvenir_exclude)]
-        else:
-            raw = [p for p in raw if (p.get("user_ratings_total") or 9999) <= 3000]
-        filtered = [p for p in raw if (p.get("rating") or 0) >= 3.8]
-        places = (filtered or raw)[:8]
-        if places and redis_set:
-            redis_set(cache_key, json.dumps(places), ttl=3 * 86400)
+        _souvenir_exclude = {"健康餐", "便當", "滷味", "鹹水雞", "剉冰", "冰品", "火鍋", "拉麵", "壽司"}
+        kw = (f"{district} 伴手禮 老店 禮盒 名產館"
+              if is_souvenir else f"{district} 人氣 必吃 新開")
+        cache_key = f"trending_district:{mode}:{district}"
+        if redis_get:
+            cached = redis_get(cache_key)
+            if cached:
+                try:
+                    places = json.loads(cached) if isinstance(cached, str) else cached
+                except Exception:
+                    pass
+        if not places and text_search_places:
+            raw = text_search_places(kw, max_results=12)
+            if is_souvenir:
+                raw = [p for p in raw
+                       if not any(ex in p.get("name", "") for ex in _souvenir_exclude)]
+            else:
+                raw = [p for p in raw if (p.get("user_ratings_total") or 9999) <= 3000]
+            filtered = [p for p in raw if (p.get("rating") or 0) >= 3.8]
+            places = (filtered or raw)[:8]
+            if places and redis_set:
+                redis_set(cache_key, json.dumps(places), ttl=3 * 86400)
 
     for p in places:
         _add_new(p)
