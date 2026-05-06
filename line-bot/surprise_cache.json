@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-28 23:00",
+  "updated_at": "2026-05-05 22:59",
   "songs": [
     {
       "name": "REDRED",
@@ -7,14 +7,34 @@
       "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
     },
     {
+      "name": "CHOOM",
+      "artist": "BABYMONSTER",
+      "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
+    },
+    {
       "name": "SWIM",
       "artist": "防彈少年團",
       "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
     },
     {
-      "name": "那天下雨了",
-      "artist": "周杰倫",
-      "url": "https://music.apple.com/tw/album/%E9%82%A3%E5%A4%A9%E4%B8%8B%E9%9B%A8%E4%BA%86/1887246588?i=1887246591"
+      "name": "TNT",
+      "artist": "CORTIS",
+      "url": "https://music.apple.com/tw/album/tnt/1887671065?i=1887671066"
+    },
+    {
+      "name": "It's Me",
+      "artist": "ILLIT",
+      "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
+    },
+    {
+      "name": "Wassup",
+      "artist": "CORTIS",
+      "url": "https://music.apple.com/tw/album/wassup/1887671065?i=1887671073"
+    },
+    {
+      "name": "ACAI",
+      "artist": "CORTIS",
+      "url": "https://music.apple.com/tw/album/acai/1887671065?i=1887671068"
     },
     {
       "name": "drop dead",
@@ -22,19 +42,24 @@
       "url": "https://music.apple.com/tw/album/drop-dead/1889992111?i=1889992113"
     },
     {
+      "name": "繞路",
+      "artist": "A-Lin",
+      "url": "https://music.apple.com/tw/album/%E7%B9%9E%E8%B7%AF/1893279797?i=1893279800"
+    },
+    {
       "name": "RUDE!",
       "artist": "Hearts2Hearts",
       "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
     },
     {
-      "name": "我對緣分小心翼翼 (劇集《逐玉》主題曲)",
-      "artist": "林俊傑",
-      "url": "https://music.apple.com/tw/album/%E6%88%91%E5%B0%8D%E7%B7%A3%E5%88%86%E5%B0%8F%E5%BF%83%E7%BF%BC%E7%BF%BC-%E5%8A%87%E9%9B%86-%E9%80%90%E7%8E%89-%E4%B8%BB%E9%A1%8C%E6%9B%B2/1874801991?i=1874801993"
+      "name": "Blue Lips",
+      "artist": "CORTIS",
+      "url": "https://music.apple.com/tw/album/blue-lips/1887671065?i=1887671074"
     },
     {
-      "name": "I Do",
-      "artist": "周杰倫",
-      "url": "https://music.apple.com/tw/album/i-do/1887246588?i=1887247016"
+      "name": "YOUNGCREATORCREW",
+      "artist": "CORTIS",
+      "url": "https://music.apple.com/tw/album/youngcreatorcrew/1887671065?i=1887671072"
     },
     {
       "name": "一念(電視劇《逐玉》插曲)",
@@ -42,70 +67,50 @@
       "url": "https://music.apple.com/tw/album/%E4%B8%80%E5%BF%B5-%E9%9B%BB%E8%A6%96%E5%8A%87-%E9%80%90%E7%8E%89-%E6%8F%92%E6%9B%B2/1884874214?i=1884874215"
     },
     {
-      "name": "CELEBRATION",
-      "artist": "LE SSERAFIM",
-      "url": "https://music.apple.com/tw/album/celebration/1894107702?i=1894107708"
-    },
-    {
-      "name": "Who is she",
-      "artist": "KISS OF LIFE",
-      "url": "https://music.apple.com/tw/album/who-is-she/1886385269?i=1886385270"
-    },
-    {
       "name": "陪你到這",
       "artist": "陳華",
       "url": "https://music.apple.com/tw/album/%E9%99%AA%E4%BD%A0%E5%88%B0%E9%80%99/1891683682?i=1891683695"
     },
     {
-      "name": "繞路",
-      "artist": "A-Lin",
-      "url": "https://music.apple.com/tw/album/%E7%B9%9E%E8%B7%AF/1893279797?i=1893279800"
-    },
-    {
-      "name": "Stick With You",
-      "artist": "TOMORROW X TOGETHER",
-      "url": "https://music.apple.com/tw/album/stick-with-you/1886536327?i=1886536332"
-    },
-    {
-      "name": "幸福在歌唱 (電影《陽光女子合唱團》幸福版主題曲)",
-      "artist": "A-Lin",
-      "url": "https://music.apple.com/tw/album/%E5%B9%B8%E7%A6%8F%E5%9C%A8%E6%AD%8C%E5%94%B1-%E9%9B%BB%E5%BD%B1-%E9%99%BD%E5%85%89%E5%A5%B3%E5%AD%90%E5%90%88%E5%94%B1%E5%9C%98-%E5%B9%B8%E7%A6%8F%E7%89%88%E4%B8%BB%E9%A1%8C%E6%9B%B2/1861431707?i=1861431711"
-    },
-    {
-      "name": "Body to Body",
-      "artist": "防彈少年團",
-      "url": "https://music.apple.com/tw/album/body-to-body/1868862375?i=1868862376"
+      "name": "CELEBRATION",
+      "artist": "LE SSERAFIM",
+      "url": "https://music.apple.com/tw/album/celebration/1894107702?i=1894107708"
     }
   ],
   "deals": [
     {
-      "title": "五省級／搶便宜必看！全聯、家樂福限時買1送1來了 - Yahoo新聞",
-      "url": "https://tw.news.yahoo.com/%E4%BA%94%E7%9C%81%E7%B4%9A-%E6%90%B6%E4%BE%BF%E5%AE%9C%E5%BF%85%E7%9C%8B-%E5%85%A8%E8%81%AF-%E5%AE%B6%E6%A8%82%E7%A6%8F%E9%99%90%E6%99%82%E8%B2%B71%E9%80%811%E4%BE%86%E4%BA%86-083500098.html",
+      "title": "台南中山店台南最大集團品牌聯合特賣 - 新光三越",
+      "url": "https://www.skm.com.tw/page/311/2026tainansale",
       "tag": "優惠"
     },
     {
-      "title": "本檔最殺- 買一送一大集合| 來全聯方便又省錢",
-      "url": "https://www.pxmart.com.tw/campaign/life-will/best-buy/%E8%B2%B7%E4%B8%80%E9%80%81%E4%B8%80%E5%A4%A7%E9%9B%86%E5%90%88",
+      "title": "誠品殺瘋了‼️記得先領券再逛     https://s.shopee.tw/AADjysIz04 （附 ...",
+      "url": "https://www.threads.com/@ay.need.yy/post/DX7XaHbgSfj/%E8%AA%A0%E5%93%81%E6%AE%BA%E7%98%8B%E4%BA%86%E8%A8%98%E5%BE%97%E5%85%88%E9%A0%98%E5%88%B8%E5%86%8D%E9%80%9Bhttpssshopeetwaadjysiz04%E9%99%84%E4%B8%8A%E9%9A%B1%E8%97%8F%E6%8A%98%E6%89%A3%E7%A2%BC-%E7%B5%90%E5%B8%B3%E8%A8%98%E5%BE%97%E6%AA%A2%E6%9F%A5%E6%9C%89%E6%B2%92%E6%9C%89%E5%A5%97%E7%94%A8%E6%9B%B8%E7%B1%8D%E9%99%A4%E4%BA%86%E5%96%AE%E6%9C%AC66%E6%8A%98-%E5%85%A9%E6%9C%AC%E5%86%8D95%E6%8A%9855%E6%BB%BF1000%E5%86%8D9",
       "tag": "優惠"
     },
     {
-      "title": "7-ELEVEN 綁定uniopen 抽購物金4/27～5/2 通通有獎，最高$50，抽完 ...",
-      "url": "https://www.threads.com/@savemoneylab/post/DXogeq9k1Jk/7-eleven-%E7%B6%81%E5%AE%9A-uniopen-%E6%8A%BD%E8%B3%BC%E7%89%A9%E9%87%9142752-%E9%80%9A%E9%80%9A%E6%9C%89%E7%8D%8E%E6%9C%80%E9%AB%98-50%E6%8A%BD%E5%AE%8C%E7%82%BA%E6%AD%A2-httpswoootw4qun0ff-uniopen-%E9%AA%B0-op-%E9%BB%9E%E6%B4%BB%E5%8B%95%E5%88%B0",
+      "title": "買iPhone送第二年電池保固！母親節熱門手機下殺5折限時開搶",
+      "url": "https://tw.news.yahoo.com/%E8%B2%B7iphone%E9%80%81%E7%AC%AC%E4%BA%8C%E5%B9%B4%E9%9B%BB%E6%B1%A0%E4%BF%9D%E5%9B%BA-%E6%AF%8D%E8%A6%AA%E7%AF%80%E7%86%B1%E9%96%80%E6%89%8B%E6%A9%9F%E4%B8%8B%E6%AE%BA5%E6%8A%98%E9%99%90%E6%99%82%E9%96%8B%E6%90%B6-061200964.html",
       "tag": "優惠"
     },
     {
-      "title": "Costco好市多(新品/優惠)最速報",
-      "url": "https://t.me/s/daybuy?before=17229",
+      "title": "【快閃活動】勞工神隊友！Apple iPhone 17 Pro 驚爆下殺2710元",
+      "url": "https://www.jyes.com.tw/news.php?act=view&id=14678",
       "tag": "優惠"
     },
     {
-      "title": "限時|ETMall東森購物網",
-      "url": "https://m.etmall.com.tw/Search?keyword=%E9%99%90%E6%99%82",
+      "title": "[Costco 好市多必買] 2026最新熱門清單推薦與5月至6月特價商品(含黑 ...",
+      "url": "https://travelerliv.com/post-229138058/",
       "tag": "優惠"
     },
     {
-      "title": "關於周年慶特賣和目前的優惠問題: r/deadbydaylight - Reddit",
-      "url": "https://www.reddit.com/r/deadbydaylight/comments/1sv4zpf/question_about_the_anniversary_sale_and_the/?tl=zh-hant",
+      "title": "2025週年慶首波！新光三越南西店必買攻略：日本展必買、獨家美食/美妝",
+      "url": "https://www.skm.com.tw/skmmedia/lifestyleandfood/living/nanxiddf",
+      "tag": "優惠"
+    },
+    {
+      "title": "崇光百貨：啟德店半年一度感謝周年慶Part 1（1-17/5）",
+      "url": "https://www.jetsoclub.com/2026/04/part-11-175.html",
       "tag": "優惠"
     },
     {
@@ -114,13 +119,8 @@
       "tag": "優惠"
     },
     {
-      "title": "比大創還便宜！ 39元平價百貨「達樂星」無預警全台收攤最後一家「清倉 ...",
-      "url": "https://travel.udn.com/travel/story/7160/9468852",
-      "tag": "優惠"
-    },
-    {
-      "title": "新竹大遠百-線上DM - 遠東百貨",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=42",
+      "title": "2026母親節優惠指南：各大百貨母親節檔期統整｜新光三越、SOGO、時代",
+      "url": "https://shop.hengstyle.com/Article/Detail/95174?srsltid=AfmBOor5ki6V_NP4oxdcsBtPoOOV3byqlR4efXfCF6TU-EAB23_zL9Is",
       "tag": "優惠"
     },
     {
@@ -129,44 +129,54 @@
       "tag": "優惠"
     },
     {
-      "title": "高雄大統百貨公司 - TikTok",
-      "url": "https://www.tiktok.com/content/%E9%AB%98%E9%9B%84%E5%A4%A7%E7%B5%B1%E7%99%BE%E8%B2%A8%E5%85%AC%E5%8F%B8",
+      "title": "台北Outlet｜2026台北三大Outlet推薦！交通方法/商鋪品牌/特色一覽",
+      "url": "https://utravel.com.hk/news/detail/20049217/%E5%8F%B0%E5%8C%97outlet-2025%E5%8F%B0%E5%8C%97%E4%B8%89%E5%A4%A7outlet%E6%8E%A8%E8%96%A6-%E4%BA%A4%E9%80%9A%E6%96%B9%E6%B3%95-%E5%95%86%E9%8B%AA%E5%93%81%E7%89%8C-%E7%89%B9%E8%89%B2%E4%B8%80%E8%A6%BD",
       "tag": "優惠"
     },
     {
-      "title": "桃園超狂7-11試營運     整間DAISO大創搬進去！ 4/25開幕蔬菜買1送1",
-      "url": "https://www.threads.com/@nownews/post/DXafXU5iKl1/%E8%A9%A6%E7%87%9F%E9%81%8B%E9%96%8B%E5%B9%95%E5%84%AA%E6%83%A0%E4%B8%80%E6%AC%A1%E7%9C%8Bhttpswwwnownewscomnews6809132utm_sourceinstagramutm_mediumnnutm_campai",
+      "title": "高流打造藍寶石園遊會票根優惠串聯逾50品牌搶客- 生活 - 自由時報",
+      "url": "https://news.ltn.com.tw/news/life/breakingnews/5423545",
       "tag": "優惠"
     },
     {
-      "title": "官宣了! 台中最大購物廣場4/10開幕營運500大型品牌逛不完 - MSN",
-      "url": "https://www.msn.com/zh-tw/news/other/%E5%AE%98%E5%AE%A3%E4%BA%86-%E5%8F%B0%E4%B8%AD%E6%9C%80%E5%A4%A7%E8%B3%BC%E7%89%A9%E5%BB%A3%E5%A0%B44-10%E9%96%8B%E5%B9%95%E7%87%9F%E9%81%8B-500%E5%A4%A7%E5%9E%8B%E5%93%81%E7%89%8C%E9%80%9B%E4%B8%8D%E5%AE%8C/ar-AA1XOFl0?apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1&bundles=feat-es2020-t",
+      "title": "連2天「買一送一」！ 星巴克陪媽媽喝「母親節咖啡優惠」",
+      "url": "https://udn.com/news/story/7185/9482425",
       "tag": "優惠"
     },
     {
-      "title": "Dyson 與MOVA 智慧家電一次看，全台門祭優惠同慶開幕 - News Pie",
-      "url": "https://www.newspie.com.tw/hengstyle-20260423/",
+      "title": "2025週年慶首波！新光三越南西店必買攻略：日本展必買、獨家美食 ...",
+      "url": "https://www.skm.com.tw/skmmedia/lifestyleandfood/living/nanxiddf",
       "tag": "優惠"
     },
     {
-      "title": "2026世界地球日「咖啡、飲料」優惠！4/22星巴克買一送一、7-11第 ...",
-      "url": "https://www.elle.com/tw/life/hot-news/g71066968/earthday-discount-2026/",
+      "title": "黛黛茶台中東山店盛大開幕優惠飲品吸客福音祝禱添暖意 - 生活達人誌",
+      "url": "https://life.posu.tw/article_view.php?up_sn=4&new_sn=14996",
       "tag": "優惠"
     },
     {
-      "title": "Laline 台北概念店開幕推限定體驗與滿額優惠迎母親節 - 台灣獨家傳媒",
-      "url": "https://www.penghunews.com/%E7%94%9F%E6%B4%BB/94971/",
-      "tag": "優惠"
+      "title": "萊爾富限時殺5日/7-11超值好康價5/06~10",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1777992093.A.F5B.html",
+      "tag": "情報"
     },
     {
-      "title": "歡慶總部開幕．母親節暖身慶   - W.Korea 正韓服飾",
-      "url": "https://www.wkorea.com.tw/post.php?action=view&id=231",
-      "tag": "優惠"
+      "title": "5/6 Love Mom開心卡1000送70 OP點數",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1777992940.A.D06.html",
+      "tag": "情報"
     },
     {
-      "title": "Laline 台北概念店開幕推限定體驗與滿額優惠迎母親節",
-      "url": "https://news.pchome.com.tw/living/morenews/20260423/index-77693997794822350009.html",
-      "tag": "優惠"
+      "title": "2026年全台捐血贈品",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
+      "tag": "情報"
+    },
+    {
+      "title": "未滿1元集點抽獎資訊集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775756243.A.056.html",
+      "tag": "集中"
+    },
+    {
+      "title": "贈送集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775845713.A.018.html",
+      "tag": "集中"
     }
   ]
 }
