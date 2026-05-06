@@ -10,14 +10,70 @@ import urllib.parse
 _PHOTO_PROXY = "https://3c-advisor.vercel.app/api/photo?ref={}"
 
 _TYPE_KEYWORDS: dict[str, list[str]] = {
-    "火鍋": ["火鍋", "涮涮鍋", "涮涮"],
-    "燒肉": ["燒肉", "燒烤", "烤肉", "韓式"],
-    "日式": ["日式", "壽司", "拉麵", "居酒屋", "日本料理", "割烹"],
-    "合菜台菜": ["台菜", "合菜", "辦桌"],
-    "西式": ["牛排", "排餐", "義式", "義大利", "法式", "西餐"],
-    "熱炒": ["熱炒", "快炒", "海產"],
-    "鍋物": ["薑母鴨", "羊肉爐", "麻辣鍋"],
+    "火鍋": ["火鍋", "涮涮鍋", "涮涮", "鍋物", "麻辣鍋"],
+    "燒肉": ["燒肉", "燒烤", "烤肉", "韓式燒"],
+    "日式": ["日式", "壽司", "拉麵", "居酒屋", "日本料理", "割烹", "丼", "和食"],
+    "合菜台菜": ["台菜", "合菜", "辦桌", "海鮮樓", "台灣料理"],
+    "西式": ["牛排", "排餐", "義式", "義大利", "法式", "西餐", "漢堡排"],
+    "熱炒": ["熱炒", "快炒", "海鮮熱炒"],
+    "鍋物": ["薑母鴨", "羊肉爐", "麻辣鍋", "鍋物"],
 }
+
+# 聚餐不適合的小吃/輕食關鍵字
+_NON_DINING_WORDS = [
+    "咖啡", "coffee", "cafe", "café", "冷萃", "手沖", "珈琲",
+    "甜點", "蛋糕", "甜食", "冰淇淋", "雪花冰", "剉冰", "冰品", "布丁", "甜湯",
+    "早餐", "早午餐", "brunch", "吐司", "蛋餅", "豆漿", "燒餅",
+    "奶茶", "珍珠", "飲料", "手搖", "果汁",
+    "麵包", "貝果", "可頌",
+    "書店", "文具", "選物",
+    "小吃", "擔仔麵", "担仔麵", "臭豆腐", "鹽酥雞", "雞排", "炸雞",
+    "包子", "饅頭", "水餃", "餃子",
+    "米粿", "碗粿", "粿",
+    "便當", "自助餐",
+    "鹹粥", "米粉湯", "羊肉湯",
+    "麥味登", "麥當勞", "肯德基", "摩斯",  # 連鎖速食/早餐
+]
+
+# Bib Gourmand 適合聚餐的類型
+_BIB_DINING_TYPES = [
+    "台菜", "合菜", "海鮮", "燒肉", "烤肉", "火鍋", "鍋物",
+    "日式", "壽司", "懷石", "割烹", "居酒屋",
+    "西式", "義式", "法式", "牛排",
+    "港式", "粵式", "熱炒", "餐廳",
+]
+
+# 確定是正式餐廳的關鍵字
+_DINING_WORDS = [
+    "餐廳", "料理", "restaurant", "食堂",
+    "海鮮", "合菜", "台菜",
+    "燒肉", "燒烤", "烤肉",
+    "火鍋", "鍋物", "薑母鴨", "羊肉爐",
+    "牛排", "排餐", "義式", "法式", "西餐",
+    "日式", "壽司", "拉麵", "居酒屋", "割烹", "丼",
+    "韓式", "韓國",
+    "熱炒", "快炒",
+    "餐酒館", "酒館",
+    "港式", "粵式",
+]
+
+
+def _is_group_dining_venue(r: dict) -> bool:
+    """判斷是否適合聚餐（排除咖啡/小吃，優先正式餐廳）。"""
+    nm = r.get("name", "")
+    nm_lower = nm.lower()
+    if any(w.lower() in nm_lower for w in _NON_DINING_WORDS):
+        return False
+    has_dining_kw = any(w.lower() in nm_lower for w in _DINING_WORDS)
+    # 超高評論數（>=1500）大概率是正式店
+    big_place = r.get("user_ratings_total", 0) >= 1500
+    return has_dining_kw or big_place
+
+
+def _bib_is_group_dining(r: dict) -> bool:
+    """Bib Gourmand 判斷是否適合聚餐（依 type 欄位）。"""
+    rtype = r.get("type", "")
+    return any(t in rtype for t in _BIB_DINING_TYPES)
 
 
 _GROUP_DINING_CITIES = [
@@ -275,33 +331,41 @@ def _build_group_result(city: str, dining_type: str, bib_gourmand: dict) -> list
             if any(kw in r.get("name", "") or kw in r.get("type", "") for kw in kws)
         ][:3]
     else:
-        bib_picks = bib_pool[:3]  # 不限：直接取前3筆
+        # 不限：只選適合聚餐類型的 Bib（排除純小吃）
+        bib_picks = [r for r in bib_pool if _bib_is_group_dining(r)][:3]
 
     # ── 2. restaurant_db ──
     pool = _load_city_pool(city)
-    if kws:
-        typed = [r for r in pool if any(kw in r.get("name", "") for kw in kws)]
-    else:
-        typed = pool
     max_cards = max(1, 11 - len(bib_picks))  # 保留 1 張 nav 卡，總計 ≤ 12
-    typed_filtered = sorted(
-        [r for r in typed if r.get("rating", 0) >= 4.0],
-        key=lambda r: (-r.get("rating", 0), -r.get("user_ratings_total", 0)),
-    )[:max_cards]
-    # 特定類型不足 3 筆：補高評分一般餐廳（排除咖啡廳）
-    _CAFE_WORDS = ["咖啡", "coffee", "café", "cafe", "茶", "甜點", "書店"]
-    if kws and len(typed_filtered) < 3:
-        seen_pids = {r.get("place_id") for r in typed_filtered}
-        fallback = sorted(
-            [r for r in pool if r.get("rating", 0) >= 4.3
-             and r.get("user_ratings_total", 0) >= 100
-             and r.get("place_id") not in seen_pids
-             and not any(w in r.get("name", "").lower() for w in _CAFE_WORDS)],
+
+    if kws:
+        # 特定類型：先按類型關鍵字篩選
+        typed_pool = [r for r in pool if any(kw in r.get("name", "") for kw in kws)]
+        typed_filtered = sorted(
+            [r for r in typed_pool if r.get("rating", 0) >= 4.0],
             key=lambda r: (-r.get("rating", 0), -r.get("user_ratings_total", 0)),
-        )[:max_cards - len(typed_filtered)]
-        typed = typed_filtered + fallback
+        )[:max_cards]
+        # 不足 3 筆：補聚餐適合的高評分餐廳
+        if len(typed_filtered) < 3:
+            seen_pids = {r.get("place_id") for r in typed_filtered}
+            fallback = sorted(
+                [r for r in pool if _is_group_dining_venue(r)
+                 and r.get("rating", 0) >= 4.3
+                 and r.get("user_ratings_total", 0) >= 200
+                 and r.get("place_id") not in seen_pids],
+                key=lambda r: (-r.get("rating", 0), -r.get("user_ratings_total", 0)),
+            )[:max_cards - len(typed_filtered)]
+            typed = typed_filtered + fallback
+        else:
+            typed = typed_filtered
     else:
-        typed = typed_filtered
+        # 不限：只要是適合聚餐的餐廳
+        typed = sorted(
+            [r for r in pool if _is_group_dining_venue(r)
+             and r.get("rating", 0) >= 4.3
+             and r.get("user_ratings_total", 0) >= 200],
+            key=lambda r: (-r.get("rating", 0), -r.get("user_ratings_total", 0)),
+        )[:max_cards]
 
     # ── 3. Build bubbles ──
     bubbles: list[dict] = []
