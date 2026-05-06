@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-05 22:33",
+  "updated_at": "2026-05-06 21:07",
   "sources": [
     "漫步時光",
     "小藝行事曆(yii.tw)",
@@ -321,22 +321,6 @@
           "url": "",
           "source": "文化部",
           "area": "新竹"
-        },
-        {
-          "name": "第一超棒新竹脫口秀",
-          "desc": "05/29 | #站立喜劇",
-          "date": "2026.05.29 (五) 19:00 - 20",
-          "url": "https://www.accupass.com/event/2604161158191453657381",
-          "source": "Accupass",
-          "area": "新竹"
-        },
-        {
-          "name": "2026 HJO Jazz Salon LOL-英靈之門 音樂會",
-          "desc": "05/14 | ",
-          "date": "2026.05.14 (四) 19:30 - 21",
-          "url": "https://www.accupass.com/event/2604240851081378127376",
-          "source": "Accupass",
-          "area": "新竹"
         }
       ],
       "文青咖啡": [
@@ -378,56 +362,6 @@
           "date": "04/10",
           "url": "",
           "source": "文化部",
-          "area": "新竹"
-        },
-        {
-          "name": "誠品書店新竹巨城店｜親子天下故事屋《勇敢小火車》",
-          "desc": "05/10 | #說故事",
-          "date": "2026.05.10 (日) 15:30 - 16",
-          "url": "https://www.accupass.com/event/2604160413186241007950",
-          "source": "Accupass",
-          "area": "新竹"
-        },
-        {
-          "name": "誠品書店新竹巨城店｜小漫遊說故事《奶奶也想媽媽》",
-          "desc": "05/17 | #說故事",
-          "date": "2026.05.17 (日) 15:30 - 16",
-          "url": "https://www.accupass.com/event/2604160416171793632887",
-          "source": "Accupass",
-          "area": "新竹"
-        },
-        {
-          "name": "誠品書店新竹巨城店｜《康樂股漲的日股奇妙冒險》新書分享會",
-          "desc": "05/24 | #誠品",
-          "date": "2026.05.24 (日) 14:30 - 15",
-          "url": "https://www.accupass.com/event/2604160344581956531337",
-          "source": "Accupass",
-          "area": "新竹"
-        }
-      ],
-      "親子同樂": [
-        {
-          "name": "2026.07.03 (五) 14:30 - 07.31 (五) 16:15",
-          "desc": "07/03 | #兒童營隊",
-          "date": "2026.07.03 (五) 14:30 - 07",
-          "url": "https://www.accupass.com/event/2604201034082814261760",
-          "source": "Accupass",
-          "area": "新竹"
-        },
-        {
-          "name": "2026.08.01 (六) 14:30 - 08.29 (六) 16:15",
-          "desc": "08/01 | #兒童營隊",
-          "date": "2026.08.01 (六) 14:30 - 08",
-          "url": "https://www.accupass.com/event/2604210903287707512510",
-          "source": "Accupass",
-          "area": "新竹"
-        },
-        {
-          "name": "新竹【兒童/親子美字班】-結構比例主題",
-          "desc": "05/16 | #書法",
-          "date": "2026.05.16 (六) 14:00 - 05",
-          "url": "https://www.accupass.com/event/2601271533312059910587",
-          "source": "Accupass",
           "area": "新竹"
         }
       ],
@@ -513,38 +447,6 @@
           "url": "https://strolltimes.com/events/hsinchu/260221221219",
           "source": "漫步時光",
           "area": "新竹"
-        },
-        {
-          "name": "【新竹】義大利 Brigaldara 酒莊風乾葡萄酒之王：Amarone互動品飲會",
-          "desc": "05/09 | #葡萄酒",
-          "date": "2026.05.09 (六) 19:30 - 21",
-          "url": "https://www.accupass.com/event/2604081338529159846250",
-          "source": "Accupass",
-          "area": "新竹"
-        },
-        {
-          "name": "2026拜金女標準新增一項：",
-          "desc": "買碗裝泡麵，不買袋裝泡麵。 🤡🤡🤡 翻譯 wang_fu_kai 2天 剛才在大賣場，聽到一堆情侶在爭執 大概意思是男",
-          "date": "",
-          "url": "https://www.threads.com/@ccgotoeat/post/DX4aHb4E2H7",
-          "source": "CC去吃飯",
-          "area": "新竹"
-        },
-        {
-          "name": "正在糾結要不要買NEO拯救我剪片剪到脫窗的眼睛",
-          "desc": "Ram只有8g事小，反正我暫時應該不會剪4k， 最大猶豫點反而是…沒有快充？？？ 就算換變壓器最高好像也才30W？ 重",
-          "date": "",
-          "url": "https://www.threads.com/@wang_fu_kai/post/DX4NLINAbPT",
-          "source": "CC去吃飯",
-          "area": "新竹"
-        },
-        {
-          "name": "雖然不知道有沒有人在意但還是更新一下",
-          "desc": "最後放棄MacBook 買了熟悉的windows系列… 【ASUS】筆電包/滑鼠組★15.6吋i7效能筆電(VivoB",
-          "date": "",
-          "url": "https://www.threads.com/@ccgotoeat/post/DXrdip5E3af",
-          "source": "CC去吃飯",
-          "area": "新竹"
         }
       ]
     },
@@ -612,66 +514,6 @@
           "date": "04/29",
           "url": "",
           "source": "文化部",
-          "area": "花蓮"
-        },
-        {
-          "name": "2026《獨自跳舞 Solo Dance》第三屆舞蹈創作平台演出",
-          "desc": "05/29 | #華山拱廳",
-          "date": "2026.05.29 (五) 19:00 - 05",
-          "url": "https://www.accupass.com/event/2603180324051775023880",
-          "source": "Accupass",
-          "area": "花蓮"
-        }
-      ],
-      "文青咖啡": [
-        {
-          "name": "聽聽故宮怎麼說：中國山水畫100分",
-          "desc": "05/06 | 國立東華大學",
-          "date": "05/06",
-          "url": "",
-          "source": "文化部",
-          "area": "花蓮"
-        }
-      ],
-      "親子同樂": [
-        {
-          "name": "花蓮鐵道電影院｜5月 ▸▸ 新鮮直送 ▸▸ 5/24 走走電影院 x momo mini x 手作靜",
-          "desc": "05/24 | #公共電視台灣國際兒童影展",
-          "date": "2026.05.24 (日) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2604270625192375591800",
-          "source": "Accupass",
-          "area": "花蓮"
-        },
-        {
-          "name": "花蓮鐵道電影院｜5月▸▸ 新鮮直送 ▸▸ 2026臺灣國際民族誌影展巡演・05/30・小朋友你今天上",
-          "desc": "05/30 | #映後座談",
-          "date": "2026.05.30 (六) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2605010813479790918850",
-          "source": "Accupass",
-          "area": "花蓮"
-        },
-        {
-          "name": "花蓮鐵道電影院｜6月 ▸▸ 新鮮直送 ▸▸ 6/28 走走電影院 x momo mini x 說說話",
-          "desc": "06/28 | #公共電視台灣國際兒童影展",
-          "date": "2026.06.28 (日) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2604270704371392260002",
-          "source": "Accupass",
-          "area": "花蓮"
-        },
-        {
-          "name": "「在愛中成長」-薩提爾模式《進階》工作坊（台北）",
-          "desc": "08/28 | #薩提爾",
-          "date": "2026.08.28 (五) 09:00 - 08",
-          "url": "https://www.accupass.com/event/2602040340401327067569",
-          "source": "Accupass",
-          "area": "花蓮"
-        },
-        {
-          "name": "薩提爾談銷售-李貞儀工作坊(台北)",
-          "desc": "07/11 | #銷售",
-          "date": "2026.07.11 (六) 09:00 - 07",
-          "url": "https://www.accupass.com/event/2601071138125401872030",
-          "source": "Accupass",
           "area": "花蓮"
         }
       ],
@@ -747,50 +589,16 @@
           "url": "",
           "source": "文化部",
           "area": "花蓮"
-        },
-        {
-          "name": "花蓮四季好頻市集：【飛魚吃西瓜】主題活動體驗（免費報名，名額有限）",
-          "desc": "05/08 | #花蓮四季好頻",
-          "date": "2026.05.08 (Fri) 12:00 - ",
-          "url": "https://www.accupass.com/event/2604240447581092180860",
-          "source": "Accupass",
-          "area": "花蓮"
-        },
-        {
-          "name": "(05/09-05/10) 愛花蓮x挺小農 共好市集",
-          "desc": "05/09 | #室內市集",
-          "date": "2026.05.09 (六) 11:00 - 05",
-          "url": "https://www.accupass.com/event/2604291825551080077929",
-          "source": "Accupass",
-          "area": "花蓮"
-        }
-      ],
-      "吃喝玩樂": [
-        {
-          "name": "花蓮小農講堂 x 阿美族的野菜採集智慧與酒麴植物釀酒學",
-          "desc": "05/09 | #野菜料理",
-          "date": "2026.05.09 (六) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2605041033171717811480",
-          "source": "Accupass",
-          "area": "花蓮"
-        },
-        {
-          "name": "攝影，美食，旅遊，長短影片拍攝",
-          "desc": "部落客、IG , youtube , tiktok",
-          "date": "",
-          "url": "https://www.threads.com/@jumpman.tw/post/DX61H4GkgGB",
-          "source": "跳躍的宅男花蓮",
-          "area": "花蓮"
         }
       ]
     },
     "高雄": {
       "表演音樂": [
         {
-          "name": "藍色狂響~高雄市陽明國小管樂班年度音樂會",
-          "desc": "衛武營國家藝術文化中心音樂廳",
+          "name": "2026浪漫琴話－中山大學音樂學系師生聯合室內樂之夜",
+          "desc": "衛武營國家藝術文化中心表演廳",
           "date": "",
-          "url": "https://yii.tw/events/44247",
+          "url": "https://yii.tw/events/44250",
           "source": "小藝行事曆",
           "area": "高雄"
         },
@@ -811,18 +619,18 @@
           "area": "高雄"
         },
         {
-          "name": "2026浪漫琴話－中山大學音樂學系師生聯合室內樂之夜",
-          "desc": "衛武營國家藝術文化中心表演廳",
-          "date": "",
-          "url": "https://yii.tw/events/44250",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
           "name": "ESO《俄法狂想》——梵志登 X 朴載弘",
           "desc": "衛武營國家藝術文化中心音樂廳",
           "date": "",
           "url": "https://yii.tw/events/44259",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
+        {
+          "name": "高雄市管樂團《動畫楽ノ祭》－日本動漫交響音樂會3",
+          "desc": "衛武營國家藝術文化中心音樂廳",
+          "date": "",
+          "url": "https://yii.tw/events/44230",
           "source": "小藝行事曆",
           "area": "高雄"
         },
@@ -889,17 +697,17 @@
           "url": "",
           "source": "文化部",
           "area": "高雄"
-        },
-        {
-          "name": "【小小音樂大師課】豎琴 × 仲夏夜之夢｜高雄",
-          "desc": "08/01 | #幼兒音樂啟蒙",
-          "date": "2026.08.01 (六) 11:00 - 08",
-          "url": "https://www.accupass.com/event/2603190827169685934940",
-          "source": "Accupass",
-          "area": "高雄"
         }
       ],
       "文青咖啡": [
+        {
+          "name": "鳳山歷史教室",
+          "desc": "大東文化藝術中心",
+          "date": "",
+          "url": "https://yii.tw/events/43280",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
         {
           "name": "歷史建築逍遙園常設展",
           "desc": "新興區（高雄市）=",
@@ -909,10 +717,10 @@
           "area": "高雄"
         },
         {
-          "name": "鳳山歷史教室",
-          "desc": "大東文化藝術中心",
+          "name": "歷史建築九曲堂泰芳商會鳳梨罐詰工場 (臺灣鳳梨工場)常設展",
+          "desc": "大樹區（高雄市）=",
           "date": "",
-          "url": "https://yii.tw/events/43280",
+          "url": "https://yii.tw/events/43281",
           "source": "小藝行事曆",
           "area": "高雄"
         },
@@ -929,14 +737,6 @@
           "desc": "旗山車站(原旗山驛)",
           "date": "",
           "url": "https://yii.tw/events/43289",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
-          "name": "歷史建築九曲堂泰芳商會鳳梨罐詰工場 (臺灣鳳梨工場)常設展",
-          "desc": "大樹區（高雄市）=",
-          "date": "",
-          "url": "https://yii.tw/events/43281",
           "source": "小藝行事曆",
           "area": "高雄"
         },
@@ -1089,19 +889,11 @@
           "area": "高雄"
         },
         {
-          "name": "鳳鼻頭考古遺址常態展",
-          "desc": "林園區（高雄市）=",
-          "date": "",
-          "url": "https://yii.tw/events/43277",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
-          "name": "旗山生活文化園區常設展",
-          "desc": "高雄市旗山生活文化園區(原舊鼓山國小)",
-          "date": "",
-          "url": "https://yii.tw/events/43283",
-          "source": "小藝行事曆",
+          "name": "115年岡山籃籗會：兩天限定市集！活動時間、接駁車資訊一次看（5/8~5/9）",
+          "desc": "05/08 | 具有百年歷史的岡山籃籗會於農曆三月廿三盛大展開，會場劃分為百貨區、花市區及傳統籃籗區，展現深厚的在地文化與市集熱鬧氛圍。活動期間由捷運高醫岡山站及岡山車站等地提",
+          "date": "05/08",
+          "url": "https://strolltimes.com/events/kaohsiung/260506051935",
+          "source": "漫步時光",
           "area": "高雄"
         },
         {
@@ -1113,50 +905,18 @@
           "area": "高雄"
         },
         {
-          "name": "雄鎮北門常設展",
-          "desc": "鼓山區（高雄市）=",
+          "name": "魔模時光機－臺灣鑄造木模文物展",
+          "desc": "國立科學工藝博物館",
           "date": "",
-          "url": "https://yii.tw/events/43286",
+          "url": "https://yii.tw/events/41948",
           "source": "小藝行事曆",
           "area": "高雄"
         },
         {
-          "name": "線上互動展《驛動時刻——HAMA與時空灶咖傳說》",
-          "desc": "鼓山區（高雄市）=",
+          "name": "乘浪上港特展",
+          "desc": "紅毛港文化園區",
           "date": "",
-          "url": "https://yii.tw/events/43275",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
-          "name": "回家：小林村的故事",
-          "desc": "甲仙區（高雄市）=",
-          "date": "",
-          "url": "https://yii.tw/events/43089",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
-          "name": "沉思者－波特拉，全本巴赫無伴奏大提琴組曲",
-          "desc": "衛武營國家藝術文化中心表演廳",
-          "date": "",
-          "url": "https://yii.tw/events/44241",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
-          "name": "解鎖！北號誌樓常設展",
-          "desc": "鼓山區（高雄市）=",
-          "date": "",
-          "url": "https://yii.tw/events/43287",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
-          "name": "地域主義的先行者：陳仁和百年+3建築紀念大展",
-          "desc": "高雄市立美術館",
-          "date": "",
-          "url": "https://yii.tw/events/43028",
+          "url": "https://yii.tw/events/43152",
           "source": "小藝行事曆",
           "area": "高雄"
         },
@@ -1169,11 +929,51 @@
           "area": "高雄"
         },
         {
+          "name": "解鎖！北號誌樓常設展",
+          "desc": "鼓山區（高雄市）=",
+          "date": "",
+          "url": "https://yii.tw/events/43287",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
+        {
+          "name": "線上互動展《驛動時刻——HAMA與時空灶咖傳說》",
+          "desc": "鼓山區（高雄市）=",
+          "date": "",
+          "url": "https://yii.tw/events/43275",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
+        {
+          "name": "【漢餅文化館】2026年4-6月手作課程體驗",
+          "desc": "高雄市大寮區 舊振南漢餅文化館",
+          "date": "",
+          "url": "https://yii.tw/events/43730",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
+        {
+          "name": "內惟藝術中心首展｜解惟．解圍 Once within Borders",
+          "desc": "內惟藝術中心",
+          "date": "",
+          "url": "https://yii.tw/events/43154",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
+        {
+          "name": "「解密哨船頭」歴史展覽",
+          "desc": "鼓山區（高雄市）=",
+          "date": "",
+          "url": "https://yii.tw/events/43285",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
+        {
           "name": "漫步郵趣－動漫郵票特展",
-          "desc": "01/01 | 三民區（高雄市）=",
-          "date": "01/01",
-          "url": "",
-          "source": "文化部",
+          "desc": "三民區（高雄市）=",
+          "date": "",
+          "url": "https://yii.tw/events/42459",
+          "source": "小藝行事曆",
           "area": "高雄"
         },
         {
@@ -1193,6 +993,22 @@
           "area": "高雄"
         },
         {
+          "name": "地域主義的先行者：陳仁和百年+3建築紀念大展",
+          "desc": "01/01 | 高雄市立美術館",
+          "date": "01/01",
+          "url": "",
+          "source": "文化部",
+          "area": "高雄"
+        },
+        {
+          "name": "回家：小林村的故事",
+          "desc": "01/01 | 甲仙區（高雄市）=",
+          "date": "01/01",
+          "url": "",
+          "source": "文化部",
+          "area": "高雄"
+        },
+        {
           "name": "砰波波波！聲音的小宇宙",
           "desc": "01/01 | 內惟藝術中心",
           "date": "01/01",
@@ -1206,56 +1022,6 @@
           "date": "01/01",
           "url": "",
           "source": "文化部",
-          "area": "高雄"
-        },
-        {
-          "name": "內惟藝術中心首展｜解惟．解圍 Once within Borders",
-          "desc": "01/01 | 內惟藝術中心",
-          "date": "01/01",
-          "url": "",
-          "source": "文化部",
-          "area": "高雄"
-        },
-        {
-          "name": "2026/5/7~5/11高雄傢俱名床全屋訂製母親節特展｜逛展送好禮4選1",
-          "desc": "05/07 | #高雄家具展",
-          "date": "2026.05.07 (四) 10:00 - 05",
-          "url": "https://www.accupass.com/event/2604141823381671496070",
-          "source": "Accupass",
-          "area": "高雄"
-        },
-        {
-          "name": "這個網頁無法正常運作",
-          "desc": "如果問題仍未解決，請與網站擁有者聯絡。 HTTP ERROR 429 重新載入",
-          "date": "",
-          "url": "https://www.threads.com/@kaohsiungfans",
-          "source": "高雄粉",
-          "area": "高雄"
-        },
-        {
-          "name": "哈瑪星鐵道 最新消息 駁二選物 地圖 關於駁二",
-          "desc": "駁二藝術特區",
-          "date": "",
-          "url": "https://pier2.org/activity/",
-          "source": "駁二",
-          "area": "高雄"
-        },
-        {
-          "name": "乘浪上港特展",
-          "desc": "紅毛港文化園區",
-          "date": "",
-          "url": "https://yii.tw/events/43152",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        }
-      ],
-      "吃喝玩樂": [
-        {
-          "name": "【酒精畫x品酒體驗】Fluid & Flavor流動與風味 品酒會- 高雄場",
-          "desc": "06/06 | #蘋果冰酒",
-          "date": "2026.06.06 (六) 14:00 - 17",
-          "url": "https://www.accupass.com/event/2604280418332045655610",
-          "source": "Accupass",
           "area": "高雄"
         }
       ],
@@ -1285,18 +1051,18 @@
           "area": "全台"
         },
         {
-          "name": "【我是新手】我是新手，我想去聖母登山步道-抹茶山",
-          "desc": "健行筆記活動",
-          "date": "",
-          "url": "https://hiking.biji.co/index.php?q=news&act=info&id=21285",
-          "source": "健行筆記",
-          "area": "全台"
-        },
-        {
           "name": "【越野跑】登山者為什麼開始跑步？台灣越野跑爆發的真實原因",
           "desc": "健行筆記活動",
           "date": "",
           "url": "https://hiking.biji.co/index.php?q=news&act=info&id=25168",
+          "source": "健行筆記",
+          "area": "全台"
+        },
+        {
+          "name": "小編實測 Columbia KONOS OutDry：極彈緩震與零滲透防水，郊山全地形應變的最佳解答",
+          "desc": "健行筆記活動",
+          "date": "",
+          "url": "https://hiking.biji.co/index.php?q=news&act=info&id=25153",
           "source": "健行筆記",
           "area": "全台"
         }
@@ -1921,30 +1687,6 @@
           "url": "",
           "source": "文化部",
           "area": "台中"
-        },
-        {
-          "name": "來去台中試 #001",
-          "desc": "05/16 | #台中現場喜劇",
-          "date": "2026.05.16 (六) 19:30 - 20",
-          "url": "https://www.accupass.com/event/2604181229411695308367",
-          "source": "Accupass",
-          "area": "台中"
-        },
-        {
-          "name": "[台中] - [小齊音樂.手作] - 吉他體驗5月",
-          "desc": "05/24 | #小齊音樂",
-          "date": "2026.05.24 (日) 16:00 - 17",
-          "url": "https://www.accupass.com/event/2605030829572141164065",
-          "source": "Accupass",
-          "area": "台中"
-        },
-        {
-          "name": "誠品書店台中園道店｜《台北生存指南》專輯音樂會",
-          "desc": "05/16 | #誠品",
-          "date": "2026.05.16 (六) 19:30 - 20",
-          "url": "https://www.accupass.com/event/2604160303441056021004",
-          "source": "Accupass",
-          "area": "台中"
         }
       ],
       "文青咖啡": [
@@ -1957,18 +1699,18 @@
           "area": "台中"
         },
         {
-          "name": "藝文研習成果展－「疊彩・舞指間」邱玲瓊師生粉彩多元創作聯展",
-          "desc": "活動地點 臺中市大墩文化中心",
-          "date": "",
-          "url": "https://yii.tw/events/44208",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
           "name": "【潭子分館】5/2-5/31~【劍獅奇想】小博士兒童繪畫成果展",
           "desc": "活動地點 潭子分館潭子區甘蔗社區活動中心4樓",
           "date": "",
           "url": "https://yii.tw/events/44309",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
+          "name": "藝文研習成果展－「疊彩・舞指間」邱玲瓊師生粉彩多元創作聯展",
+          "desc": "活動地點 臺中市大墩文化中心",
+          "date": "",
+          "url": "https://yii.tw/events/44208",
           "source": "小藝行事曆",
           "area": "台中"
         },
@@ -2035,137 +1777,9 @@
           "url": "",
           "source": "文化部",
           "area": "台中"
-        },
-        {
-          "name": "【走讀】博物台中｜從臺中火車站走到中山73",
-          "desc": "05/17 | #學習",
-          "date": "2026.05.17 (日) 14:00 - 05",
-          "url": "https://www.accupass.com/event/2604271405445218559380",
-          "source": "Accupass",
-          "area": "台中"
-        },
-        {
-          "name": "【台中市政店】Annie ke.安妮水彩-夢幻花卉水彩課程 2026.05",
-          "desc": "05/10 | #插畫",
-          "date": "2026.05.10 (日) 13:30 - 05",
-          "url": "https://www.accupass.com/event/2604100431015792116910",
-          "source": "Accupass",
-          "area": "台中"
-        },
-        {
-          "name": "誠品書店台中園道店｜未來姐姐說故事《小情緒大事件》",
-          "desc": "05/16 | #說故事",
-          "date": "2026.05.16 (六) 15:30 - 16",
-          "url": "https://www.accupass.com/event/2604160354041842675334",
-          "source": "Accupass",
-          "area": "台中"
-        },
-        {
-          "name": "誠品書店台中園道店｜采實姐姐說故事《神奇的甲蟲書包》",
-          "desc": "05/09 | #說故事",
-          "date": "2026.05.09 (六) 15:30 - 16",
-          "url": "https://www.accupass.com/event/2604160350109274592350",
-          "source": "Accupass",
-          "area": "台中"
-        },
-        {
-          "name": "誠品書店台中園道店｜《寫作新一課》新書分享會",
-          "desc": "05/09 | #誠品",
-          "date": "2026.05.09 (六) 19:30 - 20",
-          "url": "https://www.accupass.com/event/2604160245521263774973",
-          "source": "Accupass",
-          "area": "台中"
-        },
-        {
-          "name": "誠品書店台中三井店｜上誼姐姐說故事《你在媽媽肚子裡的時候》",
-          "desc": "05/16 | #說故事",
-          "date": "2026.05.16 (六) 15:30 - 16",
-          "url": "https://www.accupass.com/event/2604160358334829194960",
-          "source": "Accupass",
-          "area": "台中"
-        },
-        {
-          "name": "【台中市政店】貝塔的一口插畫-水彩速寫教室-2026.05",
-          "desc": "05/08 | #插畫",
-          "date": "2026.05.08 (五) 14:00 - 05",
-          "url": "https://www.accupass.com/event/2604100432595091912500",
-          "source": "Accupass",
-          "area": "台中"
-        },
-        {
-          "name": "誠品書店台中園道店｜《康樂股漲的日股奇妙冒險》新書分享會",
-          "desc": "05/23 | #誠品",
-          "date": "2026.05.23 (六) 14:30 - 15",
-          "url": "https://www.accupass.com/event/2604160314103730440590",
-          "source": "Accupass",
-          "area": "台中"
-        },
-        {
-          "name": "誠品書店台中園道店｜《通氣血，排文明毒》新書分享會",
-          "desc": "05/17 | #誠品",
-          "date": "2026.05.17 (日) 14:30 - 15",
-          "url": "https://www.accupass.com/event/2604160308271811101857",
-          "source": "Accupass",
-          "area": "台中"
-        },
-        {
-          "name": "誠品書店台中園道店｜《你不是愛錯人，是想錯愛》新書分享會",
-          "desc": "05/16 | #誠品",
-          "date": "2026.05.16 (六) 14:30 - 15",
-          "url": "https://www.accupass.com/event/2604160249199654812090",
-          "source": "Accupass",
-          "area": "台中"
-        },
-        {
-          "name": "誠品書店台中園道店｜《超級綠拿鐵》綠奇蹟分享會",
-          "desc": "05/09 | #誠品",
-          "date": "2026.05.09 (六) 14:30 - 15",
-          "url": "https://www.accupass.com/event/2604160240451949444944",
-          "source": "Accupass",
-          "area": "台中"
         }
       ],
       "親子同樂": [
-        {
-          "name": "【梧棲親子館】05/02-05/31 線條與色彩美感的協奏曲-陳秋貴個展",
-          "desc": "活動地點 梧棲親子館",
-          "date": "",
-          "url": "https://yii.tw/events/44308",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "【沙鹿文昌分館】5/2-5/31「在地作家玉米辰(陳旻昱)老師繪本美學作品」海報展",
-          "desc": "活動地點 沙鹿文昌分館",
-          "date": "",
-          "url": "https://yii.tw/events/44410",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "繪本小屋的初心",
-          "desc": "活動地點 清水眷村文化園區清水區海灣繪本館",
-          "date": "",
-          "url": "https://yii.tw/events/42877",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "兒童美術研習班成果展-好厲害的豬籠草",
-          "desc": "活動地點 港區藝術中心清水區港區小藝廊",
-          "date": "",
-          "url": "https://yii.tw/events/43901",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "【上楓分館】5/2-5/30【孕育的神奇力量】黃淨琪老師紙黏土作品展(母親節)",
-          "desc": "活動地點 上楓分館大雅區一樓親子展區",
-          "date": "",
-          "url": "https://yii.tw/events/44411",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
         {
           "name": "第33屆全國兒童聯想創作畫比賽得獎作品115年巡迴展(4)-沙鹿區 沙鹿國小",
           "desc": "活動地點 沙鹿區臺中市沙鹿區沙鹿國小",
@@ -2183,9 +1797,49 @@
           "area": "台中"
         },
         {
+          "name": "【沙鹿文昌分館】5/2-5/31「在地作家玉米辰(陳旻昱)老師繪本美學作品」海報展",
+          "desc": "活動地點 沙鹿文昌分館",
+          "date": "",
+          "url": "https://yii.tw/events/44410",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
+          "name": "兒童美術研習班成果展-好厲害的豬籠草",
+          "desc": "活動地點 港區藝術中心清水區港區小藝廊",
+          "date": "",
+          "url": "https://yii.tw/events/43901",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
+          "name": "【梧棲親子館】05/02-05/31 線條與色彩美感的協奏曲-陳秋貴個展",
+          "desc": "活動地點 梧棲親子館",
+          "date": "",
+          "url": "https://yii.tw/events/44308",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
+          "name": "【上楓分館】5/2-5/30【孕育的神奇力量】黃淨琪老師紙黏土作品展(母親節)",
+          "desc": "活動地點 上楓分館大雅區一樓親子展區",
+          "date": "",
+          "url": "https://yii.tw/events/44411",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
+          "name": "繪本小屋的初心",
+          "desc": "臺中市港區藝術中心",
+          "date": "",
+          "url": "https://yii.tw/events/43060",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
           "name": "科博館《古代人說故事》南屯山仔腳遺址出土的鐵刀首亮相!",
-          "desc": "05/06 | 人類文化廳二樓",
-          "date": "05/06",
+          "desc": "05/07 | 人類文化廳二樓",
+          "date": "05/07",
           "url": "",
           "source": "文化部",
           "area": "台中"
@@ -2245,14 +1899,6 @@
           "url": "",
           "source": "文化部",
           "area": "台中"
-        },
-        {
-          "name": "台中親子活動推薦:小小飯店人2.0-星級成長記",
-          "desc": "08/16 | #科技運動",
-          "date": "2026.08.16 (日) 10:00 - 14",
-          "url": "https://www.accupass.com/event/2604170626472004823298",
-          "source": "Accupass",
-          "area": "台中"
         }
       ],
       "市集展覽": [
@@ -2265,74 +1911,66 @@
           "area": "台中"
         },
         {
-          "name": "【沙鹿深波分館】5/2-5/10《字遊過了頭：文字造型的實驗與探索》—許伯豪個展",
-          "desc": "活動地點 沙鹿深波分館",
+          "name": "「24/7：：：創作中的反覆與堆疊」兒童藝術教育展",
+          "desc": "國立臺灣美術館",
           "date": "",
-          "url": "https://yii.tw/events/44408",
+          "url": "https://yii.tw/events/42441",
           "source": "小藝行事曆",
           "area": "台中"
         },
         {
-          "name": "臺中市逍遙藝術學會第三十屆會員聯展",
-          "desc": "活動地點 屯區藝文中心",
-          "date": "",
-          "url": "https://yii.tw/events/43975",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "眾生共命：宮島達男",
-          "desc": "亞洲大學現代美術館",
-          "date": "",
-          "url": "https://yii.tw/events/42439",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "眷村觀測站:老物件的光譜研究",
-          "desc": "活動地點 清水眷村文化園區清水區西5號主題展間",
-          "date": "",
-          "url": "https://yii.tw/events/43903",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "之間 - 2026賴彥伶創作個展",
-          "desc": "活動地點 葫蘆墩文化中心",
-          "date": "",
-          "url": "https://yii.tw/events/44080",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "渺渺核－臺中市立臺中第一高級中等學校第28屆美術班畢業畫展",
+          "name": "山那邊．海那邊",
           "desc": "活動地點 臺中市大墩文化中心",
           "date": "",
-          "url": "https://yii.tw/events/44205",
+          "url": "https://yii.tw/events/43837",
           "source": "小藝行事曆",
           "area": "台中"
         },
         {
-          "name": "【梧棲分館】05/02-05/31 原住民族文物 展",
-          "desc": "活動地點 梧棲分館",
+          "name": "奇幻、文化、臺中城-張家霖藝術創作展",
+          "desc": "活動地點 港區藝術中心清水區臺中市美術家資料館",
           "date": "",
-          "url": "https://yii.tw/events/44270",
+          "url": "https://yii.tw/events/43439",
           "source": "小藝行事曆",
           "area": "台中"
         },
         {
-          "name": "2026臺灣美術新貌獎徵件",
-          "desc": "活動地點 港區藝術中心",
+          "name": "2026臺中市西區大同國小美術班成果展",
+          "desc": "活動地點 臺中市大墩文化中心",
           "date": "",
-          "url": "https://yii.tw/events/43905",
+          "url": "https://yii.tw/events/44206",
           "source": "小藝行事曆",
           "area": "台中"
         },
         {
-          "name": "【沙鹿深波分館】5/2-5/10 《察文觀字》學生創作聯展",
+          "name": "游於藝－陳春明竹木雕刻紀念展",
+          "desc": "活動地點 臺中市大墩文化中心",
+          "date": "",
+          "url": "https://yii.tw/events/43838",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
+          "name": "烽火船說－水下文化資產特展",
+          "desc": "文化部文化資產園區",
+          "date": "",
+          "url": "https://yii.tw/events/43214",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
+          "name": "【沙鹿深波分館】5/2-5/31 電影海報美學展",
           "desc": "活動地點 沙鹿深波分館",
           "date": "",
-          "url": "https://yii.tw/events/44409",
+          "url": "https://yii.tw/events/44406",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
+          "name": "唐藝庭《層疊的空間》、 洪聖雄《砌殼》",
+          "desc": "臺中市港區藝術中心",
+          "date": "",
+          "url": "https://yii.tw/events/43272",
           "source": "小藝行事曆",
           "area": "台中"
         },
@@ -2345,9 +1983,17 @@
           "area": "台中"
         },
         {
+          "name": "溫柔時光－李淑秀手工布娃娃創作展",
+          "desc": "活動地點 臺中市大墩文化中心",
+          "date": "",
+          "url": "https://yii.tw/events/44207",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
           "name": "科博館《古代人說故事》南屯山仔腳遺址出土的鐵刀首亮相!",
-          "desc": "05/06 | 人類文化廳二樓",
-          "date": "05/06",
+          "desc": "05/07 | 人類文化廳二樓",
+          "date": "05/07",
           "url": "",
           "source": "文化部",
           "area": "台中"
@@ -2361,8 +2007,8 @@
           "area": "台中"
         },
         {
-          "name": "「24/7：：：創作中的反覆與堆疊」兒童藝術教育展",
-          "desc": "01/01 | 國立臺灣美術館",
+          "name": "眾生共命：宮島達男",
+          "desc": "01/01 | 亞洲大學現代美術館",
           "date": "01/01",
           "url": "",
           "source": "文化部",
@@ -2399,200 +2045,88 @@
           "url": "",
           "source": "文化部",
           "area": "台中"
-        },
-        {
-          "name": "台中飲料店",
-          "desc": "臺中市西區忠明里美村路一段36號1樓 — 色長新聯",
-          "date": "",
-          "url": "https://www.threads.com/@mynii7/post/DX9NzwZDuRZ",
-          "source": "倪倪小日常",
-          "area": "台中"
-        },
-        {
-          "name": "台中YouBike自5月6日零時起",
-          "desc": "5月6日零時起 APP新增悠遊付和iPASS MONEY付款功能 大家多久騎一次YouBike呢？ 翻譯 42 12",
-          "date": "",
-          "url": "https://www.threads.com/@taichungfans/post/DX9El3pDxVf",
-          "source": "台中粉",
-          "area": "台中"
-        },
-        {
-          "name": "科博館5/17免費入館！",
-          "desc": "05/17",
-          "date": "05/17",
-          "url": "https://www.threads.com/@taichungfans/post/DX8yTzjj4UW",
-          "source": "台中粉",
-          "area": "台中"
-        },
-        {
-          "name": "台中營業到凌晨一點的台式三杯爆炒滷味！還有推出罐頭麻辣燙🙌",
-          "desc": "推出罐頭麻辣燙🙌 喜歡吃火鍋和炒滷味一次滿足",
-          "date": "",
-          "url": "https://www.threads.com/@taichungfans/post/DX68AwND_qc",
-          "source": "台中粉",
-          "area": "台中"
-        },
-        {
-          "name": "🔘好粗滷｜粗吼鍋 正港ㄟ台式火鍋",
-          "desc": "@52truehotpot 🔘臺中市北區五權路386號 🔘11:00–01:00 🔘5月份優惠｜牛、豬套餐特價99元",
-          "date": "",
-          "url": "https://www.threads.com/@taichungfans/post/DX68K5Mj7C7",
-          "source": "台中粉",
-          "area": "台中"
-        },
-        {
-          "name": "【西區分館】05/02-05/31 藝遊心境藝術聯展",
-          "desc": "活動地點 西區分館",
-          "date": "",
-          "url": "https://yii.tw/events/44258",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "【梧棲分館】05/02-05/31 祝福開成花 聯展",
-          "desc": "活動地點 梧棲分館",
-          "date": "",
-          "url": "https://yii.tw/events/44273",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "【烏日分館】5/02-5/31 無厘塗-愚魚藝術創作展",
-          "desc": "活動地點 烏日分館",
-          "date": "",
-          "url": "https://yii.tw/events/44430",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "唐藝庭《層疊的空間》、 洪聖雄《砌殼》",
-          "desc": "臺中市港區藝術中心",
-          "date": "",
-          "url": "https://yii.tw/events/43272",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "三林墨影書法創作展",
-          "desc": "活動地點 臺中市大墩文化中心",
-          "date": "",
-          "url": "https://yii.tw/events/43836",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "【梧棲分館】05/02-05/31 一馬當先展覽",
-          "desc": "活動地點 梧棲分館",
-          "date": "",
-          "url": "https://yii.tw/events/44272",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "館藏交流微型展—百變藺草 創新草鞋",
-          "desc": "臺中市屯區藝文中心",
-          "date": "",
-          "url": "https://yii.tw/events/43262",
-          "source": "小藝行事曆",
-          "area": "台中"
         }
       ],
       "吃喝玩樂": [
         {
-          "name": "10000咖啡台中漢神洲際店新開幕，咖啡與可頌是必點組合，限量新款環保瓶熱賣中！",
-          "desc": "10000咖啡 TEN THOUSAND 台中漢神洲際店新開幕！這間曾被譽為「紐",
+          "name": "在地人才知道！隱藏在田野間的20年老店，激推現炸臭豆腐、還有隱藏版大骨湯",
+          "desc": "糖糖最近挖到一家超級隱密的在地老店！這間安和臭豆腐，外觀看起來就是一間再普通不過",
           "date": "",
-          "url": "https://taiwan17go.com/taichung10000coffee/",
+          "url": "https://taiwan17go.com/anhestinkytofu/",
           "source": "熱血台中",
           "area": "台中"
         },
         {
-          "name": "阿梅早點自助餐便當，台中早上6點就能吃到自助餐！價格便宜人超多",
-          "desc": "如果不是去澄清醫院平等領藥的關係！說真的我也不會發現台中中區竟然有一間自助餐，早",
+          "name": "熱血採訪｜台中南屯咖啡廳推薦，吸睛試管咖啡，鄰近IKEA的實驗室風格下午茶",
+          "desc": "想在實驗室裡喝下午茶嗎？台中南屯255 LAB café 鄰近IKEA，是近期超",
           "date": "",
-          "url": "https://taiwan17go.com/wqe61/",
+          "url": "https://taiwan17go.com/255labcafe/",
           "source": "熱血台中",
           "area": "台中"
         },
         {
-          "name": "阿華炒麵魯肉飯，營業到凌晨一點，東興路宵夜人氣王，辣椒超辣很過癮",
-          "desc": "說到東興路宵夜人氣王，就會讓人想到這間阿華炒麵魯肉飯，外觀簡單樸實，經過時紅色系",
+          "name": "台中乳酪蛋糕懶人包｜四間在地人激推最強乳酪蛋糕，乳酪控必收藏！",
+          "desc": "大家最愛的台中乳酪蛋糕懶人包來啦！每次有朋友問糖糖台中伴手禮要買什麼，除了太陽餅",
           "date": "",
-          "url": "https://taiwan17go.com/wqe60/",
+          "url": "https://taiwan17go.com/bakedcheesecakebag/",
           "source": "熱血台中",
           "area": "台中"
         },
         {
-          "name": "11樓之三，獨棟民宅中結合早午餐的好吃甜點，美型生乳捲好吃又好看，每一道都讓人驚艷！",
-          "desc": "為了久久一次的運動姐妹聚會來到這家11樓之三用餐，其實幾年前就被他們家的蜜柑生乳",
+          "name": "熱血採訪｜台中波奇碗推薦，外帶透明球，不只可愛更有實力！客製化低卡午餐新選擇",
+          "desc": "台中波奇碗推薦！這間位在台中西屯的Poke Go 波奇走走，主打低卡低油、高蛋白",
           "date": "",
-          "url": "https://taiwan17go.com/11f3/",
+          "url": "https://taiwan17go.com/pokego/",
           "source": "熱血台中",
           "area": "台中"
         },
         {
-          "name": "杯中的優雅:被忽略的年份 | 台中480",
-          "desc": "05/24 | #台中品酒會",
-          "date": "2026.05.24 (日) 15:00 - 17",
-          "url": "https://www.accupass.com/event/2604230545181805206529",
-          "source": "Accupass",
+          "name": "熱血採訪｜2026母親節蛋糕推薦！薔薇派超狂一個蛋糕五種口味，早鳥預購任選兩種口味拼盤現省100元，",
+          "desc": "還在煩惱2026母親節蛋糕要訂哪一家嗎？ 糖糖每年都被問到「有沒有全家人都愛吃、",
+          "date": "",
+          "url": "https://taiwan17go.com/rosepiemother2026/",
+          "source": "熱血台中",
           "area": "台中"
         },
         {
-          "name": "台北超紅甜點承繼快閃台中新光三越！",
+          "name": "2026台中母親節蛋糕最後衝刺！送媽媽的這一份甜蜜，你想要哪一個？",
+          "desc": "2026 台中母親節最後衝刺！還沒幫媽媽訂蛋糕嗎？本篇精選近期有寫道的台中人氣母",
+          "date": "",
+          "url": "https://taiwan17go.com/wqe63/",
+          "source": "熱血台中",
+          "area": "台中"
+        },
+        {
+          "name": "健康餐盒蛋白盒子，口味選擇多多，連無肉餐盒都好好吃！這家分店週週可領10元折價券",
+          "desc": "蛋白盒子全台幾乎都有門市、澎湖也有分店，餐點主打少油鹽、高蛋白健康低卡餐盒，是現",
+          "date": "",
+          "url": "https://taiwan17go.com/theproteinbox/",
+          "source": "熱血台中",
+          "area": "台中"
+        },
+        {
+          "name": "熱血採訪│台中可可多多千層蛋糕，只到5/10，加購一片千層蛋糕只要69元",
           "desc": "05/10",
           "date": "05/10",
-          "url": "https://www.threads.com/@taichungfans/post/DX1xEUFj7sb",
-          "source": "台中粉",
+          "url": "https://taiwan17go.com/wqe62/",
+          "source": "熱血台中",
+          "area": "台中"
+        },
+        {
+          "name": "台中北區素食有什麼好吃的？10間台中市北區蔬食料理懶人包",
+          "desc": "台中北區素食有什麼好吃的？10間台中市北區蔬食料理懶人包，是由熱血台中美食編輯群",
+          "date": "",
+          "url": "https://taiwan17go.com/veggie3/",
+          "source": "熱血台中",
           "area": "台中"
         }
       ],
       "戶外踏青": [
         {
-          "name": "台北Att 4 Fun餐廳攻略，6間Att 4 Fun美食懶人包",
-          "desc": "台北Att 4 Fun餐廳攻略，6間Att 4 Fun美食懶人包，是由熱血台中與",
+          "name": "湖光市場美食有哪些？6間湖光市場周邊美食小吃懶人包",
+          "desc": "湖光市場美食有哪些？6間湖光市場周邊美食小吃懶人包，是由熱血台中與台北美食部落客",
           "date": "",
-          "url": "https://taiwan17go.com/att4fun07food/",
-          "source": "熱血台中",
-          "area": "台中"
-        },
-        {
-          "name": "新北永和尾牙餐廳有哪些？10間新北市永和區尾牙春酒飯店懶人包",
-          "desc": "新北永和春酒餐廳有哪些？10間新北市永和區尾牙飯店懶人包，是由熱血系列美食部落客",
-          "date": "",
-          "url": "https://taiwan17go.com/banqiaorestaurants2/",
-          "source": "熱血台中",
-          "area": "台中"
-        },
-        {
-          "name": "新北義大利麵有什麼好吃的？9間新北市義大利麵料理懶人包",
-          "desc": "新北義大利麵有什麼好吃的？9間新北市義大利麵料理懶人包，是由熱血台中與台北美食部",
-          "date": "",
-          "url": "https://taiwan17go.com/ntppasta/",
-          "source": "熱血台中",
-          "area": "台中"
-        },
-        {
-          "name": "新北三峽尾牙餐廳有哪些？8間新北市三峽區尾牙春酒飯店懶人包",
-          "desc": "新北三峽春酒餐廳有哪些？8間新北市三峽區尾牙飯店懶人包，是由熱血台中與台北美食部",
-          "date": "",
-          "url": "https://taiwan17go.com/ntpweiya4aera08/",
-          "source": "熱血台中",
-          "area": "台中"
-        },
-        {
-          "name": "新北板橋尾牙餐廳有哪些？12間新北市板橋區尾牙春酒飯店懶人包",
-          "desc": "新北板橋春酒餐廳有哪些？12間新北市板橋區尾牙飯店懶人包，是由熱血台中與台北美食",
-          "date": "",
-          "url": "https://taiwan17go.com/banqiaorestaurants/",
-          "source": "熱血台中",
-          "area": "台中"
-        },
-        {
-          "name": "台北塔可有什麼好吃的？8間台北市Taco料理推薦懶人包",
-          "desc": "2026台北塔可有什麼好吃的？8間台北市Taco料理推薦懶人包，是由熱血台中與台",
-          "date": "",
-          "url": "https://taiwan17go.com/taipeitaco/",
+          "url": "https://taiwan17go.com/huguangmatket05/",
           "source": "熱血台中",
           "area": "台中"
         },
@@ -2621,18 +2155,18 @@
           "area": "全台"
         },
         {
-          "name": "【我是新手】我是新手，我想去聖母登山步道-抹茶山",
-          "desc": "健行筆記活動",
-          "date": "",
-          "url": "https://hiking.biji.co/index.php?q=news&act=info&id=21285",
-          "source": "健行筆記",
-          "area": "全台"
-        },
-        {
           "name": "【越野跑】登山者為什麼開始跑步？台灣越野跑爆發的真實原因",
           "desc": "健行筆記活動",
           "date": "",
           "url": "https://hiking.biji.co/index.php?q=news&act=info&id=25168",
+          "source": "健行筆記",
+          "area": "全台"
+        },
+        {
+          "name": "小編實測 Columbia KONOS OutDry：極彈緩震與零滲透防水，郊山全地形應變的最佳解答",
+          "desc": "健行筆記活動",
+          "date": "",
+          "url": "https://hiking.biji.co/index.php?q=news&act=info&id=25153",
           "source": "健行筆記",
           "area": "全台"
         }
@@ -2640,38 +2174,6 @@
     },
     "台南": {
       "表演音樂": [
-        {
-          "name": "臺南運河百年戶外音樂祭",
-          "desc": "台南美食\n\n\t異國料理\n\t道地小吃\n\t鍋物料理\n\t甜點冰品\n\t鐵板燒烤\n\t早午餐",
-          "date": "",
-          "url": "https://decing.tw/tainan-2026050103/",
-          "source": "熱血台南",
-          "area": "台南"
-        },
-        {
-          "name": "草原音樂祭",
-          "desc": "台南美食\n\n\t異國料理\n\t道地小吃\n\t鍋物料理\n\t甜點冰品\n\t鐵板燒烤\n\t早午餐",
-          "date": "",
-          "url": "https://decing.tw/tainan-2026050103/",
-          "source": "熱血台南",
-          "area": "台南"
-        },
-        {
-          "name": "台南五月音樂季",
-          "desc": "台南美食\n\n\t異國料理\n\t道地小吃\n\t鍋物料理\n\t甜點冰品\n\t鐵板燒烤\n\t早午餐",
-          "date": "",
-          "url": "https://decing.tw/tainan-2026050103/",
-          "source": "熱血台南",
-          "area": "台南"
-        },
-        {
-          "name": "森活故事體驗計畫 虎頭埤、新化林場｜音樂盛宴親子同樂",
-          "desc": "台南美食\n\n\t異國料理\n\t道地小吃\n\t鍋物料理\n\t甜點冰品\n\t鐵板燒烤\n\t早午餐",
-          "date": "",
-          "url": "https://decing.tw/tainan-2026050103/",
-          "source": "熱血台南",
-          "area": "台南"
-        },
         {
           "name": "十鼓藝術季-2026魔法夜祭2 神之島",
           "desc": "05/09 | 十鼓文創園區 夢糖劇場",
@@ -2737,27 +2239,35 @@
           "area": "台南"
         },
         {
-          "name": "誠品書店台南一日夜書店｜【夜書店系列活動】《Just杜it》音樂分享會",
-          "desc": "05/30 | #誠品書店台南",
-          "date": "2026.05.30 (六) 15:00 - 16",
-          "url": "https://www.accupass.com/event/2604200818565019271690",
-          "source": "Accupass",
+          "name": "臺南運河百年戶外音樂祭",
+          "desc": "台南美食\n\n\t異國料理\n\t道地小吃\n\t鍋物料理\n\t甜點冰品\n\t鐵板燒烤\n\t早午餐",
+          "date": "",
+          "url": "https://decing.tw/tainan-2026050103/",
+          "source": "熱血台南",
           "area": "台南"
         },
         {
-          "name": "五月份 OPEN MIC",
-          "desc": "05/17 | #喜劇",
-          "date": "2026.05.17 (日) 18:30 - 05",
-          "url": "https://www.accupass.com/event/2604271111464820958500",
-          "source": "Accupass",
+          "name": "草原音樂祭",
+          "desc": "台南美食\n\n\t異國料理\n\t道地小吃\n\t鍋物料理\n\t甜點冰品\n\t鐵板燒烤\n\t早午餐",
+          "date": "",
+          "url": "https://decing.tw/tainan-2026050103/",
+          "source": "熱血台南",
           "area": "台南"
         },
         {
-          "name": "加場！！！進擊的巨人Beyond the Walls世界巡演音樂會，台南站6/4確定加場，本週四4/",
-          "desc": "06/04",
-          "date": "06/04",
-          "url": "https://www.threads.com/@tainan_vigor/post/DXrDJLRlP3J",
-          "source": "台南很有式",
+          "name": "台南五月音樂季",
+          "desc": "台南美食\n\n\t異國料理\n\t道地小吃\n\t鍋物料理\n\t甜點冰品\n\t鐵板燒烤\n\t早午餐",
+          "date": "",
+          "url": "https://decing.tw/tainan-2026050103/",
+          "source": "熱血台南",
+          "area": "台南"
+        },
+        {
+          "name": "森活故事體驗計畫 虎頭埤、新化林場｜音樂盛宴親子同樂",
+          "desc": "台南美食\n\n\t異國料理\n\t道地小吃\n\t鍋物料理\n\t甜點冰品\n\t鐵板燒烤\n\t早午餐",
+          "date": "",
+          "url": "https://decing.tw/tainan-2026050103/",
+          "source": "熱血台南",
           "area": "台南"
         }
       ],
@@ -2771,10 +2281,10 @@
           "area": "台南"
         },
         {
-          "name": "2025黑面琵鷺保育季-黑面琵鷺文創藝術展",
-          "desc": "七股區（臺南市）=",
+          "name": "郭芳純繪畫個展",
+          "desc": "官田區（臺南市）=",
           "date": "",
-          "url": "https://yii.tw/events/43294",
+          "url": "https://yii.tw/events/43307",
           "source": "小藝行事曆",
           "area": "台南"
         },
@@ -2787,19 +2297,11 @@
           "area": "台南"
         },
         {
-          "name": "郭芳純繪畫個展",
-          "desc": "官田區（臺南市）=",
+          "name": "2025黑面琵鷺保育季-黑面琵鷺文創藝術展",
+          "desc": "七股區（臺南市）=",
           "date": "",
-          "url": "https://yii.tw/events/43307",
+          "url": "https://yii.tw/events/43294",
           "source": "小藝行事曆",
-          "area": "台南"
-        },
-        {
-          "name": "爬玩府城 鍬鍬一起來",
-          "desc": "台南美食\n\n\t異國料理\n\t道地小吃\n\t鍋物料理\n\t甜點冰品\n\t鐵板燒烤\n\t早午餐",
-          "date": "",
-          "url": "https://decing.tw/tainan-2026050103/",
-          "source": "熱血台南",
           "area": "台南"
         },
         {
@@ -2867,83 +2369,11 @@
           "area": "台南"
         },
         {
-          "name": "115/5/30(六)台南百年故事ｘ超夯祀典武廟月老線！",
-          "desc": "05/30 | #導覽",
-          "date": "2026.05.30 (六) 15:00 - 17",
-          "url": "https://www.accupass.com/event/2604080215318819227210",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "115/5/16(六)夜行台南 × 永樂2F咖啡(周末限定)",
-          "desc": "05/16 | #導覽",
-          "date": "2026.05.16 (六) 18:00 - 20",
-          "url": "https://www.accupass.com/event/2604070923571610168012",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "誠品書店台南一日夜書店｜閱讀推廣系列活動－《台語上媠！用母語創作ê心內話》",
-          "desc": "05/30 | #誠品書店台南",
-          "date": "2026.05.30 (六) 20:00 - 21",
-          "url": "https://www.accupass.com/event/2604200821146722931970",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "導覽行程5：穿街走巷探索府城3--全臺首學",
-          "desc": "05/10 | #巷弄",
-          "date": "2026.05.10 (日) 15:00 - 18",
-          "url": "https://www.accupass.com/event/2604151528179053222170",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "知府巡行五條港｜踏訪追尋府城史",
-          "desc": "05/09 | #台南景點",
-          "date": "2026.05.09 (六) 15:00 - 18",
-          "url": "https://www.accupass.com/event/2604230724231310684355",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "台南｜【母親節花束】單堂",
-          "desc": "05/07 | #繪畫",
-          "date": "2026.05.07 (四) 10:30 - 12",
-          "url": "https://www.accupass.com/event/2604180620271784407702",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "台南｜【水晶花康乃馨】單堂",
-          "desc": "05/06 | #繪畫",
-          "date": "2026.05.06 (三) 13:30 - 16",
-          "url": "https://www.accupass.com/event/2604180755531819046479",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "文化體驗：台南｜輕水彩【新課體驗 $500】五月",
-          "desc": "05/07 | #繪畫",
-          "date": "2026.05.07 (四) 13:30 - 05",
-          "url": "https://www.accupass.com/event/2604061758131916204112",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "看府城隍巡人間事｜讀延平王創歷史路",
-          "desc": "05/30 | #台南景點",
-          "date": "2026.05.30 (六) 15:00 - 18",
-          "url": "https://www.accupass.com/event/2604230747051701453469",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "咒術迴戰 死滅迴游",
-          "desc": "2026-3-27 再說一次 MAPPA我的神… 乙骨我的神… 個人心目中咒術歷史最爽的一集 翻譯 69 2 2",
+          "name": "爬玩府城 鍬鍬一起來",
+          "desc": "台南美食\n\n\t異國料理\n\t道地小吃\n\t鍋物料理\n\t甜點冰品\n\t鐵板燒烤\n\t早午餐",
           "date": "",
-          "url": "https://www.threads.com/@weieatainan/post/DW8kdxvlLGk",
-          "source": "威吃台南",
+          "url": "https://decing.tw/tainan-2026050103/",
+          "source": "熱血台南",
           "area": "台南"
         }
       ],
@@ -2979,62 +2409,6 @@
           "url": "",
           "source": "文化部",
           "area": "台南"
-        },
-        {
-          "name": "台南｜【串珠DIY】｜開放親子報名",
-          "desc": "05/24 | #零基礎也能輕鬆上手",
-          "date": "2026.05.24 (日) 13:30 - 15",
-          "url": "https://www.accupass.com/event/2604180620526691776940",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "【台南・五月】Be a Child療癒工作坊：用手指畫與催眠，赴一場與內在小孩的約會",
-          "desc": "05/31 | #藝術療育",
-          "date": "2026.05.31 (日) 14:00 - 18",
-          "url": "https://www.accupass.com/event/2604041328051680425848",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "敦煌書局台南店_蟲蟲Live秀",
-          "desc": "06/13 | #繪本說故事",
-          "date": "2026.06.13 (六) 15:00 - 16",
-          "url": "https://www.accupass.com/event/2605010347192117174019",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "敦煌書局台南店_從繪本到現場：Aden老師的非洲冒險",
-          "desc": "06/07 | #非洲",
-          "date": "2026.06.07 (日) 15:00 - 16",
-          "url": "https://www.accupass.com/event/2603251034119246723880",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "敦煌書局台南店_走進黑黑的房子IN A DARK, DARK HOUSE",
-          "desc": "06/14 | #親子 體驗",
-          "date": "2026.06.14 (日) 10:30 - 12",
-          "url": "https://www.accupass.com/event/2604300825561884744777",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "台南｜奶油膠梳子手作｜開放親子報名",
-          "desc": "05/24 | #零基礎也能輕鬆上手",
-          "date": "2026.05.24 (日) 10:30 - 12",
-          "url": "https://www.accupass.com/event/2604180620161762072761",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "這個母親節，帶媽媽來點不一樣的！",
-          "desc": "05/05 | 11:00-22:00 | 台南市北區文成路650巷31號 營業時間：依店家公",
-          "date": "05/05",
-          "url": "https://www.threads.com/@tainan_vigor/post/DX9RQNRFCc5",
-          "source": "台南很有式",
-          "area": "台南"
         }
       ],
       "市集展覽": [
@@ -3047,50 +2421,50 @@
           "area": "台南"
         },
         {
-          "name": "馳馬翫墨-中國書法學會會員暨國際名家聯展",
-          "desc": "【新營區】新營文化中心",
-          "date": "",
-          "url": "https://yii.tw/events/44176",
-          "source": "小藝行事曆",
-          "area": "台南"
-        },
-        {
-          "name": "大英博物館鉅獻《埃及之王：法老》",
+          "name": "穹頂計畫III 末日慶典",
           "desc": "臺南市奇美博物館",
           "date": "",
-          "url": "https://yii.tw/events/43001",
+          "url": "https://yii.tw/events/43339",
           "source": "小藝行事曆",
           "area": "台南"
         },
         {
-          "name": "2026年心豐藝術節特展-刻繪的手勢",
-          "desc": "【歸仁區】歸仁文化中心",
+          "name": "恁兜攏按怎拜？從餐桌到神桌的藝術連結Where We Eat, Where We Pray: From Din",
+          "desc": "臺南市美術館",
           "date": "",
-          "url": "https://yii.tw/events/44212",
+          "url": "https://yii.tw/events/43348",
           "source": "小藝行事曆",
           "area": "台南"
         },
         {
-          "name": "【朝神者們】台南市府城傳統藝術學會20周年特展",
-          "desc": "【麻豆區】總爺藝文中心",
+          "name": "馳馬翫墨-中國書法學會會員暨國際名家聯展",
+          "desc": "【新營區】",
           "date": "",
-          "url": "https://yii.tw/events/43323",
+          "url": "https://yii.tw/events/44014",
           "source": "小藝行事曆",
           "area": "台南"
         },
         {
-          "name": "《水交社 桂子山—汐見之丘》Shuei Jiao She Gueizih Hills—The Hill of ",
-          "desc": "【南區】水交社文化園區",
+          "name": "【能量的顏色，療癒的光】張嘉苓當代藝術特展",
+          "desc": "【新營區】三一宅藝空間",
           "date": "",
-          "url": "https://yii.tw/events/43404",
+          "url": "https://yii.tw/events/43609",
           "source": "小藝行事曆",
           "area": "台南"
         },
         {
-          "name": "《眾生平安-皆大歡喜》",
-          "desc": "【南區】水交社文化園區",
+          "name": "臺南市奇美博物館【常設展】兵器廳",
+          "desc": "臺南市奇美博物館",
           "date": "",
-          "url": "https://yii.tw/events/43405",
+          "url": "https://yii.tw/events/43341",
+          "source": "小藝行事曆",
+          "area": "台南"
+        },
+        {
+          "name": "穹頂計畫Ⅱ 潘神之子",
+          "desc": "臺南市奇美博物館",
+          "date": "",
+          "url": "https://yii.tw/events/43338",
           "source": "小藝行事曆",
           "area": "台南"
         },
@@ -3103,19 +2477,51 @@
           "area": "台南"
         },
         {
-          "name": "悠悠然—潮生Tide comes and goes, tranquilly life grows",
-          "desc": "【安南區】台江文化中心",
+          "name": "顏水龍的工藝精神與影響展覽",
+          "desc": "【麻豆區】總爺藝文中心",
           "date": "",
-          "url": "https://yii.tw/events/43817",
+          "url": "https://yii.tw/events/43569",
           "source": "小藝行事曆",
           "area": "台南"
         },
         {
-          "name": "穹頂計畫",
+          "name": "《穿越時空的航海家》",
           "desc": "臺南市奇美博物館",
           "date": "",
-          "url": "https://yii.tw/events/43337",
+          "url": "https://yii.tw/events/43340",
           "source": "小藝行事曆",
+          "area": "台南"
+        },
+        {
+          "name": "大英博物館鉅獻《埃及之王：法老》",
+          "desc": "01/29 | 臺南市奇美博物館",
+          "date": "01/29",
+          "url": "",
+          "source": "文化部",
+          "area": "台南"
+        },
+        {
+          "name": "2025黑面琵鷺保育季-黑面琵鷺文創藝術展",
+          "desc": "01/01 | 七股區（臺南市）=",
+          "date": "01/01",
+          "url": "",
+          "source": "文化部",
+          "area": "台南"
+        },
+        {
+          "name": "郭芳純繪畫個展",
+          "desc": "01/09 | 官田區（臺南市）=",
+          "date": "01/09",
+          "url": "",
+          "source": "文化部",
+          "area": "台南"
+        },
+        {
+          "name": "穹頂計畫",
+          "desc": "01/01 | 臺南市奇美博物館",
+          "date": "01/01",
+          "url": "",
+          "source": "文化部",
           "area": "台南"
         },
         {
@@ -3237,89 +2643,17 @@
           "url": "https://decing.tw/tainan-202604250426/",
           "source": "熱血台南",
           "area": "台南"
-        },
-        {
-          "name": "2025黑面琵鷺保育季-黑面琵鷺文創藝術展",
-          "desc": "01/01 | 七股區（臺南市）=",
-          "date": "01/01",
-          "url": "",
-          "source": "文化部",
-          "area": "台南"
-        },
-        {
-          "name": "郭芳純繪畫個展",
-          "desc": "01/09 | 官田區（臺南市）=",
-          "date": "01/09",
-          "url": "",
-          "source": "文化部",
-          "area": "台南"
-        },
-        {
-          "name": "穹頂計畫Ⅱ 潘神之子",
-          "desc": "01/01 | 臺南市奇美博物館",
-          "date": "01/01",
-          "url": "",
-          "source": "文化部",
-          "area": "台南"
-        },
-        {
-          "name": "穹頂計畫III 末日慶典",
-          "desc": "01/01 | 臺南市奇美博物館",
-          "date": "01/01",
-          "url": "",
-          "source": "文化部",
-          "area": "台南"
-        },
-        {
-          "name": "《穿越時空的航海家》",
-          "desc": "01/01 | 臺南市奇美博物館",
-          "date": "01/01",
-          "url": "",
-          "source": "文化部",
-          "area": "台南"
-        },
-        {
-          "name": "埃及收藏控注意！黑橋牌推出埃及限定套餐、條子肉乾、小卡啦！",
-          "desc": "搭上奇美博物館埃及展熱潮，黑橋牌推出了埃及限定套餐！憑著實力口碑已悄悄地在奇美專櫃熱賣上百組，如果你還沒吃過，別再只是",
-          "date": "",
-          "url": "https://www.threads.com/@tainan_vigor/post/DXwgxXSlNuz",
-          "source": "台南很有式",
-          "area": "台南"
-        },
-        {
-          "name": "｜ 純 ‧ 身 心 靈 市 集 ｜",
-          "desc": "𝟮𝟬𝟮𝟲 𝗧𝗜𝗡𝗔𝗡 𝗦𝗣𝗜𝗥𝗜𝗧 𝗠𝗔𝗥𝗞𝗘𝗧 連假午後，53 個療癒品牌三天連假快閃，帶你從喧囂走入內心寧靜。 ☾",
-          "date": "",
-          "url": "https://www.threads.com/@tainan_vigor/post/DXqyKaClDJu",
-          "source": "台南很有式",
-          "area": "台南"
-        },
-        {
-          "name": "日常—長榮美術系碩班聯展",
-          "desc": "【歸仁區】歸仁文化中心",
-          "date": "",
-          "url": "https://yii.tw/events/44211",
-          "source": "小藝行事曆",
-          "area": "台南"
-        },
-        {
-          "name": "恁兜攏按怎拜？從餐桌到神桌的藝術連結Where We Eat, Where We Pray: From Din",
-          "desc": "臺南市美術館",
-          "date": "",
-          "url": "https://yii.tw/events/43348",
-          "source": "小藝行事曆",
-          "area": "台南"
-        },
-        {
-          "name": "臺南市奇美博物館【常設展】兵器廳",
-          "desc": "臺南市奇美博物館",
-          "date": "",
-          "url": "https://yii.tw/events/43341",
-          "source": "小藝行事曆",
-          "area": "台南"
         }
       ],
       "吃喝玩樂": [
+        {
+          "name": "貴貴腹地gui_gui_foodie！日式風格早午餐，咖哩控不能錯過的小清新店家~",
+          "desc": "近期特別想吃咖哩，於是來這間放在口袋已久的「貴貴腹地gui_gui_foodie",
+          "date": "",
+          "url": "https://decing.tw/tainan-guiguifoodie/",
+          "source": "熱血台南",
+          "area": "台南"
+        },
         {
           "name": "鴨母寮菜市場美食",
           "desc": "台南美食\n\n\t異國料理\n\t道地小吃\n\t鍋物料理\n\t甜點冰品\n\t鐵板燒烤\n\t早午餐",
@@ -3353,99 +2687,11 @@
           "area": "台南"
         },
         {
-          "name": "海老大叔壽司本舖！善化百元有找的炸蝦壽司，一捲就能吃到兩尾炸蝦耶~",
-          "desc": "善化黃昏市場人氣美食推薦！「海老大叔壽司本舖」地點就位於善化仁愛路黃昏市場內，一",
-          "date": "",
-          "url": "https://decing.tw/tainan-seaold/",
-          "source": "熱血台南",
-          "area": "台南"
-        },
-        {
           "name": "2026鴨母寮市場美食全攻略",
           "desc": "台南美食\n\n\t異國料理\n\t道地小吃\n\t鍋物料理\n\t甜點冰品\n\t鐵板燒烤\n\t早午餐",
           "date": "",
           "url": "https://decing.tw/tainan-202604250426/",
           "source": "熱血台南",
-          "area": "台南"
-        },
-        {
-          "name": "2026 漫步台南葡萄酒展(夏)",
-          "desc": "05/23 | #台南餐廳",
-          "date": "2026.05.23 (六) 16:00 - 19",
-          "url": "https://www.accupass.com/event/2603251405497980825790",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "2026/5/16（六）PIERRICK BOULEY品酒會 | 台南",
-          "desc": "05/16 | #布根地品酒會",
-          "date": "2026.05.16 (六) 15:00 - 17",
-          "url": "https://www.accupass.com/event/2604100728001680642149",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "O&CO台南旅行廚房 x 初夏開胃饗食",
-          "desc": "05/21 | #地中海料理",
-          "date": "2026.05.21 (四) 13:30 - 15",
-          "url": "https://www.accupass.com/event/2604290413347554714170",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "5/17 (日) ✦ 微醺日常｜世界風味品飲會 走動式品飲，輕鬆探索多國風土",
-          "desc": "05/17 | #台南品酒會",
-          "date": "2026.05.17 (日) 15:00 - 18",
-          "url": "https://www.accupass.com/event/2604290644021407913939",
-          "source": "Accupass",
-          "area": "台南"
-        },
-        {
-          "name": "星巴克慶祝母親節，本週四本週五，一連兩天大杯以上飲料買一送一！",
-          "desc": "翻譯 34 37",
-          "date": "",
-          "url": "https://www.threads.com/@tainan_vigor/post/DX8z4tplPwY",
-          "source": "台南很有式",
-          "area": "台南"
-        },
-        {
-          "name": "FOCUS你的5月！和媽媽一起過更好🥰",
-          "desc": "FOCUS母親節優惠👇幫你通通列好！ 翻譯 24 4 1",
-          "date": "",
-          "url": "https://www.threads.com/@tainan_vigor/post/DX31_wcEf5J",
-          "source": "台南很有式",
-          "area": "台南"
-        },
-        {
-          "name": "藏壽司 x 排球少年!! 首次聯名！",
-          "desc": "不僅推出史上最多40款聯名限定扭蛋，還有馬克杯、票卡夾等滿額贈好禮，限定彈簧包則可以在15間限定店舖換到，台南的限定店",
-          "date": "",
-          "url": "https://www.threads.com/@tainan_vigor/post/DXuH4fslMa_",
-          "source": "台南很有式",
-          "area": "台南"
-        },
-        {
-          "name": "名字裡有「真、淑、美、麗」同音字的注意！",
-          "desc": "05/29",
-          "date": "05/29",
-          "url": "https://www.threads.com/@tainan_vigor/post/DXtJMZTFFN2",
-          "source": "台南很有式",
-          "area": "台南"
-        },
-        {
-          "name": "活動日期｜ 即日起-5/27 活動時間｜ 10:30-19:00（週二公休） 活動地點｜ 南埕衖事 ",
-          "desc": "05/27 | 10:30-19:00 | ｜ 南埕衖事 2 樓 （台南市中西區忠義路二段 9",
-          "date": "05/27",
-          "url": "https://www.threads.com/@tainan_vigor/post/DXmIg4IE8pB",
-          "source": "台南很有式",
-          "area": "台南"
-        },
-        {
-          "name": "這是標錯價還是",
-          "desc": "貧窮限制了我的想像… 翻譯 2,360 195 22 3,311",
-          "date": "",
-          "url": "https://www.threads.com/@weieatainan/post/DXBzizGDyAY",
-          "source": "威吃台南",
           "area": "台南"
         }
       ],
@@ -3475,18 +2721,18 @@
           "area": "全台"
         },
         {
-          "name": "【我是新手】我是新手，我想去聖母登山步道-抹茶山",
-          "desc": "健行筆記活動",
-          "date": "",
-          "url": "https://hiking.biji.co/index.php?q=news&act=info&id=21285",
-          "source": "健行筆記",
-          "area": "全台"
-        },
-        {
           "name": "【越野跑】登山者為什麼開始跑步？台灣越野跑爆發的真實原因",
           "desc": "健行筆記活動",
           "date": "",
           "url": "https://hiking.biji.co/index.php?q=news&act=info&id=25168",
+          "source": "健行筆記",
+          "area": "全台"
+        },
+        {
+          "name": "小編實測 Columbia KONOS OutDry：極彈緩震與零滲透防水，郊山全地形應變的最佳解答",
+          "desc": "健行筆記活動",
+          "date": "",
+          "url": "https://hiking.biji.co/index.php?q=news&act=info&id=25153",
           "source": "健行筆記",
           "area": "全台"
         }
@@ -3495,34 +2741,10 @@
     "台北": {
       "表演音樂": [
         {
-          "name": "命運‧絃律－柴可夫斯基之夜",
-          "desc": "國家音樂廳",
-          "date": "",
-          "url": "https://yii.tw/events/44248",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "皇者之聲 - 中島結里愛鋼琴獨奏會",
-          "desc": "國家兩廳院演奏廳",
-          "date": "",
-          "url": "https://yii.tw/events/44249",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
           "name": "【弦樂華章】臺灣藝術大學福舟弓弦樂團與小巨人絲竹樂團",
           "desc": "國家兩廳院演奏廳",
           "date": "",
           "url": "https://yii.tw/events/44251",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "《弦之詠》-2026台北愛樂少年弦樂團定期音樂會",
-          "desc": "臺北市中山堂中正廳",
-          "date": "",
-          "url": "https://yii.tw/events/44253",
           "source": "小藝行事曆",
           "area": "台北"
         },
@@ -3535,26 +2757,18 @@
           "area": "台北"
         },
         {
+          "name": "《弦之詠》-2026台北愛樂少年弦樂團定期音樂會",
+          "desc": "臺北市中山堂中正廳",
+          "date": "",
+          "url": "https://yii.tw/events/44253",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
           "name": "女高音蔡澐宣獨唱會",
           "desc": "國家兩廳院演奏廳",
           "date": "",
           "url": "https://yii.tw/events/44255",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "2026TIFA 拉貝克姊妹：菲利普．葛拉斯《考克多三部曲》",
-          "desc": "國家音樂廳",
-          "date": "",
-          "url": "https://yii.tw/events/44287",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "呂宜珊鋼琴獨奏會《俄式風情》",
-          "desc": "國家兩廳院演奏廳",
-          "date": "",
-          "url": "https://yii.tw/events/44305",
           "source": "小藝行事曆",
           "area": "台北"
         },
@@ -3567,10 +2781,42 @@
           "area": "台北"
         },
         {
+          "name": "呂宜珊鋼琴獨奏會《俄式風情》",
+          "desc": "國家兩廳院演奏廳",
+          "date": "",
+          "url": "https://yii.tw/events/44305",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "顏華容2026鋼琴獨奏會Ｉ－微光",
+          "desc": "國家兩廳院演奏廳",
+          "date": "",
+          "url": "https://yii.tw/events/44165",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
           "name": "《打擊經典．聲影交織》台北打擊樂團爵士系列音樂會",
           "desc": "臺北表演藝術中心 藍盒子",
           "date": "",
           "url": "https://yii.tw/events/44328",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "2026TIFA 拉貝克姊妹：菲利普．葛拉斯《考克多三部曲》",
+          "desc": "國家音樂廳",
+          "date": "",
+          "url": "https://yii.tw/events/44287",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "美國鏡。臺灣聲─福爾摩沙四重奏",
+          "desc": "國家兩廳院演奏廳",
+          "date": "",
+          "url": "https://yii.tw/events/44238",
           "source": "小藝行事曆",
           "area": "台北"
         },
@@ -3629,46 +2875,46 @@
           "url": "",
           "source": "文化部",
           "area": "台北"
-        },
-        {
-          "name": "2026 第一季駐村藝術家聯展活動 Event｜蕭靖彤 Cassandra HSIAO 讀劇演出 S",
-          "desc": "05/09 | #台北藝術進駐",
-          "date": "2026.05.09 (六) 16:00 - 05",
-          "url": "https://www.accupass.com/event/2603300645485805896100",
-          "source": "Accupass",
-          "area": "台北"
-        },
-        {
-          "name": "誠品書店台中園道店｜《台北生存指南》專輯音樂會",
-          "desc": "05/16 | #誠品",
-          "date": "2026.05.16 (六) 19:30 - 20",
-          "url": "https://www.accupass.com/event/2604160303441056021004",
-          "source": "Accupass",
-          "area": "台北"
-        },
-        {
-          "name": "2026島嶼樂集台北樂譜展 — 【漫遊日本音樂教材】",
-          "desc": "06/13 | #日本音樂教材",
-          "date": "2026.06.13 (六) 10:00 - 06",
-          "url": "https://www.accupass.com/event/2603300641351470109525",
-          "source": "Accupass",
-          "area": "台北"
-        },
-        {
-          "name": "顏華容2026鋼琴獨奏會Ｉ－微光",
-          "desc": "國家兩廳院演奏廳",
-          "date": "",
-          "url": "https://yii.tw/events/44165",
-          "source": "小藝行事曆",
-          "area": "台北"
         }
       ],
       "文青咖啡": [
         {
-          "name": "《你的城市我的家--城市鳥巢展》",
-          "desc": "華山文創園區",
+          "name": "親近國寶──大理石梟形小立雕",
+          "desc": "歷史文物陳列館",
           "date": "",
-          "url": "https://yii.tw/events/44269",
+          "url": "https://yii.tw/events/42697",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "第十屆義大利設計日在台灣 | 2026",
+          "desc": "松山文創園區",
+          "date": "",
+          "url": "https://yii.tw/events/44302",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "挑戰關鍵決策",
+          "desc": "孫運璿科技‧人文紀念館",
+          "date": "",
+          "url": "https://yii.tw/events/42121",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "HUNTERxHUNTER 獵人快閃店",
+          "desc": "松山文創園區",
+          "date": "",
+          "url": "https://yii.tw/events/43731",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "松菸夜光花園 光影展 The LUMINOUS GARDENS",
+          "desc": "松山文創園區",
+          "date": "",
+          "url": "https://yii.tw/events/43335",
           "source": "小藝行事曆",
           "area": "台北"
         },
@@ -3689,38 +2935,6 @@
           "area": "台北"
         },
         {
-          "name": "城市失物招領所 LOST &amp; FOUND in THE CITY",
-          "desc": "華山文創園區",
-          "date": "",
-          "url": "https://yii.tw/events/44125",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "HUNTERxHUNTER 獵人快閃店",
-          "desc": "松山文創園區",
-          "date": "",
-          "url": "https://yii.tw/events/43731",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "噪點 NOISE",
-          "desc": "松山文創園區",
-          "date": "",
-          "url": "https://yii.tw/events/44300",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "VISION TOYS 快閃店",
-          "desc": "松山文創園區",
-          "date": "",
-          "url": "https://yii.tw/events/43732",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
           "name": "《內心風景：東南亞當代藝術展》",
           "desc": "華山文創園區",
           "date": "",
@@ -3729,18 +2943,18 @@
           "area": "台北"
         },
         {
-          "name": "Second Morning《九歲生日慶》快閃店",
-          "desc": "松山文創園區",
+          "name": "《你的城市我的家--城市鳥巢展》",
+          "desc": "華山文創園區",
           "date": "",
-          "url": "https://yii.tw/events/44112",
+          "url": "https://yii.tw/events/44269",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "親近國寶──大理石梟形小立雕",
-          "desc": "歷史文物陳列館",
+          "name": "VISION TOYS 快閃店",
+          "desc": "松山文創園區",
           "date": "",
-          "url": "https://yii.tw/events/42697",
+          "url": "https://yii.tw/events/43732",
           "source": "小藝行事曆",
           "area": "台北"
         },
@@ -3754,16 +2968,16 @@
         },
         {
           "name": "臺北表演藝術中心：專人定時導覽",
-          "desc": "05/06 | 臺北表演藝術中心",
-          "date": "05/06",
+          "desc": "05/12 | 臺北表演藝術中心",
+          "date": "05/12",
           "url": "",
           "source": "文化部",
           "area": "台北"
         },
         {
           "name": "《漂浮北藝》VR虛擬實境",
-          "desc": "05/06 | 臺北表演藝術中心",
-          "date": "05/06",
+          "desc": "05/07 | 臺北表演藝術中心",
+          "date": "05/07",
           "url": "",
           "source": "文化部",
           "area": "台北"
@@ -3806,46 +3020,6 @@
           "date": "05/27",
           "url": "",
           "source": "文化部",
-          "area": "台北"
-        },
-        {
-          "name": "📚【台北藝文】書店漫步任務：解鎖「生命靈數」命定契合對象 | 心理測驗・MBTI",
-          "desc": "06/20 | #自我成長",
-          "date": "2026.06.20 (六) 15:00 - 06",
-          "url": "https://www.accupass.com/event/2603101610294661144880",
-          "source": "Accupass",
-          "area": "台北"
-        },
-        {
-          "name": "台北南洋線 : 小印尼X尋找鮑斯印度歷史路線走讀",
-          "desc": "05/17 | #印度",
-          "date": "2026.05.17 (日) 14:00 - 17",
-          "url": "https://www.accupass.com/event/2604260715301346229689",
-          "source": "Accupass",
-          "area": "台北"
-        },
-        {
-          "name": "野生無尾熊",
-          "desc": "2026-4-16 家門口路邊就有無尾熊散步 連家裡庭院樹上也有無尾熊🐨 也太可愛了吧😍 翻譯 121 9 2 17",
-          "date": "",
-          "url": "https://www.threads.com/@77.food/post/DX1zcMbE2Tc",
-          "source": "77美食日記",
-          "area": "台北"
-        },
-        {
-          "name": "松菸夜光花園 光影展 The LUMINOUS GARDENS",
-          "desc": "松山文創園區",
-          "date": "",
-          "url": "https://yii.tw/events/43335",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "挑戰關鍵決策",
-          "desc": "孫運璿科技‧人文紀念館",
-          "date": "",
-          "url": "https://yii.tw/events/42121",
-          "source": "小藝行事曆",
           "area": "台北"
         }
       ],
@@ -3929,46 +3103,38 @@
           "url": "",
           "source": "文化部",
           "area": "台北"
-        },
-        {
-          "name": "台北偶戲館週末療癒提案：親子手作課程「QQ動物執頭偶」【𝟓月場次】",
-          "desc": "05/10 | #親子共學",
-          "date": "2026.05.10 (日) 13:30 - 05",
-          "url": "https://www.accupass.com/event/2604181336478805888100",
-          "source": "Accupass",
-          "area": "台北"
-        },
-        {
-          "name": "植物彩繪 一日體驗工作坊-2026年5月台北場",
-          "desc": "05/22 | #日本藝術家",
-          "date": "2026.05.22 (五) 13:00 - 05",
-          "url": "https://www.accupass.com/event/2604060821341325547097",
-          "source": "Accupass",
-          "area": "台北"
         }
       ],
       "市集展覽": [
         {
-          "name": "北美館- 造公園",
-          "desc": "臺北市立美術館",
+          "name": "七日談—蔡咅璟個展",
+          "desc": "當代藝術館",
           "date": "",
-          "url": "https://yii.tw/events/43933",
+          "url": "https://yii.tw/events/44374",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "中心新村｜《永不退場-從軍眷球場到全民的籃球傳奇》特展",
-          "desc": "中心新村",
+          "name": "積吶虹光｜虹心球(RHS)光譜中的我們",
+          "desc": "立法院 文化走廊",
           "date": "",
-          "url": "https://yii.tw/events/43423",
+          "url": "https://yii.tw/events/44422",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "“Professor With Profession”「藝境．職心」 2026 印度國際藝術競賽暨線上展",
-          "desc": "印度賓達斯藝術集團線上展",
+          "name": "鏡花蟲洞宴｜洪易戶外雕塑展",
+          "desc": "國立歷史博物館",
           "date": "",
-          "url": "https://yii.tw/events/43590",
+          "url": "https://yii.tw/events/43203",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "慶祝2026國定佛誕節特展 光中極尊-素人藝術的淨土變相圖展出者",
+          "desc": "佛光緣美術館台北館",
+          "date": "",
+          "url": "https://yii.tw/events/44465",
           "source": "小藝行事曆",
           "area": "台北"
         },
@@ -3981,50 +3147,42 @@
           "area": "台北"
         },
         {
-          "name": "慶祝2026國定佛誕節特展 光中極尊-素人藝術的淨土變相圖",
-          "desc": "佛光緣美術館台北館",
+          "name": "燕子之城二部曲展覽作品徵件",
+          "desc": "田園城市生活風格書店B1 / 好土書店 2.3F",
           "date": "",
-          "url": "https://yii.tw/events/44067",
+          "url": "https://yii.tw/events/44337",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "《茶脈流轉：一盞茶的濃・淡・新》",
-          "desc": "新芳春茶行",
+          "name": "動力文明的遺構——劉玹希的機械考古學",
+          "desc": "曙畫廊",
           "date": "",
-          "url": "https://yii.tw/events/43437",
+          "url": "https://yii.tw/events/44322",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "台北偶戲館「耍物仔Sńg mih-á 」物件劇場特展",
-          "desc": "台北偶戲館",
+          "name": "超現實主義：對話中的世界",
+          "desc": "臺北市立美術館",
           "date": "",
-          "url": "https://yii.tw/events/40284",
+          "url": "https://yii.tw/events/43912",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "115年度主辦特展「熊妤創藝特展｜如果影子會寫畫」",
-          "desc": "臺北市藝文推廣處一樓特展室",
+          "name": "鄉土.童心.逍遙遊〜劉宗銘 姚遠雙個展",
+          "desc": "孟焦畫坊",
           "date": "",
-          "url": "https://yii.tw/events/43608",
+          "url": "https://yii.tw/events/44036",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "李奉2026個展",
-          "desc": "帝門藝術中心",
+          "name": "【光中綻放】～第二屆美國IAPC點點色彩能量曼陀羅師生聯展",
+          "desc": "中國文化大學推廣教育部 大夏藝廊",
           "date": "",
-          "url": "https://yii.tw/events/44210",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "林東磬 創作個展【潰形誌】",
-          "desc": "金車文藝中心 臺北南京館",
-          "date": "",
-          "url": "https://yii.tw/events/43966",
+          "url": "https://yii.tw/events/44319",
           "source": "小藝行事曆",
           "area": "台北"
         },
@@ -4091,256 +3249,6 @@
           "url": "",
           "source": "文化部",
           "area": "台北"
-        },
-        {
-          "name": "(新版)【台北藝文】展覽漫步任務：挑戰解鎖「星盤」命定對象 | 心理測驗・MBTI",
-          "desc": "05/16 | #MBTI",
-          "date": "2026.05.16 (六) 15:00 - 05",
-          "url": "https://www.accupass.com/event/2604211349441712874392",
-          "source": "Accupass",
-          "area": "台北"
-        },
-        {
-          "name": "「珠璣—串起文明的珠飾」特展",
-          "desc": "北投文物館",
-          "date": "",
-          "url": "https://yii.tw/events/43363",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "「引光入畫」 ——鳳甲美術館刺繡收藏展",
-          "desc": "大安覺風藝文空間",
-          "date": "",
-          "url": "https://yii.tw/events/43865",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "慶祝2026國定佛誕節特展 光中極尊-素人藝術的淨土變相圖展出者",
-          "desc": "佛光緣美術館台北館",
-          "date": "",
-          "url": "https://yii.tw/events/44465",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "鄉土.童心.逍遙遊〜劉宗銘 姚遠雙個展",
-          "desc": "孟焦畫坊",
-          "date": "",
-          "url": "https://yii.tw/events/44036",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "第三屆中國信託當代繪畫獎",
-          "desc": "國立臺北藝術大學 關渡美術館",
-          "date": "",
-          "url": "https://yii.tw/events/43614",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "「推力──巴西聖保羅雙年展的輻輳與擴散」典藏展",
-          "desc": "國立歷史博物館",
-          "date": "",
-          "url": "https://yii.tw/events/43926",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "動力文明的遺構——劉玹希的機械考古學",
-          "desc": "曙畫廊",
-          "date": "",
-          "url": "https://yii.tw/events/44322",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "大家的歷史．歷史的大家：窯變．釉韻-范振金特展",
-          "desc": "國立歷史博物館",
-          "date": "",
-          "url": "https://yii.tw/events/43924",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "【1839當代】《SHOW88-99》薄井一議 Kazuyoshi USUI 攝影展",
-          "desc": "1839當代藝廊",
-          "date": "",
-          "url": "https://yii.tw/events/44049",
-          "source": "小藝行事曆",
-          "area": "台北"
-        }
-      ],
-      "吃喝玩樂": [
-        {
-          "name": "2026台北國際精緻酒展(夏季) | 2026夏季最大品酒盛會",
-          "desc": "08/21 | #世貿酒展",
-          "date": "2026.08.21 (五) 10:00 - 08",
-          "url": "https://www.accupass.com/event/2604290259511618877488",
-          "source": "Accupass",
-          "area": "台北"
-        },
-        {
-          "name": "【5月廚藝示範課】Bistro Party！餐酒館料理在家輕鬆做",
-          "desc": "05/24 | #春遊",
-          "date": "2026.05.24 (日) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2604020953411795345397",
-          "source": "Accupass",
-          "area": "台北"
-        },
-        {
-          "name": "本以為台北場沒有的延伸鑽石💎",
-          "desc": "本以為台北場沒有的延伸鑽石💎 會用鑽石花車代替之類的 結果沒有🤣 只好放一下上次在香港站拍的 過癮一下👍 翻譯 1,65",
-          "date": "",
-          "url": "https://www.threads.com/@ovaltine_fooddiary/post/DXCJzUdCUhf",
-          "source": "阿華田食記",
-          "area": "台北"
-        },
-        {
-          "name": "台北新開的-68℃雪漸層咖啡❄️☕️",
-          "desc": "-68℃雪漸層咖啡❄️☕️ 喝完玻璃杯可以帶走～ 翻譯",
-          "date": "",
-          "url": "https://www.threads.com/@ovaltine_fooddiary/post/DXBwT1xibP8",
-          "source": "阿華田食記",
-          "area": "台北"
-        },
-        {
-          "name": "各位趕車沒聽到11的",
-          "desc": "-11 各位趕車沒聽到11的 這不就來了！ 翻譯 306 6 18 33",
-          "date": "",
-          "url": "https://www.threads.com/@ovaltine_fooddiary/post/DW_y0wWiet3",
-          "source": "阿華田食記",
-          "area": "台北"
-        },
-        {
-          "name": "Day3的安口曲也太多！",
-          "desc": "1 Day3的安口曲也太多！ 我想聽的 很久以後 聽到了 11 也聽到了！！！ 還一起合唱手心的薔薇🌹 翻譯 1,634",
-          "date": "",
-          "url": "https://www.threads.com/@ovaltine_fooddiary/post/DW_qHhhie2a",
-          "source": "阿華田食記",
-          "area": "台北"
-        },
-        {
-          "name": "好喜歡野生袋鼠公園",
-          "desc": "野生袋鼠公園 中午去了一次 接近日落的時候又去一次 翻譯 299 10 2 54",
-          "date": "",
-          "url": "https://www.threads.com/@77.food/post/DX1wNIMEzWH",
-          "source": "77美食日記",
-          "area": "台北"
-        },
-        {
-          "name": "不容反駁 最可愛的鄰居",
-          "desc": "翻譯 www.instagram.com Instagram 3",
-          "date": "",
-          "url": "https://www.threads.com/@77.food/post/DXMK66Pk1Ht",
-          "source": "77美食日記",
-          "area": "台北"
-        },
-        {
-          "name": "來澳洲看無尾熊",
-          "desc": "-4-14 來澳洲看無尾熊 意外獲得國中畢業紀念冊風的照片😍 翻譯 137 9 22",
-          "date": "",
-          "url": "https://www.threads.com/@77.food/post/DXMN491E3Ur",
-          "source": "77美食日記",
-          "area": "台北"
-        },
-        {
-          "name": "在台灣吃到泰國老闆製作的道地糖絲捲餅🇹🇭",
-          "desc": "國老闆製作的道地糖絲捲餅🇹🇭 想吃一定要早點去買 今天14:40去 幸運買到最後2份 翻譯 52 3 3 21",
-          "date": "",
-          "url": "https://www.threads.com/@77.food/post/DXItkgqEzQj",
-          "source": "77美食日記",
-          "area": "台北"
-        },
-        {
-          "name": "2025年3月- 2026年3月喝完的抹茶紀錄📓",
-          "desc": "113 14 1 7",
-          "date": "",
-          "url": "https://www.threads.com/@taipeifoodie/post/DXqABoeCbyQ",
-          "source": "台北美食家",
-          "area": "台北"
-        },
-        {
-          "name": "最近在泰山吃到一間很有家常感的小店",
-          "desc": "排骨蛋炒飯真的必點，排骨厚又嫩 紅油抄手也很香！！每一道都好喜歡 是那種會想再回訪的店🤤 翻譯 10 2",
-          "date": "",
-          "url": "https://www.threads.com/@cindy._foodie/post/DV28NojE5vr",
-          "source": "Cindy美食",
-          "area": "台北"
-        },
-        {
-          "name": "大家都害怕當年阪神虎的都市傳說又出現",
-          "desc": "怕當年阪神虎的都市傳說又出現 今年都很認真的膜拜肯德基爺爺 畢竟到了關鍵時刻 能拜就拜，能求就求才是正港台灣人😂 我們也",
-          "date": "",
-          "url": "https://www.threads.com/@cindy._foodie/post/DVffdA4CItd",
-          "source": "Cindy美食",
-          "area": "台北"
-        },
-        {
-          "name": "超愛的信義宵夜",
-          "desc": "26-2-25 超愛的信義宵夜 而且白色情人節雙人套餐，只要399超級划算！😍 翻譯 80 1 2 60",
-          "date": "",
-          "url": "https://www.threads.com/@cindy._foodie/post/DVLhmOhk4aM",
-          "source": "Cindy美食",
-          "area": "台北"
-        },
-        {
-          "name": "朝聖柯南動畫場景：和歌山白濱",
-          "desc": "聖柯南動畫場景：和歌山白濱 圖一：三段壁 圖二：三段壁洞窟 圖三：千疊敷 圖四：圓月島 團員沒人懂我在幹麻，沒關係脆上的",
-          "date": "",
-          "url": "https://www.threads.com/@tenjochou/post/DWRQiMNEqqO",
-          "source": "周花花甲飽沒",
-          "area": "台北"
-        },
-        {
-          "name": "好想要這個鑰匙圈但我找不到。",
-          "desc": "翻譯",
-          "date": "",
-          "url": "https://www.threads.com/@tenjochou/post/DWRQuaiEsoQ",
-          "source": "周花花甲飽沒",
-          "area": "台北"
-        },
-        {
-          "name": "此生遇過最愛台灣的日本老闆！",
-          "desc": "11:30-14:00",
-          "date": "",
-          "url": "https://www.threads.com/@tenjochou/post/DUKedD9Eh2j",
-          "source": "周花花甲飽沒",
-          "area": "台北"
-        },
-        {
-          "name": "威美早餐店",
-          "desc": "2026-1-24 「我再ven一次，有沒有人要跟我分一份四片大總匯」 店內幾乎每桌一份四片大總匯、豬排蛋餅，不用ve",
-          "date": "",
-          "url": "https://www.threads.com/@tenjochou/post/DUKenHeEun1",
-          "source": "周花花甲飽沒",
-          "area": "台北"
-        },
-        {
-          "name": "桃園機場第二航廈",
-          "desc": "15小時 來換龍騰餐，居然裡面最好的是珍奶 21 1 2",
-          "date": "",
-          "url": "https://www.threads.com/@nash_gogogo/post/DX7wRgKEyMp",
-          "source": "Nash神之領域",
-          "area": "台北"
-        },
-        {
-          "name": "蘆洲大廟口切仔麵",
-          "desc": "02 2848 4795 06:00–15:30 新北市蘆洲區得勝街6號 翻譯 35 30",
-          "date": "",
-          "url": "https://www.threads.com/@nash_gogogo/post/DX3cLQNidTV",
-          "source": "Nash神之領域",
-          "area": "台北"
-        },
-        {
-          "name": "秦朝老碗麵（中和民德店）",
-          "desc": "新北市中和區民德路105號 營業時間：11:00–",
-          "date": "",
-          "url": "https://www.threads.com/@nash_gogogo/post/DX1zkKzjrAR",
-          "source": "Nash神之領域",
-          "area": "台北"
         }
       ],
       "戶外踏青": [
@@ -4385,14 +3293,6 @@
           "area": "全台"
         },
         {
-          "name": "【我是新手】我是新手，我想去聖母登山步道-抹茶山",
-          "desc": "健行筆記活動",
-          "date": "",
-          "url": "https://hiking.biji.co/index.php?q=news&act=info&id=21285",
-          "source": "健行筆記",
-          "area": "全台"
-        },
-        {
           "name": "【越野跑】登山者為什麼開始跑步？台灣越野跑爆發的真實原因",
           "desc": "健行筆記活動",
           "date": "",
@@ -4401,20 +3301,12 @@
           "area": "全台"
         },
         {
-          "name": "樹鶯縱走15公里 環台北天際線進階村 06/27",
-          "desc": "06/27 | #登山",
-          "date": "2026.06.27 (六) 08:00 - 16",
-          "url": "https://www.accupass.com/event/2604030938204120414050",
-          "source": "Accupass",
-          "area": "台北"
-        },
-        {
-          "name": "台北 大稻埕｜ 喀什米爾七大湖．高山健行 分享會 x 台北 小樹屋",
-          "desc": "05/24 | #喀什米爾七大湖",
-          "date": "2026.05.24 (日) 13:00 - 15",
-          "url": "https://www.accupass.com/event/2604270726131422399032",
-          "source": "Accupass",
-          "area": "台北"
+          "name": "小編實測 Columbia KONOS OutDry：極彈緩震與零滲透防水，郊山全地形應變的最佳解答",
+          "desc": "健行筆記活動",
+          "date": "",
+          "url": "https://hiking.biji.co/index.php?q=news&act=info&id=25153",
+          "source": "健行筆記",
+          "area": "全台"
         }
       ]
     },
@@ -4483,30 +3375,6 @@
           "url": "",
           "source": "文化部",
           "area": "宜蘭"
-        },
-        {
-          "name": "「一卡在手，rhythm不卡」-音樂教學神器系列-高階",
-          "desc": "05/23 | #教學",
-          "date": "2026.05.23 (六) 15:30 - 16",
-          "url": "https://www.accupass.com/event/2604270148071082014606",
-          "source": "Accupass",
-          "area": "宜蘭"
-        },
-        {
-          "name": "【小小音樂大師課】低音管 × 乞丐王子｜台北",
-          "desc": "06/13 | #幼兒音樂啟蒙",
-          "date": "2026.06.13 (六) 11:00 - 06",
-          "url": "https://www.accupass.com/event/2603230748508673749750",
-          "source": "Accupass",
-          "area": "宜蘭"
-        },
-        {
-          "name": "冬山【旺米同樂町】互動式音樂劇＋食農市集＋親子體驗活動",
-          "desc": "05/09 | #食農教育",
-          "date": "2026.05.09 (六) 13:00 - 17",
-          "url": "https://www.accupass.com/event/2604170543051202839116",
-          "source": "Accupass",
-          "area": "宜蘭"
         }
       ],
       "文青咖啡": [
@@ -4516,22 +3384,6 @@
           "date": "09/14",
           "url": "",
           "source": "文化部",
-          "area": "宜蘭"
-        },
-        {
-          "name": "✦ 走讀宜蘭｜𝟐𝟎𝟐𝟔宜.ᐟ 蘭人市集 ✦",
-          "desc": "05/23 | ",
-          "date": "2026.05.23 (六) 10:00 - 05",
-          "url": "https://www.accupass.com/event/2604281222371873219964",
-          "source": "Accupass",
-          "area": "宜蘭"
-        },
-        {
-          "name": "【暗夜踅神 ⟡ 宜蘭大拜拜｜丙午】街角游擊文化走讀系列",
-          "desc": "05/09 | #民俗文化",
-          "date": "2026.05.09 (六) 17:00 - 19",
-          "url": "https://www.accupass.com/event/2604200542221120899392",
-          "source": "Accupass",
           "area": "宜蘭"
         }
       ],
@@ -4558,22 +3410,6 @@
           "date": "06/28",
           "url": "",
           "source": "文化部",
-          "area": "宜蘭"
-        },
-        {
-          "name": "2026 玩具復活節—宜蘭場",
-          "desc": "05/16 | #玩具DIY課程",
-          "date": "2026.05.16 (六) 09:00 - 11",
-          "url": "https://www.accupass.com/event/2603120808461323290889",
-          "source": "Accupass",
-          "area": "宜蘭"
-        },
-        {
-          "name": "玩．劇場—親子工作坊：偶戲篇",
-          "desc": "07/13 | #暑假",
-          "date": "2026.07.13 (一) 10:00 - 07",
-          "url": "https://www.accupass.com/event/2603250343118664321160",
-          "source": "Accupass",
           "area": "宜蘭"
         }
       ],
@@ -4616,58 +3452,6 @@
           "date": "01/01",
           "url": "",
           "source": "文化部",
-          "area": "宜蘭"
-        }
-      ],
-      "吃喝玩樂": [
-        {
-          "name": "IN東門·美食品旅 05/1７",
-          "desc": "05/17 | #銀翼餐廳",
-          "date": "2026.05.17 (日) 09:30 - 12",
-          "url": "https://www.accupass.com/event/2604290040101145991061",
-          "source": "Accupass",
-          "area": "宜蘭"
-        },
-        {
-          "name": "私廚饗宴&品酒-初夏限定｜ 北歐晨光松露雙重奏 × 橙汁脆皮鴨胸(週末場)",
-          "desc": "05/10 | #嵌入式烤箱",
-          "date": "2026.05.10 (日) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2604011057105617975680",
-          "source": "Accupass",
-          "area": "宜蘭"
-        },
-        {
-          "name": "IN東門·美食品旅 05/1０",
-          "desc": "05/10 | #銀翼餐廳",
-          "date": "2026.05.10 (日) 09:30 - 12",
-          "url": "https://www.accupass.com/event/2604010907553929150000",
-          "source": "Accupass",
-          "area": "宜蘭"
-        },
-        {
-          "name": "私廚饗宴&品酒-初夏限定｜ 北歐晨光松露雙重奏 × 橙汁脆皮鴨胸(週五場)",
-          "desc": "05/08 | #嵌入式烤箱",
-          "date": "2026.05.08 (五) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2603260749531180241858",
-          "source": "Accupass",
-          "area": "宜蘭"
-        },
-        {
-          "name": "【5月廚藝示範課】Bistro Party！餐酒館料理在家輕鬆做",
-          "desc": "05/24 | #春遊",
-          "date": "2026.05.24 (日) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2604020953411795345397",
-          "source": "Accupass",
-          "area": "宜蘭"
-        }
-      ],
-      "戶外踏青": [
-        {
-          "name": "【台灣抹茶山】宜蘭 聖母登山步道 / 臺灣の抹茶冰淇淋山┃山行旅",
-          "desc": "05/21 | #抹茶山",
-          "date": "2026.05.21 (四) 09:05 - 16",
-          "url": "https://www.accupass.com/event/2604240951472052672979",
-          "source": "Accupass",
           "area": "宜蘭"
         }
       ]
@@ -4773,6 +3557,14 @@
           "area": "雲林"
         },
         {
+          "name": "2026雲林健康嘉年華 土庫鄉親日：免報名！母親節健走活動登場（5/10）",
+          "desc": "05/10 | 本活動於母親節當日溫馨登場，邀請民眾免報名直接現場參與。內容包含5.5公里的環狀健走及四大補給站，並設置七大運動闖關、餐車市集與拍貼機。舞台區則準備了精彩表演與",
+          "date": "05/10",
+          "url": "https://strolltimes.com/events/yunlin/260506042354",
+          "source": "漫步時光",
+          "area": "雲林"
+        },
+        {
           "name": "2026年1月【雲林布袋戲館-「掌演乾坤」常設展】",
           "desc": "01/02 | 雲林布袋戲館",
           "date": "01/02",
@@ -4784,14 +3576,6 @@
           "name": "2026年1月【雲林布袋戲館-《傳藝之魂‧黃海岱與戲偶之道》特展】",
           "desc": "01/02 | 雲林布袋戲館",
           "date": "01/02",
-          "url": "",
-          "source": "文化部",
-          "area": "雲林"
-        },
-        {
-          "name": "2026年3月【雲林縣北港文化中心-十二節氣聯歡】",
-          "desc": "03/07 | 北港文化中心",
-          "date": "03/07",
           "url": "",
           "source": "文化部",
           "area": "雲林"
@@ -4899,9 +3683,17 @@
           "area": "新北"
         },
         {
+          "name": "【新北市立圖書館新莊西盛分館】115年4月~6月「小大讀書會」 說故事活動",
+          "desc": "04/09 | 新北市立圖書館新莊西盛分館",
+          "date": "04/09",
+          "url": "",
+          "source": "文化部",
+          "area": "新北"
+        },
+        {
           "name": "直接行動",
-          "desc": "05/06 | 國家電影及視聽文化中心-大影格",
-          "date": "05/06",
+          "desc": "05/09 | 國家電影及視聽文化中心-大影格",
+          "date": "05/09",
           "url": "",
           "source": "文化部",
           "area": "新北"
@@ -4945,22 +3737,6 @@
           "url": "",
           "source": "文化部",
           "area": "新北"
-        },
-        {
-          "name": "陌生短片輯#3：紀念西川智也",
-          "desc": "05/09 | 國家電影及視聽文化中心-小影格",
-          "date": "05/09",
-          "url": "",
-          "source": "文化部",
-          "area": "新北"
-        },
-        {
-          "name": "【職場參訪體驗】新北市立十三行博物館",
-          "desc": "05/15 | #歷史",
-          "date": "2026.05.15 (五) 13:00 - 16",
-          "url": "https://www.accupass.com/event/2604070654029691271330",
-          "source": "Accupass",
-          "area": "新北"
         }
       ],
       "親子同樂": [
@@ -4989,51 +3765,11 @@
           "area": "新北"
         },
         {
-          "name": "汐止區｜美力開展・全能訓練工作坊｜115新北市女性常態運動計畫",
-          "desc": "05/13 | #新北市體育局",
-          "date": "2026.05.13 (三) 19:30 - 08",
-          "url": "https://www.accupass.com/event/2604160702273626077480",
-          "source": "Accupass",
-          "area": "新北"
-        },
-        {
-          "name": "永和區｜美力進階・體能訓練工作坊｜115新北市女性常態運動計畫",
-          "desc": "05/12 | #女性常態運動計畫",
-          "date": "2026.05.12 (二) 19:30 - 08",
-          "url": "https://www.accupass.com/event/2604151049313224097700",
-          "source": "Accupass",
-          "area": "新北"
-        },
-        {
-          "name": "新店區｜美力養成・運動實踐工作坊｜115新北市女性常態運動計畫",
-          "desc": "05/20 | #女性常態運動計畫",
-          "date": "2026.05.20 (三) 09:30 - 08",
-          "url": "https://www.accupass.com/event/2604230154517773970880",
-          "source": "Accupass",
-          "area": "新北"
-        },
-        {
-          "name": "林口區｜美力光采・核心鍛鍊工作坊｜115新北市女性常態運動計畫",
-          "desc": "05/11 | #女性常態運動計畫",
-          "date": "2026.05.11 (一) 19:00 - 08",
-          "url": "https://www.accupass.com/event/2604160633599396186200",
-          "source": "Accupass",
-          "area": "新北"
-        },
-        {
-          "name": "淡水區｜美力賦能：核心美學工作坊｜115新北市女性常態運動計畫",
-          "desc": "05/12 | #女性常態運動計畫",
-          "date": "2026.05.12 (二) 19:30 - 08",
-          "url": "https://www.accupass.com/event/2604160610401500177137",
-          "source": "Accupass",
-          "area": "新北"
-        },
-        {
-          "name": "【5月職場適應團體】手作黏土紓壓：用雙手捏出身心的安定感",
-          "desc": "05/23 | ",
-          "date": "2026.05.23 (六) 09:00 - 12",
-          "url": "https://www.accupass.com/event/2604290730374867388420",
-          "source": "Accupass",
+          "name": "積吶虹光｜RHS 圓形光譜 (共存與後極化感知倫理觀看模型)",
+          "desc": "05/01 |  新北市立圖書館．樹林分館展覽室3樓",
+          "date": "05/01",
+          "url": "",
+          "source": "文化部",
           "area": "新北"
         }
       ],
@@ -5109,24 +3845,6 @@
           "url": "",
           "source": "文化部",
           "area": "新北"
-        },
-        {
-          "name": "源起 Tranan 德拉楠｜小米溪畔市集",
-          "desc": "06/06 | #泰雅族",
-          "date": "2026.06.06 (六) 11:00 - 15",
-          "url": "https://www.accupass.com/event/2604281120461059540905",
-          "source": "Accupass",
-          "area": "新北"
-        }
-      ],
-      "吃喝玩樂": [
-        {
-          "name": "2026新北客家山河藝遊×船長野餐派對",
-          "desc": "05/16 | #野餐",
-          "date": "2026.05.16 (六) 14:00 - 20",
-          "url": "https://www.accupass.com/event/2604220349016992130240",
-          "source": "Accupass",
-          "area": "新北"
         }
       ],
       "戶外踏青": [
@@ -5155,18 +3873,18 @@
           "area": "全台"
         },
         {
-          "name": "【我是新手】我是新手，我想去聖母登山步道-抹茶山",
-          "desc": "健行筆記活動",
-          "date": "",
-          "url": "https://hiking.biji.co/index.php?q=news&act=info&id=21285",
-          "source": "健行筆記",
-          "area": "全台"
-        },
-        {
           "name": "【越野跑】登山者為什麼開始跑步？台灣越野跑爆發的真實原因",
           "desc": "健行筆記活動",
           "date": "",
           "url": "https://hiking.biji.co/index.php?q=news&act=info&id=25168",
+          "source": "健行筆記",
+          "area": "全台"
+        },
+        {
+          "name": "小編實測 Columbia KONOS OutDry：極彈緩震與零滲透防水，郊山全地形應變的最佳解答",
+          "desc": "健行筆記活動",
+          "date": "",
+          "url": "https://hiking.biji.co/index.php?q=news&act=info&id=25153",
           "source": "健行筆記",
           "area": "全台"
         }
@@ -5404,16 +4122,6 @@
           "source": "文化部",
           "area": "苗栗"
         }
-      ],
-      "吃喝玩樂": [
-        {
-          "name": "原來7-11也有即期品專區",
-          "desc": "9 原來7-11也有即期品專區 5折感覺蠻划算的👍🏻👍🏻 翻譯 16 1 2",
-          "date": "",
-          "url": "https://www.threads.com/@vivaweiblog/post/DX1BBWHAbPI",
-          "source": "瑋瑋美食萬歲",
-          "area": "苗栗"
-        }
       ]
     },
     "桃園": {
@@ -5547,22 +4255,6 @@
           "url": "",
           "source": "文化部",
           "area": "桃園"
-        },
-        {
-          "name": "〚永續發展〛水與川的回聲—大漢溪與泰雅族、阿美族的生命故事—走讀活動",
-          "desc": "05/16 | #聯合國永續發展指標",
-          "date": "2026.05.16 (六) 09:30 - 12",
-          "url": "https://www.accupass.com/event/2603200352141547970180",
-          "source": "Accupass",
-          "area": "桃園"
-        },
-        {
-          "name": "〚專家導覽〛行入陳澄波畫筆中ê臺灣",
-          "desc": "05/16 | #導覽",
-          "date": "2026.05.16 (六) 14:00 - 15",
-          "url": "https://www.accupass.com/event/2603030659131138598263",
-          "source": "Accupass",
-          "area": "桃園"
         }
       ],
       "親子同樂": [
@@ -5596,102 +4288,6 @@
           "date": "06/13",
           "url": "",
           "source": "文化部",
-          "area": "桃園"
-        },
-        {
-          "name": "點亮故事力：115年桃園市立圖書館說故事培訓課程",
-          "desc": "05/16 | #繪本說故事",
-          "date": "2026.05.16 (六) 09:00 - 06",
-          "url": "https://www.accupass.com/event/2604030917561952610346",
-          "source": "Accupass",
-          "area": "桃園"
-        },
-        {
-          "name": "【大園場】桃仔園電影趴，來咱社區看電影：《那裡魔神仔很多你還要回去》＋《跳房子》",
-          "desc": "05/15 | #家庭關係",
-          "date": "2026.05.15 (五) 12:30 - 14",
-          "url": "https://www.accupass.com/event/2601210827224084471760",
-          "source": "Accupass",
-          "area": "桃園"
-        },
-        {
-          "name": "2026童演童語-故事DIY-《友誼拉拉手：我們都是超級隊友》",
-          "desc": "08/25 | #台灣布袋戲",
-          "date": "2026.08.25 (二) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2604161849551233866544",
-          "source": "Accupass",
-          "area": "桃園"
-        },
-        {
-          "name": "2026童演童語-故事DIY-《同理心眼鏡：我看見你的超能力》",
-          "desc": "07/06 | #台灣布袋戲",
-          "date": "2026.07.06 (一) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2604161835281289372763",
-          "source": "Accupass",
-          "area": "桃園"
-        },
-        {
-          "name": "2026童演童語-故事DIY-《智慧地圖包：做決定我最勇敢》",
-          "desc": "09/26 | #台灣布袋戲",
-          "date": "2026.09.26 (六) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2604161852431123538314",
-          "source": "Accupass",
-          "area": "桃園"
-        },
-        {
-          "name": "2026童演童語-故事DIY-《冷靜守護戰：奪回小火龍的平靜之力》",
-          "desc": "06/28 | #台灣布袋戲",
-          "date": "2026.06.28 (日) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2604161831334486946410",
-          "source": "Accupass",
-          "area": "桃園"
-        },
-        {
-          "name": "2026童演童語-兒童夏令營《小小掌中特攻隊：解決衝突的聲音劇場》",
-          "desc": "08/28 | #台灣布袋戲",
-          "date": "2026.08.28 (五) 13:00 - 16",
-          "url": "https://www.accupass.com/event/2604161908429542849460",
-          "source": "Accupass",
-          "area": "桃園"
-        },
-        {
-          "name": "2026童演童語-兒童夏令營《英雄心靈密碼：我的英雄我配音》",
-          "desc": "07/16 | #台灣布袋戲",
-          "date": "2026.07.16 (四) 13:00 - 16",
-          "url": "https://www.accupass.com/event/2604161902231453047248",
-          "source": "Accupass",
-          "area": "桃園"
-        },
-        {
-          "name": "於心中展演 — 情緒讀劇工作坊",
-          "desc": "05/17 | #文本閱讀",
-          "date": "2026.05.17 (日) 10:00 - 13",
-          "url": "https://www.accupass.com/event/2603280757148704070510",
-          "source": "Accupass",
-          "area": "桃園"
-        },
-        {
-          "name": "2026童演童語-故事DIY-《心情轉轉盤：今天我是什麼顏色？》",
-          "desc": "05/31 | #台灣布袋戲",
-          "date": "2026.05.31 (日) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2604161823408830225060",
-          "source": "Accupass",
-          "area": "桃園"
-        },
-        {
-          "name": "2026 玩具復活節—桃園場",
-          "desc": "05/23 | #玩具DIY課程",
-          "date": "2026.05.23 (六) 09:00 - 11",
-          "url": "https://www.accupass.com/event/2603120753231607604647",
-          "source": "Accupass",
-          "area": "桃園"
-        },
-        {
-          "name": "【探索雲端繪本島04】為什麼大人常常說「不行」？/Sandy姐姐說故事｜SEL社會情緒學習｜兒童繪本",
-          "desc": "05/06 | #親子繪本說故事",
-          "date": "2026.05.06 (三) 20:00 - 05",
-          "url": "https://www.accupass.com/event/2605040841191878185140",
-          "source": "Accupass",
           "area": "桃園"
         }
       ],
@@ -5758,48 +4354,6 @@
           "date": "01/01",
           "url": "",
           "source": "文化部",
-          "area": "桃園"
-        },
-        {
-          "name": "\\ 你各位也期待淡江大橋通車嗎？從桃園西濱過去很快就到淡水了！ /",
-          "desc": "新北市特別新闢「988板橋快線」、「989機場快線」、「990機場快線」及「115淡水八里觀光公車」4條公車路線，5月",
-          "date": "",
-          "url": "https://www.threads.com/@taoyuan_how/post/DX845iLFDd7",
-          "source": "桃園號",
-          "area": "桃園"
-        },
-        {
-          "name": "\\ 原來這張海報是檢疫犬看醫生時的生氣表情呀！😆 /",
-          "desc": "桃園機場的檢疫海報很難不去注意到，檢疫犬目光兇狠，EVA風格文字排版加上諧音梗「I 吸 YOU」標題，成功提醒旅客。防",
-          "date": "",
-          "url": "https://www.threads.com/@taoyuan_how/post/DX8tCaDFPVV",
-          "source": "桃園號",
-          "area": "桃園"
-        }
-      ],
-      "吃喝玩樂": [
-        {
-          "name": "曼谷不缺飯店，甚至可以說選擇多到想要每天換一間飯店都可以，從百年大飯店到設計精品旅館，從昭披耶河畔到",
-          "desc": "從昭披耶河畔到素坤逸商圈都有，此次入住的第一間是2025年9月才正式開業的全新飯店，位置剛好卡在 Phrom Phong",
-          "date": "",
-          "url": "https://www.threads.com/@viviyublog/post/DX9BCU_EdUH",
-          "source": "VIVI桃園美食",
-          "area": "桃園"
-        },
-        {
-          "name": "詳細圖文版： viviyu.com/archi…",
-          "desc": "/archi… 翻譯 viviyu.com 2025全新開幕！體驗泰式美學與頂級享受~曼谷Phrom Phong站旁奢華",
-          "date": "",
-          "url": "https://www.threads.com/@viviyublog/post/DX9BC-ykdbU",
-          "source": "VIVI桃園美食",
-          "area": "桃園"
-        },
-        {
-          "name": "煙燻鮮奶油咖啡",
-          "desc": "煙燻鮮奶油咖啡 這杯咖啡上桌時會有個透明盅蓋著咖啡，送至桌邊時再讓煙燻的氣味飄散，香氣十足真的很有梗的飲料! 入口時卻",
-          "date": "",
-          "url": "https://www.threads.com/@viviyublog/post/DX8TyC-ERnw",
-          "source": "VIVI桃園美食",
           "area": "桃園"
         }
       ]
@@ -6099,88 +4653,6 @@
           "url": "",
           "source": "文化部",
           "area": "嘉義"
-        },
-        {
-          "name": "2026嘉義民族管弦樂團《聽說・高粱》品酒音樂會",
-          "desc": "05/16 | #音樂會",
-          "date": "2026.05.16 (六) 19:30 - 20",
-          "url": "https://www.accupass.com/event/2604061223321127542500",
-          "source": "Accupass",
-          "area": "嘉義"
-        },
-        {
-          "name": "2026嘉義民族管弦樂團《聽說・高粱》品酒工作坊",
-          "desc": "05/23 | #高粱",
-          "date": "2026.05.23 (六) 19:30 - 20",
-          "url": "https://www.accupass.com/event/2604061206511459151115",
-          "source": "Accupass",
-          "area": "嘉義"
-        },
-        {
-          "name": "《文森梵谷的星夜》~The Colors of Sound~",
-          "desc": "06/12 | #現場演唱",
-          "date": "2026.06.12 (五) 18:00 - 21",
-          "url": "https://www.accupass.com/event/2604031144251463658478",
-          "source": "Accupass",
-          "area": "嘉義"
-        },
-        {
-          "name": "我的油畫8堂課~古典篇",
-          "desc": "08/04 | #古典油畫",
-          "date": "2026.08.04 (二) 19:00 - 08",
-          "url": "https://www.accupass.com/event/2604301149457547392760",
-          "source": "Accupass",
-          "area": "嘉義"
-        },
-        {
-          "name": "2026《獨自跳舞 Solo Dance》第三屆舞蹈創作平台演出",
-          "desc": "05/29 | #華山拱廳",
-          "date": "2026.05.29 (五) 19:00 - 05",
-          "url": "https://www.accupass.com/event/2603180324051775023880",
-          "source": "Accupass",
-          "area": "嘉義"
-        }
-      ],
-      "文青咖啡": [
-        {
-          "name": "誠品書店嘉義市立美術館限定店｜【誠品故事時間】噴火龍來啦！情緒怪獸出任務",
-          "desc": "05/09 | #說故事",
-          "date": "2026.05.09 (六) 15:00 - 16",
-          "url": "https://www.accupass.com/event/2604010144385727099150",
-          "source": "Accupass",
-          "area": "嘉義"
-        },
-        {
-          "name": "風土、城市與藝術：「大肚之盟：山海間的物際外交」｜策展人導覽",
-          "desc": "05/17 | ",
-          "date": "2026.05.17 (日) 11:00 - 12",
-          "url": "https://www.accupass.com/event/2604291030431748415374",
-          "source": "Accupass",
-          "area": "嘉義"
-        },
-        {
-          "name": "誠品書店新港培桂堂限定店｜【誠品繪本公寓故事時間】《貓咪看家》——跟著町田尚子的貓咪去旅行",
-          "desc": "06/27 | #說故事",
-          "date": "2026.06.27 (六) 15:00 - 16",
-          "url": "https://www.accupass.com/event/2604270546051647053275",
-          "source": "Accupass",
-          "area": "嘉義"
-        },
-        {
-          "name": "我的油畫8堂課~花卉篇",
-          "desc": "07/07 | #台北油畫課程",
-          "date": "2026.07.07 (二) 19:00 - 07",
-          "url": "https://www.accupass.com/event/2604300807531811923206",
-          "source": "Accupass",
-          "area": "嘉義"
-        },
-        {
-          "name": "誠品書店新港培桂堂限定店｜【誠品繪本公寓說故事時間】 開啟加納果林的貓冒險— 《小偷貓老大當保母》",
-          "desc": "05/16 | #小天下",
-          "date": "2026.05.16 (六) 15:00 - 16",
-          "url": "https://www.accupass.com/event/2603311009337762816220",
-          "source": "Accupass",
-          "area": "嘉義"
         }
       ],
       "親子同樂": [
@@ -6190,14 +4662,6 @@
           "date": "05/16",
           "url": "",
           "source": "文化部",
-          "area": "嘉義"
-        },
-        {
-          "name": "百年木屋裡的活字印刷體驗（含飲品+霜淇淋+工作坊）｜5月場次",
-          "desc": "05/23 | #嘉義木屋",
-          "date": "2026.05.23 (六) 18:30 - 20",
-          "url": "https://www.accupass.com/event/2604160420018008735920",
-          "source": "Accupass",
           "area": "嘉義"
         }
       ],
@@ -6264,34 +4728,6 @@
           "date": "01/31",
           "url": "",
           "source": "文化部",
-          "area": "嘉義"
-        },
-        {
-          "name": "風土、城市與藝術：「大肚之盟：山海間的物際外交」展覽座談",
-          "desc": "05/17 | ",
-          "date": "2026.05.17 (日) 14:00 - 16",
-          "url": "https://www.accupass.com/event/2604260513579054159160",
-          "source": "Accupass",
-          "area": "嘉義"
-        }
-      ],
-      "吃喝玩樂": [
-        {
-          "name": "2026.05.23 (六) 11:45 - 05.24 (日) 18:00",
-          "desc": "05/23 | #古早味美食",
-          "date": "2026.05.23 (六) 11:45 - 05",
-          "url": "https://www.accupass.com/event/2603031329298960792200",
-          "source": "Accupass",
-          "area": "嘉義"
-        }
-      ],
-      "戶外踏青": [
-        {
-          "name": "從田間到雲端~西部農場的社群經營心法",
-          "desc": "06/27 | #短影音內容策略",
-          "date": "2026.06.27 (六) 13:30 - 16",
-          "url": "https://www.accupass.com/event/2604081442052042981318",
-          "source": "Accupass",
           "area": "嘉義"
         }
       ]
@@ -6388,6 +4824,14 @@
           "name": "「藍調時光市集·慢語時光」海島音樂會",
           "desc": "05/01 | 北竿鄉（連江縣）=",
           "date": "05/01",
+          "url": "",
+          "source": "文化部",
+          "area": "連江"
+        },
+        {
+          "name": "經典民歌音樂會《微風往事》",
+          "desc": "05/09 | 馬祖梅石藝文中心",
+          "date": "05/09",
           "url": "",
           "source": "文化部",
           "area": "連江"
