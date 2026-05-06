@@ -20,7 +20,8 @@
           "accupass_cache.json",
           "restaurant_cache.json",
           "restaurant_db.json",
-          "surprise_cache.json"
+          "surprise_cache.json",
+          "group_dining_cache.json"
         ]
       }
     }

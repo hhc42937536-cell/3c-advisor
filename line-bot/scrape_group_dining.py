@@ -34,8 +34,27 @@ sys.stdout = __import__("io").TextIOWrapper(sys.stdout.buffer, encoding="utf-8",
 _DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT = os.path.join(_DIR, "group_dining_cache.json")
 
-# ── 城市清單 ─────────────────────────────────────────────
-CITIES = ["台北", "新北", "桃園", "新竹", "台中", "台南", "高雄", "嘉義", "宜蘭", "花蓮"]
+# ── 城市清單（ifoodie 使用的名稱 → 對應的短名，存檔用）────────────
+# 格式：(ifoodie查詢名, 存檔key)
+CITIES: list[tuple[str, str]] = [
+    ("台北",   "台北"),
+    ("新北市", "新北"),
+    ("桃園",   "桃園"),
+    ("新竹",   "新竹"),
+    ("苗栗",   "苗栗"),
+    ("台中",   "台中"),
+    ("彰化",   "彰化"),
+    ("南投",   "南投"),
+    ("雲林",   "雲林"),
+    ("嘉義",   "嘉義"),
+    ("台南",   "台南"),
+    ("高雄",   "高雄"),
+    ("屏東",   "屏東"),
+    ("宜蘭",   "宜蘭"),
+    ("花蓮",   "花蓮"),
+    ("台東",   "台東"),
+    ("基隆",   "基隆"),
+]
 
 # ── 類型 → ifoodie 分類關鍵字 ────────────────────────────
 CATEGORY_MAP: dict[str, str] = {
@@ -142,17 +161,17 @@ def main() -> None:
     by_city: dict[str, dict[str, list]] = existing.get("by_city", {})
     total = 0
 
-    for city in CITIES:
-        if city not in by_city:
-            by_city[city] = {}
-        print(f"\n【{city}】")
+    for ifoodie_city, save_key in CITIES:
+        if save_key not in by_city:
+            by_city[save_key] = {}
+        print(f"\n【{save_key}（查詢名：{ifoodie_city}）】")
         for dining_type, ifoodie_cat in CATEGORY_MAP.items():
             print(f"  {dining_type} ({ifoodie_cat}) ...", end=" ", flush=True)
-            rests = scrape_ifoodie(city, ifoodie_cat)
-            by_city[city][dining_type] = rests
+            rests = scrape_ifoodie(ifoodie_city, ifoodie_cat)
+            by_city[save_key][dining_type] = rests
             print(f"{len(rests)} 筆")
             total += len(rests)
-            time.sleep(0.8)  # polite delay
+            time.sleep(1.0)  # polite delay
 
     output = {
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
