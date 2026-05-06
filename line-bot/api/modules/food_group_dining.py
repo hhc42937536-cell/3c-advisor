@@ -126,6 +126,21 @@ def _load_city_pool(city: str) -> list:
         return []
 
 
+def _load_group_dining_cache(city: str, dining_type: str) -> list[dict]:
+    """Load pre-scraped ifoodie data for city × dining_type (group_dining_cache.json)."""
+    try:
+        here = _os.path.dirname(_os.path.abspath(__file__))
+        cache_path = _os.path.join(here, "..", "..", "group_dining_cache.json")
+        with open(cache_path, encoding="utf-8") as f:
+            cache = _json.load(f)
+        city_data = cache.get("by_city", {})
+        # 直接命中或前2字命中
+        entries = city_data.get(city) or city_data.get(city[:2]) or {}
+        return entries.get(dining_type, [])
+    except Exception:
+        return []
+
+
 def _make_restaurant_card(r: dict, color: str, tag: str = "") -> dict:
     """Build a Flex bubble card for a single restaurant."""
     name = r.get("name", "")
@@ -137,6 +152,7 @@ def _make_restaurant_card(r: dict, color: str, tag: str = "") -> dict:
     lat, lng = r.get("lat"), r.get("lng")
     desc = r.get("desc", "")
 
+    ifoodie_url = r.get("ifoodie_url", "")
     if place_id:
         nav_url = f"https://www.google.com/maps/place/?q=place_id:{place_id}"
     elif lat and lng:
@@ -144,6 +160,8 @@ def _make_restaurant_card(r: dict, color: str, tag: str = "") -> dict:
             f"https://www.google.com/maps/search/{urllib.parse.quote(name)}"
             f"/@{lat},{lng},17z"
         )
+    elif ifoodie_url:
+        nav_url = ifoodie_url
     else:
         nav_url = f"https://www.google.com/maps/search/{urllib.parse.quote(name)}"
 
@@ -200,10 +218,20 @@ def _make_restaurant_card(r: dict, color: str, tag: str = "") -> dict:
             ],
         },
     }
+    # photo_ref → 我們的代理；cover_url → 直接用（愛食記 CDN）
+    photo = r.get("photo_ref", "")
+    cover = r.get("cover_url", "")
     if photo:
+        img_url = _PHOTO_PROXY.format(photo)
+    elif cover:
+        img_url = cover
+    else:
+        img_url = ""
+
+    if img_url:
         bub["hero"] = {
             "type": "image",
-            "url": _PHOTO_PROXY.format(photo),
+            "url": img_url,
             "size": "full",
             "aspectRatio": "20:13",
             "aspectMode": "cover",
@@ -334,38 +362,48 @@ def _build_group_result(city: str, dining_type: str, bib_gourmand: dict) -> list
         # 不限：只選適合聚餐類型的 Bib（排除純小吃）
         bib_picks = [r for r in bib_pool if _bib_is_group_dining(r)][:3]
 
-    # ── 2. restaurant_db ──
-    pool = _load_city_pool(city)
+    # ── 2. 優先用 ifoodie 爬蟲資料，不足才補 restaurant_db ──
     max_cards = max(1, 11 - len(bib_picks))  # 保留 1 張 nav 卡，總計 ≤ 12
 
-    if kws:
-        # 特定類型：先按類型關鍵字篩選
-        typed_pool = [r for r in pool if any(kw in r.get("name", "") for kw in kws)]
-        typed_filtered = sorted(
-            [r for r in typed_pool if r.get("rating", 0) >= 4.0],
-            key=lambda r: (-r.get("rating", 0), -r.get("user_ratings_total", 0)),
-        )[:max_cards]
-        # 不足 3 筆：補聚餐適合的高評分餐廳
-        if len(typed_filtered) < 3:
-            seen_pids = {r.get("place_id") for r in typed_filtered}
-            fallback = sorted(
-                [r for r in pool if _is_group_dining_venue(r)
-                 and r.get("rating", 0) >= 4.3
-                 and r.get("user_ratings_total", 0) >= 200
-                 and r.get("place_id") not in seen_pids],
-                key=lambda r: (-r.get("rating", 0), -r.get("user_ratings_total", 0)),
-            )[:max_cards - len(typed_filtered)]
-            typed = typed_filtered + fallback
-        else:
-            typed = typed_filtered
+    # ifoodie 資料（主力）
+    ifoodie_rests = _load_group_dining_cache(city, dining_type)
+    # 轉為統一格式（ifoodie 欄位名稱不同）
+    ifoodie_norm = [
+        {
+            "name": r.get("name", ""),
+            "addr": r.get("addr", ""),
+            "rating": r.get("rating", 0),
+            "user_ratings_total": r.get("review_cnt", 0),
+            "lat": r.get("lat"),
+            "lng": r.get("lng"),
+            "photo_ref": "",          # ifoodie 用 cover URL，走不同路
+            "cover_url": r.get("cover", ""),
+            "place_id": "",
+            "ifoodie_url": r.get("url", ""),
+        }
+        for r in ifoodie_rests
+        if r.get("name")
+    ]
+    ifoodie_norm = sorted(
+        [r for r in ifoodie_norm if r["rating"] >= 4.0],
+        key=lambda r: (-r["rating"], -r["user_ratings_total"]),
+    )[:max_cards]
+
+    if len(ifoodie_norm) >= 3:
+        typed = ifoodie_norm
     else:
-        # 不限：只要是適合聚餐的餐廳
-        typed = sorted(
-            [r for r in pool if _is_group_dining_venue(r)
-             and r.get("rating", 0) >= 4.3
+        # 補 restaurant_db
+        pool = _load_city_pool(city)
+        if kws:
+            db_pool = [r for r in pool if any(kw in r.get("name", "") for kw in kws)]
+        else:
+            db_pool = [r for r in pool if _is_group_dining_venue(r)]
+        db_filtered = sorted(
+            [r for r in db_pool if r.get("rating", 0) >= 4.3
              and r.get("user_ratings_total", 0) >= 200],
             key=lambda r: (-r.get("rating", 0), -r.get("user_ratings_total", 0)),
-        )[:max_cards]
+        )[:max_cards - len(ifoodie_norm)]
+        typed = ifoodie_norm + db_filtered
 
     # ── 3. Build bubbles ──
     bubbles: list[dict] = []
