@@ -26,6 +26,7 @@ def build_morning_summary(
     outfit_advice,
     get_national_deal,
     get_city_local_deal,
+    get_trending_topic=None,
 ) -> list:
     """早安摘要：天氣 + 穿搭 + 匯率 + 油價 + 今日好康"""
     all_cities_pat = "|".join(all_cities)
@@ -138,6 +139,11 @@ def build_morning_summary(
     nat_icon, nat_title, nat_body = get_national_deal(city, user_id)
     loc_icon, loc_title, loc_body = get_city_local_deal(city, user_id)
 
+    # 今日熱話（PTT/網路好康，含 URL）
+    hot_topic: tuple = ()
+    if get_trending_topic:
+        hot_topic = get_trending_topic(city, user_id)
+
     tip = morning_actions[doy % len(morning_actions)]
 
     _bot_invite = f"https://line.me/R/ti/p/{line_bot_id}" if line_bot_id else "https://line.me/R/"
@@ -171,16 +177,30 @@ def build_morning_summary(
                       "weight": "bold", "color": "#5C6BC0", "margin": "md"},
                      *info_items,
                      {"type": "separator", "margin": "md"},
-                     {"type": "text", "text": "🎁 今日小驚喜", "size": "xs",
+                     {"type": "text", "text": "☕ 今日好料", "size": "xs",
                       "weight": "bold", "color": "#E65100", "margin": "md"},
+                     # 週間固定優惠（早餐/咖啡/食物）
                      {"type": "text", "text": f"{nat_icon} {nat_title}", "size": "xs",
                       "weight": "bold", "color": "#5C6BC0", "margin": "sm"},
                      {"type": "text", "text": nat_body, "size": "xs",
                       "color": "#37474F", "wrap": True},
+                     # 在地活動
                      {"type": "text", "text": f"{loc_icon} {loc_title}", "size": "xs",
                       "weight": "bold", "color": "#5C6BC0", "margin": "sm"},
                      {"type": "text", "text": loc_body, "size": "xs",
                       "color": "#37474F", "wrap": True},
+                     # 今日熱話（PTT / 網路好康）
+                     *(
+                         [
+                             {"type": "text",
+                              "text": f"{hot_topic[0]} {hot_topic[1]}",
+                              "size": "xs", "weight": "bold",
+                              "color": "#B71C1C", "margin": "sm"},
+                             {"type": "text", "text": hot_topic[2], "size": "xs",
+                              "color": "#37474F", "wrap": True, "maxLines": 2},
+                         ]
+                         if hot_topic else []
+                     ),
                      {"type": "separator", "margin": "md"},
                      {"type": "text", "text": "💡 今日健康提醒", "size": "xs",
                       "weight": "bold", "color": "#5C6BC0", "margin": "md"},
@@ -199,6 +219,13 @@ def build_morning_summary(
                           {"type": "button", "style": "secondary", "height": "sm", "flex": 1,
                            "action": {"type": "message", "label": "健康", "text": "健康小幫手"}},
                       ]},
+                     *(
+                         [{"type": "button", "style": "secondary", "height": "sm",
+                           "action": {"type": "uri",
+                                      "label": f"🔥 查看今日熱話",
+                                      "uri": hot_topic[3]}}]
+                         if hot_topic and len(hot_topic) > 3 and hot_topic[3] else []
+                     ),
                      {"type": "button", "style": "primary", "color": "#E65100", "height": "sm",
                       "action": {"type": "uri", "label": "📤 分享給朋友", "uri": _share_url}},
                      {"type": "button", "style": "secondary", "height": "sm",
