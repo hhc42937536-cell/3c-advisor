@@ -37,6 +37,7 @@ from modules.weather_morning_helpers import bot_invite_text as _shared_bot_invit
 from modules.weather_morning_helpers import day_city_hash as _shared_day_city_hash
 from modules.weather_morning_helpers import day_user_city_hash as _shared_day_user_city_hash
 from modules.weather_morning_helpers import get_city_local_deal as _shared_get_city_local_deal
+from modules.weather_morning_helpers import get_trending_topic as _shared_get_trending_topic
 from modules.weather_morning_helpers import get_morning_actions as _shared_get_morning_actions
 from modules.weather_morning_helpers import get_national_deal as _shared_get_national_deal
 from modules.weather_advice import estimate_uvi as _shared_estimate_uvi
@@ -197,6 +198,12 @@ def _get_city_local_deal(city: str, user_id: str = "") -> tuple:
     )
 
 
+def _get_trending_topic(city: str, user_id: str = "") -> tuple:
+    return _shared_get_trending_topic(
+        city, user_id, surprise_cache=_get_surprise_cache()
+    )
+
+
 def _get_morning_actions() -> list:
     return _shared_get_morning_actions(_MORNING_ACTIONS)
 
@@ -244,6 +251,7 @@ def build_morning_summary(text: str, user_id: str = "") -> list:
         outfit_advice=_outfit_advice,
         get_national_deal=_get_national_deal,
         get_city_local_deal=_get_city_local_deal,
+        get_trending_topic=_get_trending_topic,
     )
 
 

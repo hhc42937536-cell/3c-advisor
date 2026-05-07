@@ -32,7 +32,7 @@ def get_national_deal(
     surprises_fallback: list,
     surprise_cache: dict,
 ) -> tuple:
-    """Pick the daily national deal/song/surprise."""
+    """每日固定好康：優先顯示符合今天星期的早餐/咖啡/食物優惠。"""
     today = _dt.date.today()
     doy = today.timetuple().tm_yday
     weekday = today.weekday()
@@ -41,26 +41,9 @@ def get_national_deal(
     if special:
         return special
 
-    candidates = []
     weekly = weekly_deals.get(weekday, [])
     if weekly:
-        pick = weekly[day_user_city_hash(doy, city, user_id, 1) % len(weekly)]
-        candidates.append(("deal", pick))
-
-    deals = surprise_cache.get("deals", []) if surprise_cache else []
-    if deals:
-        deal = deals[day_user_city_hash(doy, city, user_id, 3) % len(deals)]
-        tag = deal.get("tag", "PTT")
-        candidates.append(("ptt", ("🔥", f"網友好康（{tag}）", deal.get("title", ""))))
-
-    songs = surprise_cache.get("songs", []) if surprise_cache else []
-    if songs:
-        song = songs[day_user_city_hash(doy, city, user_id, 2) % len(songs)]
-        candidates.append(("song", ("🎵", "今日推薦新歌", f"《{song.get('name','')}》— {song.get('artist','')}")))
-
-    if candidates:
-        pick = candidates[day_user_city_hash(doy, city, user_id, 0) % len(candidates)]
-        return pick[1]
+        return weekly[day_user_city_hash(doy, city, user_id, 1) % len(weekly)]
 
     return surprises_fallback[day_user_city_hash(doy, city, user_id, 9) % len(surprises_fallback)]
 
@@ -93,6 +76,28 @@ def get_city_local_deal(
     tip_pool = city_local_tips.get(city, generic_local_tips)
     combined = deal_pool + tip_pool
     return combined[day_user_city_hash(doy, city, user_id, 5) % len(combined)]
+
+
+def get_trending_topic(
+    city: str,
+    user_id: str,
+    *,
+    surprise_cache: dict,
+) -> tuple:
+    """今日熱話：從 surprise_cache 取 PTT/網路好康，回傳 (icon, title, body, url)。"""
+    today = _dt.date.today()
+    doy = today.timetuple().tm_yday
+
+    deals = surprise_cache.get("deals", []) if surprise_cache else []
+    if deals:
+        deal = deals[day_user_city_hash(doy, city, user_id, 3) % len(deals)]
+        tag = deal.get("tag", "網路")
+        title = deal.get("title", "")
+        if len(title) > 32:
+            title = title[:30] + "…"
+        return ("🔥", f"今日熱話（{tag}）", title, deal.get("url", ""))
+
+    return ("📰", "今日熱話", "今天暫無熱門消息", "")
 
 
 def get_morning_actions(morning_actions: list) -> list:
