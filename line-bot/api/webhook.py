@@ -1420,7 +1420,13 @@ class handler(BaseHTTPRequestHandler):
                             _bib_near.sort(key=_dist)
                             _bib_picks = _bib_near[:3]
 
-                            # ── restaurant_db：取最近 80 筆，按餐期輪流取（四路交錯）──
+                            # ── restaurant_db：取最近 80 筆，按餐期關鍵字過濾 ──
+                            _MEAL_EXCLUDE = {
+                                "晚餐": ["早餐", "早午餐", "brunch", "Brunch"],
+                                "消夜": ["早餐", "早午餐", "brunch", "Brunch"],
+                                "早餐": ["消夜", "宵夜", "燒烤", "居酒屋", "火鍋"],
+                                "午餐": [],
+                            }
                             _db_path = _of.path.join(
                                 _of.path.dirname(_of.path.dirname(_of.path.abspath(__file__))),
                                 "restaurant_db.json")
@@ -1430,9 +1436,11 @@ class handler(BaseHTTPRequestHandler):
                             _sorted80 = sorted(
                                 [r for r in _pool if r.get("lat") and r.get("lng")],
                                 key=_dist)[:80]
-                            if _meal_type and len(_sorted80) > 4:
-                                _mi = _MEAL_IDX[_meal_type]
-                                _db_picks = _sorted80[_mi::4][:20]
+                            if _meal_type:
+                                _excl = _MEAL_EXCLUDE.get(_meal_type, [])
+                                _filtered = [r for r in _sorted80
+                                             if not any(kw in r.get("name", "") for kw in _excl)]
+                                _db_picks = _filtered[:20] if _filtered else _sorted80[:20]
                             else:
                                 _db_picks = _sorted80[:20]
 
