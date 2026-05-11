@@ -1022,6 +1022,10 @@
     document.addEventListener("click", (event) => {
       const openButton = event.target.closest("[data-open]");
       if (!openButton) return;
+      if (openButton.dataset.open === "tools" && openButton.textContent.includes("停車")) {
+        document.querySelector("#tool-topic").value = "停車查詢";
+        updateToolFields();
+      }
       activateTab(openButton.dataset.open);
       document.querySelector("#workspace").scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -1044,14 +1048,131 @@
 
     document.querySelector("#tool-topic").addEventListener("change", updateToolFields);
 
+    const sourceLabel = (sources) => {
+      const values = Object.values(sources || {}).filter(Boolean);
+      if (!values.length) return "資料來源：前端備援";
+      return `資料來源：${values.join(" / ")}`;
+    };
+
+    async function getJson(url) {
+      const response = await fetch(url, { headers: { "Accept": "application/json" } });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    }
+
+    function renderMorning(data) {
+      const weather = data.weather || {};
+      const oil = data.oil || {};
+      const rates = data.rates || {};
+      const weatherText = weather.ok
+        ? `${weather.wx}，${weather.min_t}-${weather.max_t} 度，降雨 ${weather.pop}%`
+        : "即時天氣暫時取不到，先用保守穿搭提醒";
+      const oilText = oil["95"] ? `95 無鉛 ${oil["95"]}，92 無鉛 ${oil["92"] || "—"}` : "油價資料暫時取不到";
+      const rateText = rates.USD ? `USD 賣出 ${rates.USD.spot_sell}，JPY 賣出 ${rates.JPY?.spot_sell || "—"}` : "匯率資料暫時取不到";
+      const activity = (data.activities || [])[0];
+      return `
+        <h4>${html(data.city)} ${html(data.time || "")}早安卡</h4>
+        <div class="result-grid">
+          ${card("氣象署天氣", weatherText)}
+          ${card("穿搭提醒", data.outfit || "依天氣調整穿搭與雨具")}
+          ${card("油價 / 匯率", `${oilText}；${rateText}`)}
+          ${card("今日小提醒", activity ? `${activity.name}｜${activity.source}` : "先決定吃飯，再看附近活動。")}
+        </div>
+        <div class="flow-note">${sourceLabel(data.sources)}。下一步可以接著決定吃什麼或看活動。</div>
+        ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看活動資訊" }])}
+      `;
+    }
+
+    function renderFood(data) {
+      const items = data.items || [];
+      const cards = items.slice(0, 4).map((item) => {
+        const place = item.area || item.address || data.city;
+        return card(item.name, `${place}｜${item.desc || item.type || "美食資料"}｜${item.source || "cache"}`);
+      }).join("");
+      return `
+        <h4>${html(data.city)} ${html(data.mood || "美食")}推薦</h4>
+        <div class="result-grid">${cards || card("目前沒有資料", "爬蟲快取裡找不到這個城市，先改查城市特色或稍後再試。")}</div>
+        <div class="flow-note">${sourceLabel(data.sources)}。這裡使用 LINE bot 的美食快取/必比登資料整理成網站卡片。</div>
+        ${actions([{ key: "activity", label: "用同城市找活動" }, { key: "tools", label: "開停車小工具" }])}
+      `;
+    }
+
+    function renderActivity(data) {
+      const items = data.items || [];
+      const cards = items.slice(0, 4).map((item) => {
+        const date = item.date ? `${item.date}｜` : "";
+        return card(item.name, `${date}${item.desc || "活動資料"}｜${item.source || "cache"}`);
+      }).join("");
+      return `
+        <h4>${html(data.city)} ${html(data.time || "")}${html(data.type || "活動")}資訊</h4>
+        <div class="result-grid">${cards || card("目前沒有活動", "爬蟲快取裡暫時沒有符合條件的活動。")}</div>
+        <div class="flow-note">${sourceLabel(data.sources)}。活動來源包含 Accupass / 文化部 / 活動網站與部落格快取。</div>
+        ${actions([{ key: "food", label: "附近吃什麼" }, { key: "tools", label: "開延伸工具" }])}
+      `;
+    }
+
+    function renderParking(data) {
+      const items = data.items || [];
+      const cards = items.slice(0, 4).map((item) => {
+        const spaces = item.available !== "" ? `剩餘 ${item.available} / ${item.total || "—"}` : `總車位 ${item.total || "—"}`;
+        return card(item.name, `${spaces}｜${item.address || data.city}｜${item.source}`);
+      }).join("");
+      return `
+        <h4>${html(data.city)} 停車查詢</h4>
+        <div class="result-grid">${cards || card("TDX 暫無資料", "目前 TDX 沒回傳這個城市的停車場資料，請稍後再試。")}</div>
+        <div class="flow-note">資料來源：${html(data.source || "tdx_unavailable")}。TDX 有 token 時會即時查停車場與剩餘車位。</div>
+      `;
+    }
+
+    async function fetchSiteMarkup(key) {
+      if (key === "morning") {
+        const city = document.querySelector("#morning-city").value;
+        const plan = document.querySelector("#morning-plan").value;
+        const time = document.querySelector("#morning-time").value;
+        const focus = document.querySelector("#morning-focus").value;
+        const data = await getJson(`/api/site_morning?city=${encodeURIComponent(city)}&plan=${encodeURIComponent(plan)}&time=${encodeURIComponent(time)}&focus=${encodeURIComponent(focus)}`);
+        return renderMorning(data);
+      }
+      if (key === "food") {
+        const city = document.querySelector("#food-city").value;
+        const mood = document.querySelector("#food-mood").value;
+        const budget = document.querySelector("#food-budget").value;
+        const people = document.querySelector("#food-people").value;
+        const data = await getJson(`/api/site_food?city=${encodeURIComponent(city)}&mood=${encodeURIComponent(mood)}&budget=${encodeURIComponent(budget)}&people=${encodeURIComponent(people)}`);
+        return renderFood(data);
+      }
+      if (key === "activity") {
+        const city = document.querySelector("#activity-city").value;
+        const time = document.querySelector("#activity-time").value;
+        const type = document.querySelector("#activity-type").value;
+        const pace = document.querySelector("#activity-pace").value;
+        const data = await getJson(`/api/site_activity?city=${encodeURIComponent(city)}&time=${encodeURIComponent(time)}&type=${encodeURIComponent(type)}&pace=${encodeURIComponent(pace)}`);
+        return renderActivity(data);
+      }
+      if (key === "tools" && document.querySelector("#tool-topic").value === "停車查詢") {
+        const city = document.querySelector("#morning-city").value || "台北";
+        const data = await getJson(`/api/site_parking?city=${encodeURIComponent(city)}`);
+        return renderParking(data);
+      }
+      return samples[key]();
+    }
+
     document.querySelectorAll("[data-demo]").forEach((button) => {
-      button.addEventListener("click", () => {
+      button.addEventListener("click", async () => {
         const key = button.dataset.demo;
-        if (samples[key]) setResult(key, samples[key]());
+        if (!samples[key]) return;
+        setResult(key, `<h4>正在讀取資料...</h4><div class="flow-note">連線到生活優轉後端，取得真實資料或爬蟲快取。</div>`);
+        try {
+          setResult(key, await fetchSiteMarkup(key));
+        } catch (error) {
+          setResult(key, `${samples[key]()}<div class="flow-note">後端資料暫時無法取得，已顯示前端備援。錯誤：${html(error.message)}</div>`);
+        }
       });
     });
 
-    setResult("morning", samples.morning());
+    fetchSiteMarkup("morning")
+      .then((markup) => setResult("morning", markup))
+      .catch(() => setResult("morning", samples.morning()));
   </script>
 </body>
 </html>

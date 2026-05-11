@@ -705,13 +705,248 @@ new Chart(document.getElementById('dailyChart'),{{
 
 # ─── Vercel Handler ───────────────────────────────
 
+def _site_json(handler, payload: dict, status: int = 200) -> None:
+    handler.send_response(status)
+    handler.send_header("Content-Type", "application/json; charset=utf-8")
+    handler.send_header("Cache-Control", "s-maxage=300, stale-while-revalidate=900")
+    handler.end_headers()
+    handler.wfile.write(json.dumps(payload, ensure_ascii=False).encode("utf-8"))
+
+
+def _site_param(qs: dict, key: str, default: str = "") -> str:
+    value = qs.get(key, [default])[0]
+    return str(value or default).strip()
+
+
+def _site_first_number(value, default=0):
+    try:
+        if value in ("", None):
+            return default
+        return float(value)
+    except Exception:
+        return default
+
+
+def _site_weather_payload(city: str) -> dict:
+    weather = _fetch_cwa_weather(city)
+    oil = _fetch_quick_oil()
+    rates = _fetch_quick_rates()
+    outfit = "查無即時天氣，先用薄外套與雨具做保守準備"
+    if weather.get("ok"):
+        pop = int(weather.get("pop", 0))
+        min_t = int(weather.get("min_t", 20))
+        max_t = int(weather.get("max_t", 25))
+        if max_t >= 30:
+            outfit = "炎熱，選透氣衣物、防曬與補水"
+        elif min_t <= 18:
+            outfit = "早晚偏涼，帶薄外套"
+        else:
+            outfit = "舒適溫度，穿搭以輕便為主"
+        if pop >= 40:
+            outfit += "，雨具建議放包包"
+    return {
+        "city": city,
+        "weather": weather,
+        "oil": oil,
+        "rates": rates,
+        "outfit": outfit,
+        "sources": {
+            "weather": "cwa_live" if weather.get("ok") else "fallback",
+            "oil": "cpc_live_or_cache" if oil else "fallback",
+            "rates": "bot_live_or_cache" if rates else "fallback",
+        },
+    }
+
+
+def _site_restaurants(city: str, mood: str = "", limit: int = 6) -> list:
+    try:
+        from modules.food_utils import _maps_url as _site_maps_url
+    except Exception:
+        def _site_maps_url(keyword: str, area: str = "") -> str:
+            return f"https://www.google.com/maps/search/{urllib.parse.quote((area + ' ' + keyword).strip())}/"
+    try:
+        from modules.food_runtime import _RESTAURANT_CACHE
+        pool = list(_RESTAURANT_CACHE.get(city, []))
+    except Exception:
+        pool = []
+    if not pool:
+        try:
+            from modules.food_data import _BIB_GOURMAND
+            pool = list(_BIB_GOURMAND.get(city, []))
+        except Exception:
+            pool = []
+    if mood and pool:
+        keywords = {
+            "快速解決": ["小吃", "麵", "飯", "粥", "便當"],
+            "朋友聚餐": ["台菜", "熱炒", "火鍋", "合菜", "餐廳"],
+            "想吃特色": ["特色", "必比登", "老店", "在地"],
+            "約會舒服": ["咖啡", "甜點", "西式", "餐酒", "義式"],
+        }.get(mood, [])
+        matched = [
+            r for r in pool
+            if any(k in f"{r.get('name','')} {r.get('type','')} {r.get('desc','')}" for k in keywords)
+        ]
+        if matched:
+            pool = matched + [r for r in pool if r not in matched]
+    items = []
+    for r in pool[:limit]:
+        name = str(r.get("name") or "").strip()
+        if not name:
+            continue
+        area = r.get("town") or r.get("area") or city
+        desc = str(r.get("desc") or r.get("type") or "生活優轉爬蟲/美食資料").strip()
+        items.append({
+            "name": name,
+            "type": r.get("type", ""),
+            "desc": desc[:90],
+            "area": area,
+            "address": r.get("addr", ""),
+            "lat": r.get("lat"),
+            "lng": r.get("lng"),
+            "url": r.get("url") or _site_maps_url(name, city),
+            "source": r.get("source") or "restaurant_cache",
+        })
+    return items
+
+
+def _site_activities(city: str, category: str = "", limit: int = 6) -> list:
+    category_map = {
+        "展覽": "市集展覽",
+        "市集": "市集展覽",
+        "親子": "親子同樂",
+        "戶外走走": "戶外踏青",
+        "音樂表演": "表演音樂",
+    }
+    wanted = category_map.get(category, category or "市集展覽")
+    events = []
+    try:
+        from modules.food_utils import _get_accupass_cache
+        city_events = _get_accupass_cache().get(city, {})
+        if isinstance(city_events, dict):
+            events = list(city_events.get(wanted, []))
+            if not events:
+                for group in city_events.values():
+                    if isinstance(group, list):
+                        events.extend(group)
+    except Exception:
+        events = []
+    if not events:
+        try:
+            from modules.activity_data import _ACTIVITY_DB
+            events = [x for x in _ACTIVITY_DB.get(wanted, []) if x.get("area") == city]
+            if not events:
+                events = [x for x in _ACTIVITY_DB.get("市集展覽", []) if x.get("area") == city]
+        except Exception:
+            events = []
+    items = []
+    for ev in events[:limit]:
+        name = str(ev.get("name") or "").strip()
+        if not name:
+            continue
+        items.append({
+            "name": name,
+            "desc": str(ev.get("desc") or "").strip()[:110],
+            "date": ev.get("date", ""),
+            "area": ev.get("area", city),
+            "url": ev.get("url", ""),
+            "source": ev.get("source") or ("crawler_cache" if ev.get("url") else "activity_fallback"),
+        })
+    return items
+
+
+_SITE_TDX_CITY = {
+    "台北": "Taipei", "臺北": "Taipei", "新北": "NewTaipei", "桃園": "Taoyuan",
+    "台中": "Taichung", "臺中": "Taichung", "台南": "Tainan", "臺南": "Tainan",
+    "高雄": "Kaohsiung", "基隆": "Keelung", "新竹": "Hsinchu", "嘉義": "Chiayi",
+}
+
+
+def _site_parking(city: str, limit: int = 6) -> dict:
+    tdx_city = _SITE_TDX_CITY.get(city, "Taipei")
+    token = _get_tdx_token()
+    if not token:
+        return {"ok": False, "city": city, "source": "tdx_unavailable", "items": []}
+    lots = _tdx_get(f"Parking/OffStreet/CarPark/City/{tdx_city}?$format=JSON", token, timeout=8)
+    avail = _tdx_get(f"Parking/OffStreet/ParkingAvailability/City/{tdx_city}?$format=JSON", token, timeout=8)
+    avail_by_id = {}
+    for row in avail:
+        pid = row.get("CarParkID") or row.get("ParkingID") or row.get("ID")
+        if pid:
+            avail_by_id[str(pid)] = row
+    items = []
+    for lot in lots[: max(limit * 3, limit)]:
+        pid = str(lot.get("CarParkID") or lot.get("ParkingID") or "")
+        live = avail_by_id.get(pid, {})
+        name = lot.get("CarParkName") or lot.get("ParkingName") or pid or "停車場"
+        pos = lot.get("CarParkPosition") or lot.get("ParkingPosition") or {}
+        items.append({
+            "name": name,
+            "address": lot.get("Address", ""),
+            "total": lot.get("TotalSpaces") or lot.get("TotalSpace") or live.get("TotalSpaces") or "",
+            "available": live.get("AvailableSpaces") or live.get("AvailableSpace") or "",
+            "lat": pos.get("PositionLat"),
+            "lng": pos.get("PositionLon"),
+            "source": "tdx_live",
+        })
+        if len(items) >= limit:
+            break
+    return {"ok": True, "city": city, "tdx_city": tdx_city, "source": "tdx_live", "items": items}
+
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         """健康檢查 + 快取預熱"""
         from urllib.parse import urlparse, parse_qs
         parsed = urlparse(self.path)
 
-        if parsed.path in ("/api/warm_cache", "/api/webhook"):
+        if parsed.path == "/api/site_morning":
+            qs = parse_qs(parsed.query or "")
+            city = _site_param(qs, "city", "台北")
+            payload = _site_weather_payload(city)
+            payload.update({
+                "ok": True,
+                "plan": _site_param(qs, "plan", "通勤上班"),
+                "time": _site_param(qs, "time", "早上 7-9 點"),
+                "focus": _site_param(qs, "focus", "全部整理"),
+                "activities": _site_activities(city, "", limit=3),
+            })
+            _site_json(self, payload)
+
+        elif parsed.path == "/api/site_food":
+            qs = parse_qs(parsed.query or "")
+            city = _site_param(qs, "city", "台北")
+            mood = _site_param(qs, "mood", "")
+            payload = {
+                "ok": True,
+                "city": city,
+                "mood": mood,
+                "budget": _site_param(qs, "budget", ""),
+                "people": _site_param(qs, "people", ""),
+                "items": _site_restaurants(city, mood, limit=6),
+                "sources": {"food": "crawler_cache_or_bib_gourmand"},
+            }
+            _site_json(self, payload)
+
+        elif parsed.path == "/api/site_activity":
+            qs = parse_qs(parsed.query or "")
+            city = _site_param(qs, "city", "台北")
+            category = _site_param(qs, "type", "展覽")
+            payload = {
+                "ok": True,
+                "city": city,
+                "time": _site_param(qs, "time", "今天"),
+                "type": category,
+                "pace": _site_param(qs, "pace", ""),
+                "items": _site_activities(city, category, limit=8),
+                "sources": {"activity": "accupass_crawler_cache_or_activity_fallback"},
+            }
+            _site_json(self, payload)
+
+        elif parsed.path == "/api/site_parking":
+            qs = parse_qs(parsed.query or "")
+            city = _site_param(qs, "city", "台北")
+            _site_json(self, _site_parking(city, limit=8))
+
+        elif parsed.path in ("/api/warm_cache", "/api/webhook"):
             import threading as _th
             results = {}
 
