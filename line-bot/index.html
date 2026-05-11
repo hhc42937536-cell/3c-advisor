@@ -28,12 +28,18 @@
     body {
       margin: 0;
       min-height: 100vh;
+      overflow-x: hidden;
       background:
         linear-gradient(135deg, rgba(255, 250, 240, .92), rgba(255, 242, 207, .78)),
         var(--warm);
       color: var(--ink);
       letter-spacing: 0;
     }
+    .hero-grid > *,
+    .panel-layout > *,
+    .workspace,
+    .task-card,
+    .lead { min-width: 0; }
     a { color: inherit; text-decoration: none; }
     button, input, select { font: inherit; }
     .wrap { width: min(1160px, calc(100% - 32px)); margin: 0 auto; }
@@ -408,6 +414,15 @@
       border-radius: 10px;
       background: var(--paper);
     }
+    .demo-box > .btn { margin-top: 14px; }
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .field { display: grid; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
     .input-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: 12px; }
     .input-row input, .input-row select {
       min-height: 44px;
@@ -416,6 +431,23 @@
       padding: 0 12px;
       background: white;
       color: var(--ink);
+    }
+    .control-grid input,
+    .control-grid select,
+    .control-grid textarea {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: white;
+      padding: 10px 12px;
+      color: var(--ink);
+      font-weight: 800;
+    }
+    .control-grid textarea {
+      min-height: 88px;
+      resize: vertical;
+      line-height: 1.6;
     }
     .result {
       margin-top: 14px;
@@ -427,6 +459,63 @@
       line-height: 1.7;
       white-space: pre-line;
       font-weight: 800;
+    }
+    .result.ready {
+      background: #fffaf0;
+      border: 1px solid var(--line);
+    }
+    .result h4 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .result-card {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(38, 49, 43, .16);
+      background: white;
+      white-space: normal;
+    }
+    .result-card strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+    .result-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 800;
+    }
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .quick-actions button {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: white;
+      padding: 8px 10px;
+      color: var(--soft-ink);
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .flow-note {
+      margin-top: 12px;
+      padding: 11px 12px;
+      border-left: 4px solid var(--green);
+      background: rgba(79, 188, 143, .12);
+      color: var(--soft-ink);
+      font-weight: 900;
+      white-space: normal;
     }
     .data-list { display: grid; gap: 10px; }
     .data-item {
@@ -506,12 +595,20 @@
       .section-head p { margin-top: 12px; }
     }
     @media (max-width: 640px) {
-      .wrap { width: min(100% - 22px, 1160px); }
+      .wrap { width: min(100% - 44px, 1160px); }
       .links { display: none; }
       .hero { padding-top: 24px; }
-      h1 { font-size: 46px; }
-      .lead { font-size: 17px; }
-      .stats, .feature-grid, .tabs, .input-row, .task-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 38px; line-height: 1.05; }
+      h1 span { display: block; }
+      .lead {
+        max-width: calc(100vw - 56px);
+        font-size: 17px;
+        word-break: break-all;
+        overflow-wrap: anywhere;
+      }
+      .task-card { box-shadow: 4px 4px 0 var(--ink); }
+      .morning-card, .workspace, .roadmap-card, .cta { box-shadow: 5px 5px 0 var(--ink); }
+      .stats, .feature-grid, .tabs, .input-row, .task-grid, .control-grid, .result-grid { grid-template-columns: 1fr; }
       .note { position: static; margin: 14px auto 0; max-width: none; }
       .panel { padding: 16px; }
       .roadmap-item { grid-template-columns: 1fr; }
@@ -612,12 +709,22 @@
                 <h3>早安，先看今日摘要。</h3>
                 <p>把早上最常查的資訊放在一起：天氣穿搭、油價、匯率、洗曬與今日提醒。</p>
                 <div class="demo-box">
-                  <label for="morning-city">所在城市</label>
-                  <div class="input-row">
-                    <select id="morning-city"><option>台北</option><option>桃園</option><option>台中</option><option>台南</option><option>高雄</option></select>
-                    <button class="btn primary" data-demo="morning">產生早安卡</button>
+                  <div class="control-grid">
+                    <label class="field" for="morning-city">所在城市
+                      <select id="morning-city"><option>台北</option><option>桃園</option><option>台中</option><option>台南</option><option>高雄</option></select>
+                    </label>
+                    <label class="field" for="morning-plan">今天重點
+                      <select id="morning-plan"><option>通勤上班</option><option>外出跑行程</option><option>在家工作</option><option>週末出遊</option></select>
+                    </label>
+                    <label class="field" for="morning-time">出門時段
+                      <select id="morning-time"><option>早上 7-9 點</option><option>上午 9-11 點</option><option>下午出門</option><option>晚上出門</option></select>
+                    </label>
+                    <label class="field" for="morning-focus">提醒偏好
+                      <select id="morning-focus"><option>穿搭與雨具</option><option>油價與匯率</option><option>洗曬與行程</option><option>全部整理</option></select>
+                    </label>
                   </div>
-                  <div class="result" id="morning-result">選城市後產生今日早安摘要。</div>
+                  <button class="btn primary" data-demo="morning">產生早安卡</button>
+                  <div class="result" id="morning-result">選好城市與今天重點，會產生可直接看的早安卡。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -634,12 +741,22 @@
                 <h3>今天想吃什麼？</h3>
                 <p>用城市和情境快速產生推薦方向，適合不知道吃什麼、想找在地特色或聚餐選擇時使用。</p>
                 <div class="demo-box">
-                  <label for="food-city">城市</label>
-                  <div class="input-row">
-                    <select id="food-city"><option>台北</option><option>新北</option><option>台中</option><option>台南</option><option>高雄</option></select>
-                    <button class="btn primary" data-demo="food">推薦</button>
+                  <div class="control-grid">
+                    <label class="field" for="food-city">城市
+                      <select id="food-city"><option>台北</option><option>新北</option><option>台中</option><option>台南</option><option>高雄</option></select>
+                    </label>
+                    <label class="field" for="food-mood">吃飯情境
+                      <select id="food-mood"><option>快速解決</option><option>朋友聚餐</option><option>想吃特色</option><option>約會舒服</option></select>
+                    </label>
+                    <label class="field" for="food-budget">預算
+                      <select id="food-budget"><option>200 以內</option><option>200-500</option><option>500-1000</option><option>不限制</option></select>
+                    </label>
+                    <label class="field" for="food-people">人數
+                      <select id="food-people"><option>1 人</option><option>2 人</option><option>3-4 人</option><option>5 人以上</option></select>
+                    </label>
                   </div>
-                  <div class="result" id="food-result">選一個城市，產生今日美食方向。</div>
+                  <button class="btn primary" data-demo="food">推薦餐廳方向</button>
+                  <div class="result" id="food-result">選條件後會整理 3 個可執行的吃飯選項。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -656,12 +773,22 @@
                 <h3>活動資訊怎麼安排？</h3>
                 <p>活動、展覽、市集、假日提醒整理成適合瀏覽的清單，網站比聊天更適合慢慢挑。</p>
                 <div class="demo-box">
-                  <label for="activity-city">城市</label>
-                  <div class="input-row">
-                    <select id="activity-city"><option>台北</option><option>新北</option><option>台中</option><option>台南</option><option>高雄</option></select>
-                    <button class="btn primary" data-demo="activity">找活動</button>
+                  <div class="control-grid">
+                    <label class="field" for="activity-city">城市
+                      <select id="activity-city"><option>台北</option><option>新北</option><option>台中</option><option>台南</option><option>高雄</option></select>
+                    </label>
+                    <label class="field" for="activity-time">時間
+                      <select id="activity-time"><option>今天</option><option>本週末</option><option>平日晚上</option><option>下個假日</option></select>
+                    </label>
+                    <label class="field" for="activity-type">活動類型
+                      <select id="activity-type"><option>展覽</option><option>市集</option><option>親子</option><option>戶外走走</option><option>音樂表演</option></select>
+                    </label>
+                    <label class="field" for="activity-pace">步調
+                      <select id="activity-pace"><option>輕鬆半天</option><option>排滿一點</option><option>雨天備案</option><option>順路吃飯</option></select>
+                    </label>
                   </div>
-                  <div class="result" id="activity-result">選城市後產生活動方向。</div>
+                  <button class="btn primary" data-demo="activity">產生活動清單</button>
+                  <div class="result" id="activity-result">選好條件後會整理活動清單與安排順序。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -678,12 +805,22 @@
                 <h3>需要時再打開的小工具。</h3>
                 <p>這些不是一天流程的主線，但在特定情境很有用：3C 選購、防詐法律、健康、停車與裁罰試算。</p>
                 <div class="demo-box">
-                  <label for="tool-topic">選一個工具</label>
-                  <div class="input-row">
-                    <select id="tool-topic"><option>3C 選購</option><option>防詐檢查</option><option>法律白話</option><option>健康小幫手</option><option>停車查詢</option></select>
-                    <button class="btn primary" data-demo="tools">查看</button>
+                  <div class="control-grid">
+                    <label class="field" for="tool-topic">選一個工具
+                      <select id="tool-topic"><option>3C 選購</option><option>防詐檢查</option><option>法律白話</option><option>健康小幫手</option><option>停車查詢</option></select>
+                    </label>
+                    <label class="field" for="tool-detail">情境
+                      <input id="tool-detail" value="想買一支拍照好、續航夠的手機" aria-label="工具情境">
+                    </label>
+                    <label class="field" for="tool-level">偏好
+                      <select id="tool-level"><option>保守安全</option><option>快速判斷</option><option>詳細比較</option><option>省錢優先</option></select>
+                    </label>
+                    <label class="field" for="tool-budget">預算 / 數值
+                      <input id="tool-budget" value="30000" aria-label="預算或數值">
+                    </label>
                   </div>
-                  <div class="result" id="tools-result">選擇工具後查看適合的使用情境。</div>
+                  <button class="btn primary" data-demo="tools">產生建議</button>
+                  <div class="result" id="tools-result">選工具並填情境，會產生可採取的下一步。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -749,39 +886,172 @@
       });
     });
 
+    const cityProfiles = {
+      "台北": { rain: 45, temp: "22-27", outfit: "薄外套加好走的鞋", food: ["溫體牛肉麵線", "巷口咖哩飯", "手沖咖啡簡餐"], area: "捷運站周邊", event: "松菸 / 華山展覽", parking: "市中心停車費較高，建議先看大眾運輸" },
+      "新北": { rain: 38, temp: "21-28", outfit: "短袖加輕薄外套", food: ["板橋小吃", "新店河岸餐廳", "三重熱炒"], area: "板橋 / 新店", event: "河岸活動與親子展", parking: "可先找轉乘停車場再進市區" },
+      "桃園": { rain: 34, temp: "22-29", outfit: "透氣上衣，午後備傘", food: ["客家小炒", "機場城咖啡", "中壢牛肉麵"], area: "中壢 / 青埔", event: "青埔展演與商圈活動", parking: "商場停車方便，假日早點出門" },
+      "台中": { rain: 28, temp: "23-30", outfit: "輕便透氣，下午留意悶熱", food: ["第二市場小吃", "公益路餐廳", "審計新村甜點"], area: "西區 / 北屯", event: "草悟道市集與展覽", parking: "熱門商圈停車可先抓 10 分鐘步行距離" },
+      "台南": { rain: 22, temp: "24-31", outfit: "防曬、帽子與補水", food: ["牛肉湯", "蝦仁飯", "府城甜品"], area: "中西區", event: "古蹟展演與市集", parking: "古蹟周邊建議停外圈再步行" },
+      "高雄": { rain: 26, temp: "25-32", outfit: "短袖、防曬，室內備薄外套", food: ["海產粥", "鹽埕小吃", "港邊咖啡"], area: "鹽埕 / 三多", event: "駁二展覽與港邊活動", parking: "駁二假日人多，可搭輕軌或停外圍" }
+    };
+
+    const html = (value) => String(value).replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[char]);
+
+    const card = (title, body) => `<div class="result-card"><strong>${html(title)}</strong><span>${html(body)}</span></div>`;
+    const actions = (items) => `<div class="quick-actions">${items.map((item) => `<button type="button" data-open="${html(item.key)}">${html(item.label)}</button>`).join("")}</div>`;
+
+    function setResult(key, markup) {
+      const target = document.querySelector(`#${key}-result`);
+      if (!target) return;
+      target.classList.add("ready");
+      target.innerHTML = markup;
+    }
+
     const samples = {
       morning: () => {
         const city = document.querySelector("#morning-city").value;
-        return `${city}早安摘要：今日先看天氣穿搭，外出可準備薄外套與雨具。\n油價與匯率可放在通勤前快速確認；今日小提醒會整理洗曬、活動與假日資訊。`;
+        const plan = document.querySelector("#morning-plan").value;
+        const time = document.querySelector("#morning-time").value;
+        const focus = document.querySelector("#morning-focus").value;
+        const profile = cityProfiles[city] || cityProfiles["台北"];
+        const rainText = profile.rain >= 40 ? "帶傘比較安心" : profile.rain >= 30 ? "包包放折傘" : "可不帶傘，留意午後雲量";
+        const oilHint = plan === "通勤上班" || plan === "外出跑行程" ? "今天若要開車，先看油價與停車點，避免臨時繞路。" : "今天用車需求低，油價放在晚點再確認即可。";
+        return `
+          <h4>${html(city)} ${html(time)}早安卡</h4>
+          <div class="result-grid">
+            ${card("天氣穿搭", `${profile.temp} 度，${rainText}。建議：${profile.outfit}。`)}
+            ${card("油價 / 交通", oilHint)}
+            ${card("匯率提醒", focus === "油價與匯率" || focus === "全部整理" ? "若有旅遊或海外購物，今天先看日幣與美元方向，再決定是否換匯。" : "今日先收成小提醒，需要旅遊時再展開匯率。")}
+            ${card("今日小提醒", `${plan}模式：先處理必要行程，再把吃飯與活動留成可調整選項。`)}
+          </div>
+          <div class="flow-note">下一步：早安看完後，通常會接著決定今天吃什麼，再看活動資訊。</div>
+          ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看活動資訊" }])}
+        `;
       },
       food: () => {
         const city = document.querySelector("#food-city").value;
-        return `${city}今日可以走「省時間」路線：先找評分穩定的小吃或簡餐，再加一個城市特色選項。\n推薦方向：在地麵食、便當熱點、聚餐友善店。`;
+        const mood = document.querySelector("#food-mood").value;
+        const budget = document.querySelector("#food-budget").value;
+        const people = document.querySelector("#food-people").value;
+        const profile = cityProfiles[city] || cityProfiles["台北"];
+        const style = mood === "快速解決" ? "不用排隊太久、翻桌快" : mood === "朋友聚餐" ? "座位舒適、好分食" : mood === "約會舒服" ? "環境安靜、可聊天" : "有城市特色、值得拍照";
+        return `
+          <h4>${html(city)} ${html(mood)}推薦</h4>
+          <div class="result-grid">
+            ${card(profile.food[0], `${budget} / ${people}：適合${style}，先找 ${profile.area} 的穩定選項。`)}
+            ${card(profile.food[1], `如果想少踩雷，選評論穩、菜單清楚、尖峰前可入座的店。`)}
+            ${card(profile.food[2], `備案：附近咖啡或甜點店，適合吃完接活動或等朋友。`)}
+            ${card("決策建議", `先用「距離 15 分鐘內」縮小範圍，再用預算 ${budget} 排序。`)}
+          </div>
+          <div class="flow-note">下一步：吃飯地點確定後，可以看同區活動，避免行程斷掉。</div>
+          ${actions([{ key: "activity", label: "用同城市找活動" }, { key: "tools", label: "開停車小工具" }])}
+        `;
       },
       activity: () => {
         const city = document.querySelector("#activity-city").value;
-        return `${city}今日活動方向：先看展覽、市集與親子活動，再依距離和時間挑選。\n網站版適合做成清單、日期篩選、地區篩選，安排週末會比聊天更清楚。`;
+        const time = document.querySelector("#activity-time").value;
+        const type = document.querySelector("#activity-type").value;
+        const pace = document.querySelector("#activity-pace").value;
+        const profile = cityProfiles[city] || cityProfiles["台北"];
+        const rainPlan = pace === "雨天備案" ? "優先選室內場館，保留咖啡店備案。" : "先排主活動，再留一段彈性時間。";
+        return `
+          <h4>${html(city)} ${html(time)}活動安排</h4>
+          <div class="result-grid">
+            ${card(`${type}主活動`, `${profile.event}。步調：${pace}，建議先確認開放時間與是否需預約。`)}
+            ${card("順路安排", `${profile.area} 周邊先接吃飯，再安排第二站，移動成本最低。`)}
+            ${card("天氣備案", rainPlan)}
+            ${card("交通提醒", profile.parking)}
+          </div>
+          <div class="flow-note">下一步：若活動需要開車或買設備，再開延伸工具處理細節。</div>
+          ${actions([{ key: "food", label: "附近吃什麼" }, { key: "tools", label: "開延伸工具" }])}
+        `;
       },
       tools: () => {
         const topic = document.querySelector("#tool-topic").value;
-        const map = {
-          "3C 選購": "適合在要買手機、筆電、平板前使用：整理需求、預算、規格差異與升級必要性。",
-          "防詐檢查": "適合收到可疑簡訊、投資邀約、包裹付款連結時使用：先看風險，再決定下一步。",
-          "法律白話": "適合遇到租屋、消費、交通或糾紛時使用：先用白話理解問題和可採取的方向。",
-          "健康小幫手": "適合記錄 BMI、飲水、睡眠、壓力與卡路里，做日常提醒。",
-          "停車查詢": "適合開車出門前使用：查停車場、費率，也能接到附近美食與活動。"
+        const detail = document.querySelector("#tool-detail").value.trim() || "目前沒有補充情境";
+        const level = document.querySelector("#tool-level").value;
+        const budget = document.querySelector("#tool-budget").value.trim() || "未設定";
+        const risky = /連結|付款|匯款|驗證碼|投資|中獎|包裹|帳號|密碼/.test(detail);
+        const toolCards = {
+          "3C 選購": [
+            ["需求整理", `情境：${detail}。預算 ${budget}，先鎖定拍照、續航、重量三個指標。`],
+            ["購買建議", level === "省錢優先" ? "先看上一代旗艦或官方福利品。" : "先列 2-3 台候選，再比較保固、容量與充電。"],
+            ["避雷", "不要只看跑分；日常體驗更看螢幕、電量、重量與售後。"],
+            ["下一步", "把候選商品規格貼進來，可以做更細的比較表。"]
+          ],
+          "防詐檢查": [
+            ["初步風險", risky ? "高風險：內容出現付款、連結、驗證碼或投資等常見詐騙關鍵字。" : "目前沒有明顯高風險字，但仍要確認來源。"],
+            ["先做這件事", "不要點連結，不要提供個資，改從官方 App 或客服電話確認。"],
+            ["保存證據", "保留截圖、電話、帳號、網址，必要時可打 165。"],
+            ["判斷依據", `你的情境：${detail}`]
+          ],
+          "法律白話": [
+            ["問題拆解", `先把事件、對象、金額、時間整理清楚：${detail}`],
+            ["可先準備", "契約、對話紀錄、收據、照片與時間線。"],
+            ["下一步", "先釐清是消費、租屋、交通或勞資，再找對應窗口。"],
+            ["提醒", "網站只做白話整理，不取代律師或正式法律意見。"]
+          ],
+          "健康小幫手": [
+            ["今日目標", `以 ${level} 模式處理：先補水、走路、睡眠三件事。`],
+            ["飲水提醒", `若體重或目標數值為 ${budget}，可先用少量多次方式，不要一次灌水。`],
+            ["壓力檢查", "如果連續疲累，先調整睡眠與咖啡因，再看是否需要就醫。"],
+            ["紀錄", `你的情境：${detail}`]
+          ],
+          "停車查詢": [
+            ["目的地", `以「${detail}」為目的地，先找步行 8-12 分鐘內的停車場。`],
+            ["費率策略", "市中心先選公有停車場；商圈假日要準備第二停車點。"],
+            ["順路安排", "停好車後接餐廳或活動，避免移車。"],
+            ["預算", `停車或行程預算：${budget}`]
+          ]
         };
-        return map[topic] || "選一個工具，查看適合的使用情境。";
+        const cards = (toolCards[topic] || toolCards["3C 選購"]).map(([title, body]) => card(title, body)).join("");
+        return `
+          <h4>${html(topic)}結果</h4>
+          <div class="result-grid">${cards}</div>
+          <div class="flow-note">這些是網站版可以先完成的判斷；需要即時資料的項目，下一階段再接正式 API。</div>
+        `;
       }
     };
+
+    document.addEventListener("click", (event) => {
+      const openButton = event.target.closest("[data-open]");
+      if (!openButton) return;
+      activateTab(openButton.dataset.open);
+      document.querySelector("#workspace").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    function updateToolFields() {
+      const topic = document.querySelector("#tool-topic").value;
+      const detail = document.querySelector("#tool-detail");
+      const budget = document.querySelector("#tool-budget");
+      const examples = {
+        "3C 選購": ["想買一支拍照好、續航夠的手機", "30000"],
+        "防詐檢查": ["陌生簡訊說包裹卡關，要我點連結付款", "0"],
+        "法律白話": ["租屋押金退租時被扣清潔費", "押金 2 個月"],
+        "健康小幫手": ["最近睡不好、下午容易累", "70"],
+        "停車查詢": ["台南美術館", "每小時 40"]
+      };
+      const sample = examples[topic] || examples["3C 選購"];
+      detail.value = sample[0];
+      budget.value = sample[1];
+    }
+
+    document.querySelector("#tool-topic").addEventListener("change", updateToolFields);
 
     document.querySelectorAll("[data-demo]").forEach((button) => {
       button.addEventListener("click", () => {
         const key = button.dataset.demo;
-        const target = document.querySelector(`#${key}-result`);
-        if (target && samples[key]) target.textContent = samples[key]();
+        if (samples[key]) setResult(key, samples[key]());
       });
     });
+
+    setResult("morning", samples.morning());
   </script>
 </body>
 </html>
