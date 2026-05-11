@@ -1391,18 +1391,10 @@ def scrape_sogoodmarket() -> dict:
     純 requests，列表頁已含日期和地點。
     摘要格式：◢ 日期：M/D㊅ -M/D㊐  ◢ 地點：城市地點名稱
     """
-    print("\n[好好市集 sogoodmarket.com]...")
-    result = {}
-
-    try:
-        resp = requests.get(
-            "https://www.sogoodmarket.com/category/market/",
-            headers=_SOGOOD_HEADERS, timeout=15
-        )
-        html = resp.text
-    except Exception as e:
-        print(f"  連線失敗: {e}")
-        return {}
+    # 2026-05 確認：站方自 2020 年起停更，列表頁全部是 5+ 年前的活動
+    # 保留函式以便日後復活，但直接 early return 避免每次排程都跑網路請求
+    print("\n[好好市集 sogoodmarket.com] [停用] 站方自 2020 年起停止更新")
+    return {}
 
     # 切分文章區塊：以每個 <article 或 entry 為單位
     # 先抓所有連結 + 其後跟著的摘要文字
@@ -1878,12 +1870,9 @@ def scrape_moc_api() -> dict:
 # ══════════════════════════════════════════════════════
 
 _OUTLOOK_SITES = {
-    "tpe": {"url": "https://tpe.tainanoutlook.com/", "cities": ["台北", "新北", "基隆"]},
-    "tjm": {"url": "https://tjm.tainanoutlook.com/", "cities": ["桃園", "新竹", "苗栗"]},
-    "txg": {"url": "https://txg.tainanoutlook.com/", "cities": ["台中", "彰化", "南投"]},
-    "chiayi": {"url": "https://chiayi.tainanoutlook.com/", "cities": ["雲林", "嘉義"]},
+    # 2026-05 確認：tpe / tjm / txg / chiayi / pthg 子站僅剩 13-15KB 空殼頁，
+    # 只有 khh（高雄）子站還有實際活動內容（已改為 SPA，需另寫解析）
     "khh": {"url": "https://khh.tainanoutlook.com/", "cities": ["高雄"]},
-    "pthg": {"url": "https://pthg.tainanoutlook.com/", "cities": ["屏東"]},
 }
 _OUTLOOK_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/135.0.0.0 Safari/537.36",
