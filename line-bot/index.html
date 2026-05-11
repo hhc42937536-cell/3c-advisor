@@ -89,13 +89,13 @@
       min-height: calc(100vh - 86px);
       display: grid;
       align-items: center;
-      padding: 34px 0 52px;
+      padding: 34px 0 44px;
     }
     .hero-grid {
       display: grid;
-      grid-template-columns: .92fr 1.08fr;
-      gap: 46px;
-      align-items: center;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 28px;
+      align-items: stretch;
     }
     .badge {
       width: fit-content;
@@ -146,6 +146,58 @@
       line-height: 1.85;
       margin: 0;
     }
+    .task-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+      max-width: 780px;
+    }
+    .task-card {
+      min-height: 142px;
+      padding: 18px;
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      background: rgba(255, 250, 240, .88);
+      box-shadow: 5px 5px 0 var(--ink);
+      cursor: pointer;
+      text-align: left;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 13px;
+      align-items: start;
+      color: var(--ink);
+    }
+    .task-card:hover,
+    .task-card:focus-visible {
+      transform: translateY(-2px);
+      outline: none;
+    }
+    .task-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      background: var(--green-soft);
+      font-weight: 900;
+    }
+    .task-card h2 {
+      margin: 0 0 6px;
+      font-size: 23px;
+      line-height: 1.2;
+    }
+    .task-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .task-card:nth-child(2) .task-icon { background: #e8eefb; }
+    .task-card:nth-child(3) .task-icon { background: #fff1c7; }
+    .task-card:nth-child(4) .task-icon { background: #ffe1dc; }
     .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
     .btn {
       display: inline-flex;
@@ -162,7 +214,7 @@
       cursor: pointer;
     }
     .btn.primary { background: var(--green); color: white; }
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
     .chip {
       padding: 9px 11px;
       border-radius: 999px;
@@ -188,18 +240,17 @@
     .stat strong { display: block; font-size: 28px; line-height: 1; }
     .stat span { display: block; color: var(--muted); font-weight: 800; font-size: 13px; margin-top: 7px; }
 
-    .visual { position: relative; min-height: 540px; display: grid; align-items: center; }
+    .visual { position: relative; min-height: auto; display: grid; align-items: start; }
     .menu-frame {
       position: relative;
       z-index: 2;
       margin-left: auto;
-      width: min(620px, 100%);
-      padding: 16px;
+      width: min(340px, 100%);
+      padding: 12px;
       border: 2px solid var(--ink);
       border-radius: 14px;
       background: rgba(255, 250, 240, .92);
-      box-shadow: 12px 12px 0 var(--ink), 0 30px 70px rgba(38, 49, 43, .16);
-      transform: rotate(.7deg);
+      box-shadow: 7px 7px 0 var(--ink), 0 22px 42px rgba(38, 49, 43, .12);
     }
     .menu-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 12px; font-weight: 900; }
     .menu-top small { color: var(--muted); font-size: 13px; }
@@ -208,8 +259,8 @@
       position: absolute;
       z-index: 3;
       right: 4px;
-      bottom: 46px;
-      max-width: 255px;
+      bottom: -62px;
+      max-width: 238px;
       padding: 14px 15px;
       border: 2px solid var(--ink);
       border-radius: 10px;
@@ -219,7 +270,7 @@
       font-weight: 900;
       line-height: 1.55;
     }
-    .soft-card { position: absolute; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 18px 42px rgba(38, 49, 43, .09); }
+    .soft-card { display: none; }
     .soft-card.one { width: 160px; height: 98px; left: 10px; top: 26px; background: var(--green-soft); }
     .soft-card.two { width: 132px; height: 132px; right: 24px; top: 0; background: #dfeaff; }
     .soft-card.three { width: 150px; height: 82px; left: 42px; bottom: 42px; background: #ffe1dc; }
@@ -251,10 +302,7 @@
       flex-direction: column;
       gap: 10px;
     }
-    .feature-card:nth-child(4n+1) { border-top: 6px solid var(--green); }
-    .feature-card:nth-child(4n+2) { border-top: 6px solid var(--blue); }
-    .feature-card:nth-child(4n+3) { border-top: 6px solid var(--gold); }
-    .feature-card:nth-child(4n+4) { border-top: 6px solid var(--coral); }
+    .feature-card { border-top: 6px solid rgba(47, 150, 109, .68); }
     .icon {
       width: 42px;
       height: 42px;
@@ -408,7 +456,6 @@
 
     @media (max-width: 960px) {
       .hero-grid, .panel-layout, .roadmap-card, .cta { grid-template-columns: 1fr; }
-      .visual { min-height: 460px; }
       .menu-frame { margin: 0 auto; }
       .feature-grid { grid-template-columns: repeat(2, 1fr); }
       .workspace { grid-template-columns: 1fr; }
@@ -423,10 +470,8 @@
       .hero { padding-top: 24px; }
       h1 { font-size: 46px; }
       .lead { font-size: 17px; }
-      .stats, .feature-grid, .tabs, .input-row { grid-template-columns: 1fr; }
+      .stats, .feature-grid, .tabs, .input-row, .task-grid { grid-template-columns: 1fr; }
       .note { position: static; margin: 14px auto 0; max-width: none; }
-      .soft-card { display: none; }
-      .menu-frame { transform: none; }
       .panel { padding: 16px; }
       .roadmap-item { grid-template-columns: 1fr; }
       .level { justify-self: start; }
@@ -450,23 +495,31 @@
     <section class="hero">
       <div class="wrap hero-grid">
         <div>
-          <span class="badge"><i></i>日常小事，一次轉順</span>
-          <h1>吃飯、停車、天氣，<span>都有方向</span>。</h1>
-          <p class="lead">生活優轉把常見的生活問題整理成清楚建議：想吃什麼、車停哪裡、天氣怎麼穿、週末去哪裡。網站版提供更完整的瀏覽、比較與操作空間。</p>
-          <div class="actions">
-            <a class="btn primary" href="#workspace">立即試用</a>
-            <a class="btn" href="#features">看看服務</a>
+          <span class="badge"><i></i>先選一件你現在要做的事</span>
+          <h1>今天想解決<span>哪件生活事</span>？</h1>
+          <p class="lead">不用先看完整功能表。直接選一個情境開始，網站版會比 LINE 更適合做篩選、比較、規劃和反覆調整條件。</p>
+          <div class="task-grid" aria-label="主要任務入口">
+            <button class="task-card" data-jump="food">
+              <span class="task-icon">食</span>
+              <span><h2>找附近餐廳</h2><p>依城市、定位、聚餐情境整理推薦方向。</p></span>
+            </button>
+            <button class="task-card" data-jump="parking">
+              <span class="task-icon">停</span>
+              <span><h2>查停車與費率</h2><p>先看停車資訊，再安排附近美食或下一站。</p></span>
+            </button>
+            <button class="task-card" data-jump="weather">
+              <span class="task-icon">天</span>
+              <span><h2>看天氣穿搭</h2><p>把天氣轉成外出、帶傘、洗曬提醒。</p></span>
+            </button>
+            <button class="task-card" data-jump="safety">
+              <span class="task-icon">安</span>
+              <span><h2>檢查可疑訊息</h2><p>先判斷詐騙風險，再決定下一步。</p></span>
+            </button>
           </div>
           <div class="chips">
-            <span class="chip">吃飯推薦</span>
-            <span class="chip">停車導航</span>
-            <span class="chip">天氣穿搭</span>
-            <span class="chip">城市活動</span>
-          </div>
-          <div class="stats" aria-label="產品狀態">
-            <div class="stat"><strong>8</strong><span>生活服務入口</span></div>
-            <div class="stat"><strong>4</strong><span>網站互動工具</span></div>
-            <div class="stat"><strong>多元</strong><span>資料整合與比較</span></div>
+            <span class="chip">網站適合比較與篩選</span>
+            <span class="chip">LINE 適合快速問一句</span>
+            <span class="chip">其他工具往下看</span>
           </div>
         </div>
         <div class="visual">
@@ -474,10 +527,10 @@
           <div class="soft-card two"></div>
           <div class="soft-card three"></div>
           <div class="menu-frame">
-            <div class="menu-top"><span>生活優轉 LINE 選單</span><small>隨手查、快速選</small></div>
+            <div class="menu-top"><span>LINE 快速入口</span><small>出門時使用</small></div>
             <img src="/rich_menu.jpg" alt="生活優轉 LINE rich menu">
           </div>
-          <div class="note">LINE 適合快問快答，網站適合完整瀏覽、比較與規劃。</div>
+          <div class="note">網站主打完整工具；LINE 保留快速查詢。</div>
         </div>
       </div>
     </section>
@@ -646,11 +699,15 @@
   <script>
     const tabs = document.querySelectorAll(".tab");
     const panels = document.querySelectorAll(".panel");
-    tabs.forEach((tab) => {
-      tab.addEventListener("click", () => {
-        const key = tab.dataset.tab;
-        tabs.forEach((item) => item.setAttribute("aria-selected", String(item === tab)));
-        panels.forEach((panel) => panel.classList.toggle("active", panel.id === `panel-${key}`));
+    function activateTab(key) {
+      tabs.forEach((item) => item.setAttribute("aria-selected", String(item.dataset.tab === key)));
+      panels.forEach((panel) => panel.classList.toggle("active", panel.id === `panel-${key}`));
+    }
+    tabs.forEach((tab) => tab.addEventListener("click", () => activateTab(tab.dataset.tab)));
+    document.querySelectorAll("[data-jump]").forEach((button) => {
+      button.addEventListener("click", () => {
+        activateTab(button.dataset.jump);
+        document.querySelector("#workspace").scrollIntoView({ behavior: "smooth", block: "start" });
       });
     });
 
