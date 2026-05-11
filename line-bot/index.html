@@ -972,6 +972,31 @@
             : "今日摘要";
       return `${city || ""} ${prefix}`.trim();
     }
+    function planAdvice(plan, time) {
+      const night = String(time || "").includes("晚上");
+      const afternoon = String(time || "").includes("下午");
+      const map = {
+        "通勤上班": night
+          ? ["返程提醒", "晚間通勤先看降雨與末班車時間，開車則先抓停車與塞車緩衝。"]
+          : ["通勤提醒", "先看降雨、油價與停車點；若要開車，建議出門前確認路況。"],
+        "外出跑行程": ["行程提醒", `${afternoon || night ? "外出前" : "出門前"}先排室內備案，地點之間保留 15-20 分鐘緩衝。`],
+        "在家工作": ["在家提醒", "重點放在洗曬、飲水與下午精神管理；油價匯率可當日常參考即可。"],
+        "週末出遊": ["出遊提醒", "先看天氣與活動，再決定吃飯地點；若要開車，停車點要比餐廳更早確認。"]
+      };
+      return map[plan] || ["今日提醒", "先把必要行程排好，再決定吃飯與活動。"];
+    }
+    function focusAdvice(focus, weatherText, oilText, rateText, activity) {
+      if (focus === "穿搭與雨具") {
+        return ["穿搭重點", `${weatherText}。把舒適度、雨具與室內外溫差放第一順位。`];
+      }
+      if (focus === "油價與匯率") {
+        return ["油價 / 匯率重點", `${oilText}；${rateText}。有開車或換匯需求時再深入看。`];
+      }
+      if (focus === "洗曬與行程") {
+        return ["洗曬與行程", activity ? `先留意天氣，再看 ${activity.name}。` : "先看降雨機率，再安排洗曬、採買或附近活動。"];
+      }
+      return ["今日小提醒", activity ? `${activity.name}｜${readableSource(activity.source)}` : "先決定吃飯，再看附近活動。"];
+    }
 
     function setResult(key, markup) {
       const target = document.querySelector(`#${key}-result`);
@@ -988,16 +1013,28 @@
         const focus = document.querySelector("#morning-focus").value;
         const profile = cityProfiles[city] || cityProfiles["台北"];
         const rainText = profile.rain >= 40 ? "帶傘比較安心" : profile.rain >= 30 ? "包包放折傘" : "可不帶傘，留意午後雲量";
-        const oilHint = plan === "通勤上班" || plan === "外出跑行程" ? "今天若要開車，先看油價與停車點，避免臨時繞路。" : "今天用車需求低，油價放在晚點再確認即可。";
+        const weatherText = `${profile.temp} 度，${rainText}`;
+        const oilText = plan === "通勤上班" || plan === "外出跑行程" ? "今天若要開車，先看油價與停車點，避免臨時繞路。" : "今天用車需求低，油價放在晚點再確認即可。";
+        const rateText = "若有旅遊或海外購物，今天先看日幣與美元方向，再決定是否換匯。";
+        const [planTitle, planBody] = planAdvice(plan, time);
+        const [focusTitle, focusBody] = focusAdvice(focus, weatherText, oilText, rateText, { name: profile.event, source: "activity_fallback" });
+        const secondaryCard = focus === "油價與匯率"
+          ? card("穿搭提醒", profile.outfit)
+          : card("油價 / 匯率", `${oilText}；${rateText}`);
+        const nextStep = plan === "在家工作"
+          ? "下一步可以先處理洗曬與健康提醒，晚點再看吃飯或活動。"
+          : plan === "週末出遊"
+            ? "下一步可以接著決定吃什麼，再把活動與停車一起安排。"
+            : "下一步可以接著決定今天吃什麼，再看活動資訊。";
         return `
           <h4>${html(summaryTitle(time, city))}</h4>
           <div class="result-grid">
-            ${card("天氣穿搭", `${profile.temp} 度，${rainText}。建議：${profile.outfit}。`)}
-            ${card("油價 / 交通", oilHint)}
-            ${card("匯率提醒", focus === "油價與匯率" || focus === "全部整理" ? "若有旅遊或海外購物，今天先看日幣與美元方向，再決定是否換匯。" : "今日先收成小提醒，需要旅遊時再展開匯率。")}
-            ${card("今日小提醒", `${plan}模式：先處理必要行程，再把吃飯與活動留成可調整選項。`)}
+            ${card("天氣穿搭", `${weatherText}。建議：${profile.outfit}。`)}
+            ${card(planTitle, planBody)}
+            ${secondaryCard}
+            ${card(focusTitle, focusBody)}
           </div>
-          <div class="flow-note">下一步：摘要看完後，可以接著決定今天吃什麼，再看活動資訊。</div>
+          <div class="flow-note">${nextStep}</div>
           ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看活動資訊" }])}
         `;
       },
@@ -1240,21 +1277,33 @@
       const weather = data.weather || {};
       const oil = data.oil || {};
       const rates = data.rates || {};
+      const plan = data.plan || "通勤上班";
+      const focus = data.focus || "全部整理";
       const weatherText = weather.ok
         ? `${weather.wx}，${weather.min_t}-${weather.max_t} 度，降雨 ${weather.pop}%`
         : "即時天氣暫時取不到，先用保守穿搭提醒";
       const oilText = oil["95"] ? `95 無鉛 ${oil["95"]}，92 無鉛 ${oil["92"] || "—"}` : "油價資料暫時取不到";
       const rateText = rates.USD ? `USD 賣出 ${rates.USD.spot_sell}，JPY 賣出 ${rates.JPY?.spot_sell || "—"}` : "匯率資料暫時取不到";
       const activity = (data.activities || [])[0];
+      const [planTitle, planBody] = planAdvice(plan, data.time);
+      const [focusTitle, focusBody] = focusAdvice(focus, weatherText, oilText, rateText, activity);
+      const secondaryCard = focus === "油價與匯率"
+        ? card("天氣穿搭", data.outfit || "依天氣調整穿搭與雨具")
+        : card("油價 / 匯率", `${oilText}；${rateText}`);
+      const nextStep = plan === "在家工作"
+        ? "下一步可以先處理洗曬與健康提醒，晚點再看吃飯或活動。"
+        : plan === "週末出遊"
+          ? "下一步可以接著決定吃什麼，再把活動與停車一起安排。"
+          : "下一步可以接著決定吃什麼或看活動。";
       return `
         <h4>${html(summaryTitle(data.time, data.city))}</h4>
         <div class="result-grid">
           ${card("氣象署天氣", weatherText)}
-          ${card("穿搭提醒", data.outfit || "依天氣調整穿搭與雨具")}
-          ${card("油價 / 匯率", `${oilText}；${rateText}`)}
-          ${card("今日小提醒", activity ? `${activity.name}｜${readableSource(activity.source)}` : "先決定吃飯，再看附近活動。")}
+          ${card(planTitle, planBody)}
+          ${secondaryCard}
+          ${card(focusTitle, focusBody)}
         </div>
-        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。下一步可以接著決定吃什麼或看活動。</div>
+        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。${nextStep}</div>
         ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看活動資訊" }])}
       `;
     }
