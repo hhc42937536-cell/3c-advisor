@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-11 21:06",
+  "updated_at": "2026-05-11 22:22",
   "sources": [
     "漫步時光",
     "小藝行事曆(yii.tw)",
@@ -627,6 +627,14 @@
           "area": "台中"
         },
         {
+          "name": "《桃花泣血記》 用台灣首部無聲電影讓大家愛上台語歌謠",
+          "desc": "臺中市葫蘆墩文化中心演奏廳",
+          "date": "",
+          "url": "https://yii.tw/events/44413",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
           "name": "NTSO張弦，王崢嶸與國臺交",
           "desc": "07/18 | 臺中市中山堂",
           "date": "07/18",
@@ -677,14 +685,6 @@
       ],
       "文青咖啡": [
         {
-          "name": "中華民國油畫創作協會-藝啓飛揚",
-          "desc": "活動地點 港區藝術中心清水區中央畫廊",
-          "date": "",
-          "url": "https://yii.tw/events/44285",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
           "name": "【沙鹿深波分館】5/2-5/31 電影播放歷史掛軸展",
           "desc": "活動地點 沙鹿深波分館",
           "date": "",
@@ -705,6 +705,14 @@
           "desc": "活動地點 臺中市大墩文化中心",
           "date": "",
           "url": "https://yii.tw/events/44208",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
+          "name": "中華民國油畫創作協會-藝啓飛揚",
+          "desc": "活動地點 港區藝術中心清水區中央畫廊",
+          "date": "",
+          "url": "https://yii.tw/events/44285",
           "source": "小藝行事曆",
           "area": "台中"
         },
@@ -775,10 +783,18 @@
       ],
       "親子同樂": [
         {
-          "name": "兒童美術研習班成果展-好厲害的豬籠草",
-          "desc": "活動地點 港區藝術中心清水區港區小藝廊",
+          "name": "【沙鹿文昌分館】5/2-5/31「在地作家玉米辰(陳旻昱)老師繪本美學作品」海報展",
+          "desc": "活動地點 沙鹿文昌分館",
           "date": "",
-          "url": "https://yii.tw/events/43901",
+          "url": "https://yii.tw/events/44410",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
+          "name": "【大里分館】05/05-05/31 「揉光成形：銀髮輕黏土軟實力」",
+          "desc": "活動地點 大里分館",
+          "date": "",
+          "url": "https://yii.tw/events/44394",
           "source": "小藝行事曆",
           "area": "台中"
         },
@@ -799,18 +815,10 @@
           "area": "台中"
         },
         {
-          "name": "【大里分館】05/05-05/31 「揉光成形：銀髮輕黏土軟實力」",
-          "desc": "活動地點 大里分館",
+          "name": "兒童美術研習班成果展-好厲害的豬籠草",
+          "desc": "活動地點 港區藝術中心清水區港區小藝廊",
           "date": "",
-          "url": "https://yii.tw/events/44394",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "【沙鹿文昌分館】5/2-5/31「在地作家玉米辰(陳旻昱)老師繪本美學作品」海報展",
-          "desc": "活動地點 沙鹿文昌分館",
-          "date": "",
-          "url": "https://yii.tw/events/44410",
+          "url": "https://yii.tw/events/43901",
           "source": "小藝行事曆",
           "area": "台中"
         },
@@ -913,50 +921,42 @@
           "area": "台中"
         },
         {
-          "name": "我們正用身體交織著",
-          "desc": "活動地點 港區藝術中心清水區展覽室B",
-          "date": "",
-          "url": "https://yii.tw/events/44321",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "【中區分館】5/2~5/31「郭麗珠、郭中光姐弟畫展」",
-          "desc": "活動地點 中區分館",
-          "date": "",
-          "url": "https://yii.tw/events/44129",
-          "source": "小藝行事曆",
-          "area": "台中"
-        },
-        {
-          "name": "【東勢許良宇圖書館】5月份 線性金屬雕塑藝術創作展",
+          "name": "【東勢許良宇圖書館】5月份 新成國小- 新意疊疊樂：拼成我的異想世界",
           "desc": "活動地點 東勢許良宇圖書館",
           "date": "",
-          "url": "https://yii.tw/events/44310",
+          "url": "https://yii.tw/events/44311",
           "source": "小藝行事曆",
           "area": "台中"
         },
         {
-          "name": "【烏日分館】5/02-5/31 巧手創藝-蝶古巴特聯展",
-          "desc": "活動地點 烏日分館",
+          "name": "【大里大新分館】05/05-05/31 心靈療癒禪繞畫 林秀苓老師禪繞畫創作展",
+          "desc": "活動地點 大里大新分館",
           "date": "",
-          "url": "https://yii.tw/events/44429",
+          "url": "https://yii.tw/events/44393",
           "source": "小藝行事曆",
           "area": "台中"
         },
         {
-          "name": "在日光之中流轉 - 周瑞萍與陳美麗雙個展",
-          "desc": "活動地點 港區藝術中心清水區清水廳",
+          "name": "【太平分館】5月 木語童心：鄉村憶趣 木雕展",
+          "desc": "活動地點 太平分館",
           "date": "",
-          "url": "https://yii.tw/events/44286",
+          "url": "https://yii.tw/events/44550",
           "source": "小藝行事曆",
           "area": "台中"
         },
         {
-          "name": "2026華盛頓小學畢業美展：築夢島與它的精靈們",
-          "desc": "活動地點 葫蘆墩文化中心",
+          "name": "「ㄅㄆㄇ悠郵環島」特展",
+          "desc": "中區（臺中市）=",
           "date": "",
-          "url": "https://yii.tw/events/44097",
+          "url": "https://yii.tw/events/42440",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
+          "name": "【沙鹿深波分館】5/2-5/31 電影海報美學展",
+          "desc": "活動地點 沙鹿深波分館",
+          "date": "",
+          "url": "https://yii.tw/events/44406",
           "source": "小藝行事曆",
           "area": "台中"
         },
@@ -969,26 +969,34 @@
           "area": "台中"
         },
         {
-          "name": "烽火船說－水下文化資產特展",
-          "desc": "文化部文化資產園區",
+          "name": "【上楓分館】5/2-5/31【利希騰貝格圖電燒木創作展】",
+          "desc": "活動地點 上楓分館大雅區二樓裝置藝術展區",
           "date": "",
-          "url": "https://yii.tw/events/43214",
+          "url": "https://yii.tw/events/44404",
           "source": "小藝行事曆",
           "area": "台中"
         },
         {
-          "name": "【大里德芳分館】05/05-05/31 「春日藝術花：把春天，留給最愛的人」",
-          "desc": "活動地點 大里德芳分館",
+          "name": "心象·情緣—高翠滿墨彩創作展",
+          "desc": "活動地點 屯區藝文中心",
           "date": "",
-          "url": "https://yii.tw/events/44395",
+          "url": "https://yii.tw/events/43974",
           "source": "小藝行事曆",
           "area": "台中"
         },
         {
-          "name": "「機密檔案」-透過陳庭詩的結構詩學看鋼鐵靈魂",
-          "desc": "太平買菸場",
+          "name": "【中區分館】5/2~5/31「郭麗珠、郭中光姐弟畫展」",
+          "desc": "活動地點 中區分館",
           "date": "",
-          "url": "https://yii.tw/events/43197",
+          "url": "https://yii.tw/events/44129",
+          "source": "小藝行事曆",
+          "area": "台中"
+        },
+        {
+          "name": "《火脈．傳形》林瑤農玻璃藝術個展",
+          "desc": "活動地點 臺中市大墩文化中心",
+          "date": "",
+          "url": "https://yii.tw/events/44203",
           "source": "小藝行事曆",
           "area": "台中"
         },
@@ -1028,14 +1036,6 @@
           "name": "「藥美容．有醫方」中醫藥美容特展",
           "desc": "10/27 | 立夫中醫藥博物館",
           "date": "10/27",
-          "url": "",
-          "source": "文化部",
-          "area": "台中"
-        },
-        {
-          "name": "「ㄅㄆㄇ悠郵環島」特展",
-          "desc": "01/01 | 中區（臺中市）=",
-          "date": "01/01",
           "url": "",
           "source": "文化部",
           "area": "台中"
@@ -1283,10 +1283,10 @@
           "area": "台南"
         },
         {
-          "name": "郭芳純繪畫個展",
-          "desc": "官田區（臺南市）=",
+          "name": "《活的歷史‧層疊的地景》Livine History, Layering Landscape",
+          "desc": "【南區】水交社文化園區",
           "date": "",
-          "url": "https://yii.tw/events/43307",
+          "url": "https://yii.tw/events/43408",
           "source": "小藝行事曆",
           "area": "台南"
         },
@@ -1299,10 +1299,10 @@
           "area": "台南"
         },
         {
-          "name": "《活的歷史‧層疊的地景》Livine History, Layering Landscape",
-          "desc": "【南區】水交社文化園區",
+          "name": "郭芳純繪畫個展",
+          "desc": "官田區（臺南市）=",
           "date": "",
-          "url": "https://yii.tw/events/43408",
+          "url": "https://yii.tw/events/43307",
           "source": "小藝行事曆",
           "area": "台南"
         },
@@ -1439,6 +1439,22 @@
           "area": "台南"
         },
         {
+          "name": "臺南市奇美博物館【常設展】動物廳",
+          "desc": "臺南市奇美博物館",
+          "date": "",
+          "url": "https://yii.tw/events/43336",
+          "source": "小藝行事曆",
+          "area": "台南"
+        },
+        {
+          "name": "顏水龍的工藝精神與影響展覽",
+          "desc": "【麻豆區】總爺藝文中心",
+          "date": "",
+          "url": "https://yii.tw/events/43569",
+          "source": "小藝行事曆",
+          "area": "台南"
+        },
+        {
           "name": "大英博物館鉅獻《埃及之王：法老》",
           "desc": "臺南市奇美博物館",
           "date": "",
@@ -1455,42 +1471,10 @@
           "area": "台南"
         },
         {
-          "name": "《直上晴空:空軍第一戰術戰鬥機聯隊特展》TAKE OFF",
-          "desc": "【南區】水交社文化園區",
-          "date": "",
-          "url": "https://yii.tw/events/43407",
-          "source": "小藝行事曆",
-          "area": "台南"
-        },
-        {
-          "name": "臺南市奇美博物館【常設展】兵器廳",
+          "name": "臺南市奇美博物館【常設展】《時間的房間》",
           "desc": "臺南市奇美博物館",
           "date": "",
-          "url": "https://yii.tw/events/43341",
-          "source": "小藝行事曆",
-          "area": "台南"
-        },
-        {
-          "name": "【能量的顏色，療癒的光】張嘉苓當代藝術特展",
-          "desc": "【新營區】三一宅藝空間",
-          "date": "",
-          "url": "https://yii.tw/events/43609",
-          "source": "小藝行事曆",
-          "area": "台南"
-        },
-        {
-          "name": "穹頂計畫",
-          "desc": "臺南市奇美博物館",
-          "date": "",
-          "url": "https://yii.tw/events/43337",
-          "source": "小藝行事曆",
-          "area": "台南"
-        },
-        {
-          "name": "穹頂計畫III 末日慶典",
-          "desc": "臺南市奇美博物館",
-          "date": "",
-          "url": "https://yii.tw/events/43339",
+          "url": "https://yii.tw/events/43343",
           "source": "小藝行事曆",
           "area": "台南"
         },
@@ -1511,10 +1495,26 @@
           "area": "台南"
         },
         {
-          "name": "2026年心豐藝術節特展-刻繪的手勢",
-          "desc": "【歸仁區】歸仁文化中心",
+          "name": "穹頂計畫Ⅱ 潘神之子",
+          "desc": "臺南市奇美博物館",
           "date": "",
-          "url": "https://yii.tw/events/44212",
+          "url": "https://yii.tw/events/43338",
+          "source": "小藝行事曆",
+          "area": "台南"
+        },
+        {
+          "name": "重構世界：當代藝術中的性別與身體",
+          "desc": "【東區】臺南文化中心",
+          "date": "",
+          "url": "https://yii.tw/events/43364",
+          "source": "小藝行事曆",
+          "area": "台南"
+        },
+        {
+          "name": "臺南市奇美博物館【常設展】兵器廳",
+          "desc": "臺南市奇美博物館",
+          "date": "",
+          "url": "https://yii.tw/events/43341",
           "source": "小藝行事曆",
           "area": "台南"
         },
@@ -1535,7 +1535,7 @@
           "area": "台南"
         },
         {
-          "name": "臺南市奇美博物館【常設展】《時間的房間》",
+          "name": "穹頂計畫",
           "desc": "01/01 | 臺南市奇美博物館",
           "date": "01/01",
           "url": "",
@@ -1543,7 +1543,7 @@
           "area": "台南"
         },
         {
-          "name": "穹頂計畫Ⅱ 潘神之子",
+          "name": "穹頂計畫III 末日慶典",
           "desc": "01/01 | 臺南市奇美博物館",
           "date": "01/01",
           "url": "",
@@ -1831,14 +1831,6 @@
           "area": "台北"
         },
         {
-          "name": "2026第十二屆臺灣國際打擊樂節-律動擊樂三重奏",
-          "desc": "國家音樂廳",
-          "date": "",
-          "url": "https://yii.tw/events/44370",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
           "name": "2026第十二屆臺灣國際打擊樂節-松本族手碟樂團&amp;手鼓演奏家范吉利斯與他的好朋友們",
           "desc": "國家音樂廳",
           "date": "",
@@ -1847,10 +1839,18 @@
           "area": "台北"
         },
         {
-          "name": "【2026 TSO 室內沙龍】情定威尼斯─劉兆哲長笛獨奏會",
+          "name": "德法經典對話",
           "desc": "國家兩廳院演奏廳",
           "date": "",
-          "url": "https://yii.tw/events/44369",
+          "url": "https://yii.tw/events/44412",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "2026第十二屆臺灣國際打擊樂節-律動擊樂三重奏",
+          "desc": "國家音樂廳",
+          "date": "",
+          "url": "https://yii.tw/events/44370",
           "source": "小藝行事曆",
           "area": "台北"
         },
@@ -1929,50 +1929,26 @@
           "area": "台北"
         },
         {
-          "name": "親近國寶──大理石梟形小立雕",
-          "desc": "歷史文物陳列館",
+          "name": "《你的城市我的家--城市鳥巢展》",
+          "desc": "華山文創園區",
           "date": "",
-          "url": "https://yii.tw/events/42697",
+          "url": "https://yii.tw/events/44269",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "100Y 山林有時：＿＿＿",
+          "name": "Studio Smoll《讀塑繹革》",
           "desc": "松山文創園區",
           "date": "",
-          "url": "https://yii.tw/events/43493",
+          "url": "https://yii.tw/events/43848",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "VISION TOYS 快閃店",
-          "desc": "松山文創園區",
+          "name": "華山畢業季X民生電氣《華山放送所：我從___畢業了》",
+          "desc": "華山文創園區",
           "date": "",
-          "url": "https://yii.tw/events/43732",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "挑戰關鍵決策",
-          "desc": "孫運璿科技‧人文紀念館",
-          "date": "",
-          "url": "https://yii.tw/events/42121",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "第十屆義大利設計日在台灣 | 2026",
-          "desc": "松山文創園區",
-          "date": "",
-          "url": "https://yii.tw/events/44302",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
-          "name": "KiKi QUOKKA《沁涼一夏》快閃店",
-          "desc": "松山文創園區",
-          "date": "",
-          "url": "https://yii.tw/events/44455",
+          "url": "https://yii.tw/events/44267",
           "source": "小藝行事曆",
           "area": "台北"
         },
@@ -1993,10 +1969,34 @@
           "area": "台北"
         },
         {
-          "name": "卓越義大利：設計，讓____成真 Italia Geniale: Design Enables",
-          "desc": "松山文創園區・台灣設計館02展間",
+          "name": "【2026華山畢業季】後浪 wave maker_活動總覽",
+          "desc": "華山文創園區",
           "date": "",
-          "url": "https://yii.tw/events/44333",
+          "url": "https://yii.tw/events/44268",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "VISION TOYS 快閃店",
+          "desc": "松山文創園區",
+          "date": "",
+          "url": "https://yii.tw/events/43732",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "挑戰關鍵決策",
+          "desc": "孫運璿科技‧人文紀念館",
+          "date": "",
+          "url": "https://yii.tw/events/42121",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "KiKi QUOKKA《沁涼一夏》快閃店",
+          "desc": "松山文創園區",
+          "date": "",
+          "url": "https://yii.tw/events/44455",
           "source": "小藝行事曆",
           "area": "台北"
         },
@@ -2149,18 +2149,34 @@
           "area": "台北"
         },
         {
-          "name": "積吶虹光｜虹心球(RHS)光譜中的我們",
-          "desc": "立法院 文化走廊",
+          "name": "「支撐之架：維護與修復的通道與顯現」布恩・卡路拜恩",
+          "desc": "安卓藝術",
           "date": "",
-          "url": "https://yii.tw/events/44424",
+          "url": "https://yii.tw/events/44079",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "「引光入畫」 ——鳳甲美術館刺繡收藏展",
-          "desc": "大安覺風藝文空間",
+          "name": "115年度主辦特展「熊妤創藝特展｜如果影子會寫畫」",
+          "desc": "臺北市藝文推廣處一樓特展室",
           "date": "",
-          "url": "https://yii.tw/events/43865",
+          "url": "https://yii.tw/events/43608",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "【童里5月展覽】躺躺睡 Take a break｜程一心 個展（05.02／05.23／05.30 下午藝術家",
+          "desc": "童里繪本洋行",
+          "date": "",
+          "url": "https://yii.tw/events/44371",
+          "source": "小藝行事曆",
+          "area": "台北"
+        },
+        {
+          "name": "【1839當代】《SHOW88-99》薄井一議 Kazuyoshi USUI 攝影展",
+          "desc": "1839當代藝廊",
+          "date": "",
+          "url": "https://yii.tw/events/44049",
           "source": "小藝行事曆",
           "area": "台北"
         },
@@ -2173,14 +2189,6 @@
           "area": "台北"
         },
         {
-          "name": "北美館 - 超現實主義：對話中的世界",
-          "desc": "臺北市立美術館",
-          "date": "",
-          "url": "https://yii.tw/events/43964",
-          "source": "小藝行事曆",
-          "area": "台北"
-        },
-        {
           "name": "北美館 - 共感：存在的節奏",
           "desc": "臺北市立美術館",
           "date": "",
@@ -2189,34 +2197,34 @@
           "area": "台北"
         },
         {
-          "name": "燕子之城二部曲展覽作品徵件",
-          "desc": "田園城市生活風格書店B1 / 好土書店 2.3F",
+          "name": "天闊煙靜｜李安成收藏展 Vast Skies, the Haze Withdrawn: Li An-Cheng",
+          "desc": "敦煌藝術中心 Caves Art Center",
           "date": "",
-          "url": "https://yii.tw/events/44337",
+          "url": "https://yii.tw/events/44213",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "鄉土.童心.逍遙遊〜劉宗銘 姚遠雙個展",
-          "desc": "孟焦畫坊",
+          "name": "《 懷。》— 史承平攝影個展「一場關於認知與存在的辯證」",
+          "desc": "中國科技大學藝文中心",
           "date": "",
-          "url": "https://yii.tw/events/44036",
+          "url": "https://yii.tw/events/43948",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "北美館- 造公園",
-          "desc": "臺北市立美術館",
+          "name": "第三屆中國信託當代繪畫獎展覽",
+          "desc": "臺北藝術大學關渡美術館",
           "date": "",
-          "url": "https://yii.tw/events/43933",
+          "url": "https://yii.tw/events/43713",
           "source": "小藝行事曆",
           "area": "台北"
         },
         {
-          "name": "115年度主辦特展「熊妤創藝特展｜如果影子會寫畫」",
-          "desc": "臺北市藝文推廣處一樓特展室",
+          "name": "林東磬 創作個展【潰形誌】",
+          "desc": "金車文藝中心 臺北南京館",
           "date": "",
-          "url": "https://yii.tw/events/43608",
+          "url": "https://yii.tw/events/43966",
           "source": "小藝行事曆",
           "area": "台北"
         },
@@ -2559,14 +2567,6 @@
     "高雄": {
       "表演音樂": [
         {
-          "name": "POP! POP! POP!流行音樂互動展",
-          "desc": "高雄流行音樂中心",
-          "date": "",
-          "url": "https://yii.tw/events/43284",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
           "name": "藍寶石大歌廳《秀場傳奇》故事展",
           "desc": "高雄流行音樂中心",
           "date": "",
@@ -2575,10 +2575,10 @@
           "area": "高雄"
         },
         {
-          "name": "高雄市信義國小115級音樂資優班畢業音樂會",
-          "desc": "衛武營國家藝術文化中心表演廳",
+          "name": "POP! POP! POP!流行音樂互動展",
+          "desc": "高雄流行音樂中心",
           "date": "",
-          "url": "https://yii.tw/events/44352",
+          "url": "https://yii.tw/events/43284",
           "source": "小藝行事曆",
           "area": "高雄"
         },
@@ -2587,6 +2587,14 @@
           "desc": "衛武營國家藝術文化中心音樂廳",
           "date": "",
           "url": "https://yii.tw/events/44351",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
+        {
+          "name": "高雄市信義國小115級音樂資優班畢業音樂會",
+          "desc": "衛武營國家藝術文化中心表演廳",
+          "date": "",
+          "url": "https://yii.tw/events/44352",
           "source": "小藝行事曆",
           "area": "高雄"
         },
@@ -2653,14 +2661,78 @@
           "url": "",
           "source": "文化部",
           "area": "高雄"
+        },
+        {
+          "name": "節奏、人聲、榮光—音樂會展現多元文化",
+          "desc": "05/13 | 衛武營 音樂廳",
+          "date": "05/13",
+          "url": "https://khh.tainanoutlook.com/events/62f69da544d7",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "高雄市信義國小音樂資優班畢業音樂會",
+          "desc": "05/13 | 衛武營 表演廳",
+          "date": "05/13",
+          "url": "https://khh.tainanoutlook.com/events/3dd8d712a8b4",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "溫暖的聲響：女高音和大提琴的音樂對話",
+          "desc": "05/15 | 衛武營 表演廳",
+          "date": "05/15",
+          "url": "https://khh.tainanoutlook.com/events/a70c39db28fa",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "音畫．臺灣：融合古典音樂的臺灣文化典雅",
+          "desc": "05/15 | 衛武營 音樂廳",
+          "date": "05/15",
+          "url": "https://khh.tainanoutlook.com/events/94a43d741a6a",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "林昭亮小提琴獨奏會：古典與浪漫的交錯",
+          "desc": "05/16 | 衛武營 音樂廳",
+          "date": "05/16",
+          "url": "https://khh.tainanoutlook.com/events/3befdefa954d",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "能量補給站快閃登場！挑戰、拍照、限定好禮等你來",
+          "desc": "05/14~05/17 | 高雄流行音樂中心 海音館",
+          "date": "05/14~05/17",
+          "url": "https://khh.tainanoutlook.com/events/8e958f05444c",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "有真與有真 音樂劇",
+          "desc": "05/16~05/17 | 衛武營 戲劇院",
+          "date": "05/16~05/17",
+          "url": "https://khh.tainanoutlook.com/events/a9dbcf17dfba",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "張正傑親子音樂會：披薩PK潤餅",
+          "desc": "05/17 | 衛武營 音樂廳",
+          "date": "05/17",
+          "url": "https://khh.tainanoutlook.com/events/502dda80558f",
+          "source": "tainanoutlook",
+          "area": "高雄"
         }
       ],
       "文青咖啡": [
         {
-          "name": "歷史建築逍遙園常設展",
-          "desc": "新興區（高雄市）=",
+          "name": "鳳山歷史教室",
+          "desc": "大東文化藝術中心",
           "date": "",
-          "url": "https://yii.tw/events/43276",
+          "url": "https://yii.tw/events/43280",
           "source": "小藝行事曆",
           "area": "高雄"
         },
@@ -2673,14 +2745,6 @@
           "area": "高雄"
         },
         {
-          "name": "歷史建築九曲堂泰芳商會鳳梨罐詰工場 (臺灣鳳梨工場)常設展",
-          "desc": "大樹區（高雄市）=",
-          "date": "",
-          "url": "https://yii.tw/events/43281",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
           "name": "「黃埔新村展示館」歷史文物展",
           "desc": "鳳山區（高雄市）=",
           "date": "",
@@ -2689,10 +2753,18 @@
           "area": "高雄"
         },
         {
-          "name": "鳳山歷史教室",
-          "desc": "大東文化藝術中心",
+          "name": "歷史建築九曲堂泰芳商會鳳梨罐詰工場 (臺灣鳳梨工場)常設展",
+          "desc": "大樹區（高雄市）=",
           "date": "",
-          "url": "https://yii.tw/events/43280",
+          "url": "https://yii.tw/events/43281",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
+        {
+          "name": "歷史建築逍遙園常設展",
+          "desc": "新興區（高雄市）=",
+          "date": "",
+          "url": "https://yii.tw/events/43276",
           "source": "小藝行事曆",
           "area": "高雄"
         },
@@ -2758,6 +2830,62 @@
           "date": "01/01",
           "url": "",
           "source": "文化部",
+          "area": "高雄"
+        },
+        {
+          "name": "高史博定時導覽，探索高雄文史與建築",
+          "desc": "05/16~05/17 | 高史博",
+          "date": "05/16~05/17",
+          "url": "https://khh.tainanoutlook.com/events/64f9f75dfe31",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "哈瑪星文化行腳：港都文化歷史之旅",
+          "desc": "05/17 | 高史博",
+          "date": "05/17",
+          "url": "https://khh.tainanoutlook.com/events/45f237c3a33e",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "鋼鐵建築導覽：揭開衛武營屋頂的秘密",
+          "desc": "05/31 | 衛武營 歌劇院後台空間",
+          "date": "05/31",
+          "url": "https://khh.tainanoutlook.com/events/e43bb37e068d",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "二二八事件的歷史現場：高雄市政府的血腥鎮壓",
+          "desc": "02/28~12/31 | 高史博 本館2樓",
+          "date": "02/28~12/31",
+          "url": "https://khh.tainanoutlook.com/events/2414169bf1e5",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "大高雄歷史常設展｜高雄活動大集合",
+          "desc": "09/01~12/31 | 高史博 本館101展覽室",
+          "date": "09/01~12/31",
+          "url": "https://khh.tainanoutlook.com/events/0083489d6684",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "鐵道血脈：高雄百年運輸歷史展覽",
+          "desc": "01/27~12/31 | 高史博 本館104展覽室",
+          "date": "01/27~12/31",
+          "url": "https://khh.tainanoutlook.com/events/155980cf37a6",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "駁二舊事倉庫：探索歷史的秘密",
+          "desc": "01/22~12/31 | 駁二 大義區C7倉庫",
+          "date": "01/22~12/31",
+          "url": "https://khh.tainanoutlook.com/events/d4a727729959",
+          "source": "tainanoutlook",
           "area": "高雄"
         }
       ],
@@ -2825,6 +2953,30 @@
           "url": "",
           "source": "文化部",
           "area": "高雄"
+        },
+        {
+          "name": "感官遊樂場慢飛天使親子工作坊",
+          "desc": "05/23 | 衛武營排練室",
+          "date": "05/23",
+          "url": "https://khh.tainanoutlook.com/events/af5411f78167",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "穿越明暗的冒險：光影史密斯工作坊",
+          "desc": "05/23~05/24 | 高史博",
+          "date": "05/23~05/24",
+          "url": "https://khh.tainanoutlook.com/events/f2ed700a99a7",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "動漫郵票特展：童趣漫遊的郵趣之旅",
+          "desc": "11/08~06/14 | 郵政博物館高雄館特展室",
+          "date": "11/08~06/14",
+          "url": "https://khh.tainanoutlook.com/events/cc65e414ccdc",
+          "source": "tainanoutlook",
+          "area": "高雄"
         }
       ],
       "市集展覽": [
@@ -2837,22 +2989,6 @@
           "area": "高雄"
         },
         {
-          "name": "鳳鼻頭考古遺址常態展",
-          "desc": "林園區（高雄市）=",
-          "date": "",
-          "url": "https://yii.tw/events/43277",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
-          "name": "打狗英國領事館文化園區常設展",
-          "desc": "打狗英國領事館文化園區",
-          "date": "",
-          "url": "https://yii.tw/events/43288",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
           "name": "乘浪上港特展",
           "desc": "紅毛港文化園區",
           "date": "",
@@ -2861,34 +2997,18 @@
           "area": "高雄"
         },
         {
-          "name": "紅毛港舊物件展",
-          "desc": "紅毛港文化園區",
+          "name": "旗山生活文化園區常設展",
+          "desc": "高雄市旗山生活文化園區(原舊鼓山國小)",
           "date": "",
-          "url": "https://yii.tw/events/43153",
+          "url": "https://yii.tw/events/43283",
           "source": "小藝行事曆",
           "area": "高雄"
         },
         {
-          "name": "「解密哨船頭」歴史展覽",
-          "desc": "鼓山區（高雄市）=",
+          "name": "砰波波波！聲音的小宇宙",
+          "desc": "內惟藝術中心",
           "date": "",
-          "url": "https://yii.tw/events/43285",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
-          "name": "原頂林仔邊警察官吏派出所常設展",
-          "desc": "原頂林仔邊警察官吏派出所",
-          "date": "",
-          "url": "https://yii.tw/events/43278",
-          "source": "小藝行事曆",
-          "area": "高雄"
-        },
-        {
-          "name": "回家：小林村的故事",
-          "desc": "甲仙區（高雄市）=",
-          "date": "",
-          "url": "https://yii.tw/events/43089",
+          "url": "https://yii.tw/events/43139",
           "source": "小藝行事曆",
           "area": "高雄"
         },
@@ -2901,10 +3021,42 @@
           "area": "高雄"
         },
         {
+          "name": "紅毛港舊物件展",
+          "desc": "紅毛港文化園區",
+          "date": "",
+          "url": "https://yii.tw/events/43153",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
+        {
+          "name": "雄鎮北門常設展",
+          "desc": "鼓山區（高雄市）=",
+          "date": "",
+          "url": "https://yii.tw/events/43286",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
+        {
           "name": "線上互動展《驛動時刻——HAMA與時空灶咖傳說》",
           "desc": "鼓山區（高雄市）=",
           "date": "",
           "url": "https://yii.tw/events/43275",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
+        {
+          "name": "回家：小林村的故事",
+          "desc": "甲仙區（高雄市）=",
+          "date": "",
+          "url": "https://yii.tw/events/43089",
+          "source": "小藝行事曆",
+          "area": "高雄"
+        },
+        {
+          "name": "內惟藝術中心首展｜解惟．解圍 Once within Borders",
+          "desc": "內惟藝術中心",
+          "date": "",
+          "url": "https://yii.tw/events/43154",
           "source": "小藝行事曆",
           "area": "高雄"
         },
@@ -2925,14 +3077,6 @@
           "area": "高雄"
         },
         {
-          "name": "砰波波波！聲音的小宇宙",
-          "desc": "01/01 | 內惟藝術中心",
-          "date": "01/01",
-          "url": "",
-          "source": "文化部",
-          "area": "高雄"
-        },
-        {
           "name": "科學發展史/海報主題展",
           "desc": "01/01 | 高雄市立圖書館左新分館",
           "date": "01/01",
@@ -2941,15 +3085,97 @@
           "area": "高雄"
         },
         {
-          "name": "內惟藝術中心首展｜解惟．解圍 Once within Borders",
-          "desc": "01/01 | 內惟藝術中心",
-          "date": "01/01",
-          "url": "",
-          "source": "文化部",
+          "name": "迷霧中的律動",
+          "desc": "05/15 | 高流 LIVE WAREHOUSE  小庫",
+          "date": "05/15",
+          "url": "https://khh.tainanoutlook.com/events/0220a7bfd31e",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "止血帶行動課：10分鐘救命技能",
+          "desc": "05/16 | 駁二 大義區紅磚廊道",
+          "date": "05/16",
+          "url": "https://khh.tainanoutlook.com/events/62aac9176332",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "追思戰士的孤勇義行：白衣天使的未竟戰爭",
+          "desc": "05/16 | 高史博",
+          "date": "05/16",
+          "url": "https://khh.tainanoutlook.com/events/023b44cf7a1a",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "爵式樂手同樂會 WiJazz Open Jam #56",
+          "desc": "05/16 | 高流 音浪塔  2F 高音塔",
+          "date": "05/16",
+          "url": "https://khh.tainanoutlook.com/events/b7250bd5f57d",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "風起兮，微光延續十週年",
+          "desc": "05/16 | 衛武營 表演廳",
+          "date": "05/16",
+          "url": "https://khh.tainanoutlook.com/events/18912e834130",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "瘋狂實驗室再現：地下城 DUNGEONS 2026",
+          "desc": "05/16 | 高流 鯨魚堤岸  03",
+          "date": "05/16",
+          "url": "https://khh.tainanoutlook.com/events/e854ba17d546",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "珍珠—南方視野的女性藝術",
+          "desc": "04/04~05/17 | 高美館",
+          "date": "04/04~05/17",
+          "url": "https://khh.tainanoutlook.com/events/ef766c43c73a",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "青春設計節：未來設計的創新力量",
+          "desc": "05/14~05/17 | 高雄市",
+          "date": "05/14~05/17",
+          "url": "https://khh.tainanoutlook.com/events/80e9c914aec9",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        }
+      ],
+      "吃喝玩樂": [
+        {
+          "name": "原住民樂舞饗宴：傳統文化的珍視與尊重",
+          "desc": "05/30 | 衛武營 歌劇院",
+          "date": "05/30",
+          "url": "https://khh.tainanoutlook.com/events/35a382b22056",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
+        {
+          "name": "勇者動畫系列2料理秀熱鬧登場！",
+          "desc": "07/04~06/07 | 駁二大義區C7動漫倉庫",
+          "date": "07/04~06/07",
+          "url": "https://khh.tainanoutlook.com/events/665e3f3c5e97",
+          "source": "tainanoutlook",
           "area": "高雄"
         }
       ],
       "戶外踏青": [
+        {
+          "name": "典藏庫房的竊竊私語：藝術生態中的角色與功能",
+          "desc": "05/09~09/06 | 高美館",
+          "date": "05/09~09/06",
+          "url": "https://khh.tainanoutlook.com/events/ab6ac1c9594a",
+          "source": "tainanoutlook",
+          "area": "高雄"
+        },
         {
           "name": "【產品活動】MAMMUT 板橋大遠百門市將於2026/4/17(五)盛大開幕！",
           "desc": "健行筆記活動",
