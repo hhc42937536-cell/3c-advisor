@@ -282,6 +282,12 @@
       border-radius: 10px;
       background: var(--paper);
       font-weight: 900;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      width: 100%;
+      transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
     }
     .morning-item span {
       color: var(--muted);
@@ -348,6 +354,25 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      width: 100%;
+      transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+    }
+    .feature-card:hover,
+    .feature-card:focus-visible,
+    .data-item:hover,
+    .data-item:focus-visible,
+    .roadmap-item:hover,
+    .roadmap-item:focus-visible,
+    .morning-item:hover,
+    .morning-item:focus-visible {
+      border-color: rgba(47, 150, 109, .42);
+      box-shadow: 0 12px 28px rgba(34, 42, 36, .08);
+      transform: translateY(-1px);
+      outline: none;
     }
     .feature-card { border-top: 6px solid rgba(47, 150, 109, .68); }
     .icon {
@@ -527,6 +552,12 @@
       justify-content: space-between;
       gap: 10px;
       font-weight: 900;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      width: 100%;
+      transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
     }
     .data-item span { color: var(--muted); font-size: 13px; }
 
@@ -552,6 +583,12 @@
       border: 1px solid var(--line);
       border-radius: 10px;
       background: var(--paper);
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      width: 100%;
+      transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
     }
     .roadmap-item b { font-size: 16px; }
     .roadmap-item span { color: var(--muted); line-height: 1.5; font-size: 14px; }
@@ -663,10 +700,10 @@
             <h2>早安，出門前看這張。</h2>
             <p>把天氣、穿搭、油價、匯率和小提醒收在同一張卡片，不用一早開很多頁。</p>
             <div class="morning-list">
-              <div class="morning-item"><strong>天氣穿搭</strong><span>薄外套、可帶傘</span></div>
-              <div class="morning-item"><strong>油價提醒</strong><span>通勤前先看</span></div>
-              <div class="morning-item"><strong>匯率摘要</strong><span>旅遊 / 換匯參考</span></div>
-              <div class="morning-item"><strong>今日小提醒</strong><span>活動、補班、洗曬</span></div>
+              <button class="morning-item" type="button" data-preset="morning" data-focus="穿搭與雨具"><strong>天氣穿搭</strong><span>薄外套、可帶傘</span></button>
+              <button class="morning-item" type="button" data-preset="morning" data-focus="油價與匯率"><strong>油價提醒</strong><span>通勤前先看</span></button>
+              <button class="morning-item" type="button" data-preset="morning" data-focus="油價與匯率"><strong>匯率摘要</strong><span>旅遊 / 換匯參考</span></button>
+              <button class="morning-item" type="button" data-preset="morning" data-focus="洗曬與行程"><strong>今日小提醒</strong><span>活動、補班、洗曬</span></button>
             </div>
           </div>
           <div class="note">LINE 可以快速推送早安；網站適合展開看細節。</div>
@@ -681,10 +718,10 @@
           <p>先整理早晨資訊，再處理吃什麼，最後安排活動。其他工具留在需要時使用，不搶主流程。</p>
         </div>
         <div class="feature-grid">
-          <article class="feature-card"><div class="icon">早</div><h3>早安今日提醒</h3><p>天氣穿搭、帶傘提醒、油價、匯率與今日小提醒。</p><div class="mini-tags"><span>早晨卡片</span><span>CWA / Finance</span></div></article>
-          <article class="feature-card"><div class="icon">食</div><h3>今天吃什麼</h3><p>美食推薦、必比登、聚餐選擇、城市特色、定位找餐廳。</p><div class="mini-tags"><span>餐廳比較</span><span>Google Places</span></div></article>
-          <article class="feature-card"><div class="icon">去</div><h3>活動資訊</h3><p>Accupass 活動、展覽、市集、地區活動與假日提醒。</p><div class="mini-tags"><span>活動篩選</span><span>公開資料</span></div></article>
-          <article class="feature-card"><div class="icon">＋</div><h3>衍生小工具</h3><p>停車、3C 選購、健康、法律、防詐騙，放在需要時再打開。</p><div class="mini-tags"><span>生活工具</span><span>輔助入口</span></div></article>
+          <button class="feature-card" type="button" data-jump="morning"><div class="icon">早</div><h3>早安今日提醒</h3><p>天氣穿搭、帶傘提醒、油價、匯率與今日小提醒。</p><div class="mini-tags"><span>早晨卡片</span><span>CWA / Finance</span></div></button>
+          <button class="feature-card" type="button" data-jump="food"><div class="icon">食</div><h3>今天吃什麼</h3><p>美食推薦、必比登、聚餐選擇、城市特色、定位找餐廳。</p><div class="mini-tags"><span>餐廳比較</span><span>Google Places</span></div></button>
+          <button class="feature-card" type="button" data-jump="activity"><div class="icon">去</div><h3>活動資訊</h3><p>Accupass 活動、展覽、市集、地區活動與假日提醒。</p><div class="mini-tags"><span>活動篩選</span><span>公開資料</span></div></button>
+          <button class="feature-card" type="button" data-jump="tools"><div class="icon">＋</div><h3>衍生小工具</h3><p>停車、3C 選購、健康、法律、防詐騙，放在需要時再打開。</p><div class="mini-tags"><span>生活工具</span><span>輔助入口</span></div></button>
         </div>
       </div>
     </section>
@@ -728,9 +765,9 @@
                 </div>
               </div>
               <div class="data-list">
-                <div class="data-item"><strong>天氣穿搭</strong><span>外出建議</span></div>
-                <div class="data-item"><strong>油價 / 匯率</strong><span>日常參考</span></div>
-                <div class="data-item"><strong>今日小提醒</strong><span>洗曬 / 活動</span></div>
+                <button class="data-item" type="button" data-preset="morning" data-focus="穿搭與雨具"><strong>天氣穿搭</strong><span>外出建議</span></button>
+                <button class="data-item" type="button" data-preset="morning" data-focus="油價與匯率"><strong>油價 / 匯率</strong><span>日常參考</span></button>
+                <button class="data-item" type="button" data-preset="morning" data-focus="洗曬與行程"><strong>今日小提醒</strong><span>洗曬 / 活動</span></button>
               </div>
             </div>
           </div>
@@ -760,9 +797,9 @@
                 </div>
               </div>
               <div class="data-list">
-                <div class="data-item"><strong>定位找餐廳</strong><span>可查詢</span></div>
-                <div class="data-item"><strong>必比登資料</strong><span>推薦參考</span></div>
-                <div class="data-item"><strong>聚餐選擇</strong><span>多人適用</span></div>
+                <button class="data-item" type="button" data-preset="food" data-mood="快速解決"><strong>定位找餐廳</strong><span>可查詢</span></button>
+                <button class="data-item" type="button" data-preset="food" data-mood="想吃特色"><strong>必比登資料</strong><span>推薦參考</span></button>
+                <button class="data-item" type="button" data-preset="food" data-mood="朋友聚餐"><strong>聚餐選擇</strong><span>多人適用</span></button>
               </div>
             </div>
           </div>
@@ -792,9 +829,9 @@
                 </div>
               </div>
               <div class="data-list">
-                <div class="data-item"><strong>展覽 / 市集</strong><span>活動篩選</span></div>
-                <div class="data-item"><strong>假日提醒</strong><span>補班補假</span></div>
-                <div class="data-item"><strong>附近順路</strong><span>停車 / 美食</span></div>
+                <button class="data-item" type="button" data-preset="activity" data-type="展覽"><strong>展覽 / 市集</strong><span>活動篩選</span></button>
+                <button class="data-item" type="button" data-preset="activity" data-time="本週末"><strong>假日提醒</strong><span>補班補假</span></button>
+                <button class="data-item" type="button" data-preset="activity" data-pace="順路吃飯"><strong>附近順路</strong><span>停車 / 美食</span></button>
               </div>
             </div>
           </div>
@@ -824,10 +861,10 @@
                 </div>
               </div>
               <div class="data-list">
-                <div class="data-item"><strong>政府資料</strong><span>城市生活雷達</span></div>
-                <div class="data-item"><strong>3C / 法律</strong><span>情境工具</span></div>
-                <div class="data-item"><strong>防詐 / 健康</strong><span>小幫手</span></div>
-                <div class="data-item"><strong>停車 / 裁罰</strong><span>查詢工具</span></div>
+                <button class="data-item" type="button" data-tool="政府資料生活雷達"><strong>政府資料</strong><span>城市生活雷達</span></button>
+                <button class="data-item" type="button" data-tool="3C 選購"><strong>3C / 法律</strong><span>情境工具</span></button>
+                <button class="data-item" type="button" data-tool="防詐檢查"><strong>防詐 / 健康</strong><span>小幫手</span></button>
+                <button class="data-item" type="button" data-tool="停車查詢"><strong>停車 / 裁罰</strong><span>查詢工具</span></button>
               </div>
             </div>
           </div>
@@ -844,12 +881,12 @@
             <p>3C 選購、法律、防詐、健康、停車、裁罰試算都是衍生工具。它們會保留在網站裡，但不再干擾「早安、吃飯、活動」三個主方向。</p>
           </div>
           <div class="roadmap">
-            <div class="roadmap-item"><b>3C 選購</b><span>產品推薦、規格解讀、升級判斷</span><em class="level">小工具</em></div>
-            <div class="roadmap-item"><b>防詐與法律</b><span>可疑訊息分析、法律白話引導</span><em class="level mid">小工具</em></div>
-            <div class="roadmap-item"><b>健康提醒</b><span>BMI、飲水、睡眠、壓力與卡路里</span><em class="level">小工具</em></div>
-            <div class="roadmap-item"><b>停車查詢</b><span>停車場、費率、附近順路安排</span><em class="level">延伸</em></div>
-            <div class="roadmap-item"><b>交通與垃圾車</b><span>公車動態、垃圾車 GPS、回收分類</span><em class="level">規劃中</em></div>
-            <div class="roadmap-item"><b>裁罰試算</b><span>違規裁罰試算與條例查詢</span><em class="level">規劃中</em></div>
+            <button class="roadmap-item" type="button" data-tool="3C 選購"><b>3C 選購</b><span>產品推薦、規格解讀、升級判斷</span><em class="level">小工具</em></button>
+            <button class="roadmap-item" type="button" data-tool="防詐檢查"><b>防詐與法律</b><span>可疑訊息分析、法律白話引導</span><em class="level mid">小工具</em></button>
+            <button class="roadmap-item" type="button" data-tool="健康小幫手"><b>健康提醒</b><span>BMI、飲水、睡眠、壓力與卡路里</span><em class="level">小工具</em></button>
+            <button class="roadmap-item" type="button" data-tool="停車查詢"><b>停車查詢</b><span>停車場、費率、附近順路安排</span><em class="level">延伸</em></button>
+            <button class="roadmap-item" type="button" data-tool="政府資料生活雷達"><b>交通與垃圾車</b><span>公車動態、垃圾車 GPS、回收分類</span><em class="level">規劃中</em></button>
+            <button class="roadmap-item" type="button" data-tool="法律白話" data-detail="想了解違規裁罰試算與條例查詢"><b>裁罰試算</b><span>違規裁罰試算與條例查詢</span><em class="level">規劃中</em></button>
           </div>
         </div>
       </div>
@@ -880,10 +917,13 @@
       panels.forEach((panel) => panel.classList.toggle("active", panel.id === `panel-${key}`));
     }
     tabs.forEach((tab) => tab.addEventListener("click", () => activateTab(tab.dataset.tab)));
+    function scrollToWorkspace() {
+      document.querySelector("#workspace").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
     document.querySelectorAll("[data-jump]").forEach((button) => {
       button.addEventListener("click", () => {
         activateTab(button.dataset.jump);
-        document.querySelector("#workspace").scrollIntoView({ behavior: "smooth", block: "start" });
+        scrollToWorkspace();
       });
     });
 
@@ -1026,15 +1066,53 @@
       }
     };
 
+    function setSelectValue(selector, value) {
+      const field = document.querySelector(selector);
+      if (!field || !value) return;
+      field.value = value;
+    }
+
+    function openTool(topic, detail = "") {
+      activateTab("tools");
+      setSelectValue("#tool-topic", topic);
+      updateToolFields();
+      if (detail) document.querySelector("#tool-detail").value = detail;
+      scrollToWorkspace();
+      runDemo("tools");
+    }
+
     document.addEventListener("click", (event) => {
       const openButton = event.target.closest("[data-open]");
-      if (!openButton) return;
-      if (openButton.dataset.open === "tools" && openButton.textContent.includes("停車")) {
-        document.querySelector("#tool-topic").value = "停車查詢";
-        updateToolFields();
+      if (openButton) {
+        if (openButton.dataset.open === "tools" && openButton.textContent.includes("停車")) {
+          openTool("停車查詢");
+          return;
+        }
+        activateTab(openButton.dataset.open);
+        scrollToWorkspace();
+        runDemo(openButton.dataset.open);
+        return;
       }
-      activateTab(openButton.dataset.open);
-      document.querySelector("#workspace").scrollIntoView({ behavior: "smooth", block: "start" });
+
+      const toolButton = event.target.closest("[data-tool]");
+      if (toolButton) {
+        openTool(toolButton.dataset.tool, toolButton.dataset.detail || "");
+        return;
+      }
+
+      const presetButton = event.target.closest("[data-preset]");
+      if (!presetButton) return;
+      const key = presetButton.dataset.preset;
+      activateTab(key);
+      if (key === "morning") setSelectValue("#morning-focus", presetButton.dataset.focus);
+      if (key === "food") setSelectValue("#food-mood", presetButton.dataset.mood);
+      if (key === "activity") {
+        setSelectValue("#activity-type", presetButton.dataset.type);
+        setSelectValue("#activity-time", presetButton.dataset.time);
+        setSelectValue("#activity-pace", presetButton.dataset.pace);
+      }
+      scrollToWorkspace();
+      runDemo(key);
     });
 
     function updateToolFields() {
@@ -1205,18 +1283,19 @@
       return samples[key]();
     }
 
+    async function runDemo(key) {
+      if (!samples[key]) return;
+      setResult(key, `<h4>正在讀取資料...</h4><div class="flow-note">正在整理最新生活資料。</div>`);
+      try {
+        setResult(key, await fetchSiteMarkup(key));
+      } catch (error) {
+        console.error(error);
+        setResult(key, `${samples[key]()}<div class="flow-note">目前連線不穩，先提供可參考的建議。</div>`);
+      }
+    }
+
     document.querySelectorAll("[data-demo]").forEach((button) => {
-      button.addEventListener("click", async () => {
-        const key = button.dataset.demo;
-        if (!samples[key]) return;
-        setResult(key, `<h4>正在讀取資料...</h4><div class="flow-note">正在整理最新生活資料。</div>`);
-        try {
-          setResult(key, await fetchSiteMarkup(key));
-        } catch (error) {
-          console.error(error);
-          setResult(key, `${samples[key]()}<div class="flow-note">目前連線不穩，先提供可參考的建議。</div>`);
-        }
-      });
+      button.addEventListener("click", () => runDemo(button.dataset.demo));
     });
 
     fetchSiteMarkup("morning")
