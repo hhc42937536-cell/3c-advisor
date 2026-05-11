@@ -687,7 +687,7 @@
           <div class="task-grid" aria-label="主要任務入口">
             <button class="task-card" data-jump="morning">
               <span class="task-icon">早</span>
-              <span><h2>今日早安提醒</h2><p>天氣、穿搭、油價、匯率與今日小提醒。</p></span>
+              <span><h2>今日摘要</h2><p>天氣、穿搭、油價、匯率與今日小提醒。</p></span>
             </button>
             <button class="task-card" data-jump="food">
               <span class="task-icon">食</span>
@@ -708,8 +708,8 @@
         <div class="visual">
           <div class="morning-card">
             <span class="badge"><i></i>今日摘要</span>
-            <h2>早安，出門前看這張。</h2>
-            <p>把天氣、穿搭、油價、匯率和小提醒收在同一張卡片，不用一早開很多頁。</p>
+            <h2>出門前先看這張。</h2>
+            <p>把天氣、穿搭、油價、匯率和小提醒收在同一張卡片，不用開很多頁。</p>
             <div class="morning-list">
               <button class="morning-item" type="button" data-preset="morning" data-focus="穿搭與雨具"><strong>天氣穿搭</strong><span>薄外套、可帶傘</span></button>
               <button class="morning-item" type="button" data-preset="morning" data-focus="油價與匯率"><strong>油價提醒</strong><span>通勤前先看</span></button>
@@ -729,7 +729,7 @@
           <p>先整理早晨資訊，再處理吃什麼，最後安排活動。其他工具留在需要時使用，不搶主流程。</p>
         </div>
         <div class="feature-grid">
-          <button class="feature-card" type="button" data-jump="morning"><div class="icon">早</div><h3>早安今日提醒</h3><p>天氣穿搭、帶傘提醒、油價、匯率與今日小提醒。</p><div class="mini-tags"><span>早晨卡片</span><span>CWA / Finance</span></div></button>
+          <button class="feature-card" type="button" data-jump="morning"><div class="icon">今</div><h3>今日摘要</h3><p>天氣穿搭、帶傘提醒、油價、匯率與今日小提醒。</p><div class="mini-tags"><span>出門前確認</span><span>CWA / Finance</span></div></button>
           <button class="feature-card" type="button" data-jump="food"><div class="icon">食</div><h3>今天吃什麼</h3><p>美食推薦、必比登、聚餐選擇、城市特色、定位找餐廳。</p><div class="mini-tags"><span>餐廳比較</span><span>Google Places</span></div></button>
           <button class="feature-card" type="button" data-jump="activity"><div class="icon">去</div><h3>活動資訊</h3><p>Accupass 活動、展覽、市集、地區活動與假日提醒。</p><div class="mini-tags"><span>活動篩選</span><span>公開資料</span></div></button>
           <button class="feature-card" type="button" data-jump="tools"><div class="icon">＋</div><h3>衍生小工具</h3><p>停車、3C 選購、健康、法律、防詐騙，放在需要時再打開。</p><div class="mini-tags"><span>生活工具</span><span>輔助入口</span></div></button>
@@ -745,7 +745,7 @@
         </div>
         <div class="workspace">
           <div class="tabs" role="tablist" aria-label="網站功能">
-            <button class="tab" role="tab" aria-selected="true" data-tab="morning">早安提醒</button>
+            <button class="tab" role="tab" aria-selected="true" data-tab="morning">今日摘要</button>
             <button class="tab" role="tab" aria-selected="false" data-tab="food">今天吃什麼</button>
             <button class="tab" role="tab" aria-selected="false" data-tab="activity">活動資訊</button>
             <button class="tab" role="tab" aria-selected="false" data-tab="tools">其他工具</button>
@@ -754,8 +754,8 @@
           <div class="panel active" id="panel-morning" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>早安，先看今日摘要。</h3>
-                <p>把早上最常查的資訊放在一起：天氣穿搭、油價、匯率、洗曬與今日提醒。</p>
+                <h3>出門前，先看今日摘要。</h3>
+                <p>把一天中常查的資訊放在一起：天氣穿搭、油價、匯率、洗曬與今日提醒。</p>
                 <div class="demo-box">
                   <div class="control-grid">
                     <label class="field" for="morning-city">所在城市
@@ -771,8 +771,8 @@
                       <select id="morning-focus"><option>穿搭與雨具</option><option>油價與匯率</option><option>洗曬與行程</option><option>全部整理</option></select>
                     </label>
                   </div>
-                  <button class="btn primary" data-demo="morning">產生早安卡</button>
-                  <div class="result" id="morning-result">選好城市與今天重點，會產生可直接看的早安卡。</div>
+                  <button class="btn primary" data-demo="morning">產生今日摘要</button>
+                  <div class="result" id="morning-result">選好城市、時段與今天重點，會產生可直接看的今日摘要。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -962,6 +962,16 @@
     const card = (title, body) => `<div class="result-card"><strong>${html(title)}</strong><span>${html(body)}</span></div>`;
     const actions = (items) => `<div class="quick-actions">${items.map((item) => `<button type="button" data-open="${html(item.key)}">${html(item.label)}</button>`).join("")}</div>`;
     const linkActions = (items) => `<div class="quick-actions">${items.map((item) => `<a href="${html(item.href)}" target="_blank" rel="noreferrer">${html(item.label)}</a>`).join("")}</div>`;
+    function summaryTitle(time, city) {
+      const prefix = String(time || "").includes("晚上")
+        ? "晚間出門摘要"
+        : String(time || "").includes("下午")
+          ? "午後出門摘要"
+          : String(time || "").includes("上午") || String(time || "").includes("早上")
+            ? "早晨摘要"
+            : "今日摘要";
+      return `${city || ""} ${prefix}`.trim();
+    }
 
     function setResult(key, markup) {
       const target = document.querySelector(`#${key}-result`);
@@ -980,14 +990,14 @@
         const rainText = profile.rain >= 40 ? "帶傘比較安心" : profile.rain >= 30 ? "包包放折傘" : "可不帶傘，留意午後雲量";
         const oilHint = plan === "通勤上班" || plan === "外出跑行程" ? "今天若要開車，先看油價與停車點，避免臨時繞路。" : "今天用車需求低，油價放在晚點再確認即可。";
         return `
-          <h4>${html(city)} ${html(time)}早安卡</h4>
+          <h4>${html(summaryTitle(time, city))}</h4>
           <div class="result-grid">
             ${card("天氣穿搭", `${profile.temp} 度，${rainText}。建議：${profile.outfit}。`)}
             ${card("油價 / 交通", oilHint)}
             ${card("匯率提醒", focus === "油價與匯率" || focus === "全部整理" ? "若有旅遊或海外購物，今天先看日幣與美元方向，再決定是否換匯。" : "今日先收成小提醒，需要旅遊時再展開匯率。")}
             ${card("今日小提醒", `${plan}模式：先處理必要行程，再把吃飯與活動留成可調整選項。`)}
           </div>
-          <div class="flow-note">下一步：早安看完後，通常會接著決定今天吃什麼，再看活動資訊。</div>
+          <div class="flow-note">下一步：摘要看完後，可以接著決定今天吃什麼，再看活動資訊。</div>
           ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看活動資訊" }])}
         `;
       },
@@ -1069,7 +1079,7 @@
           "政府資料生活雷達": [
             ["城市資料", `以「${detail}」查政府開放資料裡的垃圾車、垃圾清運與環境統計。`],
             ["能看什麼", "新北與台中可看垃圾車動態；各縣市可看環境部清運與回收統計。"],
-            ["用途", "早安卡之外，多一層城市生活狀態，適合提醒倒垃圾與了解城市環境趨勢。"],
+            ["用途", "今日摘要之外，多一層城市生活狀態，適合提醒倒垃圾與了解城市環境趨勢。"],
             ["資料來源", "data.gov.tw、環境部、地方政府開放資料平台。"]
           ]
         };
@@ -1237,7 +1247,7 @@
       const rateText = rates.USD ? `USD 賣出 ${rates.USD.spot_sell}，JPY 賣出 ${rates.JPY?.spot_sell || "—"}` : "匯率資料暫時取不到";
       const activity = (data.activities || [])[0];
       return `
-        <h4>${html(data.city)} ${html(data.time || "")}早安卡</h4>
+        <h4>${html(summaryTitle(data.time, data.city))}</h4>
         <div class="result-grid">
           ${card("氣象署天氣", weatherText)}
           ${card("穿搭提醒", data.outfit || "依天氣調整穿搭與雨具")}
