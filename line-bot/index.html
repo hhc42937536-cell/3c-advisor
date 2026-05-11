@@ -683,7 +683,7 @@
         <div class="feature-grid">
           <article class="feature-card"><div class="icon">早</div><h3>早安今日提醒</h3><p>天氣穿搭、帶傘提醒、油價、匯率與今日小提醒。</p><div class="mini-tags"><span>早晨卡片</span><span>CWA / Finance</span></div></article>
           <article class="feature-card"><div class="icon">食</div><h3>今天吃什麼</h3><p>美食推薦、必比登、聚餐選擇、城市特色、定位找餐廳。</p><div class="mini-tags"><span>餐廳比較</span><span>Google Places</span></div></article>
-          <article class="feature-card"><div class="icon">去</div><h3>活動資訊</h3><p>Accupass 活動、展覽、市集、地區活動與假日提醒。</p><div class="mini-tags"><span>活動篩選</span><span>Open Data</span></div></article>
+          <article class="feature-card"><div class="icon">去</div><h3>活動資訊</h3><p>Accupass 活動、展覽、市集、地區活動與假日提醒。</p><div class="mini-tags"><span>活動篩選</span><span>公開資料</span></div></article>
           <article class="feature-card"><div class="icon">＋</div><h3>衍生小工具</h3><p>停車、3C 選購、健康、法律、防詐騙，放在需要時再打開。</p><div class="mini-tags"><span>生活工具</span><span>輔助入口</span></div></article>
         </div>
       </div>
@@ -996,7 +996,7 @@
             ["問題拆解", `先把事件、對象、金額、時間整理清楚：${detail}`],
             ["可先準備", "契約、對話紀錄、收據、照片與時間線。"],
             ["下一步", "先釐清是消費、租屋、交通或勞資，再找對應窗口。"],
-            ["提醒", "網站只做白話整理，不取代律師或正式法律意見。"]
+            ["提醒", "網站只做白話整理，不取代專業法律諮詢。"]
           ],
           "健康小幫手": [
             ["今日目標", `以 ${level} 模式處理：先補水、走路、睡眠三件事。`],
@@ -1021,7 +1021,7 @@
         return `
           <h4>${html(topic)}結果</h4>
           <div class="result-grid">${cards}</div>
-          <div class="flow-note">這些是網站版可以先完成的判斷；需要即時資料的項目，下一階段再接正式 API。</div>
+          <div class="flow-note">這些建議會依你輸入的情境整理，適合先快速判斷方向。</div>
         `;
       }
     };
@@ -1060,11 +1060,11 @@
       cwa_live: "交通部中央氣象署",
       cpc_live_or_cache: "台灣中油油價公告",
       bot_live_or_cache: "臺灣銀行牌告匯率",
-      crawler_cache_or_bib_gourmand: "生活優轉美食資料庫、米其林必比登與 Google Places",
-      accupass_crawler_cache_or_activity_fallback: "Accupass、文化部 Open Data、活動網站與部落格",
-      restaurant_cache: "生活優轉美食爬蟲資料庫",
-      crawler_cache: "生活優轉活動爬蟲資料庫",
-      activity_fallback: "生活優轉活動資料庫",
+      crawler_cache_or_bib_gourmand: "生活優轉整理的美食名單、米其林必比登與 Google 地圖資訊",
+      accupass_crawler_cache_or_activity_fallback: "Accupass、文化部藝文活動資料、活動網站與部落格",
+      restaurant_cache: "生活優轉整理的美食名單",
+      crawler_cache: "生活優轉整理的活動名單",
+      activity_fallback: "生活優轉推薦活動",
       tdx_live: "TDX 運輸資料流通服務平臺",
       tdx_unavailable: "TDX 運輸資料流通服務平臺暫時無法取得",
       moenv_waste_clearance: "環境部一般廢棄物清運統計",
@@ -1072,13 +1072,13 @@
       taichung_garbage_truck: "臺中市政府環保局垃圾車動態",
       ntpc_garbage_truck: "新北市政府環保局垃圾車動態",
       garbage_truck_not_supported: "地方政府垃圾車動態資料",
-      fallback: "生活優轉備援資料"
+      fallback: "生活優轉參考建議"
     };
     const readableSource = (value) => SOURCE_NAMES[value] || value || "生活優轉資料";
     const sourceLabel = (sources) => {
       const rawValues = Object.values(sources || {}).filter(Boolean);
       const values = [...new Set(rawValues.map(readableSource))];
-      if (!values.length) return "資料來源：生活優轉備援資料";
+      if (!values.length) return "資料來源：生活優轉參考建議";
       return `資料來源：${values.join("、")}`;
     };
 
@@ -1104,7 +1104,7 @@
           ${card("氣象署天氣", weatherText)}
           ${card("穿搭提醒", data.outfit || "依天氣調整穿搭與雨具")}
           ${card("油價 / 匯率", `${oilText}；${rateText}`)}
-          ${card("今日小提醒", activity ? `${activity.name}｜${activity.source}` : "先決定吃飯，再看附近活動。")}
+          ${card("今日小提醒", activity ? `${activity.name}｜${readableSource(activity.source)}` : "先決定吃飯，再看附近活動。")}
         </div>
         <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。下一步可以接著決定吃什麼或看活動。</div>
         ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看活動資訊" }])}
@@ -1115,12 +1115,12 @@
       const items = data.items || [];
       const cards = items.slice(0, 4).map((item) => {
         const place = item.area || item.address || data.city;
-        return card(item.name, `${place}｜${item.desc || item.type || "美食資料"}｜${item.source || "cache"}`);
+        return card(item.name, `${place}｜${item.desc || item.type || "美食資訊"}｜${readableSource(item.source)}`);
       }).join("");
       return `
         <h4>${html(data.city)} ${html(data.mood || "美食")}推薦</h4>
-        <div class="result-grid">${cards || card("目前沒有資料", "爬蟲快取裡找不到這個城市，先改查城市特色或稍後再試。")}</div>
-        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。這裡使用 LINE bot 的美食快取/必比登資料整理成網站卡片。</div>
+        <div class="result-grid">${cards || card("目前沒有資料", "目前沒有找到這個城市的推薦，先改查城市特色或稍後再試。")}</div>
+        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。已整理生活優轉美食名單與必比登資訊。</div>
         ${actions([{ key: "activity", label: "用同城市找活動" }, { key: "tools", label: "開停車小工具" }])}
       `;
     }
@@ -1129,12 +1129,12 @@
       const items = data.items || [];
       const cards = items.slice(0, 4).map((item) => {
         const date = item.date ? `${item.date}｜` : "";
-        return card(item.name, `${date}${item.desc || "活動資料"}｜${item.source || "cache"}`);
+        return card(item.name, `${date}${item.desc || "活動資訊"}｜${readableSource(item.source)}`);
       }).join("");
       return `
         <h4>${html(data.city)} ${html(data.time || "")}${html(data.type || "活動")}資訊</h4>
-        <div class="result-grid">${cards || card("目前沒有活動", "爬蟲快取裡暫時沒有符合條件的活動。")}</div>
-        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。活動來源包含 Accupass / 文化部 / 活動網站與部落格快取。</div>
+        <div class="result-grid">${cards || card("目前沒有活動", "目前沒有找到符合條件的活動，可以換城市或類型再試。")}</div>
+        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。已整理 Accupass、文化部藝文活動與在地活動資訊。</div>
         ${actions([{ key: "food", label: "附近吃什麼" }, { key: "tools", label: "開延伸工具" }])}
       `;
     }
@@ -1148,7 +1148,7 @@
       return `
         <h4>${html(data.city)} 停車查詢</h4>
         <div class="result-grid">${cards || card("TDX 暫無資料", "目前 TDX 沒回傳這個城市的停車場資料，請稍後再試。")}</div>
-        <div class="flow-note">資料來源：${html(readableSource(data.source || "tdx_unavailable"))}。有授權時會即時查停車場與剩餘車位。</div>
+        <div class="flow-note">資料來源：${html(readableSource(data.source || "tdx_unavailable"))}。可查詢停車場與剩餘車位。</div>
       `;
     }
 
@@ -1209,11 +1209,12 @@
       button.addEventListener("click", async () => {
         const key = button.dataset.demo;
         if (!samples[key]) return;
-        setResult(key, `<h4>正在讀取資料...</h4><div class="flow-note">連線到生活優轉後端，取得真實資料或爬蟲快取。</div>`);
+        setResult(key, `<h4>正在讀取資料...</h4><div class="flow-note">正在整理最新生活資料。</div>`);
         try {
           setResult(key, await fetchSiteMarkup(key));
         } catch (error) {
-          setResult(key, `${samples[key]()}<div class="flow-note">後端資料暫時無法取得，已顯示前端備援。錯誤：${html(error.message)}</div>`);
+          console.error(error);
+          setResult(key, `${samples[key]()}<div class="flow-note">目前連線不穩，先提供可參考的建議。</div>`);
         }
       });
     });

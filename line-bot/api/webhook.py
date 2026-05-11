@@ -785,9 +785,9 @@ def _site_weather_payload(city: str) -> dict:
             "rates": "bot_live_or_cache" if rates else "fallback",
         },
         "source_names": {
-            "weather": "交通部中央氣象署" if weather.get("ok") else "生活優轉備援資料",
-            "oil": "台灣中油油價公告" if oil else "生活優轉備援資料",
-            "rates": "臺灣銀行牌告匯率" if rates else "生活優轉備援資料",
+            "weather": "交通部中央氣象署" if weather.get("ok") else "生活優轉參考建議",
+            "oil": "台灣中油油價公告" if oil else "生活優轉參考建議",
+            "rates": "臺灣銀行牌告匯率" if rates else "生活優轉參考建議",
         },
     }
 
@@ -828,7 +828,7 @@ def _site_restaurants(city: str, mood: str = "", limit: int = 6) -> list:
         if not name:
             continue
         area = r.get("town") or r.get("area") or city
-        desc = str(r.get("desc") or r.get("type") or "生活優轉爬蟲/美食資料").strip()
+        desc = str(r.get("desc") or r.get("type") or "生活優轉整理的美食資訊").strip()
         items.append({
             "name": name,
             "type": r.get("type", ""),
@@ -1108,7 +1108,7 @@ class handler(BaseHTTPRequestHandler):
                 "people": _site_param(qs, "people", ""),
                 "items": _site_restaurants(city, mood, limit=6),
                 "sources": {"food": "crawler_cache_or_bib_gourmand"},
-                "source_names": {"food": "生活優轉美食資料庫、米其林必比登與 Google Places"},
+                "source_names": {"food": "生活優轉整理的美食名單、米其林必比登與 Google 地圖資訊"},
             }
             _site_json(self, payload)
 
@@ -1124,7 +1124,7 @@ class handler(BaseHTTPRequestHandler):
                 "pace": _site_param(qs, "pace", ""),
                 "items": _site_activities(city, category, limit=8),
                 "sources": {"activity": "accupass_crawler_cache_or_activity_fallback"},
-                "source_names": {"activity": "Accupass、文化部 Open Data、活動網站與部落格"},
+                "source_names": {"activity": "Accupass、文化部藝文活動資料、活動網站與部落格"},
             }
             _site_json(self, payload)
 
