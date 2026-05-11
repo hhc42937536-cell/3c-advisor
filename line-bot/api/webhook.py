@@ -727,6 +727,14 @@ def _site_first_number(value, default=0):
         return default
 
 
+def _site_text(value, default: str = "") -> str:
+    if isinstance(value, dict):
+        return str(value.get("Zh_tw") or value.get("Zh-TW") or value.get("zh_tw") or value.get("En") or default)
+    if value in (None, ""):
+        return default
+    return str(value)
+
+
 def _site_weather_payload(city: str) -> dict:
     weather = _fetch_cwa_weather(city)
     oil = _fetch_quick_oil()
@@ -877,11 +885,11 @@ def _site_parking(city: str, limit: int = 6) -> dict:
     for lot in lots[: max(limit * 3, limit)]:
         pid = str(lot.get("CarParkID") or lot.get("ParkingID") or "")
         live = avail_by_id.get(pid, {})
-        name = lot.get("CarParkName") or lot.get("ParkingName") or pid or "停車場"
+        name = _site_text(lot.get("CarParkName") or lot.get("ParkingName"), pid or "停車場")
         pos = lot.get("CarParkPosition") or lot.get("ParkingPosition") or {}
         items.append({
             "name": name,
-            "address": lot.get("Address", ""),
+            "address": _site_text(lot.get("Address"), ""),
             "total": lot.get("TotalSpaces") or lot.get("TotalSpace") or live.get("TotalSpaces") or "",
             "available": live.get("AvailableSpaces") or live.get("AvailableSpace") or "",
             "lat": pos.get("PositionLat"),
