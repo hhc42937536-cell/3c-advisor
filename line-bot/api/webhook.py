@@ -1077,6 +1077,120 @@ def _site_govdata(city: str) -> dict:
         },
     }
 
+
+def _site_tech_advice(text: str, budget_text: str = "") -> dict:
+    text = (text or "").strip() or "想買一支拍照好、續航夠的手機"
+    try:
+        from modules.tech_product_data import detect_device, detect_use, filter_products, load_products, parse_budget, spec_to_plain_line
+        device = detect_device(text) or "phone"
+        uses = detect_use(text) or ["日常"]
+        budget = parse_budget(f"{text} {budget_text}") or 30000
+        products = load_products().get(device, [])
+        items = []
+        for p in filter_products(products, budget, uses)[:4]:
+            items.append({
+                "name": p.get("name", "推薦產品"),
+                "price": p.get("price") or p.get("total_price") or "",
+                "summary": spec_to_plain_line(p),
+                "reason": p.get("pros", "")[:90],
+                "url": p.get("url", "https://hhc42937536-cell.github.io/3c-advisor/"),
+            })
+        return {
+            "ok": True,
+            "query": text,
+            "device": {"phone": "手機", "laptop": "筆電", "tablet": "平板", "desktop": "桌機"}.get(device, "產品"),
+            "uses": uses,
+            "budget": budget,
+            "items": items,
+            "full_site": "https://hhc42937536-cell.github.io/3c-advisor/",
+            "source_names": {"tech": "生活優轉 3C 選購顧問"},
+        }
+    except Exception as exc:
+        return {
+            "ok": False,
+            "query": text,
+            "error": str(exc),
+            "items": [],
+            "full_site": "https://hhc42937536-cell.github.io/3c-advisor/",
+            "source_names": {"tech": "生活優轉 3C 選購顧問"},
+        }
+
+
+def _site_legal_advice(topic: str) -> dict:
+    raw = (topic or "").strip()
+    try:
+        from modules.safety_legal import LEGAL_QA
+        aliases = {
+            "租屋": "租屋糾紛", "房東": "租屋糾紛", "押金": "租屋糾紛",
+            "勞資": "勞資糾紛", "欠薪": "勞資糾紛", "解僱": "勞資糾紛",
+            "消費": "消費者保護", "假貨": "消費者保護", "退款": "消費者保護",
+            "車禍": "交通事故", "交通": "交通事故",
+            "詐騙": "詐騙求助", "匯款": "詐騙求助",
+            "家暴": "家事", "離婚": "家事", "監護": "家事",
+            "裁罰": "交通事故", "違規": "交通事故",
+        }
+        selected = raw if raw in LEGAL_QA else ""
+        if not selected:
+            selected = next((value for key, value in aliases.items() if key in raw), "租屋糾紛")
+        qa = LEGAL_QA.get(selected) or next(iter(LEGAL_QA.values()))
+        return {
+            "ok": True,
+            "topic": selected,
+            "title": qa.get("title", selected),
+            "content": qa.get("content", ""),
+            "topics": list(LEGAL_QA.keys()),
+            "full_site": "https://hhc42937536-cell.github.io/legal-guide/",
+            "source_names": {"legal": "生活優轉法律常識網站"},
+        }
+    except Exception as exc:
+        return {
+            "ok": False,
+            "topic": raw or "法律白話",
+            "title": "法律白話",
+            "content": "目前法律資料暫時無法取得，建議改開完整法律常識網站查詢。",
+            "error": str(exc),
+            "topics": [],
+            "full_site": "https://hhc42937536-cell.github.io/legal-guide/",
+            "source_names": {"legal": "生活優轉法律常識網站"},
+        }
+
+
+def _site_fraud_advice(text: str) -> dict:
+    text = (text or "").strip()
+    try:
+        from modules.safety_fraud import analyze_fraud
+        result = analyze_fraud(text)
+    except Exception:
+        result = {"score": 0, "risk": "low", "patterns": []}
+    risk = result.get("risk", "low")
+    copy = {
+        "high": {
+            "title": "高度疑似詐騙",
+            "summary": "內容含有多項詐騙特徵，請先停止回覆、不要轉帳，也不要點任何連結。",
+            "action": "立即截圖保存，撥打 165 或聯絡銀行確認。"
+        },
+        "medium": {
+            "title": "發現可疑特徵",
+            "summary": "內容有部分可疑跡象，請不要急著回應，先向家人或 165 確認。",
+            "action": "先不要點連結、不提供個資、不依指示操作 ATM 或網銀。"
+        },
+        "low": {
+            "title": "未發現明顯詐騙特徵",
+            "summary": "目前沒有命中明顯詐騙關鍵字，但仍建議確認對方身分與來源。",
+            "action": "若仍不放心，可以撥 165 詢問或貼更多上下文再分析。"
+        },
+    }[risk]
+    return {
+        "ok": True,
+        "input": text,
+        "score": result.get("score", 0),
+        "risk": risk,
+        "patterns": result.get("patterns", []),
+        **copy,
+        "source_names": {"fraud": "生活優轉 LINE bot 防詐辨識規則"},
+    }
+
+
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         """健康檢查 + 快取預熱"""
@@ -1137,6 +1251,22 @@ class handler(BaseHTTPRequestHandler):
             qs = parse_qs(parsed.query or "")
             city = _site_param(qs, "city", "台中")
             _site_json(self, _site_govdata(city))
+
+        elif parsed.path == "/api/site_tech":
+            qs = parse_qs(parsed.query or "")
+            text = _site_param(qs, "text", "想買一支拍照好、續航夠的手機")
+            budget = _site_param(qs, "budget", "")
+            _site_json(self, _site_tech_advice(text, budget))
+
+        elif parsed.path == "/api/site_legal":
+            qs = parse_qs(parsed.query or "")
+            topic = _site_param(qs, "topic", "租屋糾紛")
+            _site_json(self, _site_legal_advice(topic))
+
+        elif parsed.path == "/api/site_fraud":
+            qs = parse_qs(parsed.query or "")
+            text = _site_param(qs, "text", "")
+            _site_json(self, _site_fraud_advice(text))
 
         elif parsed.path in ("/api/warm_cache", "/api/webhook"):
             import threading as _th

@@ -63,6 +63,18 @@
       "dest": "api/webhook.py"
     },
     {
+      "src": "/api/site_tech",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/api/site_legal",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/api/site_fraud",
+      "dest": "api/webhook.py"
+    },
+    {
       "src": "/api/warm_cache",
       "dest": "api/webhook.py"
     },

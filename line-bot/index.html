@@ -524,7 +524,8 @@
       gap: 8px;
       margin-top: 12px;
     }
-    .quick-actions button {
+    .quick-actions button,
+    .quick-actions a {
       border: 1px solid var(--line);
       border-radius: 999px;
       background: white;
@@ -532,6 +533,16 @@
       color: var(--soft-ink);
       font-weight: 900;
       cursor: pointer;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .fraud-upload[hidden] { display: none; }
+    .ocr-status {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.5;
     }
     .flow-note {
       margin-top: 12px;
@@ -847,7 +858,7 @@
                       <select id="tool-topic"><option>政府資料生活雷達</option><option>3C 選購</option><option>防詐檢查</option><option>法律白話</option><option>健康小幫手</option><option>停車查詢</option></select>
                     </label>
                     <label class="field" for="tool-detail">情境
-                      <input id="tool-detail" value="想買一支拍照好、續航夠的手機" aria-label="工具情境">
+                      <textarea id="tool-detail" aria-label="工具情境">想買一支拍照好、續航夠的手機</textarea>
                     </label>
                     <label class="field" for="tool-level">偏好
                       <select id="tool-level"><option>保守安全</option><option>快速判斷</option><option>詳細比較</option><option>省錢優先</option></select>
@@ -855,15 +866,19 @@
                     <label class="field" for="tool-budget">預算 / 數值
                       <input id="tool-budget" value="30000" aria-label="預算或數值">
                     </label>
+                    <label class="field fraud-upload full" for="fraud-image" hidden>上傳可疑對話截圖
+                      <input id="fraud-image" type="file" accept="image/*" aria-label="上傳可疑對話截圖">
+                      <span class="ocr-status" id="fraud-ocr-status">會先辨識圖片中的文字，再用防詐規則判斷。</span>
+                    </label>
                   </div>
                   <button class="btn primary" data-demo="tools">產生建議</button>
                   <div class="result" id="tools-result">選工具並填情境，會產生可採取的下一步。</div>
                 </div>
               </div>
               <div class="data-list">
-                <button class="data-item" type="button" data-tool="政府資料生活雷達"><strong>政府資料</strong><span>城市生活雷達</span></button>
-                <button class="data-item" type="button" data-tool="3C 選購"><strong>3C / 法律</strong><span>情境工具</span></button>
-                <button class="data-item" type="button" data-tool="防詐檢查"><strong>防詐 / 健康</strong><span>小幫手</span></button>
+                <button class="data-item" type="button" data-tool="3C 選購"><strong>3C 選購</strong><span>完整網站</span></button>
+                <button class="data-item" type="button" data-tool="法律白話"><strong>法律白話</strong><span>完整網站</span></button>
+                <button class="data-item" type="button" data-tool="防詐檢查"><strong>防詐檢查</strong><span>貼文字 / 截圖</span></button>
                 <button class="data-item" type="button" data-tool="停車查詢"><strong>停車 / 裁罰</strong><span>查詢工具</span></button>
               </div>
             </div>
@@ -882,7 +897,7 @@
           </div>
           <div class="roadmap">
             <button class="roadmap-item" type="button" data-tool="3C 選購"><b>3C 選購</b><span>產品推薦、規格解讀、升級判斷</span><em class="level">小工具</em></button>
-            <button class="roadmap-item" type="button" data-tool="防詐檢查"><b>防詐與法律</b><span>可疑訊息分析、法律白話引導</span><em class="level mid">小工具</em></button>
+            <button class="roadmap-item" type="button" data-tool="法律白話"><b>防詐與法律</b><span>可疑訊息分析、法律白話引導</span><em class="level mid">小工具</em></button>
             <button class="roadmap-item" type="button" data-tool="健康小幫手"><b>健康提醒</b><span>BMI、飲水、睡眠、壓力與卡路里</span><em class="level">小工具</em></button>
             <button class="roadmap-item" type="button" data-tool="停車查詢"><b>停車查詢</b><span>停車場、費率、附近順路安排</span><em class="level">延伸</em></button>
             <button class="roadmap-item" type="button" data-tool="政府資料生活雷達"><b>交通與垃圾車</b><span>公車動態、垃圾車 GPS、回收分類</span><em class="level">規劃中</em></button>
@@ -946,6 +961,7 @@
 
     const card = (title, body) => `<div class="result-card"><strong>${html(title)}</strong><span>${html(body)}</span></div>`;
     const actions = (items) => `<div class="quick-actions">${items.map((item) => `<button type="button" data-open="${html(item.key)}">${html(item.label)}</button>`).join("")}</div>`;
+    const linkActions = (items) => `<div class="quick-actions">${items.map((item) => `<a href="${html(item.href)}" target="_blank" rel="noreferrer">${html(item.label)}</a>`).join("")}</div>`;
 
     function setResult(key, markup) {
       const target = document.querySelector(`#${key}-result`);
@@ -1130,9 +1146,53 @@
       const sample = examples[topic] || examples["3C 選購"];
       detail.value = sample[0];
       budget.value = sample[1];
+      document.querySelector(".fraud-upload").hidden = topic !== "防詐檢查";
     }
 
-    document.querySelector("#tool-topic").addEventListener("change", updateToolFields);
+    document.querySelector("#tool-topic").addEventListener("change", () => {
+      updateToolFields();
+      runDemo("tools");
+    });
+
+    document.addEventListener("click", (event) => {
+      const legalTopic = event.target.closest("[data-legal-topic]");
+      if (!legalTopic) return;
+      document.querySelector("#tool-topic").value = "法律白話";
+      document.querySelector("#tool-detail").value = legalTopic.dataset.legalTopic;
+      updateToolFields();
+      document.querySelector("#tool-detail").value = legalTopic.dataset.legalTopic;
+      runDemo("tools");
+    });
+
+    async function loadTesseract() {
+      if (window.Tesseract) return window.Tesseract;
+      await new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+      return window.Tesseract;
+    }
+
+    document.querySelector("#fraud-image").addEventListener("change", async (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const status = document.querySelector("#fraud-ocr-status");
+      status.textContent = "正在辨識圖片中的文字，第一次載入會稍等一下...";
+      try {
+        const Tesseract = await loadTesseract();
+        const result = await Tesseract.recognize(file, "chi_tra+eng");
+        const text = (result.data?.text || "").trim();
+        document.querySelector("#tool-detail").value = text || "圖片文字不清楚，請改貼可疑訊息文字。";
+        status.textContent = text ? "已讀到圖片文字，正在判斷風險。" : "圖片文字不清楚，可以改貼訊息文字再判斷。";
+        runDemo("tools");
+      } catch (error) {
+        console.error(error);
+        status.textContent = "圖片辨識暫時失敗，請直接貼上可疑文字。";
+      }
+    });
 
     const SOURCE_NAMES = {
       cwa_live: "交通部中央氣象署",
@@ -1245,6 +1305,53 @@
       `;
     }
 
+    function renderTech(data) {
+      const cards = (data.items || []).map((item) => {
+        const price = item.price ? `${item.price}｜` : "";
+        return card(item.name, `${price}${item.summary || ""}｜${item.reason || "適合日常使用"}`);
+      }).join("");
+      return `
+        <h4>${html(data.device || "3C")} 選購建議</h4>
+        <div class="result-grid">${cards || card("先開完整 3C 顧問", "這個條件暫時沒有篩到合適產品，可以到完整網站用更多條件比較。")}</div>
+        <div class="flow-note">${sourceLabel(data.source_names)}。網站版會先給快速候選，完整比較請開 3C 選購顧問。</div>
+        ${linkActions([{ href: data.full_site || "https://hhc42937536-cell.github.io/3c-advisor/", label: "開啟完整 3C 選購網站" }])}
+      `;
+    }
+
+    function renderLegal(data) {
+      const parts = String(data.content || "").split(/\n{2,}/).filter(Boolean).slice(0, 4);
+      const cards = parts.map((part, index) => {
+        const lines = part.split("\n").filter(Boolean);
+        return card(index === 0 ? (data.title || data.topic || "法律白話") : (lines[0] || "重點"), lines.join(" "));
+      }).join("");
+      const topicButtons = (data.topics || []).slice(0, 6)
+        .map((topic) => `<button type="button" data-legal-topic="${html(topic)}">${html(topic)}</button>`)
+        .join("");
+      return `
+        <h4>${html(data.title || "法律白話")}</h4>
+        <div class="result-grid">${cards || card("開啟法律常識網站", "這題需要更多脈絡，建議開完整法律網站查詢。")}</div>
+        <div class="quick-actions">${topicButtons}</div>
+        <div class="flow-note">${sourceLabel(data.source_names)}。這是一般性說明，不取代專業法律諮詢。</div>
+        ${linkActions([{ href: data.full_site || "https://hhc42937536-cell.github.io/legal-guide/", label: "開啟完整法律網站" }])}
+      `;
+    }
+
+    function renderFraud(data) {
+      const riskClass = data.risk === "high" ? "高風險" : data.risk === "medium" ? "可疑" : "低風險";
+      const patterns = (data.patterns || []).length ? data.patterns.join("、") : "沒有命中明顯特徵";
+      return `
+        <h4>${html(riskClass)}：${html(data.title || "防詐檢查")}</h4>
+        <div class="result-grid">
+          ${card("判斷結果", data.summary || "已完成初步判斷。")}
+          ${card("偵測特徵", patterns)}
+          ${card("建議動作", data.action || "有疑慮請撥打 165。")}
+          ${card("分數", `風險分數 ${data.score || 0}，本工具僅供初步參考。`)}
+        </div>
+        <div class="flow-note">${sourceLabel(data.source_names)}。可以貼文字，也可以上傳對話截圖先做文字辨識。</div>
+        ${linkActions([{ href: "tel:165", label: "撥打 165" }, { href: "https://165.npa.gov.tw/", label: "開啟 165 官網" }])}
+      `;
+    }
+
     async function fetchSiteMarkup(key) {
       if (key === "morning") {
         const city = document.querySelector("#morning-city").value;
@@ -1279,6 +1386,22 @@
         const city = document.querySelector("#tool-detail").value.trim() || document.querySelector("#morning-city").value || "台中";
         const data = await getJson(`/api/site_govdata?city=${encodeURIComponent(city)}`);
         return renderGovData(data);
+      }
+      if (key === "tools" && document.querySelector("#tool-topic").value === "3C 選購") {
+        const text = document.querySelector("#tool-detail").value.trim();
+        const budget = document.querySelector("#tool-budget").value.trim();
+        const data = await getJson(`/api/site_tech?text=${encodeURIComponent(text)}&budget=${encodeURIComponent(budget)}`);
+        return renderTech(data);
+      }
+      if (key === "tools" && document.querySelector("#tool-topic").value === "法律白話") {
+        const topic = document.querySelector("#tool-detail").value.trim();
+        const data = await getJson(`/api/site_legal?topic=${encodeURIComponent(topic)}`);
+        return renderLegal(data);
+      }
+      if (key === "tools" && document.querySelector("#tool-topic").value === "防詐檢查") {
+        const text = document.querySelector("#tool-detail").value.trim();
+        const data = await getJson(`/api/site_fraud?text=${encodeURIComponent(text.slice(0, 1800))}`);
+        return renderFraud(data);
       }
       return samples[key]();
     }
