@@ -1883,7 +1883,8 @@ _OUTLOOK_HEADERS = {
 def scrape_tainanoutlook() -> dict:
     """
     從 tainanoutlook 系列子站抓活動。
-    純 requests，所有子站共用同一套 HTML 結構。
+    2026-05 起只剩 khh（高雄）子站可用，採卡片式 HTML
+    （<article class="card"> 含 📅 日期、🔗 來源、📍 場館）。
     """
     print("\n[tainanoutlook 活動大集合]...")
     result = {}
@@ -1899,71 +1900,67 @@ def scrape_tainanoutlook() -> dict:
             print(f"  {site_key}: 連線失敗 {e}")
             continue
 
-        # 抓文章區塊：<article> 或 <a href="..."> + 標題
-        # 常見格式：<a href="URL">標題</a> + 日期/地點文字
-        articles = re.findall(
-            r'<a\s+href="(https?://[^"]*tainanoutlook\.com/[^"]{10,})"[^>]*>\s*([^<]{5,100})\s*</a>',
-            html
-        )
+        # 限縮在「活動列表」section，避免抓到頁尾其他連結
+        body_m = re.search(r'<section class="widget">[\s\S]*?</section>', html)
+        body = body_m.group(0) if body_m else html
 
-        seen = set()
+        cards = re.findall(r'<article class="card">([\s\S]*?)</article>', body)
         site_count = 0
+        default_city = site_cities[0]
 
-        for url, raw_title in articles:
-            title = re.sub(r"\s+", " ", raw_title).strip()
-            if not title or len(title) < 5 or url in seen:
-                continue
-            if any(skip in title for skip in ["Read more", "閱讀更多", "留言", "分享", "搜尋"]):
-                continue
-            seen.add(url)
-
-            if is_blocked(title):
+        for card in cards:
+            url_m   = re.search(r'href="(/events/[a-f0-9]+)"', card)
+            date_m  = re.search(r'📅\s*(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})', card)
+            title_m = re.search(r'<h3><a[^>]*>([^<]+)</a></h3>', card)
+            if not (url_m and date_m and title_m):
                 continue
 
-            # 從標題或 URL 判斷城市
-            city = ""
-            for c in site_cities + _MOC_CITY_KEYWORDS:
-                if c in title:
-                    city = c
-                    break
-            if not city:
-                city = site_cities[0]  # 預設用該站第一個城市
+            try:
+                end_date = datetime.strptime(date_m.group(2), "%Y-%m-%d")
+            except Exception:
+                continue
+            if end_date.date() < TODAY.date():
+                continue
 
-            # 從標題抓日期
-            date_short = ""
-            dm = re.search(r"(\d{1,2})[/.](\d{1,2})", title)
-            if dm:
-                try:
-                    mo, dy = int(dm.group(1)), int(dm.group(2))
-                    if 1 <= mo <= 12 and 1 <= dy <= 31:
-                        ev = datetime(TODAY.year, mo, dy)
-                        if ev.date() < TODAY.date():
-                            continue
-                        date_short = f"{mo:02d}/{dy:02d}"
-                except Exception:
-                    pass
+            title = re.sub(r"\s+", " ", title_m.group(1)).strip()
+            if not title or len(title) < 5 or is_blocked(title):
+                continue
 
-            # 分類
-            cat = classify(title) or "市集展覽"
+            place_m = re.search(r'📍\s*([^<]+?)\s*</span>', card)
+            place = place_m.group(1).strip() if place_m else ""
+
+            # 子站只服務單一區域，直接用子站預設城市，避免標題誤命中（例如「回歸台北」）
+            city = default_city
+
+            # 日期格式：05/13 或 05/13~05/15
+            start_short = f"{date_m.group(1)[5:7]}/{date_m.group(1)[8:10]}"
+            end_short   = f"{date_m.group(2)[5:7]}/{date_m.group(2)[8:10]}"
+            date_short  = start_short if start_short == end_short else f"{start_short}~{end_short}"
+
+            cat = classify(title + " " + place) or "市集展覽"
 
             if city not in result:
                 result[city] = {c: [] for c in CATEGORY_MAP}
             if cat not in result[city]:
                 result[city][cat] = []
 
-            if len(result[city][cat]) < 8:
-                existing = {e["name"] for e in result[city][cat]}
-                name = re.sub(r'^【[^】]+】\s*', '', title).strip()[:55]
-                if name not in existing:
-                    result[city][cat].append({
-                        "name": name,
-                        "desc": date_short or "",
-                        "date": date_short,
-                        "url": url,
-                        "source": "tainanoutlook",
-                        "area": city,
-                    })
-                    site_count += 1
+            if len(result[city][cat]) >= 8:
+                continue
+            existing = {e["name"] for e in result[city][cat]}
+            name = re.sub(r"^【[^】]+】\s*", "", title).strip()[:55]
+            if name in existing:
+                continue
+
+            desc = f"{date_short} | {place}" if place else date_short
+            result[city][cat].append({
+                "name": name,
+                "desc": desc[:60],
+                "date": date_short,
+                "url": "https://" + site_key + ".tainanoutlook.com" + url_m.group(1),
+                "source": "tainanoutlook",
+                "area": city,
+            })
+            site_count += 1
 
         if site_count:
             print(f"  {site_key} ({','.join(site_cities)}): {site_count} 筆")
