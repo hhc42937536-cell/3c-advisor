@@ -763,6 +763,11 @@ def _site_weather_payload(city: str) -> dict:
             "oil": "cpc_live_or_cache" if oil else "fallback",
             "rates": "bot_live_or_cache" if rates else "fallback",
         },
+        "source_names": {
+            "weather": "交通部中央氣象署" if weather.get("ok") else "生活優轉備援資料",
+            "oil": "台灣中油油價公告" if oil else "生活優轉備援資料",
+            "rates": "臺灣銀行牌告匯率" if rates else "生活優轉備援資料",
+        },
     }
 
 
@@ -931,6 +936,7 @@ class handler(BaseHTTPRequestHandler):
                 "people": _site_param(qs, "people", ""),
                 "items": _site_restaurants(city, mood, limit=6),
                 "sources": {"food": "crawler_cache_or_bib_gourmand"},
+                "source_names": {"food": "生活優轉美食資料庫、米其林必比登與 Google Places"},
             }
             _site_json(self, payload)
 
@@ -946,6 +952,7 @@ class handler(BaseHTTPRequestHandler):
                 "pace": _site_param(qs, "pace", ""),
                 "items": _site_activities(city, category, limit=8),
                 "sources": {"activity": "accupass_crawler_cache_or_activity_fallback"},
+                "source_names": {"activity": "Accupass、文化部 Open Data、活動網站與部落格"},
             }
             _site_json(self, payload)
 

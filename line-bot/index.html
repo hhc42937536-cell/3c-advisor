@@ -1048,10 +1048,25 @@
 
     document.querySelector("#tool-topic").addEventListener("change", updateToolFields);
 
+    const SOURCE_NAMES = {
+      cwa_live: "交通部中央氣象署",
+      cpc_live_or_cache: "台灣中油油價公告",
+      bot_live_or_cache: "臺灣銀行牌告匯率",
+      crawler_cache_or_bib_gourmand: "生活優轉美食資料庫、米其林必比登與 Google Places",
+      accupass_crawler_cache_or_activity_fallback: "Accupass、文化部 Open Data、活動網站與部落格",
+      restaurant_cache: "生活優轉美食爬蟲資料庫",
+      crawler_cache: "生活優轉活動爬蟲資料庫",
+      activity_fallback: "生活優轉活動資料庫",
+      tdx_live: "TDX 運輸資料流通服務平臺",
+      tdx_unavailable: "TDX 運輸資料流通服務平臺暫時無法取得",
+      fallback: "生活優轉備援資料"
+    };
+    const readableSource = (value) => SOURCE_NAMES[value] || value || "生活優轉資料";
     const sourceLabel = (sources) => {
-      const values = Object.values(sources || {}).filter(Boolean);
-      if (!values.length) return "資料來源：前端備援";
-      return `資料來源：${values.join(" / ")}`;
+      const rawValues = Object.values(sources || {}).filter(Boolean);
+      const values = [...new Set(rawValues.map(readableSource))];
+      if (!values.length) return "資料來源：生活優轉備援資料";
+      return `資料來源：${values.join("、")}`;
     };
 
     async function getJson(url) {
@@ -1078,7 +1093,7 @@
           ${card("油價 / 匯率", `${oilText}；${rateText}`)}
           ${card("今日小提醒", activity ? `${activity.name}｜${activity.source}` : "先決定吃飯，再看附近活動。")}
         </div>
-        <div class="flow-note">${sourceLabel(data.sources)}。下一步可以接著決定吃什麼或看活動。</div>
+        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。下一步可以接著決定吃什麼或看活動。</div>
         ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看活動資訊" }])}
       `;
     }
@@ -1092,7 +1107,7 @@
       return `
         <h4>${html(data.city)} ${html(data.mood || "美食")}推薦</h4>
         <div class="result-grid">${cards || card("目前沒有資料", "爬蟲快取裡找不到這個城市，先改查城市特色或稍後再試。")}</div>
-        <div class="flow-note">${sourceLabel(data.sources)}。這裡使用 LINE bot 的美食快取/必比登資料整理成網站卡片。</div>
+        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。這裡使用 LINE bot 的美食快取/必比登資料整理成網站卡片。</div>
         ${actions([{ key: "activity", label: "用同城市找活動" }, { key: "tools", label: "開停車小工具" }])}
       `;
     }
@@ -1106,7 +1121,7 @@
       return `
         <h4>${html(data.city)} ${html(data.time || "")}${html(data.type || "活動")}資訊</h4>
         <div class="result-grid">${cards || card("目前沒有活動", "爬蟲快取裡暫時沒有符合條件的活動。")}</div>
-        <div class="flow-note">${sourceLabel(data.sources)}。活動來源包含 Accupass / 文化部 / 活動網站與部落格快取。</div>
+        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。活動來源包含 Accupass / 文化部 / 活動網站與部落格快取。</div>
         ${actions([{ key: "food", label: "附近吃什麼" }, { key: "tools", label: "開延伸工具" }])}
       `;
     }
@@ -1120,7 +1135,7 @@
       return `
         <h4>${html(data.city)} 停車查詢</h4>
         <div class="result-grid">${cards || card("TDX 暫無資料", "目前 TDX 沒回傳這個城市的停車場資料，請稍後再試。")}</div>
-        <div class="flow-note">資料來源：${html(data.source || "tdx_unavailable")}。TDX 有 token 時會即時查停車場與剩餘車位。</div>
+        <div class="flow-note">資料來源：${html(readableSource(data.source || "tdx_unavailable"))}。有授權時會即時查停車場與剩餘車位。</div>
       `;
     }
 
