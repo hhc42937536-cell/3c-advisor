@@ -13,6 +13,7 @@ import hashlib
 import hmac
 import urllib.request
 import urllib.parse
+import ssl as _ssl
 from http.server import BaseHTTPRequestHandler
 
 # 確保 Vercel 能找到 modules/ 與 utils/（api/ 目錄加入 sys.path）
@@ -735,6 +736,26 @@ def _site_text(value, default: str = "") -> str:
     return str(value)
 
 
+def _site_fix_text(value) -> str:
+    text = _site_text(value, "")
+    if any(mark in text for mark in ("æ", "è", "å", "ç", "ã")):
+        try:
+            return text.encode("latin1").decode("utf-8")
+        except Exception:
+            return text
+    return text
+
+
+def _site_get_json(url: str, timeout: int = 8):
+    req = urllib.request.Request(url, headers={"User-Agent": "LifeUturn/1.0"})
+    ctx = _ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = _ssl.CERT_NONE
+    with urllib.request.urlopen(req, timeout=timeout, context=ctx) as response:
+        raw = response.read()
+    return json.loads(raw.decode("utf-8", "replace"))
+
+
 def _site_weather_payload(city: str) -> dict:
     weather = _fetch_cwa_weather(city)
     oil = _fetch_quick_oil()
@@ -905,6 +926,157 @@ def _site_parking(city: str, limit: int = 6) -> dict:
             break
     return {"ok": True, "city": city, "tdx_city": tdx_city, "source": "tdx_live", "items": items}
 
+
+_SITE_COUNTY_NAMES = {
+    "台北": "臺北市", "臺北": "臺北市", "新北": "新北市", "桃園": "桃園市",
+    "台中": "臺中市", "臺中": "臺中市", "台南": "臺南市", "臺南": "臺南市",
+    "高雄": "高雄市", "基隆": "基隆市", "新竹": "新竹市", "嘉義": "嘉義市",
+}
+
+
+def _site_waste_stats(city: str) -> dict:
+    county = _SITE_COUNTY_NAMES.get(city, city)
+    try:
+        data = _site_get_json(
+            "https://data.moenv.gov.tw/api/v2/stat_p_45"
+            "?api_key=e75b1660-e564-4107-aad5-a8be1f905dd9&format=JSON&limit=1000&sort=ImportDate+desc"
+        )
+        for row in data:
+            row_county = _site_fix_text(row.get("county", ""))
+            if row_county in (county, city, city + "市"):
+                generated = _site_first_number(row.get("garbagegenerated"), 0)
+                clearance = _site_first_number(row.get("garbageclearance"), 0)
+                recycled = _site_first_number(row.get("garbagerecycled"), 0)
+                food = _site_first_number(row.get("foodwastesrecycled"), 0)
+                recycle_rate = round((recycled + food) / generated * 100, 1) if generated else 0
+                return {
+                    "ok": True,
+                    "year": row.get("year", ""),
+                    "county": row_county,
+                    "generated": generated,
+                    "clearance": clearance,
+                    "recycled": recycled,
+                    "food_waste": food,
+                    "recycle_rate": recycle_rate,
+                    "source": "moenv_waste_clearance",
+                }
+    except Exception as exc:
+        return {"ok": False, "error": str(exc), "source": "moenv_waste_clearance"}
+    return {"ok": False, "error": "no_city_data", "source": "moenv_waste_clearance"}
+
+
+def _site_national_waste(limit: int = 3) -> list:
+    try:
+        data = _site_get_json(
+            "https://data.moenv.gov.tw/api/v2/stat_p_126"
+            "?api_key=e75b1660-e564-4107-aad5-a8be1f905dd9&format=JSON&limit=12&sort=ImportDate+desc"
+        )
+        items = []
+        for row in data[:limit]:
+            items.append({
+                "period": _site_fix_text(row.get("item1", "")),
+                "generated": _site_first_number(row.get("value1"), 0),
+                "clearance": _site_first_number(row.get("value2"), 0),
+                "recycled": _site_first_number(row.get("value3"), 0),
+                "food_waste": _site_first_number(row.get("value4"), 0),
+                "daily_per_person": _site_first_number(row.get("value5"), 0),
+                "source": "moenv_national_waste",
+            })
+        return items
+    except Exception:
+        return []
+
+
+def _site_garbage_trucks(city: str, limit: int = 6) -> dict:
+    if city in ("台中", "臺中"):
+        source_name = "臺中市政府環保局垃圾車動態"
+        url = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=c923ad20-2ec6-43b9-b3ab-54527e99f7bc"
+        try:
+            data = _site_get_json(url)
+            items = []
+            for row in data[:limit]:
+                items.append({
+                    "car": _site_fix_text(row.get("car", "")),
+                    "time": _site_fix_text(row.get("time", "")),
+                    "location": _site_fix_text(row.get("location", "")),
+                    "lat": row.get("Y", ""),
+                    "lng": row.get("X", ""),
+                    "speed": row.get("SpeedValue", ""),
+                })
+            return {"ok": True, "city": "台中", "source": "taichung_garbage_truck", "source_name": source_name, "items": items}
+        except Exception as exc:
+            return {"ok": False, "city": city, "source": "taichung_garbage_truck", "source_name": source_name, "error": str(exc), "items": []}
+    if city in ("新北", "新北市"):
+        source_name = "新北市政府環保局垃圾車動態"
+        url = "https://data.ntpc.gov.tw/api/datasets/28ab4122-60e1-4065-98e5-abccb69aaca6/json?page=0&size=20"
+        try:
+            data = _site_get_json(url)
+            items = []
+            for row in data[:limit]:
+                items.append({
+                    "car": _site_fix_text(row.get("car", "")),
+                    "time": _site_fix_text(row.get("time", "")),
+                    "location": _site_fix_text(row.get("location", "")),
+                    "district": _site_fix_text(row.get("cityname", "")),
+                    "lat": row.get("latitude", ""),
+                    "lng": row.get("longitude", ""),
+                })
+            return {"ok": True, "city": "新北", "source": "ntpc_garbage_truck", "source_name": source_name, "items": items}
+        except Exception as exc:
+            return {"ok": False, "city": city, "source": "ntpc_garbage_truck", "source_name": source_name, "error": str(exc), "items": []}
+    return {
+        "ok": False,
+        "city": city,
+        "source": "garbage_truck_not_supported",
+        "source_name": "垃圾車動態資料目前支援新北市、臺中市",
+        "items": [],
+    }
+
+
+def _site_govdata(city: str) -> dict:
+    waste = _site_waste_stats(city)
+    trucks = _site_garbage_trucks(city)
+    national = _site_national_waste(limit=3)
+    cards = []
+    if waste.get("ok"):
+        cards.append({
+            "title": f"{waste['county']}垃圾與回收",
+            "body": f"{waste['year']} 年一般廢棄物 {int(waste['generated']):,} 噸，回收率約 {waste['recycle_rate']}%",
+            "source": "moenv_waste_clearance",
+        })
+    if trucks.get("ok") and trucks.get("items"):
+        first = trucks["items"][0]
+        cards.append({
+            "title": f"{city}垃圾車動態",
+            "body": f"{first.get('location','目前無位置')}｜車號 {first.get('car','—')}｜{first.get('time','')}",
+            "source": trucks.get("source"),
+        })
+    if national:
+        latest = national[0]
+        cards.append({
+            "title": "全國一般廢棄物趨勢",
+            "body": f"{latest['period']} 每人每日約 {latest['daily_per_person']} 公斤，一般廢棄物 {int(latest['generated']):,} 噸",
+            "source": "moenv_national_waste",
+        })
+    return {
+        "ok": True,
+        "city": city,
+        "waste": waste,
+        "garbage_trucks": trucks,
+        "national_waste": national,
+        "cards": cards,
+        "sources": {
+            "waste": "moenv_waste_clearance",
+            "national": "moenv_national_waste",
+            "garbage_truck": trucks.get("source", "garbage_truck_not_supported"),
+        },
+        "source_names": {
+            "waste": "環境部一般廢棄物清運統計",
+            "national": "環境部全國一般廢棄物產生量",
+            "garbage_truck": trucks.get("source_name", "地方政府垃圾車動態資料"),
+        },
+    }
+
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         """健康檢查 + 快取預熱"""
@@ -960,6 +1132,11 @@ class handler(BaseHTTPRequestHandler):
             qs = parse_qs(parsed.query or "")
             city = _site_param(qs, "city", "台北")
             _site_json(self, _site_parking(city, limit=8))
+
+        elif parsed.path == "/api/site_govdata":
+            qs = parse_qs(parsed.query or "")
+            city = _site_param(qs, "city", "台中")
+            _site_json(self, _site_govdata(city))
 
         elif parsed.path in ("/api/warm_cache", "/api/webhook"):
             import threading as _th

@@ -807,7 +807,7 @@
                 <div class="demo-box">
                   <div class="control-grid">
                     <label class="field" for="tool-topic">選一個工具
-                      <select id="tool-topic"><option>3C 選購</option><option>防詐檢查</option><option>法律白話</option><option>健康小幫手</option><option>停車查詢</option></select>
+                      <select id="tool-topic"><option>政府資料生活雷達</option><option>3C 選購</option><option>防詐檢查</option><option>法律白話</option><option>健康小幫手</option><option>停車查詢</option></select>
                     </label>
                     <label class="field" for="tool-detail">情境
                       <input id="tool-detail" value="想買一支拍照好、續航夠的手機" aria-label="工具情境">
@@ -824,6 +824,7 @@
                 </div>
               </div>
               <div class="data-list">
+                <div class="data-item"><strong>政府資料</strong><span>城市生活雷達</span></div>
                 <div class="data-item"><strong>3C / 法律</strong><span>情境工具</span></div>
                 <div class="data-item"><strong>防詐 / 健康</strong><span>小幫手</span></div>
                 <div class="data-item"><strong>停車 / 裁罰</strong><span>查詢工具</span></div>
@@ -1008,6 +1009,12 @@
             ["費率策略", "市中心先選公有停車場；商圈假日要準備第二停車點。"],
             ["順路安排", "停好車後接餐廳或活動，避免移車。"],
             ["預算", `停車或行程預算：${budget}`]
+          ],
+          "政府資料生活雷達": [
+            ["城市資料", `以「${detail}」查政府開放資料裡的垃圾車、垃圾清運與環境統計。`],
+            ["能看什麼", "新北與台中可看垃圾車動態；各縣市可看環境部清運與回收統計。"],
+            ["用途", "早安卡之外，多一層城市生活狀態，適合提醒倒垃圾與了解城市環境趨勢。"],
+            ["資料來源", "data.gov.tw、環境部、地方政府開放資料平台。"]
           ]
         };
         const cards = (toolCards[topic] || toolCards["3C 選購"]).map(([title, body]) => card(title, body)).join("");
@@ -1035,6 +1042,7 @@
       const detail = document.querySelector("#tool-detail");
       const budget = document.querySelector("#tool-budget");
       const examples = {
+        "政府資料生活雷達": ["台中", "城市生活"],
         "3C 選購": ["想買一支拍照好、續航夠的手機", "30000"],
         "防詐檢查": ["陌生簡訊說包裹卡關，要我點連結付款", "0"],
         "法律白話": ["租屋押金退租時被扣清潔費", "押金 2 個月"],
@@ -1059,6 +1067,11 @@
       activity_fallback: "生活優轉活動資料庫",
       tdx_live: "TDX 運輸資料流通服務平臺",
       tdx_unavailable: "TDX 運輸資料流通服務平臺暫時無法取得",
+      moenv_waste_clearance: "環境部一般廢棄物清運統計",
+      moenv_national_waste: "環境部全國一般廢棄物產生量",
+      taichung_garbage_truck: "臺中市政府環保局垃圾車動態",
+      ntpc_garbage_truck: "新北市政府環保局垃圾車動態",
+      garbage_truck_not_supported: "地方政府垃圾車動態資料",
       fallback: "生活優轉備援資料"
     };
     const readableSource = (value) => SOURCE_NAMES[value] || value || "生活優轉資料";
@@ -1139,6 +1152,21 @@
       `;
     }
 
+    function renderGovData(data) {
+      const cards = (data.cards || [])
+        .map((item) => card(item.title, `${item.body}｜${readableSource(item.source)}`))
+        .join("");
+      const truckItems = data.garbage_trucks?.items || [];
+      const truckCards = truckItems.slice(0, 2)
+        .map((item) => card(`垃圾車 ${item.car || ""}`, `${item.location || "無位置"}｜${item.time || ""}`))
+        .join("");
+      return `
+        <h4>${html(data.city)}政府資料生活雷達</h4>
+        <div class="result-grid">${cards || card("目前沒有城市資料", "這個城市暫時沒有可用的政府資料生活卡。")}${truckCards}</div>
+        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。資料來自 data.gov.tw 及各機關開放資料。</div>
+      `;
+    }
+
     async function fetchSiteMarkup(key) {
       if (key === "morning") {
         const city = document.querySelector("#morning-city").value;
@@ -1168,6 +1196,11 @@
         const city = document.querySelector("#morning-city").value || "台北";
         const data = await getJson(`/api/site_parking?city=${encodeURIComponent(city)}`);
         return renderParking(data);
+      }
+      if (key === "tools" && document.querySelector("#tool-topic").value === "政府資料生活雷達") {
+        const city = document.querySelector("#tool-detail").value.trim() || document.querySelector("#morning-city").value || "台中";
+        const data = await getJson(`/api/site_govdata?city=${encodeURIComponent(city)}`);
+        return renderGovData(data);
       }
       return samples[key]();
     }
