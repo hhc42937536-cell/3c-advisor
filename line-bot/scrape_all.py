@@ -2022,16 +2022,34 @@ def scrape_taipei_tourism() -> dict:
     result = {"台北": {cat: [] for cat in CATEGORY_MAP}}
     total = 0
 
-    # 嘗試各分類 ID
+    # 先預檢一次：站台已啟用 Cloudflare 反爬蟲，純 urllib 過不去就整個放棄
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    probe_url = (
+        "https://www.travel.taipei/open-api/zh-tw/Events"
+        "?categoryIds=131&top=1&skip=0"
+    )
+    try:
+        req = _ur2.Request(probe_url, headers=_TAIPEI_TOURISM_HEADERS)
+        with _ur2.urlopen(req, timeout=12, context=ctx) as r:
+            _json.loads(r.read().decode("utf-8", errors="ignore"))
+    except Exception as e:
+        msg = str(e)
+        if "403" in msg or "Forbidden" in msg:
+            print("  [跳過] 台北旅遊網 已啟用 Cloudflare 反爬蟲（純 requests 無法通過）")
+        else:
+            print(f"  [跳過] 台北旅遊網 預檢失敗：{e}")
+        print("  台北: 0 筆")
+        return result
+
+    # 預檢通過才正式抓
     for cat_id, our_cat in _TAIPEI_CAT_MAP.items():
         url = (
             f"https://www.travel.taipei/open-api/zh-tw/Events"
             f"?categoryIds={cat_id}&top=20&skip=0"
         )
         try:
-            ctx = ssl.create_default_context()
-            ctx.check_hostname = False
-            ctx.verify_mode = ssl.CERT_NONE
             req = _ur2.Request(url, headers=_TAIPEI_TOURISM_HEADERS)
             with _ur2.urlopen(req, timeout=12, context=ctx) as r:
                 raw = r.read().decode("utf-8", errors="ignore")
