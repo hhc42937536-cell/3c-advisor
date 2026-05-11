@@ -3,813 +3,528 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f3ea">
-  <meta name="description" content="生活優轉 Life Uturn：把天氣、美食、停車、活動、理財、健康、安全與 3C 建議整合到 LINE 與網站的一站式生活助理。">
+  <meta name="theme-color" content="#fff2cf">
+  <meta name="description" content="生活優轉 Life Uturn：整合美食、停車、天氣、活動、理財、健康、安全與 3C 建議的 LINE bot 與網站版生活助理。">
   <title>生活優轉 Life Uturn</title>
   <style>
     :root {
-      color-scheme: light;
-      --ink: #1f2933;
-      --muted: #65717f;
-      --line: #d8ded6;
-      --paper: #fffdf8;
-      --wash: #f6f1e8;
-      --mint: #4cbf8f;
-      --mint-dark: #22745a;
-      --amber: #f0b84a;
-      --coral: #e56f5b;
-      --sky: #5d8ac8;
-      --shadow: 0 18px 45px rgba(31, 41, 51, .12);
+      --ink: #26312b;
+      --soft-ink: #3c4a42;
+      --muted: #726b62;
+      --paper: #fffaf0;
+      --warm: #f6ead4;
+      --cream: #fff2cf;
+      --green: #2f966d;
+      --green-soft: #dff3e7;
+      --coral: #e66e5d;
+      --gold: #f0b848;
+      --blue: #5f86bd;
+      --line: rgba(38, 49, 43, .16);
       font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
       min-height: 100vh;
       background:
-        linear-gradient(135deg, rgba(255, 253, 248, .94), rgba(246, 241, 232, .9)),
-        radial-gradient(circle at 18% 18%, rgba(76, 191, 143, .14), transparent 30%),
-        radial-gradient(circle at 82% 8%, rgba(93, 138, 200, .14), transparent 26%),
-        var(--wash);
+        linear-gradient(135deg, rgba(255, 250, 240, .92), rgba(255, 242, 207, .78)),
+        var(--warm);
       color: var(--ink);
       letter-spacing: 0;
     }
-
     a { color: inherit; text-decoration: none; }
-
-    button, input, select {
-      font: inherit;
-    }
-
-    .shell {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-    }
+    button, input, select { font: inherit; }
+    .wrap { width: min(1160px, calc(100% - 32px)); margin: 0 auto; }
 
     .site-header {
       position: sticky;
       top: 0;
       z-index: 20;
-      border-bottom: 1px solid rgba(216, 222, 214, .82);
-      background: rgba(255, 253, 248, .9);
-      backdrop-filter: blur(18px);
+      padding: 14px 0;
+      background: rgba(246, 234, 212, .76);
+      backdrop-filter: blur(14px);
     }
-
-    .nav {
-      min-height: 72px;
+    nav {
+      min-height: 58px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
+      gap: 18px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 250, 240, .78);
+      box-shadow: 0 18px 46px rgba(38, 49, 43, .07);
     }
-
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
-      min-width: 0;
+      gap: 10px;
+      font-weight: 900;
+      white-space: nowrap;
     }
-
-    .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
+    .mark {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--ink);
+      border-radius: 10px;
       display: grid;
       place-items: center;
-      background: conic-gradient(from 210deg, var(--mint), var(--sky), var(--amber), var(--mint));
-      color: #fff;
+      background: var(--gold);
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+    .links { display: flex; align-items: center; gap: 4px; }
+    .links a {
+      color: var(--soft-ink);
+      font-size: 14px;
       font-weight: 900;
-      box-shadow: 0 10px 24px rgba(76, 191, 143, .28);
-    }
-
-    .brand strong {
-      display: block;
-      font-size: 19px;
-      line-height: 1.2;
-    }
-
-    .brand span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .nav-links a {
-      padding: 9px 12px;
+      padding: 9px 10px;
       border-radius: 8px;
     }
-
-    .nav-links a:hover,
-    .nav-links a:focus-visible {
-      background: rgba(76, 191, 143, .12);
-      color: var(--mint-dark);
-      outline: none;
-    }
+    .links a:hover { background: rgba(47, 150, 109, .12); }
 
     .hero {
-      min-height: calc(100vh - 72px);
+      min-height: calc(100vh - 86px);
       display: grid;
       align-items: center;
-      padding: 54px 0 38px;
+      padding: 34px 0 52px;
     }
-
     .hero-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.04fr) minmax(320px, .86fr);
-      gap: 42px;
+      grid-template-columns: .92fr 1.08fr;
+      gap: 46px;
       align-items: center;
     }
-
-    .eyebrow {
+    .badge {
       width: fit-content;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border: 1px solid rgba(76, 191, 143, .26);
+      gap: 9px;
+      padding: 9px 12px;
+      border: 2px solid var(--ink);
       border-radius: 999px;
-      background: rgba(255, 255, 255, .58);
-      color: var(--mint-dark);
+      background: var(--paper);
+      color: var(--green);
+      box-shadow: 4px 4px 0 var(--ink);
+      font-weight: 900;
       font-size: 14px;
-      font-weight: 700;
     }
-
-    .pulse {
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: var(--mint);
-      box-shadow: 0 0 0 5px rgba(76, 191, 143, .16);
+    .badge i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(47, 150, 109, .16);
     }
-
     h1 {
-      margin: 22px 0 16px;
-      font-size: clamp(44px, 7vw, 84px);
+      margin: 22px 0 18px;
+      font-size: clamp(48px, 8vw, 94px);
       line-height: .95;
       letter-spacing: 0;
     }
-
-    .hero-copy {
-      max-width: 690px;
-      color: #465260;
+    h1 span {
+      position: relative;
+      display: inline-block;
+    }
+    h1 span::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: -2px;
+      bottom: 8px;
+      height: 18px;
+      background: rgba(240, 184, 72, .55);
+      z-index: -1;
+      border-radius: 999px;
+    }
+    .lead {
+      max-width: 650px;
+      color: var(--muted);
       font-size: 20px;
-      line-height: 1.8;
+      line-height: 1.85;
       margin: 0;
     }
-
-    .hero-actions {
-      margin-top: 30px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
     .btn {
-      min-height: 46px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      min-height: 46px;
       padding: 12px 18px;
-      border: 1px solid transparent;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 800;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-    }
-
-    .btn:hover { transform: translateY(-1px); }
-
-    .btn-primary {
-      background: var(--ink);
-      color: #fff;
-      box-shadow: 0 14px 30px rgba(31, 41, 51, .18);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, .78);
-      border-color: var(--line);
+      border: 2px solid var(--ink);
+      border-radius: 9px;
       color: var(--ink);
-    }
-
-    .stats-row {
-      margin-top: 34px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      max-width: 680px;
-    }
-
-    .stat {
-      padding: 16px;
-      border: 1px solid rgba(216, 222, 214, .88);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, .62);
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 28px;
-      line-height: 1;
-    }
-
-    .stat span {
-      display: block;
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .phone {
-      width: min(420px, 100%);
-      margin-left: auto;
-      border-radius: 34px;
-      padding: 14px;
-      background: #19232e;
-      box-shadow: var(--shadow);
-    }
-
-    .screen {
-      min-height: 650px;
-      overflow: hidden;
-      border-radius: 24px;
-      background: #fffdf8;
-      border: 1px solid rgba(255, 255, 255, .2);
-    }
-
-    .chat-top {
-      padding: 18px 18px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #2f8f6a;
-      color: #fff;
-    }
-
-    .chat-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
       font-weight: 900;
+      background: var(--paper);
+      box-shadow: 5px 5px 0 var(--ink);
+      cursor: pointer;
     }
-
-    .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
+    .btn.primary { background: var(--green); color: white; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+    .chip {
+      padding: 9px 11px;
+      border-radius: 999px;
+      background: rgba(255, 250, 240, .78);
+      border: 1px solid var(--line);
+      color: var(--soft-ink);
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .stats {
       display: grid;
-      place-items: center;
-      background: rgba(255, 255, 255, .22);
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 28px;
+      max-width: 620px;
     }
-
-    .chat-body {
-      padding: 18px;
-      display: grid;
-      gap: 12px;
+    .stat {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 250, 240, .74);
     }
+    .stat strong { display: block; font-size: 28px; line-height: 1; }
+    .stat span { display: block; color: var(--muted); font-weight: 800; font-size: 13px; margin-top: 7px; }
 
-    .bubble {
-      max-width: 86%;
-      padding: 12px 14px;
-      border-radius: 16px;
+    .visual { position: relative; min-height: 540px; display: grid; align-items: center; }
+    .menu-frame {
+      position: relative;
+      z-index: 2;
+      margin-left: auto;
+      width: min(620px, 100%);
+      padding: 16px;
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      background: rgba(255, 250, 240, .92);
+      box-shadow: 12px 12px 0 var(--ink), 0 30px 70px rgba(38, 49, 43, .16);
+      transform: rotate(.7deg);
+    }
+    .menu-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 12px; font-weight: 900; }
+    .menu-top small { color: var(--muted); font-size: 13px; }
+    .menu-frame img { width: 100%; display: block; border: 1px solid var(--line); border-radius: 9px; }
+    .note {
+      position: absolute;
+      z-index: 3;
+      right: 4px;
+      bottom: 46px;
+      max-width: 255px;
+      padding: 14px 15px;
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      background: var(--coral);
+      color: white;
+      box-shadow: 6px 6px 0 var(--ink);
+      font-weight: 900;
       line-height: 1.55;
-      font-size: 15px;
-      box-shadow: 0 8px 18px rgba(31, 41, 51, .08);
     }
+    .soft-card { position: absolute; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 18px 42px rgba(38, 49, 43, .09); }
+    .soft-card.one { width: 160px; height: 98px; left: 10px; top: 26px; background: var(--green-soft); }
+    .soft-card.two { width: 132px; height: 132px; right: 24px; top: 0; background: #dfeaff; }
+    .soft-card.three { width: 150px; height: 82px; left: 42px; bottom: 42px; background: #ffe1dc; }
 
-    .bubble.bot {
-      background: #eef7f1;
-      border-top-left-radius: 4px;
-    }
-
-    .bubble.user {
-      justify-self: end;
-      color: #fff;
-      background: #34495e;
-      border-top-right-radius: 4px;
-    }
-
-    .rich-menu {
-      margin-top: 4px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      overflow: hidden;
-      background: #fff;
-    }
-
-    .rich-menu img {
-      width: 100%;
-      display: block;
-      aspect-ratio: 2500 / 1686;
-      object-fit: cover;
-    }
-
-    .quick-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .quick {
-      border: 1px solid var(--line);
-      background: #fff;
-      border-radius: 8px;
-      padding: 10px;
-      font-weight: 800;
-      color: #34495e;
-    }
-
-    section {
-      padding: 82px 0;
-      border-top: 1px solid rgba(216, 222, 214, .65);
-    }
-
+    section.band { padding: 74px 0; border-top: 1px solid rgba(38, 49, 43, .1); }
     .section-head {
       display: flex;
-      justify-content: space-between;
       align-items: end;
-      gap: 24px;
-      margin-bottom: 26px;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: 24px;
     }
-
-    h2 {
-      margin: 0;
-      font-size: clamp(30px, 4vw, 48px);
-      line-height: 1.12;
-    }
-
-    .section-head p {
-      max-width: 520px;
-      color: var(--muted);
-      line-height: 1.8;
-      margin: 0;
-    }
+    h2 { margin: 0; font-size: clamp(32px, 5vw, 58px); line-height: 1.05; letter-spacing: 0; }
+    .section-head p { max-width: 520px; margin: 0; color: var(--muted); line-height: 1.8; }
 
     .feature-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .feature-card {
-      min-height: 210px;
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, .68);
-      display: flex;
-      flex-direction: column;
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
     }
-
+    .feature-card {
+      min-height: 214px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 250, 240, .8);
+      box-shadow: 0 18px 38px rgba(38, 49, 43, .07);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .feature-card:nth-child(4n+1) { border-top: 6px solid var(--green); }
+    .feature-card:nth-child(4n+2) { border-top: 6px solid var(--blue); }
+    .feature-card:nth-child(4n+3) { border-top: 6px solid var(--gold); }
+    .feature-card:nth-child(4n+4) { border-top: 6px solid var(--coral); }
     .icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 8px;
+      width: 42px;
+      height: 42px;
       display: grid;
       place-items: center;
-      background: rgba(76, 191, 143, .14);
-      color: var(--mint-dark);
-      font-size: 24px;
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      background: var(--paper);
+      box-shadow: 3px 3px 0 var(--ink);
+      font-weight: 900;
     }
-
-    .feature-card h3 {
-      margin: 0;
-      font-size: 20px;
-    }
-
-    .feature-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 15px;
-    }
-
-    .tag-row {
-      margin-top: auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-    }
-
-    .tag {
-      padding: 6px 9px;
-      border-radius: 999px;
-      background: rgba(31, 41, 51, .06);
-      color: #44515f;
-      font-size: 12px;
-      font-weight: 800;
-    }
+    .feature-card h3 { margin: 0; font-size: 20px; }
+    .feature-card p { margin: 0; color: var(--muted); line-height: 1.65; font-size: 14px; }
+    .mini-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+    .mini-tags span { padding: 5px 8px; border-radius: 999px; background: rgba(38, 49, 43, .06); font-size: 12px; font-weight: 900; color: var(--soft-ink); }
 
     .workspace {
       display: grid;
-      grid-template-columns: 280px minmax(0, 1fr);
-      min-height: 560px;
+      grid-template-columns: 260px 1fr;
+      min-height: 520px;
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      background: rgba(255, 250, 240, .84);
+      box-shadow: 9px 9px 0 var(--ink), 0 24px 60px rgba(38, 49, 43, .12);
       overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, .78);
-      box-shadow: 0 18px 40px rgba(31, 41, 51, .08);
     }
-
     .tabs {
       padding: 14px;
       border-right: 1px solid var(--line);
-      background: rgba(246, 241, 232, .56);
       display: grid;
       align-content: start;
       gap: 8px;
+      background: rgba(255, 242, 207, .44);
     }
-
     .tab {
       width: 100%;
+      min-height: 46px;
       border: 1px solid transparent;
-      border-radius: 8px;
-      padding: 13px 12px;
+      border-radius: 9px;
       background: transparent;
+      color: var(--soft-ink);
       text-align: left;
+      padding: 11px;
+      font-weight: 900;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #475462;
-      font-weight: 800;
     }
-
     .tab[aria-selected="true"] {
-      background: #fff;
-      border-color: var(--line);
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      box-shadow: 4px 4px 0 var(--ink);
       color: var(--ink);
-      box-shadow: 0 8px 20px rgba(31, 41, 51, .07);
     }
-
-    .panel {
-      padding: 26px;
-      display: none;
-    }
-
+    .panel { display: none; padding: 24px; }
     .panel.active { display: block; }
-
-    .panel-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 320px;
-      gap: 24px;
-      align-items: start;
-    }
-
-    .panel h3 {
-      margin: 0 0 10px;
-      font-size: 30px;
-    }
-
-    .panel p {
-      color: var(--muted);
-      line-height: 1.8;
-      margin: 0;
-    }
-
+    .panel-layout { display: grid; grid-template-columns: 1fr 320px; gap: 22px; align-items: start; }
+    .panel h3 { margin: 0 0 10px; font-size: 32px; }
+    .panel p { margin: 0; color: var(--muted); line-height: 1.8; }
     .demo-box {
       margin-top: 20px;
+      padding: 16px;
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-      padding: 18px;
+      border-radius: 10px;
+      background: var(--paper);
     }
-
-    .input-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .input-row input,
-    .input-row select {
+    .input-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: 12px; }
+    .input-row input, .input-row select {
       min-height: 44px;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 9px;
       padding: 0 12px;
-      background: #fff;
+      background: white;
       color: var(--ink);
     }
-
     .result {
       margin-top: 14px;
       min-height: 92px;
       padding: 14px;
-      border-radius: 8px;
-      background: #f2f7f4;
-      color: #264235;
+      border-radius: 10px;
+      background: var(--green-soft);
+      color: #244235;
       line-height: 1.7;
       white-space: pre-line;
+      font-weight: 800;
     }
-
-    .data-list {
-      display: grid;
-      gap: 10px;
-    }
-
+    .data-list { display: grid; gap: 10px; }
     .data-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
       padding: 13px;
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-    }
-
-    .data-item span { color: var(--muted); }
-
-    .roadmap {
-      display: grid;
+      border-radius: 10px;
+      background: var(--paper);
+      display: flex;
+      justify-content: space-between;
       gap: 10px;
-    }
-
-    .roadmap-item {
-      display: grid;
-      grid-template-columns: 156px minmax(0, 1fr) 88px;
-      gap: 12px;
-      align-items: center;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, .68);
-    }
-
-    .difficulty {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
       font-weight: 900;
     }
+    .data-item span { color: var(--muted); font-size: 13px; }
 
-    .dot {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: var(--mint);
-      box-shadow: 0 0 0 4px rgba(76, 191, 143, .14);
-    }
-
-    .dot.mid {
-      background: var(--amber);
-      box-shadow: 0 0 0 4px rgba(240, 184, 74, .16);
-    }
-
-    .status-grid {
+    .roadmap-card {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .status {
-      border: 1px solid var(--line);
-      border-radius: 8px;
+      grid-template-columns: .86fr 1.14fr;
+      gap: 18px;
       padding: 18px;
-      background: rgba(255, 255, 255, .72);
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      background: rgba(255, 250, 240, .86);
+      box-shadow: 9px 9px 0 var(--ink), 0 24px 60px rgba(38, 49, 43, .12);
     }
-
-    .stars {
-      margin: 12px 0 0;
-      color: var(--amber);
-      font-size: 20px;
-      letter-spacing: 2px;
-    }
-
-    .cta-band {
+    .roadmap-copy { padding: 18px; }
+    .roadmap-copy p { margin: 14px 0 0; color: var(--muted); line-height: 1.8; font-size: 17px; }
+    .roadmap { display: grid; gap: 10px; }
+    .roadmap-item {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: 132px minmax(0, 1fr) 66px;
+      gap: 12px;
       align-items: center;
-      gap: 22px;
-      padding: 28px;
+      padding: 13px;
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #20302a;
-      color: #fff;
-      box-shadow: var(--shadow);
+      border-radius: 10px;
+      background: var(--paper);
     }
-
-    .cta-band h2 { color: #fff; }
-
-    .cta-band p {
-      margin: 10px 0 0;
-      color: rgba(255, 255, 255, .72);
-      line-height: 1.7;
+    .roadmap-item b { font-size: 16px; }
+    .roadmap-item span { color: var(--muted); line-height: 1.5; font-size: 14px; }
+    .level {
+      justify-self: end;
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-weight: 900;
+      font-size: 13px;
+      font-style: normal;
     }
+    .level.mid { background: rgba(240, 184, 72, .2); color: #9a6b13; }
 
-    .site-footer {
-      padding: 30px 0 42px;
-      color: var(--muted);
-      font-size: 14px;
+    .cta {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding: 24px;
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      background: var(--ink);
+      color: white;
+      box-shadow: 9px 9px 0 var(--gold);
     }
+    .cta h2 { color: white; }
+    .cta p { margin: 12px 0 0; color: rgba(255,255,255,.76); line-height: 1.75; }
+    .cta .btn { background: var(--gold); color: var(--ink); white-space: nowrap; }
+    footer { padding: 30px 0 46px; color: var(--muted); font-weight: 800; }
 
-    @media (max-width: 980px) {
-      .hero-grid,
-      .panel-layout,
-      .workspace,
-      .cta-band {
-        grid-template-columns: 1fr;
-      }
-
-      .phone { margin: 0 auto; }
-      .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .tabs {
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-      .tab { justify-content: center; text-align: center; }
+    @media (max-width: 960px) {
+      .hero-grid, .panel-layout, .roadmap-card, .cta { grid-template-columns: 1fr; }
+      .visual { min-height: 460px; }
+      .menu-frame { margin: 0 auto; }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .workspace { grid-template-columns: 1fr; }
+      .tabs { grid-template-columns: repeat(4, 1fr); border-right: 0; border-bottom: 1px solid var(--line); }
+      .tab { text-align: center; }
       .section-head { display: block; }
       .section-head p { margin-top: 12px; }
     }
-
-    @media (max-width: 680px) {
-      .shell { width: min(100% - 22px, 1180px); }
-      .nav { min-height: 64px; }
-      .nav-links { display: none; }
-      .hero { padding-top: 34px; }
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 22px, 1160px); }
+      .links { display: none; }
+      .hero { padding-top: 24px; }
       h1 { font-size: 46px; }
-      .hero-copy { font-size: 17px; }
-      .stats-row,
-      .feature-grid,
-      .status-grid,
-      .quick-grid,
-      .input-row {
-        grid-template-columns: 1fr;
-      }
-      .screen { min-height: 560px; }
-      section { padding: 58px 0; }
-      .tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .panel { padding: 18px; }
-      .roadmap-item {
-        grid-template-columns: 1fr;
-        align-items: start;
-      }
+      .lead { font-size: 17px; }
+      .stats, .feature-grid, .tabs, .input-row { grid-template-columns: 1fr; }
+      .note { position: static; margin: 14px auto 0; max-width: none; }
+      .soft-card { display: none; }
+      .menu-frame { transform: none; }
+      .panel { padding: 16px; }
+      .roadmap-item { grid-template-columns: 1fr; }
+      .level { justify-self: start; }
     }
   </style>
 </head>
 <body>
   <header class="site-header">
-    <div class="shell nav">
-      <a class="brand" href="#top" aria-label="生活優轉首頁">
-        <span class="brand-mark">優</span>
-        <span>
-          <strong>生活優轉</strong>
-          <span>Life Uturn</span>
-        </span>
-      </a>
-      <nav class="nav-links" aria-label="主要導覽">
+    <nav class="wrap">
+      <a class="brand" href="#top" aria-label="生活優轉首頁"><span class="mark">優</span>生活優轉</a>
+      <div class="links">
         <a href="#features">功能</a>
         <a href="#workspace">體驗</a>
-        <a href="#roadmap">規劃</a>
+        <a href="#roadmap">下一步</a>
         <a href="#line">LINE</a>
-      </nav>
-    </div>
+      </div>
+    </nav>
   </header>
 
   <main id="top">
     <section class="hero">
-      <div class="shell hero-grid">
+      <div class="wrap hero-grid">
         <div>
-          <span class="eyebrow"><span class="pulse"></span>LINE bot 已開發完成，網站版啟動</span>
-          <h1>生活優轉</h1>
-          <p class="hero-copy">把每天會遇到的選擇整理成一個入口：吃什麼、停哪裡、天氣怎麼穿、週末去哪、預算怎麼抓、3C 怎麼挑，網站與 LINE 都能快速轉出下一步。</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#workspace">試用網站功能</a>
-            <a class="btn btn-secondary" href="#line">查看 LINE 入口</a>
+          <span class="badge"><i></i>A+C 混合：活潑中帶優雅</span>
+          <h1>每天的小決定，<span>轉得更順</span>一點。</h1>
+          <p class="lead">生活優轉像一位懂日常的 LINE 生活助理：吃什麼、停哪裡、天氣怎麼穿、週末去哪，把複雜資料整理成下一步。</p>
+          <div class="actions">
+            <a class="btn primary" href="#workspace">開始體驗</a>
+            <a class="btn" href="#features">看功能</a>
           </div>
-          <div class="stats-row" aria-label="產品狀態">
+          <div class="chips">
+            <span class="chip">吃飯推薦</span>
+            <span class="chip">停車導航</span>
+            <span class="chip">天氣穿搭</span>
+            <span class="chip">城市活動</span>
+          </div>
+          <div class="stats" aria-label="產品狀態">
             <div class="stat"><strong>8</strong><span>已完成模組</span></div>
             <div class="stat"><strong>4.1</strong><span>平均完整度</span></div>
-            <div class="stat"><strong>8</strong><span>下一階段開放資料功能</span></div>
+            <div class="stat"><strong>8</strong><span>下一波資料功能</span></div>
           </div>
         </div>
-
-        <aside class="phone" aria-label="LINE bot 預覽">
-          <div class="screen">
-            <div class="chat-top">
-              <div class="chat-title"><span class="avatar">優</span>生活優轉</div>
-              <span>online</span>
-            </div>
-            <div class="chat-body">
-              <div class="bubble bot">早安，今天想先解決哪件生活小事？</div>
-              <div class="bubble user">幫我找附近好停車又能吃飯的地方</div>
-              <div class="bubble bot">可以，我會先看停車場、費率與距離，再接著找附近美食。</div>
-              <div class="rich-menu">
-                <img src="/rich_menu.jpg" alt="生活優轉 LINE rich menu">
-              </div>
-              <div class="quick-grid" aria-label="快捷功能">
-                <div class="quick">美食推薦</div>
-                <div class="quick">停車查詢</div>
-                <div class="quick">天氣穿搭</div>
-                <div class="quick">安全工具</div>
-              </div>
-            </div>
+        <div class="visual">
+          <div class="soft-card one"></div>
+          <div class="soft-card two"></div>
+          <div class="soft-card three"></div>
+          <div class="menu-frame">
+            <div class="menu-top"><span>LINE bot 已完成</span><small>Web experience</small></div>
+            <img src="/rich_menu.jpg" alt="生活優轉 LINE rich menu">
           </div>
-        </aside>
+          <div class="note">保留品牌質感，再加一點讓人記得住的活力。</div>
+        </div>
       </div>
     </section>
 
-    <section id="features">
-      <div class="shell">
+    <section class="band" id="features">
+      <div class="wrap">
         <div class="section-head">
-          <h2>已完成的生活模組</h2>
-          <p>先把 LINE bot 已經穩定可用的能力整理成網站入口，讓使用者不用記指令，也能從情境直接開始。</p>
+          <h2>把日常任務分成好懂的入口。</h2>
+          <p>網站版先承接 LINE bot 已完成的功能，讓使用者不用記指令，也能從情境直接開始。</p>
         </div>
         <div class="feature-grid">
-          <article class="feature-card">
-            <div class="icon">食</div>
-            <h3>EatUturn</h3>
-            <p>美食推薦、必比登、聚餐選擇、城市特色與定位找餐廳。</p>
-            <div class="tag-row"><span class="tag">★★★★★</span><span class="tag">Google Places</span></div>
-          </article>
-          <article class="feature-card">
-            <div class="icon">停</div>
-            <h3>ParkUturn</h3>
-            <p>TDX 停車場、多城市費率、停車後順手找附近美食。</p>
-            <div class="tag-row"><span class="tag">★★★★★</span><span class="tag">TDX</span></div>
-          </article>
-          <article class="feature-card">
-            <div class="icon">天</div>
-            <h3>WeatherUturn</h3>
-            <p>天氣資料、穿搭建議、早安卡片與帶傘提醒。</p>
-            <div class="tag-row"><span class="tag">★★★★★</span><span class="tag">CWA</span></div>
-          </article>
-          <article class="feature-card">
-            <div class="icon">錢</div>
-            <h3>BillUturn</h3>
-            <p>油價、匯率、信用卡建議、預算規劃與存款建議。</p>
-            <div class="tag-row"><span class="tag">★★★★</span><span class="tag">Finance</span></div>
-          </article>
-          <article class="feature-card">
-            <div class="icon">健</div>
-            <h3>健康工具</h3>
-            <p>BMI、卡路里、睡眠、飲水與壓力檢查。</p>
-            <div class="tag-row"><span class="tag">★★★★</span><span class="tag">Daily Care</span></div>
-          </article>
-          <article class="feature-card">
-            <div class="icon">安</div>
-            <h3>安全工具</h3>
-            <p>詐騙分析與法律白話引導，把風險說得更清楚。</p>
-            <div class="tag-row"><span class="tag">★★★★</span><span class="tag">165 / Legal</span></div>
-          </article>
-          <article class="feature-card">
-            <div class="icon">週</div>
-            <h3>WeekendUturn</h3>
-            <p>Accupass 活動與地區活動選擇器，快速安排週末。</p>
-            <div class="tag-row"><span class="tag">★★★</span><span class="tag">Events</span></div>
-          </article>
-          <article class="feature-card">
-            <div class="icon">3C</div>
-            <h3>3C 顧問</h3>
-            <p>產品推薦、規格解讀、升級判斷與購買情境選擇。</p>
-            <div class="tag-row"><span class="tag">★★★★</span><span class="tag">Advisor</span></div>
-          </article>
+          <article class="feature-card"><div class="icon">食</div><h3>EatUturn</h3><p>美食推薦、必比登、聚餐選擇、城市特色、定位找餐廳。</p><div class="mini-tags"><span>★★★★★</span><span>Google Places</span></div></article>
+          <article class="feature-card"><div class="icon">停</div><h3>ParkUturn</h3><p>TDX 停車場、多城市費率、停車後順手找附近美食。</p><div class="mini-tags"><span>★★★★★</span><span>TDX</span></div></article>
+          <article class="feature-card"><div class="icon">天</div><h3>WeatherUturn</h3><p>天氣資料、穿搭建議、早安卡片、帶傘提醒。</p><div class="mini-tags"><span>★★★★★</span><span>CWA</span></div></article>
+          <article class="feature-card"><div class="icon">錢</div><h3>BillUturn</h3><p>油價、匯率、信用卡建議、預算規劃與存款建議。</p><div class="mini-tags"><span>★★★★</span><span>Finance</span></div></article>
+          <article class="feature-card"><div class="icon">健</div><h3>健康工具</h3><p>BMI、卡路里、睡眠、飲水與壓力檢查。</p><div class="mini-tags"><span>★★★★</span><span>Daily Care</span></div></article>
+          <article class="feature-card"><div class="icon">安</div><h3>安全工具</h3><p>詐騙分析與法律白話引導，把風險說得更清楚。</p><div class="mini-tags"><span>★★★★</span><span>165 / Legal</span></div></article>
+          <article class="feature-card"><div class="icon">週</div><h3>WeekendUturn</h3><p>Accupass 活動與地區活動選擇器，快速安排週末。</p><div class="mini-tags"><span>★★★</span><span>Events</span></div></article>
+          <article class="feature-card"><div class="icon">3C</div><h3>3C 顧問</h3><p>產品推薦、規格解讀、升級判斷與購買情境選擇。</p><div class="mini-tags"><span>★★★★</span><span>Advisor</span></div></article>
         </div>
       </div>
     </section>
 
-    <section id="workspace">
-      <div class="shell">
+    <section class="band" id="workspace">
+      <div class="wrap">
         <div class="section-head">
-          <h2>網站版互動入口</h2>
-          <p>第一版先把常用情境做成可以點、可以輸入的介面；後續可再串接現有 Python 模組，讓網站與 LINE 共用同一套判斷邏輯。</p>
+          <h2>網站版先做成能試的工作台。</h2>
+          <p>第一版先把常用情境做成可點、可輸入的入口，後續再把這裡接回既有 Python 模組。</p>
         </div>
-
         <div class="workspace">
           <div class="tabs" role="tablist" aria-label="網站功能">
-            <button class="tab" role="tab" aria-selected="true" data-tab="food">食 美食</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="parking">停 停車</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="weather">天 天氣</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="tools">安 工具</button>
+            <button class="tab" role="tab" aria-selected="true" data-tab="food">美食</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="parking">停車</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="weather">天氣</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="safety">安全</button>
           </div>
 
           <div class="panel active" id="panel-food" role="tabpanel">
             <div class="panel-layout">
               <div>
                 <h3>今天想吃什麼？</h3>
-                <p>用地點與情境快速產生推薦方向。正式串 API 後，這裡可以接 Google Places、必比登與城市特色資料。</p>
+                <p>用城市和情境快速產生推薦方向。正式串接後可整合必比登、城市特色與 Google Places。</p>
                 <div class="demo-box">
                   <label for="food-city">城市</label>
                   <div class="input-row">
-                    <select id="food-city">
-                      <option>台北</option><option>新北</option><option>台中</option><option>台南</option><option>高雄</option>
-                    </select>
-                    <button class="btn btn-primary" data-demo="food">推薦</button>
+                    <select id="food-city"><option>台北</option><option>新北</option><option>台中</option><option>台南</option><option>高雄</option></select>
+                    <button class="btn primary" data-demo="food">推薦</button>
                   </div>
                   <div class="result" id="food-result">選一個城市，產生今日美食方向。</div>
                 </div>
@@ -825,13 +540,13 @@
           <div class="panel" id="panel-parking" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>先停車，再安排下一站</h3>
-                <p>停車場、費率與附近餐廳可以一起看，適合開車出門前或抵達目的地後使用。</p>
+                <h3>先停車，再安排下一站。</h3>
+                <p>停車場、費率與附近餐廳一起看，適合開車出門前或抵達目的地後使用。</p>
                 <div class="demo-box">
                   <label for="parking-place">目的地</label>
                   <div class="input-row">
                     <input id="parking-place" value="台南美術館" aria-label="目的地">
-                    <button class="btn btn-primary" data-demo="parking">查詢</button>
+                    <button class="btn primary" data-demo="parking">查詢</button>
                   </div>
                   <div class="result" id="parking-result">輸入目的地，產生停車查詢摘要。</div>
                 </div>
@@ -847,15 +562,13 @@
           <div class="panel" id="panel-weather" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>把天氣變成行動建議</h3>
+                <h3>把天氣變成行動建議。</h3>
                 <p>不只顯示溫度，也轉成穿搭、雨具、早安摘要與外出提醒。</p>
                 <div class="demo-box">
                   <label for="weather-city">城市</label>
                   <div class="input-row">
-                    <select id="weather-city">
-                      <option>台北</option><option>桃園</option><option>台中</option><option>台南</option><option>高雄</option>
-                    </select>
-                    <button class="btn btn-primary" data-demo="weather">產生</button>
+                    <select id="weather-city"><option>台北</option><option>桃園</option><option>台中</option><option>台南</option><option>高雄</option></select>
+                    <button class="btn primary" data-demo="weather">產生</button>
                   </div>
                   <div class="result" id="weather-result">選城市後產生生活化天氣摘要。</div>
                 </div>
@@ -868,24 +581,24 @@
             </div>
           </div>
 
-          <div class="panel" id="panel-tools" role="tabpanel">
+          <div class="panel" id="panel-safety" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>安全、健康與花費工具</h3>
-                <p>把不想查很多頁的生活問題，整理成一段能直接判斷的建議。</p>
+                <h3>先判斷風險，再決定動作。</h3>
+                <p>詐騙訊息、法律問題、生活風險都先整理成白話提示。</p>
                 <div class="demo-box">
-                  <label for="tool-question">輸入狀況</label>
+                  <label for="safety-text">輸入狀況</label>
                   <div class="input-row">
-                    <input id="tool-question" value="陌生簡訊說包裹卡關，要我點連結付款" aria-label="狀況描述">
-                    <button class="btn btn-primary" data-demo="tools">分析</button>
+                    <input id="safety-text" value="陌生簡訊說包裹卡關，要我點連結付款" aria-label="狀況描述">
+                    <button class="btn primary" data-demo="safety">分析</button>
                   </div>
-                  <div class="result" id="tools-result">輸入生活狀況，產生初步風險提示。</div>
+                  <div class="result" id="safety-result">輸入生活狀況，產生初步風險提示。</div>
                 </div>
               </div>
               <div class="data-list">
                 <div class="data-item"><strong>詐騙分析</strong><span>完成</span></div>
-                <div class="data-item"><strong>BMI / 飲水</strong><span>完成</span></div>
-                <div class="data-item"><strong>信用卡建議</strong><span>部分</span></div>
+                <div class="data-item"><strong>法律白話</strong><span>完成</span></div>
+                <div class="data-item"><strong>回報建議</strong><span>完成</span></div>
               </div>
             </div>
           </div>
@@ -893,44 +606,46 @@
       </div>
     </section>
 
-    <section id="roadmap">
-      <div class="shell">
-        <div class="section-head">
-          <h2>下一波開放資料功能</h2>
-          <p>依照你提供的規劃，低難度項目可以優先進網站版；即時路況屬中難度，適合排在交通頁第二階段。</p>
-        </div>
-        <div class="roadmap">
-          <div class="roadmap-item"><strong>GoUturn</strong><span>台鐵 / 高鐵時刻、公車動態</span><span class="difficulty"><i class="dot"></i>低</span></div>
-          <div class="roadmap-item"><strong>GoUturn</strong><span>即時路況：Google Maps / TDX</span><span class="difficulty"><i class="dot mid"></i>中</span></div>
-          <div class="roadmap-item"><strong>ErrandUturn</strong><span>垃圾車即時 GPS、資源回收分類查詢</span><span class="difficulty"><i class="dot"></i>低</span></div>
-          <div class="roadmap-item"><strong>WeekendUturn</strong><span>展覽、市集活動、國定假日與補班提醒</span><span class="difficulty"><i class="dot"></i>低</span></div>
-          <div class="roadmap-item"><strong>WeatherUturn</strong><span>洗衣與曬衣指數</span><span class="difficulty"><i class="dot"></i>低</span></div>
-          <div class="roadmap-item"><strong>ParkUturn</strong><span>違規裁罰試算</span><span class="difficulty"><i class="dot"></i>低</span></div>
+    <section class="band" id="roadmap">
+      <div class="wrap">
+        <div class="roadmap-card">
+          <div class="roadmap-copy">
+            <span class="badge"><i></i>下一波開放資料</span>
+            <h2>把城市資料也變成日常提醒。</h2>
+            <p>後續可以把 GoUturn、垃圾車、展覽市集、洗衣指數與裁罰試算都接進網站。風格維持活潑，但資訊呈現要清楚、有秩序。</p>
+          </div>
+          <div class="roadmap">
+            <div class="roadmap-item"><b>GoUturn</b><span>台鐵、高鐵時刻與公車動態</span><em class="level">低</em></div>
+            <div class="roadmap-item"><b>路況整合</b><span>Google Maps / TDX 即時路況</span><em class="level mid">中</em></div>
+            <div class="roadmap-item"><b>ErrandUturn</b><span>垃圾車 GPS 與資源回收分類查詢</span><em class="level">低</em></div>
+            <div class="roadmap-item"><b>WeekendUturn</b><span>展覽、市集、假日與補班提醒</span><em class="level">低</em></div>
+            <div class="roadmap-item"><b>WeatherUturn</b><span>洗衣、曬衣與外出舒適指數</span><em class="level">低</em></div>
+            <div class="roadmap-item"><b>ParkUturn</b><span>違規裁罰試算與條例查詢</span><em class="level">低</em></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="line">
-      <div class="shell">
-        <div class="cta-band">
+    <section class="band" id="line">
+      <div class="wrap">
+        <div class="cta">
           <div>
-            <h2>網站先上線，LINE 繼續當日常入口</h2>
-            <p>這一版網站已可作為產品介紹與功能入口。下一步可以把互動區接到現有 API，讓網站輸入與 LINE bot 共用同一套推薦邏輯。</p>
+            <h2>網站先上線，LINE 繼續當日常入口。</h2>
+            <p>這一版網站可以作為產品介紹與功能入口。下一步會把互動區接到現有 API，讓網站輸入與 LINE bot 共用同一套推薦邏輯。</p>
           </div>
-          <a class="btn btn-primary" href="https://line.me/R/" target="_blank" rel="noreferrer">開啟 LINE</a>
+          <a class="btn" href="https://line.me/R/" target="_blank" rel="noreferrer">開啟 LINE</a>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="shell">Life Uturn 生活優轉 · LINE bot + Web</div>
+  <footer>
+    <div class="wrap">Life Uturn 生活優轉 · LINE bot + Web</div>
   </footer>
 
   <script>
     const tabs = document.querySelectorAll(".tab");
     const panels = document.querySelectorAll(".panel");
-
     tabs.forEach((tab) => {
       tab.addEventListener("click", () => {
         const key = tab.dataset.tab;
@@ -952,8 +667,8 @@
         const city = document.querySelector("#weather-city").value;
         return `${city}今日提醒：早晚溫差留意，外出包包可放薄外套。\n網站串接後可加入降雨機率、穿搭、洗衣指數與早安卡片。`;
       },
-      tools: () => {
-        const text = document.querySelector("#tool-question").value.trim();
+      safety: () => {
+        const text = document.querySelector("#safety-text").value.trim();
         const risky = /連結|付款|驗證碼|帳號|匯款|投資/.test(text);
         return risky
           ? "初步判斷：有高風險關鍵字。先不要點連結或付款，改從官方 App 或客服電話確認。"

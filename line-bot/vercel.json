@@ -16,6 +16,7 @@
       "src": "api/webhook.py",
       "use": "@vercel/python",
       "config": {
+        "maxDuration": 60,
         "includeFiles": [
           "api/modules/**",
           "api/handlers/**",

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>生活優轉 B - 操作中樞感</title>
+  <style>
+    :root {
+      --ink: #172026;
+      --muted: #687580;
+      --paper: #ffffff;
+      --bg: #eef2ee;
+      --line: #d5ddd7;
+      --green: #208563;
+      --blue: #4a75ad;
+      --amber: #d99b2e;
+      --red: #d66154;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); }
+    .app { min-height: 100vh; display: grid; grid-template-columns: 260px 1fr; }
+    aside { padding: 22px; border-right: 1px solid var(--line); background: #fbfcfa; position: sticky; top: 0; height: 100vh; }
+    .logo { font-size: 24px; font-weight: 900; margin-bottom: 28px; }
+    .nav { display: grid; gap: 8px; }
+    .nav a { padding: 12px; border-radius: 8px; color: #43505a; text-decoration: none; font-weight: 900; }
+    .nav a.active, .nav a:hover { background: #e8f3ed; color: var(--green); }
+    main { padding: 26px; }
+    .top { display: flex; justify-content: space-between; gap: 18px; align-items: center; margin-bottom: 18px; }
+    .top h1 { margin: 0; font-size: clamp(32px, 5vw, 58px); line-height: 1.05; }
+    .status { padding: 10px 12px; border-radius: 999px; background: #e8f3ed; color: var(--green); font-weight: 900; white-space: nowrap; }
+    .dashboard { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; }
+    .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 18px; box-shadow: 0 16px 34px rgba(23, 32, 38, .06); }
+    .hero-panel { min-height: 560px; display: flex; flex-direction: column; justify-content: space-between; }
+    .lead { max-width: 640px; color: var(--muted); font-size: 19px; line-height: 1.8; margin: 18px 0 0; }
+    .search { margin-top: 24px; display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+    input { min-height: 48px; border: 1px solid var(--line); border-radius: 8px; padding: 0 13px; }
+    button { min-height: 48px; border: 0; border-radius: 8px; background: var(--ink); color: white; font-weight: 900; padding: 0 18px; cursor: pointer; }
+    .modules { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 28px; }
+    .module { border: 1px solid var(--line); border-radius: 8px; padding: 14px; background: #fbfcfa; }
+    .module span { color: var(--muted); font-size: 13px; }
+    .module b { display: block; margin-top: 6px; font-size: 19px; }
+    .phone img { width: 100%; border-radius: 8px; display: block; border: 1px solid var(--line); }
+    .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+    .metric { background: #fbfcfa; border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
+    .metric strong { font-size: 30px; }
+    .worklist { display: grid; gap: 10px; margin-top: 16px; }
+    .task { display: grid; grid-template-columns: 110px 1fr 70px; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; align-items: center; }
+    .pill { justify-self: end; padding: 6px 9px; border-radius: 999px; background: #e8f3ed; color: var(--green); font-weight: 900; font-size: 13px; }
+    @media (max-width: 960px) {
+      .app { grid-template-columns: 1fr; }
+      aside { height: auto; position: static; }
+      .dashboard { grid-template-columns: 1fr; }
+      .nav { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 620px) {
+      main { padding: 14px; }
+      .top, .search { display: grid; grid-template-columns: 1fr; }
+      .modules, .metric-grid { grid-template-columns: 1fr; }
+      .task { grid-template-columns: 1fr; }
+      .pill { justify-self: start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="logo">生活優轉</div>
+      <nav class="nav"><a class="active" href="#">今日入口</a><a href="#">美食停車</a><a href="#">天氣活動</a><a href="./index.html">版本列表</a></nav>
+    </aside>
+    <main>
+      <div class="top"><h1>把生活任務集中處理。</h1><span class="status">LINE bot READY</span></div>
+      <div class="dashboard">
+        <section class="panel hero-panel">
+          <div>
+            <p class="lead">這個版本像一個生活 dashboard，重點是快、清楚、可操作。很適合把網站從介紹頁往工具平台推進。</p>
+            <div class="search"><input value="我想找台南美術館附近停車和晚餐"><button>開始</button></div>
+            <div class="modules">
+              <div class="module"><span>FOOD</span><b>美食推薦</b></div>
+              <div class="module"><span>PARKING</span><b>停車查詢</b></div>
+              <div class="module"><span>WEATHER</span><b>天氣建議</b></div>
+              <div class="module"><span>SAFETY</span><b>詐騙分析</b></div>
+            </div>
+          </div>
+          <div class="metric-grid">
+            <div class="metric"><strong>8</strong><br><span>完成模組</span></div>
+            <div class="metric"><strong>4.1</strong><br><span>完整度</span></div>
+            <div class="metric"><strong>8</strong><br><span>資料功能</span></div>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="phone"><img src="../rich_menu.jpg" alt="生活優轉 LINE rich menu"></div>
+          <div class="worklist">
+            <div class="task"><b>EatUturn</b><span>定位、必比登、聚餐選擇</span><span class="pill">完成</span></div>
+            <div class="task"><b>GoUturn</b><span>台鐵、高鐵、公車動態</span><span class="pill">規劃</span></div>
+            <div class="task"><b>Errand</b><span>垃圾車 GPS、回收分類</span><span class="pill">規劃</span></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

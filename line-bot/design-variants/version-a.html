@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>生活優轉 A - 生活雜誌感</title>
+  <style>
+    :root {
+      --ink: #24312b;
+      --muted: #657166;
+      --paper: #fffaf0;
+      --cream: #f4ead8;
+      --green: #2f8f6a;
+      --red: #c95d4f;
+      --gold: #d89d39;
+      --blue: #496f9e;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--cream); color: var(--ink); }
+    .wrap { width: min(1160px, calc(100% - 30px)); margin: 0 auto; }
+    header { padding: 22px 0; border-bottom: 1px solid rgba(36, 49, 43, .12); }
+    nav { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .brand { font-weight: 900; font-size: 22px; }
+    nav a { color: var(--muted); text-decoration: none; font-weight: 800; margin-left: 16px; }
+    .hero { min-height: calc(100vh - 75px); display: grid; align-items: center; padding: 42px 0 30px; }
+    .hero-grid { display: grid; grid-template-columns: 1fr .9fr; gap: 46px; align-items: center; }
+    .label { color: var(--red); font-weight: 900; letter-spacing: 2px; }
+    h1 { margin: 16px 0; font-size: clamp(46px, 8vw, 96px); line-height: .95; }
+    .copy { color: var(--muted); font-size: 20px; line-height: 1.9; max-width: 660px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .btn { padding: 13px 18px; border-radius: 8px; border: 1px solid rgba(36, 49, 43, .18); text-decoration: none; font-weight: 900; }
+    .primary { background: var(--green); color: white; border-color: var(--green); }
+    .secondary { color: var(--ink); background: rgba(255, 250, 240, .72); }
+    .cover {
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: 0 28px 70px rgba(36, 49, 43, .16);
+      transform: rotate(1deg);
+    }
+    .cover img { width: 100%; display: block; }
+    .cover-caption { padding: 18px; display: flex; justify-content: space-between; gap: 18px; }
+    .cover-caption strong { font-size: 22px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 34px; }
+    .chip { padding: 9px 11px; border-radius: 999px; background: rgba(255, 250, 240, .74); color: #425047; font-weight: 900; }
+    section { padding: 78px 0; border-top: 1px solid rgba(36, 49, 43, .1); }
+    .section-title { display: flex; justify-content: space-between; gap: 30px; align-items: end; margin-bottom: 24px; }
+    h2 { margin: 0; font-size: clamp(30px, 5vw, 54px); line-height: 1.08; }
+    .section-title p { max-width: 460px; color: var(--muted); line-height: 1.8; margin: 0; }
+    .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .card { padding: 20px; min-height: 210px; background: var(--paper); border: 1px solid rgba(36, 49, 43, .12); border-radius: 8px; }
+    .card b { display: block; font-size: 22px; margin-bottom: 12px; }
+    .card p { color: var(--muted); line-height: 1.7; margin: 0; }
+    .accent-green { border-top: 6px solid var(--green); }
+    .accent-red { border-top: 6px solid var(--red); }
+    .accent-gold { border-top: 6px solid var(--gold); }
+    .accent-blue { border-top: 6px solid var(--blue); }
+    @media (max-width: 920px) {
+      .hero-grid, .section-title { grid-template-columns: 1fr; display: grid; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      nav .links { display: none; }
+    }
+    @media (max-width: 620px) { .cards { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header><nav class="wrap"><div class="brand">生活優轉</div><div class="links"><a href="./index.html">版本列表</a><a href="#modules">功能</a></div></nav></header>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="label">LIFE UTURN DAILY GUIDE</div>
+          <h1>每天的小決定，有一個比較順的轉彎。</h1>
+          <p class="copy">生活優轉把美食、停車、天氣、活動、健康、安全與 3C 顧問整理成一個日常入口。不是要你學指令，是把下一步放到你眼前。</p>
+          <div class="actions"><a class="btn primary" href="#modules">看功能</a><a class="btn secondary" href="../">回正式版</a></div>
+          <div class="chips"><span class="chip">吃什麼</span><span class="chip">停哪裡</span><span class="chip">天氣怎麼穿</span><span class="chip">週末去哪</span></div>
+        </div>
+        <figure class="cover">
+          <img src="../rich_menu.jpg" alt="生活優轉 LINE 選單">
+          <figcaption class="cover-caption"><strong>LINE bot 已完成</strong><span>網站版延伸中</span></figcaption>
+        </figure>
+      </div>
+    </section>
+    <section id="modules">
+      <div class="wrap">
+        <div class="section-title"><h2>像一本會回話的生活手冊</h2><p>這個方向重點是親切、可信、帶一點雜誌感，適合做品牌第一印象。</p></div>
+        <div class="cards">
+          <article class="card accent-green"><b>EatUturn</b><p>美食推薦、必比登、聚餐與城市特色。</p></article>
+          <article class="card accent-blue"><b>ParkUturn</b><p>TDX 停車場、費率與停車後找美食。</p></article>
+          <article class="card accent-gold"><b>WeatherUturn</b><p>天氣資料轉成穿搭、雨具與早安提醒。</p></article>
+          <article class="card accent-red"><b>Safety Tools</b><p>詐騙分析、法律白話與生活風險提醒。</p></article>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

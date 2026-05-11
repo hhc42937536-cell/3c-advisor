@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>生活優轉 D - 城市資訊感</title>
+  <style>
+    :root {
+      --ink: #1f2426;
+      --muted: #667174;
+      --paper: #fdfdf8;
+      --line: #d7dedb;
+      --map: #e6eee8;
+      --green: #2d8f65;
+      --orange: #e38a3b;
+      --red: #cf5d52;
+      --blue: #477bb0;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); }
+    .map-bg {
+      min-height: 100vh;
+      background:
+        linear-gradient(90deg, transparent 0 23%, rgba(31, 36, 38, .08) 23% 23.2%, transparent 23.2% 55%, rgba(31, 36, 38, .08) 55% 55.2%, transparent 55.2%),
+        linear-gradient(0deg, transparent 0 20%, rgba(31, 36, 38, .07) 20% 20.2%, transparent 20.2% 47%, rgba(31, 36, 38, .07) 47% 47.2%, transparent 47.2%),
+        var(--map);
+    }
+    .wrap { width: min(1180px, calc(100% - 30px)); margin: 0 auto; }
+    header { padding: 18px 0; }
+    nav { min-height: 54px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--line); border-radius: 8px; padding: 0 14px; background: rgba(253, 253, 248, .88); }
+    .brand { font-weight: 900; }
+    nav a { color: var(--muted); text-decoration: none; font-weight: 900; margin-left: 14px; }
+    .hero { padding: 42px 0 70px; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 390px; gap: 22px; align-items: stretch; }
+    .hero-card, .side-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(253, 253, 248, .92);
+      box-shadow: 0 20px 42px rgba(31, 36, 38, .08);
+    }
+    .hero-card { padding: 30px; min-height: 650px; display: flex; flex-direction: column; justify-content: space-between; }
+    .route-label { display: inline-flex; gap: 8px; align-items: center; width: fit-content; padding: 8px 10px; background: #fff; border: 1px solid var(--line); border-radius: 999px; color: var(--green); font-weight: 900; }
+    .route-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
+    h1 { margin: 22px 0 16px; font-size: clamp(42px, 7vw, 92px); line-height: .95; }
+    .lead { max-width: 680px; color: var(--muted); font-size: 19px; line-height: 1.8; }
+    .route-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 34px; }
+    .route { padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: white; }
+    .route small { color: var(--muted); font-weight: 900; }
+    .route b { display: block; margin-top: 8px; font-size: 20px; }
+    .side-card { padding: 16px; }
+    .side-card img { width: 100%; border-radius: 8px; display: block; border: 1px solid var(--line); }
+    .signal-list { display: grid; gap: 10px; margin-top: 16px; }
+    .signal { display: grid; grid-template-columns: 18px 1fr auto; gap: 10px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: white; }
+    .light { width: 13px; height: 13px; border-radius: 50%; background: var(--green); }
+    .light.mid { background: var(--orange); }
+    .light.hot { background: var(--red); }
+    .signal span { color: var(--muted); }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .btn { padding: 13px 18px; border-radius: 8px; border: 1px solid var(--ink); background: var(--ink); color: white; text-decoration: none; font-weight: 900; }
+    .btn.alt { background: white; color: var(--ink); }
+    @media (max-width: 980px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-card { min-height: auto; }
+      .route-board { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 620px) {
+      nav .links { display: none; }
+      .hero-card { padding: 20px; }
+      .route-board { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="map-bg">
+    <header><nav class="wrap"><div class="brand">生活優轉 · City Layer</div><div class="links"><a href="./index.html">版本列表</a><a href="../">正式版</a></div></nav></header>
+    <main class="wrap hero">
+      <div class="hero-grid">
+        <section class="hero-card">
+          <div>
+            <span class="route-label"><i class="route-dot"></i>公開資料整合路線</span>
+            <h1>把城市資料，轉成今天可以用的建議。</h1>
+            <p class="lead">這個版本偏城市資訊平台，適合強調台鐵高鐵、公車動態、停車、天氣、垃圾車、展覽市集與裁罰試算。比較不像一般 landing page，會更像可擴充的生活地圖入口。</p>
+            <div class="actions"><a class="btn" href="#routes">看資料路線</a><a class="btn alt" href="./index.html">換版本</a></div>
+          </div>
+          <div class="route-board" id="routes">
+            <div class="route"><small>01</small><b>GoUturn</b></div>
+            <div class="route"><small>02</small><b>ParkUturn</b></div>
+            <div class="route"><small>03</small><b>WeatherUturn</b></div>
+            <div class="route"><small>04</small><b>WeekendUturn</b></div>
+          </div>
+        </section>
+        <aside class="side-card">
+          <img src="../rich_menu.jpg" alt="生活優轉 LINE rich menu">
+          <div class="signal-list">
+            <div class="signal"><i class="light"></i><b>台鐵 / 高鐵 / 公車</b><span>低</span></div>
+            <div class="signal"><i class="light mid"></i><b>即時路況</b><span>中</span></div>
+            <div class="signal"><i class="light"></i><b>垃圾車 GPS</b><span>低</span></div>
+            <div class="signal"><i class="light hot"></i><b>裁罰試算</b><span>低</span></div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

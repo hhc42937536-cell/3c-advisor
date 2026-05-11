@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>生活優轉 C - 活潑生活感</title>
+  <style>
+    :root {
+      --ink: #2a2824;
+      --muted: #6d6259;
+      --paper: #fff8e9;
+      --green: #44a56d;
+      --coral: #ea6d5d;
+      --yellow: #f4bd45;
+      --blue: #5b84bf;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: #ffefd0; }
+    .wrap { width: min(1120px, calc(100% - 28px)); margin: 0 auto; }
+    header { padding: 18px 0; }
+    nav { display: flex; justify-content: space-between; align-items: center; }
+    .brand { padding: 10px 14px; border: 3px solid var(--ink); border-radius: 8px; background: white; box-shadow: 5px 5px 0 var(--ink); font-weight: 900; }
+    nav a { color: var(--ink); text-decoration: none; font-weight: 900; margin-left: 14px; }
+    .hero { padding: 44px 0 54px; min-height: calc(100vh - 70px); display: grid; align-items: center; }
+    .hero-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: 38px; align-items: center; }
+    .badge { width: fit-content; padding: 9px 12px; border: 3px solid var(--ink); border-radius: 999px; background: var(--yellow); font-weight: 900; box-shadow: 4px 4px 0 var(--ink); }
+    h1 { margin: 20px 0 14px; font-size: clamp(44px, 8vw, 92px); line-height: .95; }
+    .copy { color: var(--muted); font-size: 20px; line-height: 1.8; }
+    .buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .btn { padding: 13px 18px; border: 3px solid var(--ink); border-radius: 8px; text-decoration: none; color: var(--ink); font-weight: 900; box-shadow: 5px 5px 0 var(--ink); background: white; }
+    .btn.main { background: var(--green); color: white; }
+    .visual { position: relative; }
+    .tile {
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: white;
+      box-shadow: 8px 8px 0 var(--ink);
+      overflow: hidden;
+    }
+    .tile img { width: 100%; display: block; }
+    .note { position: absolute; padding: 13px; border: 3px solid var(--ink); border-radius: 8px; background: var(--coral); color: white; font-weight: 900; right: -8px; bottom: 24px; box-shadow: 5px 5px 0 var(--ink); max-width: 210px; }
+    .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 36px; }
+    .card { min-height: 170px; padding: 18px; border: 3px solid var(--ink); border-radius: 8px; background: white; box-shadow: 5px 5px 0 var(--ink); }
+    .card:nth-child(2) { background: #dff2ff; }
+    .card:nth-child(3) { background: #e9f7dc; }
+    .card:nth-child(4) { background: #ffe0da; }
+    .card b { font-size: 22px; }
+    .card p { color: var(--muted); line-height: 1.65; }
+    section { padding: 64px 0; }
+    h2 { font-size: clamp(30px, 5vw, 56px); margin: 0 0 14px; }
+    @media (max-width: 920px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 620px) {
+      nav .links { display: none; }
+      .cards { grid-template-columns: 1fr; }
+      .note { position: static; margin-top: 14px; max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <header><nav class="wrap"><div class="brand">生活優轉</div><div class="links"><a href="./index.html">版本列表</a><a href="../">正式版</a></div></nav></header>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="badge">今天又要轉哪一關？</div>
+          <h1>吃飯、停車、天氣，一起問就好。</h1>
+          <p class="copy">這個版本比較活潑，適合把生活優轉做成有角色感的 LINE bot 品牌。使用者會感覺比較輕鬆，也比較容易記住。</p>
+          <div class="buttons"><a class="btn main" href="#daily">看看日常任務</a><a class="btn" href="./index.html">換個版本</a></div>
+        </div>
+        <div class="visual">
+          <div class="tile"><img src="../rich_menu.jpg" alt="生活優轉 LINE rich menu"></div>
+          <div class="note">把 LINE 選單變成網站第一眼記憶點</div>
+        </div>
+      </div>
+    </section>
+    <section id="daily">
+      <div class="wrap">
+        <h2>一排排日常小任務</h2>
+        <div class="cards">
+          <article class="card"><b>今天吃什麼</b><p>城市特色、必比登、聚餐建議。</p></article>
+          <article class="card"><b>車停哪裡</b><p>剩餘車位、費率與導航。</p></article>
+          <article class="card"><b>要帶傘嗎</b><p>天氣、穿搭、洗衣指數。</p></article>
+          <article class="card"><b>這是不是詐騙</b><p>關鍵字風險與下一步提醒。</p></article>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

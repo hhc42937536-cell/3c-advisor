@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>生活優轉 AC - 活潑優雅混合版</title>
+  <style>
+    :root {
+      --ink: #26312b;
+      --soft-ink: #3c4a42;
+      --muted: #726b62;
+      --paper: #fffaf0;
+      --warm: #f6ead4;
+      --cream: #fff2cf;
+      --green: #2f966d;
+      --green-soft: #dff3e7;
+      --coral: #e66e5d;
+      --gold: #f0b848;
+      --blue: #5f86bd;
+      --line: rgba(38, 49, 43, .16);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(135deg, rgba(255, 250, 240, .9), rgba(255, 242, 207, .78)),
+        var(--warm);
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+    .wrap {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    header {
+      padding: 20px 0 0;
+    }
+    nav {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 250, 240, .76);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 46px rgba(38, 49, 43, .07);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+    }
+    .mark {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: var(--gold);
+      box-shadow: 4px 4px 0 var(--ink);
+      color: var(--ink);
+    }
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .links a {
+      color: var(--soft-ink);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 900;
+      padding: 9px 10px;
+      border-radius: 8px;
+    }
+    .links a:hover { background: rgba(47, 150, 109, .12); }
+    .hero {
+      min-height: calc(100vh - 78px);
+      display: grid;
+      align-items: center;
+      padding: 38px 0 52px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: .92fr 1.08fr;
+      gap: 46px;
+      align-items: center;
+    }
+    .badge {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 12px;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--green);
+      box-shadow: 4px 4px 0 var(--ink);
+      font-weight: 900;
+      font-size: 14px;
+    }
+    .badge i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(47, 150, 109, .16);
+    }
+    h1 {
+      margin: 22px 0 18px;
+      font-size: clamp(48px, 8vw, 94px);
+      line-height: .95;
+      letter-spacing: 0;
+    }
+    h1 span {
+      position: relative;
+      display: inline-block;
+    }
+    h1 span::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: -2px;
+      bottom: 8px;
+      height: 18px;
+      background: rgba(240, 184, 72, .55);
+      z-index: -1;
+      border-radius: 999px;
+    }
+    .lead {
+      max-width: 650px;
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1.85;
+      margin: 0;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border: 2px solid var(--ink);
+      border-radius: 9px;
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 900;
+      background: var(--paper);
+      box-shadow: 5px 5px 0 var(--ink);
+    }
+    .btn.primary {
+      background: var(--green);
+      color: white;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 32px;
+    }
+    .chip {
+      padding: 9px 11px;
+      border-radius: 999px;
+      background: rgba(255, 250, 240, .78);
+      border: 1px solid var(--line);
+      color: var(--soft-ink);
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .visual {
+      position: relative;
+      min-height: 540px;
+      display: grid;
+      align-items: center;
+    }
+    .menu-frame {
+      position: relative;
+      z-index: 2;
+      margin-left: auto;
+      width: min(620px, 100%);
+      padding: 16px;
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      background: rgba(255, 250, 240, .92);
+      box-shadow: 12px 12px 0 var(--ink), 0 30px 70px rgba(38, 49, 43, .16);
+      transform: rotate(.7deg);
+    }
+    .menu-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 12px;
+      font-weight: 900;
+    }
+    .menu-top small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .menu-frame img {
+      width: 100%;
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+    }
+    .note {
+      position: absolute;
+      z-index: 3;
+      right: 4px;
+      bottom: 46px;
+      max-width: 255px;
+      padding: 14px 15px;
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      background: var(--coral);
+      color: white;
+      box-shadow: 6px 6px 0 var(--ink);
+      font-weight: 900;
+      line-height: 1.55;
+    }
+    .soft-card {
+      position: absolute;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, .78);
+      box-shadow: 0 18px 42px rgba(38, 49, 43, .09);
+    }
+    .soft-card.one {
+      width: 160px;
+      height: 98px;
+      left: 10px;
+      top: 26px;
+      background: var(--green-soft);
+    }
+    .soft-card.two {
+      width: 132px;
+      height: 132px;
+      right: 24px;
+      top: 0;
+      background: #dfeaff;
+    }
+    .soft-card.three {
+      width: 150px;
+      height: 82px;
+      left: 42px;
+      bottom: 42px;
+      background: #ffe1dc;
+    }
+    .modules {
+      padding: 0 0 70px;
+    }
+    .module-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .module {
+      min-height: 156px;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 250, 240, .8);
+      box-shadow: 0 18px 38px rgba(38, 49, 43, .07);
+    }
+    .module b {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .module p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+    .module:nth-child(1) { border-top: 6px solid var(--green); }
+    .module:nth-child(2) { border-top: 6px solid var(--blue); }
+    .module:nth-child(3) { border-top: 6px solid var(--gold); }
+    .module:nth-child(4) { border-top: 6px solid var(--coral); }
+    @media (max-width: 940px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .visual { min-height: 460px; }
+      .menu-frame { margin: 0 auto; }
+      .module-strip { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 620px) {
+      .links { display: none; }
+      .hero { padding-top: 28px; }
+      h1 { font-size: 46px; }
+      .lead { font-size: 17px; }
+      .module-strip { grid-template-columns: 1fr; }
+      .note {
+        position: static;
+        margin: 14px auto 0;
+        max-width: none;
+      }
+      .soft-card { display: none; }
+      .menu-frame { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="wrap">
+      <div class="brand"><span class="mark">優</span>生活優轉</div>
+      <div class="links">
+        <a href="./index.html">版本列表</a>
+        <a href="../">正式版</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="badge"><i></i>A+C 混合：活潑中帶優雅</span>
+          <h1>每天的小決定，<span>轉得更順</span>一點。</h1>
+          <p class="lead">生活優轉像一位懂日常的 LINE 生活助理：吃什麼、停哪裡、天氣怎麼穿、週末去哪，把複雜資料整理成下一步。</p>
+          <div class="actions">
+            <a class="btn primary" href="#modules">看今日任務</a>
+            <a class="btn" href="./index.html">比較其他版本</a>
+          </div>
+          <div class="chips">
+            <span class="chip">吃飯推薦</span>
+            <span class="chip">停車導航</span>
+            <span class="chip">天氣穿搭</span>
+            <span class="chip">城市活動</span>
+          </div>
+        </div>
+        <div class="visual">
+          <div class="soft-card one"></div>
+          <div class="soft-card two"></div>
+          <div class="soft-card three"></div>
+          <div class="menu-frame">
+            <div class="menu-top"><span>LINE bot 已完成</span><small>Web experience</small></div>
+            <img src="../rich_menu.jpg" alt="生活優轉 LINE rich menu">
+          </div>
+          <div class="note">保留品牌質感，再加一點讓人記得住的活力。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="modules wrap" id="modules">
+      <div class="module-strip">
+        <article class="module"><b>EatUturn</b><p>美食推薦、必比登、聚餐選擇、城市特色。</p></article>
+        <article class="module"><b>ParkUturn</b><p>停車場、費率、定位與停車後找美食。</p></article>
+        <article class="module"><b>WeatherUturn</b><p>天氣資料、穿搭建議、早安卡片。</p></article>
+        <article class="module"><b>Safety Tools</b><p>詐騙分析、法律白話與生活風險提醒。</p></article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
