@@ -93,7 +93,7 @@
     }
     .hero-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 340px;
+      grid-template-columns: minmax(0, 1fr) 380px;
       gap: 28px;
       align-items: stretch;
     }
@@ -148,7 +148,7 @@
     }
     .task-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
       margin-top: 28px;
       max-width: 780px;
@@ -195,9 +195,8 @@
       font-size: 14px;
       font-weight: 800;
     }
-    .task-card:nth-child(2) .task-icon { background: #e8eefb; }
-    .task-card:nth-child(3) .task-icon { background: #fff1c7; }
-    .task-card:nth-child(4) .task-icon { background: #ffe1dc; }
+    .task-card:nth-child(2) .task-icon { background: #fff1c7; }
+    .task-card:nth-child(3) .task-icon { background: #e8eefb; }
     .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
     .btn {
       display: inline-flex;
@@ -241,6 +240,48 @@
     .stat span { display: block; color: var(--muted); font-weight: 800; font-size: 13px; margin-top: 7px; }
 
     .visual { position: relative; min-height: auto; display: grid; align-items: start; }
+    .morning-card {
+      position: relative;
+      z-index: 2;
+      width: min(380px, 100%);
+      margin-left: auto;
+      padding: 18px;
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      background: rgba(255, 250, 240, .92);
+      box-shadow: 7px 7px 0 var(--ink), 0 22px 42px rgba(38, 49, 43, .12);
+    }
+    .morning-card h2 {
+      margin: 10px 0 8px;
+      font-size: 30px;
+      line-height: 1.1;
+    }
+    .morning-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 800;
+    }
+    .morning-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 16px;
+    }
+    .morning-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+      font-weight: 900;
+    }
+    .morning-item span {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: right;
+    }
     .menu-frame {
       position: relative;
       z-index: 2;
@@ -483,9 +524,9 @@
     <nav class="wrap">
       <a class="brand" href="#top" aria-label="生活優轉首頁"><span class="mark">優</span>生活優轉</a>
       <div class="links">
-        <a href="#features">功能</a>
-        <a href="#workspace">體驗</a>
-        <a href="#roadmap">下一步</a>
+        <a href="#features">一天流程</a>
+        <a href="#workspace">使用看看</a>
+        <a href="#roadmap">延伸工具</a>
         <a href="#line">LINE</a>
       </div>
     </nav>
@@ -495,42 +536,43 @@
     <section class="hero">
       <div class="wrap hero-grid">
         <div>
-          <span class="badge"><i></i>先選一件你現在要做的事</span>
-          <h1>今天想解決<span>哪件生活事</span>？</h1>
-          <p class="lead">不用先看完整功能表。直接選一個情境開始，網站版會比 LINE 更適合做篩選、比較、規劃和反覆調整條件。</p>
+          <span class="badge"><i></i>從早晨開始安排今天</span>
+          <h1>從早安開始，<span>安排今天</span></h1>
+          <p class="lead">生活優轉的主線是一整天的生活節奏：早晨先看天氣穿搭、油價匯率與今日提醒；接著決定今天吃什麼；再看看附近活動或週末去哪裡。</p>
           <div class="task-grid" aria-label="主要任務入口">
+            <button class="task-card" data-jump="morning">
+              <span class="task-icon">早</span>
+              <span><h2>今日早安提醒</h2><p>天氣、穿搭、油價、匯率與今日小提醒。</p></span>
+            </button>
             <button class="task-card" data-jump="food">
               <span class="task-icon">食</span>
-              <span><h2>找附近餐廳</h2><p>依城市、定位、聚餐情境整理推薦方向。</p></span>
+              <span><h2>今天吃什麼</h2><p>用城市、定位、聚餐情境整理推薦方向。</p></span>
             </button>
-            <button class="task-card" data-jump="parking">
-              <span class="task-icon">停</span>
-              <span><h2>查停車與費率</h2><p>先看停車資訊，再安排附近美食或下一站。</p></span>
-            </button>
-            <button class="task-card" data-jump="weather">
-              <span class="task-icon">天</span>
-              <span><h2>看天氣穿搭</h2><p>把天氣轉成外出、帶傘、洗曬提醒。</p></span>
-            </button>
-            <button class="task-card" data-jump="safety">
-              <span class="task-icon">安</span>
-              <span><h2>檢查可疑訊息</h2><p>先判斷詐騙風險，再決定下一步。</p></span>
+            <button class="task-card" data-jump="activity">
+              <span class="task-icon">去</span>
+              <span><h2>活動資訊</h2><p>活動、市集、展覽、假日安排一次看。</p></span>
             </button>
           </div>
           <div class="chips">
-            <span class="chip">網站適合比較與篩選</span>
-            <span class="chip">LINE 適合快速問一句</span>
+            <span class="chip">早安摘要</span>
+            <span class="chip">吃飯決策</span>
+            <span class="chip">活動資訊</span>
             <span class="chip">其他工具往下看</span>
           </div>
         </div>
         <div class="visual">
-          <div class="soft-card one"></div>
-          <div class="soft-card two"></div>
-          <div class="soft-card three"></div>
-          <div class="menu-frame">
-            <div class="menu-top"><span>LINE 快速入口</span><small>出門時使用</small></div>
-            <img src="/rich_menu.jpg" alt="生活優轉 LINE rich menu">
+          <div class="morning-card">
+            <span class="badge"><i></i>今日摘要</span>
+            <h2>早安，出門前看這張。</h2>
+            <p>把天氣、穿搭、油價、匯率和小提醒收在同一張卡片，不用一早開很多頁。</p>
+            <div class="morning-list">
+              <div class="morning-item"><strong>天氣穿搭</strong><span>薄外套、可帶傘</span></div>
+              <div class="morning-item"><strong>油價提醒</strong><span>通勤前先看</span></div>
+              <div class="morning-item"><strong>匯率摘要</strong><span>旅遊 / 換匯參考</span></div>
+              <div class="morning-item"><strong>今日小提醒</strong><span>活動、補班、洗曬</span></div>
+            </div>
           </div>
-          <div class="note">網站主打完整工具；LINE 保留快速查詢。</div>
+          <div class="note">LINE 可以快速推送早安；網站適合展開看細節。</div>
         </div>
       </div>
     </section>
@@ -538,18 +580,14 @@
     <section class="band" id="features">
       <div class="wrap">
         <div class="section-head">
-          <h2>不用記名稱，直接找功能。</h2>
-          <p>生活優轉是品牌名；網站上的入口會盡量用白話功能命名，讓使用者一眼知道可以解決什麼問題。</p>
+          <h2>三個主方向，串起一天。</h2>
+          <p>先整理早晨資訊，再處理吃什麼，最後安排活動。其他工具留在需要時使用，不搶主流程。</p>
         </div>
         <div class="feature-grid">
-          <article class="feature-card"><div class="icon">食</div><h3>找美食</h3><p>美食推薦、必比登、聚餐選擇、城市特色、定位找餐廳。</p><div class="mini-tags"><span>餐廳比較</span><span>Google Places</span></div></article>
-          <article class="feature-card"><div class="icon">停</div><h3>找停車</h3><p>TDX 停車場、多城市費率、停車後順手找附近美食。</p><div class="mini-tags"><span>車位資訊</span><span>TDX</span></div></article>
-          <article class="feature-card"><div class="icon">天</div><h3>天氣穿搭</h3><p>天氣資料、穿搭建議、早安卡片、帶傘提醒。</p><div class="mini-tags"><span>生活提醒</span><span>CWA</span></div></article>
-          <article class="feature-card"><div class="icon">錢</div><h3>理財小幫手</h3><p>油價、匯率、信用卡建議、預算規劃與存款建議。</p><div class="mini-tags"><span>日常花費</span><span>Finance</span></div></article>
-          <article class="feature-card"><div class="icon">健</div><h3>健康小幫手</h3><p>BMI、卡路里、睡眠、飲水與壓力檢查。</p><div class="mini-tags"><span>身體紀錄</span><span>Daily Care</span></div></article>
-          <article class="feature-card"><div class="icon">安</div><h3>防詐與法律</h3><p>詐騙分析與法律白話引導，把風險說得更清楚。</p><div class="mini-tags"><span>風險判斷</span><span>165 / Legal</span></div></article>
-          <article class="feature-card"><div class="icon">週</div><h3>週末活動</h3><p>Accupass 活動與地區活動選擇器，快速安排週末。</p><div class="mini-tags"><span>活動篩選</span><span>Events</span></div></article>
-          <article class="feature-card"><div class="icon">3C</div><h3>3C 選購</h3><p>產品推薦、規格解讀、升級判斷與購買情境選擇。</p><div class="mini-tags"><span>購買建議</span><span>Advisor</span></div></article>
+          <article class="feature-card"><div class="icon">早</div><h3>早安今日提醒</h3><p>天氣穿搭、帶傘提醒、油價、匯率與今日小提醒。</p><div class="mini-tags"><span>早晨卡片</span><span>CWA / Finance</span></div></article>
+          <article class="feature-card"><div class="icon">食</div><h3>今天吃什麼</h3><p>美食推薦、必比登、聚餐選擇、城市特色、定位找餐廳。</p><div class="mini-tags"><span>餐廳比較</span><span>Google Places</span></div></article>
+          <article class="feature-card"><div class="icon">去</div><h3>活動資訊</h3><p>Accupass 活動、展覽、市集、地區活動與假日提醒。</p><div class="mini-tags"><span>活動篩選</span><span>Open Data</span></div></article>
+          <article class="feature-card"><div class="icon">＋</div><h3>衍生小工具</h3><p>停車、3C 選購、健康、法律、防詐騙，放在需要時再打開。</p><div class="mini-tags"><span>生活工具</span><span>輔助入口</span></div></article>
         </div>
       </div>
     </section>
@@ -557,18 +595,40 @@
     <section class="band" id="workspace">
       <div class="wrap">
         <div class="section-head">
-          <h2>網站版要比 LINE 更適合深入使用。</h2>
-          <p>LINE 適合即時問一句；網站版則可以做成表單、篩選、比較清單與地圖資訊，適合慢慢看、反覆調整條件。</p>
+          <h2>網站版把一天展開來看。</h2>
+          <p>LINE 適合快速問一句；網站版適合把早安摘要、吃飯決策、活動資訊展開成可比較、可篩選的工具。</p>
         </div>
         <div class="workspace">
           <div class="tabs" role="tablist" aria-label="網站功能">
-            <button class="tab" role="tab" aria-selected="true" data-tab="food">找美食</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="parking">找停車</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="weather">天氣穿搭</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="safety">防詐檢查</button>
+            <button class="tab" role="tab" aria-selected="true" data-tab="morning">早安提醒</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="food">今天吃什麼</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="activity">活動資訊</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="tools">其他工具</button>
           </div>
 
-          <div class="panel active" id="panel-food" role="tabpanel">
+          <div class="panel active" id="panel-morning" role="tabpanel">
+            <div class="panel-layout">
+              <div>
+                <h3>早安，先看今日摘要。</h3>
+                <p>把早上最常查的資訊放在一起：天氣穿搭、油價、匯率、洗曬與今日提醒。</p>
+                <div class="demo-box">
+                  <label for="morning-city">所在城市</label>
+                  <div class="input-row">
+                    <select id="morning-city"><option>台北</option><option>桃園</option><option>台中</option><option>台南</option><option>高雄</option></select>
+                    <button class="btn primary" data-demo="morning">產生早安卡</button>
+                  </div>
+                  <div class="result" id="morning-result">選城市後產生今日早安摘要。</div>
+                </div>
+              </div>
+              <div class="data-list">
+                <div class="data-item"><strong>天氣穿搭</strong><span>外出建議</span></div>
+                <div class="data-item"><strong>油價 / 匯率</strong><span>日常參考</span></div>
+                <div class="data-item"><strong>今日小提醒</strong><span>洗曬 / 活動</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" id="panel-food" role="tabpanel">
             <div class="panel-layout">
               <div>
                 <h3>今天想吃什麼？</h3>
@@ -590,68 +650,46 @@
             </div>
           </div>
 
-          <div class="panel" id="panel-parking" role="tabpanel">
+          <div class="panel" id="panel-activity" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>先停車，再安排下一站。</h3>
-                <p>停車場、費率與附近餐廳一起看，適合開車出門前或抵達目的地後使用。</p>
+                <h3>活動資訊怎麼安排？</h3>
+                <p>活動、展覽、市集、假日提醒整理成適合瀏覽的清單，網站比聊天更適合慢慢挑。</p>
                 <div class="demo-box">
-                  <label for="parking-place">目的地</label>
+                  <label for="activity-city">城市</label>
                   <div class="input-row">
-                    <input id="parking-place" value="台南美術館" aria-label="目的地">
-                    <button class="btn primary" data-demo="parking">查詢</button>
+                    <select id="activity-city"><option>台北</option><option>新北</option><option>台中</option><option>台南</option><option>高雄</option></select>
+                    <button class="btn primary" data-demo="activity">找活動</button>
                   </div>
-                  <div class="result" id="parking-result">輸入目的地，產生停車查詢摘要。</div>
+                  <div class="result" id="activity-result">選城市後產生活動方向。</div>
                 </div>
               </div>
               <div class="data-list">
-                <div class="data-item"><strong>停車場資料</strong><span>TDX</span></div>
-                <div class="data-item"><strong>多城市費率</strong><span>資料整合</span></div>
-                <div class="data-item"><strong>停車後找美食</strong><span>順路安排</span></div>
+                <div class="data-item"><strong>展覽 / 市集</strong><span>活動篩選</span></div>
+                <div class="data-item"><strong>假日提醒</strong><span>補班補假</span></div>
+                <div class="data-item"><strong>附近順路</strong><span>停車 / 美食</span></div>
               </div>
             </div>
           </div>
 
-          <div class="panel" id="panel-weather" role="tabpanel">
+          <div class="panel" id="panel-tools" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>把天氣變成行動建議。</h3>
-                <p>不只顯示溫度，也轉成穿搭、雨具、早安摘要與外出提醒。</p>
+                <h3>需要時再打開的小工具。</h3>
+                <p>這些不是一天流程的主線，但在特定情境很有用：3C 選購、防詐法律、健康、停車與裁罰試算。</p>
                 <div class="demo-box">
-                  <label for="weather-city">城市</label>
+                  <label for="tool-topic">選一個工具</label>
                   <div class="input-row">
-                    <select id="weather-city"><option>台北</option><option>桃園</option><option>台中</option><option>台南</option><option>高雄</option></select>
-                    <button class="btn primary" data-demo="weather">產生</button>
+                    <select id="tool-topic"><option>3C 選購</option><option>防詐檢查</option><option>法律白話</option><option>健康小幫手</option><option>停車查詢</option></select>
+                    <button class="btn primary" data-demo="tools">查看</button>
                   </div>
-                  <div class="result" id="weather-result">選城市後產生生活化天氣摘要。</div>
+                  <div class="result" id="tools-result">選擇工具後查看適合的使用情境。</div>
                 </div>
               </div>
               <div class="data-list">
-                <div class="data-item"><strong>天氣資料</strong><span>CWA</span></div>
-                <div class="data-item"><strong>穿搭建議</strong><span>生活提醒</span></div>
-                <div class="data-item"><strong>早安卡片</strong><span>每日摘要</span></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel" id="panel-safety" role="tabpanel">
-            <div class="panel-layout">
-              <div>
-                <h3>先判斷風險，再決定動作。</h3>
-                <p>詐騙訊息、法律問題、生活風險都先整理成白話提示。</p>
-                <div class="demo-box">
-                  <label for="safety-text">輸入狀況</label>
-                  <div class="input-row">
-                    <input id="safety-text" value="陌生簡訊說包裹卡關，要我點連結付款" aria-label="狀況描述">
-                    <button class="btn primary" data-demo="safety">分析</button>
-                  </div>
-                  <div class="result" id="safety-result">輸入生活狀況，產生初步風險提示。</div>
-                </div>
-              </div>
-              <div class="data-list">
-                <div class="data-item"><strong>詐騙分析</strong><span>風險判斷</span></div>
-                <div class="data-item"><strong>法律白話</strong><span>初步理解</span></div>
-                <div class="data-item"><strong>回報建議</strong><span>下一步</span></div>
+                <div class="data-item"><strong>3C / 法律</strong><span>情境工具</span></div>
+                <div class="data-item"><strong>防詐 / 健康</strong><span>小幫手</span></div>
+                <div class="data-item"><strong>停車 / 裁罰</strong><span>查詢工具</span></div>
               </div>
             </div>
           </div>
@@ -663,16 +701,16 @@
       <div class="wrap">
         <div class="roadmap-card">
           <div class="roadmap-copy">
-            <span class="badge"><i></i>更多城市生活服務</span>
-            <h2>把城市資料也變成日常提醒。</h2>
-            <p>未來會持續加入交通、垃圾車、展覽市集、洗衣指數與裁罰試算等服務，讓常用資訊更容易被找到。</p>
+            <span class="badge"><i></i>延伸工具</span>
+            <h2>主流程之外，需要時再用。</h2>
+            <p>3C 選購、法律、防詐、健康、停車、裁罰試算都是衍生工具。它們會保留在網站裡，但不再干擾「早安、吃飯、活動」三個主方向。</p>
           </div>
           <div class="roadmap">
-            <div class="roadmap-item"><b>交通查詢</b><span>台鐵、高鐵時刻與公車動態</span><em class="level">規劃中</em></div>
-            <div class="roadmap-item"><b>路況整合</b><span>Google Maps / TDX 即時路況</span><em class="level mid">整合中</em></div>
-            <div class="roadmap-item"><b>垃圾車提醒</b><span>垃圾車 GPS 與資源回收分類查詢</span><em class="level">規劃中</em></div>
-            <div class="roadmap-item"><b>活動與假日</b><span>展覽、市集、假日與補班提醒</span><em class="level">規劃中</em></div>
-            <div class="roadmap-item"><b>洗曬指數</b><span>洗衣、曬衣與外出舒適指數</span><em class="level">規劃中</em></div>
+            <div class="roadmap-item"><b>3C 選購</b><span>產品推薦、規格解讀、升級判斷</span><em class="level">小工具</em></div>
+            <div class="roadmap-item"><b>防詐與法律</b><span>可疑訊息分析、法律白話引導</span><em class="level mid">小工具</em></div>
+            <div class="roadmap-item"><b>健康提醒</b><span>BMI、飲水、睡眠、壓力與卡路里</span><em class="level">小工具</em></div>
+            <div class="roadmap-item"><b>停車查詢</b><span>停車場、費率、附近順路安排</span><em class="level">延伸</em></div>
+            <div class="roadmap-item"><b>交通與垃圾車</b><span>公車動態、垃圾車 GPS、回收分類</span><em class="level">規劃中</em></div>
             <div class="roadmap-item"><b>裁罰試算</b><span>違規裁罰試算與條例查詢</span><em class="level">規劃中</em></div>
           </div>
         </div>
@@ -683,8 +721,8 @@
       <div class="wrap">
         <div class="cta">
           <div>
-            <h2>網站負責完整工具，LINE 負責快速入口。</h2>
-            <p>網站會承載更完整的查詢、比較、篩選與規劃功能；LINE 則保留出門前、路上、臨時需要建議時的快速使用情境。</p>
+            <h2>早安可以在 LINE 推送，細節交給網站展開。</h2>
+            <p>LINE 適合早晨推一張今日摘要；網站適合把天氣、吃飯、活動與各種小工具展開成可比較、可篩選的頁面。</p>
           </div>
           <a class="btn" href="https://line.me/R/" target="_blank" rel="noreferrer">開啟 LINE</a>
         </div>
@@ -712,24 +750,28 @@
     });
 
     const samples = {
+      morning: () => {
+        const city = document.querySelector("#morning-city").value;
+        return `${city}早安摘要：今日先看天氣穿搭，外出可準備薄外套與雨具。\n油價與匯率可放在通勤前快速確認；今日小提醒會整理洗曬、活動與假日資訊。`;
+      },
       food: () => {
         const city = document.querySelector("#food-city").value;
         return `${city}今日可以走「省時間」路線：先找評分穩定的小吃或簡餐，再加一個城市特色選項。\n推薦方向：在地麵食、便當熱點、聚餐友善店。`;
       },
-      parking: () => {
-        const place = document.querySelector("#parking-place").value.trim() || "目的地";
-        return `${place}周邊建議先查公有停車場，再看步行 8 分鐘內的餐廳。\n可搭配剩餘車位、費率、距離與導航一起安排。`;
+      activity: () => {
+        const city = document.querySelector("#activity-city").value;
+        return `${city}今日活動方向：先看展覽、市集與親子活動，再依距離和時間挑選。\n網站版適合做成清單、日期篩選、地區篩選，安排週末會比聊天更清楚。`;
       },
-      weather: () => {
-        const city = document.querySelector("#weather-city").value;
-        return `${city}今日提醒：早晚溫差留意，外出包包可放薄外套。\n也可以延伸查看降雨機率、穿搭、洗衣指數與早安摘要。`;
-      },
-      safety: () => {
-        const text = document.querySelector("#safety-text").value.trim();
-        const risky = /連結|付款|驗證碼|帳號|匯款|投資/.test(text);
-        return risky
-          ? "初步判斷：有高風險關鍵字。先不要點連結或付款，改從官方 App 或客服電話確認。"
-          : "初步判斷：風險不明顯，但仍建議保留截圖、確認來源、避免提供個資。";
+      tools: () => {
+        const topic = document.querySelector("#tool-topic").value;
+        const map = {
+          "3C 選購": "適合在要買手機、筆電、平板前使用：整理需求、預算、規格差異與升級必要性。",
+          "防詐檢查": "適合收到可疑簡訊、投資邀約、包裹付款連結時使用：先看風險，再決定下一步。",
+          "法律白話": "適合遇到租屋、消費、交通或糾紛時使用：先用白話理解問題和可採取的方向。",
+          "健康小幫手": "適合記錄 BMI、飲水、睡眠、壓力與卡路里，做日常提醒。",
+          "停車查詢": "適合開車出門前使用：查停車場、費率，也能接到附近美食與活動。"
+        };
+        return map[topic] || "選一個工具，查看適合的使用情境。";
       }
     };
 
