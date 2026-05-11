@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f3ea">
+  <meta name="description" content="生活優轉 Life Uturn：把天氣、美食、停車、活動、理財、健康、安全與 3C 建議整合到 LINE 與網站的一站式生活助理。">
+  <title>生活優轉 Life Uturn</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2933;
+      --muted: #65717f;
+      --line: #d8ded6;
+      --paper: #fffdf8;
+      --wash: #f6f1e8;
+      --mint: #4cbf8f;
+      --mint-dark: #22745a;
+      --amber: #f0b84a;
+      --coral: #e56f5b;
+      --sky: #5d8ac8;
+      --shadow: 0 18px 45px rgba(31, 41, 51, .12);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(135deg, rgba(255, 253, 248, .94), rgba(246, 241, 232, .9)),
+        radial-gradient(circle at 18% 18%, rgba(76, 191, 143, .14), transparent 30%),
+        radial-gradient(circle at 82% 8%, rgba(93, 138, 200, .14), transparent 26%),
+        var(--wash);
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(216, 222, 214, .82);
+      background: rgba(255, 253, 248, .9);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(from 210deg, var(--mint), var(--sky), var(--amber), var(--mint));
+      color: #fff;
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(76, 191, 143, .28);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 19px;
+      line-height: 1.2;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .nav-links a {
+      padding: 9px 12px;
+      border-radius: 8px;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      background: rgba(76, 191, 143, .12);
+      color: var(--mint-dark);
+      outline: none;
+    }
+
+    .hero {
+      min-height: calc(100vh - 72px);
+      display: grid;
+      align-items: center;
+      padding: 54px 0 38px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.04fr) minmax(320px, .86fr);
+      gap: 42px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid rgba(76, 191, 143, .26);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .58);
+      color: var(--mint-dark);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .pulse {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--mint);
+      box-shadow: 0 0 0 5px rgba(76, 191, 143, .16);
+    }
+
+    h1 {
+      margin: 22px 0 16px;
+      font-size: clamp(44px, 7vw, 84px);
+      line-height: .95;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 690px;
+      color: #465260;
+      font-size: 20px;
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    .hero-actions {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(31, 41, 51, .18);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, .78);
+      border-color: var(--line);
+      color: var(--ink);
+    }
+
+    .stats-row {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 680px;
+    }
+
+    .stat {
+      padding: 16px;
+      border: 1px solid rgba(216, 222, 214, .88);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .62);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .phone {
+      width: min(420px, 100%);
+      margin-left: auto;
+      border-radius: 34px;
+      padding: 14px;
+      background: #19232e;
+      box-shadow: var(--shadow);
+    }
+
+    .screen {
+      min-height: 650px;
+      overflow: hidden;
+      border-radius: 24px;
+      background: #fffdf8;
+      border: 1px solid rgba(255, 255, 255, .2);
+    }
+
+    .chat-top {
+      padding: 18px 18px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #2f8f6a;
+      color: #fff;
+    }
+
+    .chat-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, .22);
+    }
+
+    .chat-body {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .bubble {
+      max-width: 86%;
+      padding: 12px 14px;
+      border-radius: 16px;
+      line-height: 1.55;
+      font-size: 15px;
+      box-shadow: 0 8px 18px rgba(31, 41, 51, .08);
+    }
+
+    .bubble.bot {
+      background: #eef7f1;
+      border-top-left-radius: 4px;
+    }
+
+    .bubble.user {
+      justify-self: end;
+      color: #fff;
+      background: #34495e;
+      border-top-right-radius: 4px;
+    }
+
+    .rich-menu {
+      margin-top: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .rich-menu img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 2500 / 1686;
+      object-fit: cover;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .quick {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      font-weight: 800;
+      color: #34495e;
+    }
+
+    section {
+      padding: 82px 0;
+      border-top: 1px solid rgba(216, 222, 214, .65);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 26px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.12;
+    }
+
+    .section-head p {
+      max-width: 520px;
+      color: var(--muted);
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .feature-card {
+      min-height: 210px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .68);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: rgba(76, 191, 143, .14);
+      color: var(--mint-dark);
+      font-size: 24px;
+    }
+
+    .feature-card h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .tag-row {
+      margin-top: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .tag {
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(31, 41, 51, .06);
+      color: #44515f;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      min-height: 560px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .78);
+      box-shadow: 0 18px 40px rgba(31, 41, 51, .08);
+    }
+
+    .tabs {
+      padding: 14px;
+      border-right: 1px solid var(--line);
+      background: rgba(246, 241, 232, .56);
+      display: grid;
+      align-content: start;
+      gap: 8px;
+    }
+
+    .tab {
+      width: 100%;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 13px 12px;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #475462;
+      font-weight: 800;
+    }
+
+    .tab[aria-selected="true"] {
+      background: #fff;
+      border-color: var(--line);
+      color: var(--ink);
+      box-shadow: 0 8px 20px rgba(31, 41, 51, .07);
+    }
+
+    .panel {
+      padding: 26px;
+      display: none;
+    }
+
+    .panel.active { display: block; }
+
+    .panel-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 30px;
+    }
+
+    .panel p {
+      color: var(--muted);
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    .demo-box {
+      margin-top: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 18px;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .input-row input,
+    .input-row select {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 12px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .result {
+      margin-top: 14px;
+      min-height: 92px;
+      padding: 14px;
+      border-radius: 8px;
+      background: #f2f7f4;
+      color: #264235;
+      line-height: 1.7;
+      white-space: pre-line;
+    }
+
+    .data-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .data-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .data-item span { color: var(--muted); }
+
+    .roadmap {
+      display: grid;
+      gap: 10px;
+    }
+
+    .roadmap-item {
+      display: grid;
+      grid-template-columns: 156px minmax(0, 1fr) 88px;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .68);
+    }
+
+    .difficulty {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-weight: 900;
+    }
+
+    .dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 0 4px rgba(76, 191, 143, .14);
+    }
+
+    .dot.mid {
+      background: var(--amber);
+      box-shadow: 0 0 0 4px rgba(240, 184, 74, .16);
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .status {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(255, 255, 255, .72);
+    }
+
+    .stars {
+      margin: 12px 0 0;
+      color: var(--amber);
+      font-size: 20px;
+      letter-spacing: 2px;
+    }
+
+    .cta-band {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 22px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #20302a;
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .cta-band h2 { color: #fff; }
+
+    .cta-band p {
+      margin: 10px 0 0;
+      color: rgba(255, 255, 255, .72);
+      line-height: 1.7;
+    }
+
+    .site-footer {
+      padding: 30px 0 42px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .panel-layout,
+      .workspace,
+      .cta-band {
+        grid-template-columns: 1fr;
+      }
+
+      .phone { margin: 0 auto; }
+      .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .tabs {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .tab { justify-content: center; text-align: center; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 12px; }
+    }
+
+    @media (max-width: 680px) {
+      .shell { width: min(100% - 22px, 1180px); }
+      .nav { min-height: 64px; }
+      .nav-links { display: none; }
+      .hero { padding-top: 34px; }
+      h1 { font-size: 46px; }
+      .hero-copy { font-size: 17px; }
+      .stats-row,
+      .feature-grid,
+      .status-grid,
+      .quick-grid,
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+      .screen { min-height: 560px; }
+      section { padding: 58px 0; }
+      .tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .panel { padding: 18px; }
+      .roadmap-item {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell nav">
+      <a class="brand" href="#top" aria-label="生活優轉首頁">
+        <span class="brand-mark">優</span>
+        <span>
+          <strong>生活優轉</strong>
+          <span>Life Uturn</span>
+        </span>
+      </a>
+      <nav class="nav-links" aria-label="主要導覽">
+        <a href="#features">功能</a>
+        <a href="#workspace">體驗</a>
+        <a href="#roadmap">規劃</a>
+        <a href="#line">LINE</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <span class="eyebrow"><span class="pulse"></span>LINE bot 已開發完成，網站版啟動</span>
+          <h1>生活優轉</h1>
+          <p class="hero-copy">把每天會遇到的選擇整理成一個入口：吃什麼、停哪裡、天氣怎麼穿、週末去哪、預算怎麼抓、3C 怎麼挑，網站與 LINE 都能快速轉出下一步。</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#workspace">試用網站功能</a>
+            <a class="btn btn-secondary" href="#line">查看 LINE 入口</a>
+          </div>
+          <div class="stats-row" aria-label="產品狀態">
+            <div class="stat"><strong>8</strong><span>已完成模組</span></div>
+            <div class="stat"><strong>4.1</strong><span>平均完整度</span></div>
+            <div class="stat"><strong>8</strong><span>下一階段開放資料功能</span></div>
+          </div>
+        </div>
+
+        <aside class="phone" aria-label="LINE bot 預覽">
+          <div class="screen">
+            <div class="chat-top">
+              <div class="chat-title"><span class="avatar">優</span>生活優轉</div>
+              <span>online</span>
+            </div>
+            <div class="chat-body">
+              <div class="bubble bot">早安，今天想先解決哪件生活小事？</div>
+              <div class="bubble user">幫我找附近好停車又能吃飯的地方</div>
+              <div class="bubble bot">可以，我會先看停車場、費率與距離，再接著找附近美食。</div>
+              <div class="rich-menu">
+                <img src="/rich_menu.jpg" alt="生活優轉 LINE rich menu">
+              </div>
+              <div class="quick-grid" aria-label="快捷功能">
+                <div class="quick">美食推薦</div>
+                <div class="quick">停車查詢</div>
+                <div class="quick">天氣穿搭</div>
+                <div class="quick">安全工具</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="shell">
+        <div class="section-head">
+          <h2>已完成的生活模組</h2>
+          <p>先把 LINE bot 已經穩定可用的能力整理成網站入口，讓使用者不用記指令，也能從情境直接開始。</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="icon">食</div>
+            <h3>EatUturn</h3>
+            <p>美食推薦、必比登、聚餐選擇、城市特色與定位找餐廳。</p>
+            <div class="tag-row"><span class="tag">★★★★★</span><span class="tag">Google Places</span></div>
+          </article>
+          <article class="feature-card">
+            <div class="icon">停</div>
+            <h3>ParkUturn</h3>
+            <p>TDX 停車場、多城市費率、停車後順手找附近美食。</p>
+            <div class="tag-row"><span class="tag">★★★★★</span><span class="tag">TDX</span></div>
+          </article>
+          <article class="feature-card">
+            <div class="icon">天</div>
+            <h3>WeatherUturn</h3>
+            <p>天氣資料、穿搭建議、早安卡片與帶傘提醒。</p>
+            <div class="tag-row"><span class="tag">★★★★★</span><span class="tag">CWA</span></div>
+          </article>
+          <article class="feature-card">
+            <div class="icon">錢</div>
+            <h3>BillUturn</h3>
+            <p>油價、匯率、信用卡建議、預算規劃與存款建議。</p>
+            <div class="tag-row"><span class="tag">★★★★</span><span class="tag">Finance</span></div>
+          </article>
+          <article class="feature-card">
+            <div class="icon">健</div>
+            <h3>健康工具</h3>
+            <p>BMI、卡路里、睡眠、飲水與壓力檢查。</p>
+            <div class="tag-row"><span class="tag">★★★★</span><span class="tag">Daily Care</span></div>
+          </article>
+          <article class="feature-card">
+            <div class="icon">安</div>
+            <h3>安全工具</h3>
+            <p>詐騙分析與法律白話引導，把風險說得更清楚。</p>
+            <div class="tag-row"><span class="tag">★★★★</span><span class="tag">165 / Legal</span></div>
+          </article>
+          <article class="feature-card">
+            <div class="icon">週</div>
+            <h3>WeekendUturn</h3>
+            <p>Accupass 活動與地區活動選擇器，快速安排週末。</p>
+            <div class="tag-row"><span class="tag">★★★</span><span class="tag">Events</span></div>
+          </article>
+          <article class="feature-card">
+            <div class="icon">3C</div>
+            <h3>3C 顧問</h3>
+            <p>產品推薦、規格解讀、升級判斷與購買情境選擇。</p>
+            <div class="tag-row"><span class="tag">★★★★</span><span class="tag">Advisor</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="workspace">
+      <div class="shell">
+        <div class="section-head">
+          <h2>網站版互動入口</h2>
+          <p>第一版先把常用情境做成可以點、可以輸入的介面；後續可再串接現有 Python 模組，讓網站與 LINE 共用同一套判斷邏輯。</p>
+        </div>
+
+        <div class="workspace">
+          <div class="tabs" role="tablist" aria-label="網站功能">
+            <button class="tab" role="tab" aria-selected="true" data-tab="food">食 美食</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="parking">停 停車</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="weather">天 天氣</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="tools">安 工具</button>
+          </div>
+
+          <div class="panel active" id="panel-food" role="tabpanel">
+            <div class="panel-layout">
+              <div>
+                <h3>今天想吃什麼？</h3>
+                <p>用地點與情境快速產生推薦方向。正式串 API 後，這裡可以接 Google Places、必比登與城市特色資料。</p>
+                <div class="demo-box">
+                  <label for="food-city">城市</label>
+                  <div class="input-row">
+                    <select id="food-city">
+                      <option>台北</option><option>新北</option><option>台中</option><option>台南</option><option>高雄</option>
+                    </select>
+                    <button class="btn btn-primary" data-demo="food">推薦</button>
+                  </div>
+                  <div class="result" id="food-result">選一個城市，產生今日美食方向。</div>
+                </div>
+              </div>
+              <div class="data-list">
+                <div class="data-item"><strong>定位找餐廳</strong><span>完成</span></div>
+                <div class="data-item"><strong>必比登資料</strong><span>完成</span></div>
+                <div class="data-item"><strong>聚餐選擇</strong><span>完成</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" id="panel-parking" role="tabpanel">
+            <div class="panel-layout">
+              <div>
+                <h3>先停車，再安排下一站</h3>
+                <p>停車場、費率與附近餐廳可以一起看，適合開車出門前或抵達目的地後使用。</p>
+                <div class="demo-box">
+                  <label for="parking-place">目的地</label>
+                  <div class="input-row">
+                    <input id="parking-place" value="台南美術館" aria-label="目的地">
+                    <button class="btn btn-primary" data-demo="parking">查詢</button>
+                  </div>
+                  <div class="result" id="parking-result">輸入目的地，產生停車查詢摘要。</div>
+                </div>
+              </div>
+              <div class="data-list">
+                <div class="data-item"><strong>停車場資料</strong><span>TDX</span></div>
+                <div class="data-item"><strong>多城市費率</strong><span>完成</span></div>
+                <div class="data-item"><strong>停車後找美食</strong><span>完成</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" id="panel-weather" role="tabpanel">
+            <div class="panel-layout">
+              <div>
+                <h3>把天氣變成行動建議</h3>
+                <p>不只顯示溫度，也轉成穿搭、雨具、早安摘要與外出提醒。</p>
+                <div class="demo-box">
+                  <label for="weather-city">城市</label>
+                  <div class="input-row">
+                    <select id="weather-city">
+                      <option>台北</option><option>桃園</option><option>台中</option><option>台南</option><option>高雄</option>
+                    </select>
+                    <button class="btn btn-primary" data-demo="weather">產生</button>
+                  </div>
+                  <div class="result" id="weather-result">選城市後產生生活化天氣摘要。</div>
+                </div>
+              </div>
+              <div class="data-list">
+                <div class="data-item"><strong>天氣資料</strong><span>CWA</span></div>
+                <div class="data-item"><strong>穿搭建議</strong><span>完成</span></div>
+                <div class="data-item"><strong>早安卡片</strong><span>完成</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" id="panel-tools" role="tabpanel">
+            <div class="panel-layout">
+              <div>
+                <h3>安全、健康與花費工具</h3>
+                <p>把不想查很多頁的生活問題，整理成一段能直接判斷的建議。</p>
+                <div class="demo-box">
+                  <label for="tool-question">輸入狀況</label>
+                  <div class="input-row">
+                    <input id="tool-question" value="陌生簡訊說包裹卡關，要我點連結付款" aria-label="狀況描述">
+                    <button class="btn btn-primary" data-demo="tools">分析</button>
+                  </div>
+                  <div class="result" id="tools-result">輸入生活狀況，產生初步風險提示。</div>
+                </div>
+              </div>
+              <div class="data-list">
+                <div class="data-item"><strong>詐騙分析</strong><span>完成</span></div>
+                <div class="data-item"><strong>BMI / 飲水</strong><span>完成</span></div>
+                <div class="data-item"><strong>信用卡建議</strong><span>部分</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="roadmap">
+      <div class="shell">
+        <div class="section-head">
+          <h2>下一波開放資料功能</h2>
+          <p>依照你提供的規劃，低難度項目可以優先進網站版；即時路況屬中難度，適合排在交通頁第二階段。</p>
+        </div>
+        <div class="roadmap">
+          <div class="roadmap-item"><strong>GoUturn</strong><span>台鐵 / 高鐵時刻、公車動態</span><span class="difficulty"><i class="dot"></i>低</span></div>
+          <div class="roadmap-item"><strong>GoUturn</strong><span>即時路況：Google Maps / TDX</span><span class="difficulty"><i class="dot mid"></i>中</span></div>
+          <div class="roadmap-item"><strong>ErrandUturn</strong><span>垃圾車即時 GPS、資源回收分類查詢</span><span class="difficulty"><i class="dot"></i>低</span></div>
+          <div class="roadmap-item"><strong>WeekendUturn</strong><span>展覽、市集活動、國定假日與補班提醒</span><span class="difficulty"><i class="dot"></i>低</span></div>
+          <div class="roadmap-item"><strong>WeatherUturn</strong><span>洗衣與曬衣指數</span><span class="difficulty"><i class="dot"></i>低</span></div>
+          <div class="roadmap-item"><strong>ParkUturn</strong><span>違規裁罰試算</span><span class="difficulty"><i class="dot"></i>低</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="line">
+      <div class="shell">
+        <div class="cta-band">
+          <div>
+            <h2>網站先上線，LINE 繼續當日常入口</h2>
+            <p>這一版網站已可作為產品介紹與功能入口。下一步可以把互動區接到現有 API，讓網站輸入與 LINE bot 共用同一套推薦邏輯。</p>
+          </div>
+          <a class="btn btn-primary" href="https://line.me/R/" target="_blank" rel="noreferrer">開啟 LINE</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">Life Uturn 生活優轉 · LINE bot + Web</div>
+  </footer>
+
+  <script>
+    const tabs = document.querySelectorAll(".tab");
+    const panels = document.querySelectorAll(".panel");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const key = tab.dataset.tab;
+        tabs.forEach((item) => item.setAttribute("aria-selected", String(item === tab)));
+        panels.forEach((panel) => panel.classList.toggle("active", panel.id === `panel-${key}`));
+      });
+    });
+
+    const samples = {
+      food: () => {
+        const city = document.querySelector("#food-city").value;
+        return `${city}今日可以走「省時間」路線：先找評分穩定的小吃或簡餐，再加一個城市特色選項。\n推薦方向：在地麵食、便當熱點、聚餐友善店。`;
+      },
+      parking: () => {
+        const place = document.querySelector("#parking-place").value.trim() || "目的地";
+        return `${place}周邊建議先查公有停車場，再看步行 8 分鐘內的餐廳。\n網站串接後可顯示：剩餘車位、費率、距離與導航。`;
+      },
+      weather: () => {
+        const city = document.querySelector("#weather-city").value;
+        return `${city}今日提醒：早晚溫差留意，外出包包可放薄外套。\n網站串接後可加入降雨機率、穿搭、洗衣指數與早安卡片。`;
+      },
+      tools: () => {
+        const text = document.querySelector("#tool-question").value.trim();
+        const risky = /連結|付款|驗證碼|帳號|匯款|投資/.test(text);
+        return risky
+          ? "初步判斷：有高風險關鍵字。先不要點連結或付款，改從官方 App 或客服電話確認。"
+          : "初步判斷：風險不明顯，但仍建議保留截圖、確認來源、避免提供個資。";
+      }
+    };
+
+    document.querySelectorAll("[data-demo]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const key = button.dataset.demo;
+        const target = document.querySelector(`#${key}-result`);
+        if (target && samples[key]) target.textContent = samples[key]();
+      });
+    });
+  </script>
+</body>
+</html>

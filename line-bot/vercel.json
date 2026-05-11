@@ -5,6 +5,14 @@
   },
   "builds": [
     {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "rich_menu.jpg",
+      "use": "@vercel/static"
+    },
+    {
       "src": "api/webhook.py",
       "use": "@vercel/python",
       "config": {
@@ -21,6 +29,14 @@
     }
   ],
   "routes": [
+    {
+      "src": "/",
+      "dest": "index.html"
+    },
+    {
+      "src": "/rich_menu.jpg",
+      "dest": "rich_menu.jpg"
+    },
     {
       "src": "/api/webhook",
       "dest": "api/webhook.py"
