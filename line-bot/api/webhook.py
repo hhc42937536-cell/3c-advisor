@@ -792,7 +792,7 @@ def _site_weather_payload(city: str) -> dict:
     }
 
 
-def _site_restaurants(city: str, mood: str = "", limit: int = 6) -> list:
+def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str = "", limit: int = 6) -> list:
     try:
         from modules.food_utils import _maps_url as _site_maps_url
     except Exception:
@@ -810,23 +810,59 @@ def _site_restaurants(city: str, mood: str = "", limit: int = 6) -> list:
         except Exception:
             pool = []
     if mood and pool:
-        keywords = {
+        group_words = ["餐廳", "火鍋", "鍋", "熱炒", "合菜", "台菜", "中式", "日式", "韓式", "燒肉", "串燒", "海鮮", "牛排", "義式", "餐酒", "酒館", "居酒屋", "包廂"]
+        snack_words = ["小吃", "肉圓", "碗粿", "蚵仔", "米糕", "牛肉湯", "虱目魚", "蝦仁飯", "蝦仁肉圓", "臭豆腐", "鹽酥", "雞排", "滷味", "甜品", "豆花", "冰", "飲料", "飯糰", "肉粽", "春捲", "肉粿", "排骨酥", "豆簽", "鴨頭", "鱔魚", "攤"]
+        mood_keywords = {
             "快速解決": ["小吃", "麵", "飯", "粥", "便當"],
-            "朋友聚餐": ["台菜", "熱炒", "火鍋", "合菜", "餐廳"],
+            "朋友聚餐": group_words,
             "想吃特色": ["特色", "必比登", "老店", "在地"],
-            "約會舒服": ["咖啡", "甜點", "西式", "餐酒", "義式"],
+            "約會舒服": ["咖啡", "甜點", "西式", "餐酒", "義式", "景觀", "安靜"],
         }.get(mood, [])
-        matched = [
-            r for r in pool
-            if any(k in f"{r.get('name','')} {r.get('type','')} {r.get('desc','')}" for k in keywords)
-        ]
-        if matched:
-            pool = matched + [r for r in pool if r not in matched]
+
+        def score_restaurant(row):
+            name = str(row.get("name", ""))
+            typed = str(row.get("type", ""))
+            body = f"{name} {row.get('desc','')} {row.get('addr','')} {row.get('town','')}"
+            text = f"{body} {typed}"
+            score = 0
+            score += sum(5 for k in mood_keywords if k in text)
+            if mood == "朋友聚餐":
+                score += sum(10 for k in group_words if k in body)
+                score += sum(2 for k in group_words if k in typed)
+                score -= sum(10 for k in snack_words if k in body)
+                score -= sum(20 for k in snack_words if k in name)
+                if people and people not in ("1 人", "2 人"):
+                    score += 8
+                if budget in ("500-1000", "不限制"):
+                    score += 4
+                if any(k in text for k in ["舒適", "座位", "聚餐", "多人", "分享", "預約"]):
+                    score += 8
+            elif mood == "快速解決":
+                score += sum(5 for k in snack_words if k in text)
+            elif mood == "約會舒服":
+                if any(k in text for k in ["咖啡", "甜點", "餐酒", "義式", "景觀", "安靜", "舒適"]):
+                    score += 8
+                if any(k in text for k in ["攤", "夜市", "小吃"]):
+                    score -= 5
+            return score
+
+        scored = [(score_restaurant(r), i, r) for i, r in enumerate(pool)]
+        scored.sort(key=lambda item: (-item[0], item[1]))
+        if mood == "朋友聚餐":
+            group_pool = [r for score, _, r in scored if score > 0]
+            if len(group_pool) >= min(limit, 4):
+                pool = group_pool + [r for score, _, r in scored if score <= 0]
+            else:
+                pool = [r for score, _, r in scored if score > 0] + [r for score, _, r in scored if score <= 0]
+        else:
+            pool = [r for score, _, r in scored if score > 0] + [r for score, _, r in scored if score <= 0]
     items = []
-    for r in pool[:limit]:
+    seen_names = set()
+    for r in pool:
         name = str(r.get("name") or "").strip()
-        if not name:
+        if not name or name in seen_names:
             continue
+        seen_names.add(name)
         area = r.get("town") or r.get("area") or city
         desc = str(r.get("desc") or r.get("type") or "生活優轉整理的美食資訊").strip()
         items.append({
@@ -840,6 +876,8 @@ def _site_restaurants(city: str, mood: str = "", limit: int = 6) -> list:
             "url": r.get("url") or _site_maps_url(name, city),
             "source": r.get("source") or "restaurant_cache",
         })
+        if len(items) >= limit:
+            break
     return items
 
 
@@ -1220,7 +1258,7 @@ class handler(BaseHTTPRequestHandler):
                 "mood": mood,
                 "budget": _site_param(qs, "budget", ""),
                 "people": _site_param(qs, "people", ""),
-                "items": _site_restaurants(city, mood, limit=6),
+                "items": _site_restaurants(city, mood, _site_param(qs, "budget", ""), _site_param(qs, "people", ""), limit=6),
                 "sources": {"food": "crawler_cache_or_bib_gourmand"},
                 "source_names": {"food": "生活優轉整理的美食名單、米其林必比登與 Google 地圖資訊"},
             }
