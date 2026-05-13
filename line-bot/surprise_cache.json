@@ -1,46 +1,108 @@
 {
-  "updated_at": "2026-04-18 08:46",
+  "updated_at": "2026-05-14 07:35",
   "songs": [
     {
-      "name": "那天下雨了",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "陪你到這",
+      "artist": "陳華"
     },
     {
-      "name": "I Do",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "繞路",
+      "artist": "A-Lin"
     },
     {
-      "name": "愛琴海",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "靠關係",
+      "artist": "DIOR 大穎"
     },
     {
-      "name": "太陽之子",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "那片海灘",
+      "artist": "郭家瑋"
     },
     {
-      "name": "誰稀罕",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "原諒我離開",
+      "artist": "鼓鼓 呂思緯"
     },
     {
-      "name": "西西里",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "Want Me Back",
+      "artist": "郁欣Ivy"
     },
     {
-      "name": "七月的極光",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "巴著你不走",
+      "artist": "U:NUS"
     },
     {
-      "name": "女兒殿下",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "我墜落你自由",
+      "artist": "陳勢安 (Andrew Tan)"
     },
     {
-      "name": "淘金小鎮",
-      "artist": "周杰倫 (Jay Chou)"
+      "name": "超越一萬英里",
+      "artist": "李哲言 Jim Lee"
     },
     {
-      "name": "誰給我的勇氣",
-      "artist": "周渝民 (Vic Chou)"
+      "name": "餘額不足",
+      "artist": "張語噥"
     }
   ],
-  "deals": []
+  "deals": [
+    {
+      "title": "全家優惠趣5/13 10:00發放",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778571891.A.911.html",
+      "tag": "情報"
+    },
+    {
+      "title": "AGF箴言金咖啡 平均單罐$108",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778576765.A.C2D.html",
+      "tag": "情報"
+    },
+    {
+      "title": "iHerb 18%",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778582983.A.D83.html",
+      "tag": "情報"
+    },
+    {
+      "title": "新竹市：Tea&#39;s原味西大店開幕推優惠",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778629604.A.64D.html",
+      "tag": "情報"
+    },
+    {
+      "title": "肯德基 點心神券！",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778639536.A.DB9.html",
+      "tag": "情報"
+    },
+    {
+      "title": "7-11 冰品抽抽樂",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778644444.A.279.html",
+      "tag": "情報"
+    },
+    {
+      "title": "7-11 冰品抽抽樂優惠活動 (5/13～7/7)",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778644645.A.5CE.html",
+      "tag": "情報"
+    },
+    {
+      "title": "網家ANDYMAY2人體工學椅$2599",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778659505.A.2FD.html",
+      "tag": "情報"
+    },
+    {
+      "title": "Panasonic 7公斤烘衣機 $7388",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778670768.A.494.html",
+      "tag": "情報"
+    },
+    {
+      "title": "12 OP點數換統一亮妍莓果牛乳",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778678834.A.CAA.html",
+      "tag": "情報"
+    },
+    {
+      "title": "全家康康五5日5好康 5/15~5/19",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778697305.A.086.html",
+      "tag": "情報"
+    },
+    {
+      "title": "2026年全台捐血贈品",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
+      "tag": "情報"
+    }
+  ],
+  "topics": []
 }

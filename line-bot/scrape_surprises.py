@@ -207,6 +207,60 @@ def scrape_threads_deals(limit_per_account: int = 5) -> list:
     return all_deals
 
 
+def scrape_threads_topics(limit_per_account: int = 5) -> list:
+    """抓 Threads 可聊話題。
+    Threads 沒有公開 API，這裡只把能從公開頁 HTML 抓到的短貼文整理成候選話題。
+    """
+    print("[Threads] 開始抓昨日/近期可聊話題...")
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
+        "Referer": "https://www.threads.net/",
+    }
+    accounts = [
+        "info.talk_tw",
+        "today.line.me",
+        "niusnews",
+        "ttshow.tw",
+    ]
+    blocklist = ["抽獎", "得獎", "私訊", "連結在", "留言", "追蹤"]
+    topics = []
+    seen = set()
+    for account in accounts:
+        try:
+            url = f"https://www.threads.net/@{account}"
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                html = resp.read().decode("utf-8", errors="ignore")
+            text_candidates = re.findall(r'"text"\s*:\s*"((?:[^"\\]|\\.){14,180})"', html)
+            for raw in text_candidates:
+                try:
+                    text = raw.encode().decode("unicode_escape")
+                except Exception:
+                    text = raw
+                text = re.sub(r"\s+", " ", text).strip()
+                if len(text) < 12 or any(word in text for word in blocklist):
+                    continue
+                key = text[:30]
+                if key in seen:
+                    continue
+                seen.add(key)
+                topics.append({
+                    "title": text[:70],
+                    "url": url,
+                    "tag": f"Threads @{account}",
+                })
+                if len(topics) >= limit_per_account * len(accounts):
+                    break
+            print(f"[Threads topics] @{account}: {len(topics)} 累計")
+            time.sleep(1)
+        except Exception as e:
+            print(f"[Threads topics] @{account} 失敗（跳過）: {e}")
+    print(f"[Threads topics] 共 {len(topics)} 筆")
+    return topics
+
+
 def main():
     print("=" * 50)
     print(f"今日小驚喜爬蟲 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
@@ -216,6 +270,7 @@ def main():
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "songs": [],
         "deals": [],
+        "topics": [],
     }
 
     # 爬 KKBOX
@@ -230,6 +285,7 @@ def main():
 
     # 爬 Threads 即時好康（非官方，失敗不影響整體）
     threads = scrape_threads_deals()
+    topics = scrape_threads_topics()
 
     # 合併：Threads 最新鮮放最前，再接 PTT、Dcard，標題去重
     seen_titles = set()
@@ -240,6 +296,7 @@ def main():
             seen_titles.add(t)
             merged.append(d)
     result["deals"] = merged[:25]
+    result["topics"] = topics[:20]
 
     # 寫出
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
@@ -248,6 +305,7 @@ def main():
     print(f"\n✅ 已寫入 {OUTPUT_FILE}")
     print(f"   新歌: {len(result['songs'])} 首")
     print(f"   好康: {len(result['deals'])} 篇（Threads {len(threads)} + PTT {len(ptt)} + Dcard {len(dcard)}）")
+    print(f"   話題: {len(result['topics'])} 篇")
 
 
 if __name__ == "__main__":

@@ -1781,9 +1781,89 @@ def _site_health_advice(text: str, mode: str = "", value: str = "") -> dict:
     }
 
 
+_SURPRISE_CACHE = None
+
+
+def _site_surprise_cache() -> dict:
+    global _SURPRISE_CACHE
+    if _SURPRISE_CACHE is not None:
+        return _SURPRISE_CACHE
+    try:
+        base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        with open(os.path.join(base, "surprise_cache.json"), encoding="utf-8") as f:
+            _SURPRISE_CACHE = json.load(f)
+    except Exception:
+        _SURPRISE_CACHE = {}
+    return _SURPRISE_CACHE
+
+
+def _site_today_surprise(city: str, limit: int = 6) -> dict:
+    cache = _site_surprise_cache()
+    today = datetime.date.today()
+    yesterday = today - datetime.timedelta(days=1)
+    items = []
+    seen = set()
+
+    def add_item(title: str, body: str, kind: str, url: str = ""):
+        key = (title or "").strip()
+        if not key or key in seen:
+            return
+        seen.add(key)
+        items.append({"title": title[:48], "body": body[:110], "kind": kind, "url": url})
+
+    for deal in cache.get("deals", [])[:2]:
+        tag = deal.get("tag") or "網友好康"
+        add_item(f"今日好康｜{tag}", deal.get("title", ""), "deal", deal.get("url", ""))
+
+    if today <= datetime.date(2026, 5, 26):
+        add_item("速食好康｜肯德基", "5/12 起限時兩週，報稅季主題優惠可留意買桶餐送餐盒活動。", "brand", "https://tw.stock.yahoo.com/news/5%E6%9C%88%E5%A0%B1%E7%A8%85%E6%95%91%E6%98%9F-%E8%82%AF%E5%BE%B7%E5%9F%BA%E8%B2%B7-%E6%A1%B6%E9%80%81-%E7%9B%92-%E9%BA%A5%E7%95%B6%E5%8B%9E%E8%B2%B7-080602569.html")
+    if today <= datetime.date(2026, 6, 9):
+        add_item("速食好康｜麥當勞", "5/13-6/9 歡樂送滿額贈 6 塊麥克鷄塊，可當午餐話題或同事揪團參考。", "brand", "https://tw.stock.yahoo.com/news/5%E6%9C%88%E5%A0%B1%E7%A8%85%E6%95%91%E6%98%9F-%E8%82%AF%E5%BE%B7%E5%9F%BA%E8%B2%B7-%E6%A1%B6%E9%80%81-%E7%9B%92-%E9%BA%A5%E7%95%B6%E5%8B%9E%E8%B2%B7-080602569.html")
+    if today <= datetime.date(2026, 5, 24):
+        add_item("咖啡飲料｜路易莎", "5/6-5/24 指定飲品買一送一，早上買咖啡前可先看門市活動。", "brand", "https://www.callingtaiwan.com.tw/%E6%89%8B%E6%90%96%E8%8C%B6%E9%80%A3%E9%8E%96%E5%92%96%E5%95%A1%E8%B6%85%E5%95%86%E5%92%96%E5%95%A1%E5%84%AA%E6%83%A0/")
+
+    for topic in cache.get("topics", [])[:2]:
+        tag = topic.get("tag") or "Threads"
+        add_item(f"{yesterday.month}/{yesterday.day} 社群話題｜{tag}", topic.get("title", ""), "topic", topic.get("url", ""))
+
+    songs = cache.get("songs", [])
+    if songs:
+        pick = songs[today.timetuple().tm_yday % len(songs)]
+        add_item("破冰話題｜今日新歌", f"可以聊《{pick.get('name', '')}》— {pick.get('artist', '')}，適合上班前分享。", "topic")
+
+    if not any(item.get("kind") == "topic" for item in items):
+        add_item(f"{yesterday.month}/{yesterday.day} 社群話題", "Threads 公開頁暫時沒有抓到穩定熱門文，先用今日好康或新歌當同事破冰話題。", "topic")
+
+    if len(items) < limit:
+        for event in _site_activities(city, "", limit=2):
+            add_item(f"{city}活動｜{event.get('name', '在地活動')}", f"{event.get('date', '')}｜{event.get('desc', '')}", "activity", event.get("url", ""))
+
+    return {
+        "ok": True,
+        "city": city,
+        "updated_at": cache.get("updated_at", ""),
+        "yesterday": yesterday.isoformat(),
+        "items": items[:limit],
+        "source_names": {
+            "surprise": "生活優轉每日小驚喜、品牌優惠公開資訊、Threads/社群公開頁與活動資料"
+        },
+    }
+
+
 def _site_local_deals(city: str, context: str = "") -> dict:
     city = city or "台北"
     cards = []
+    surprise = _site_today_surprise(city, limit=6)
+    for item in surprise.get("items", []):
+        cards.append(item)
+    if len(cards) >= 6:
+        return {
+            "ok": True,
+            "city": city,
+            "context": context,
+            "items": cards[:6],
+            "source_names": surprise.get("source_names", {"surprise": "生活優轉每日小驚喜整理"}),
+        }
     try:
         from modules.weather import _get_city_local_deal, _get_national_deal
         local = _get_city_local_deal(city, "site")
@@ -1798,14 +1878,14 @@ def _site_local_deals(city: str, context: str = "") -> dict:
         cards.append({"title": food.get("name", "在地美食"), "body": f"{food.get('area', city)}｜{food.get('desc', '')[:64]}", "kind": "food", "url": food.get("url", "")})
     if not cards:
         cards = [
-            {"title": f"{city}今日優惠方向", "body": "先看商圈活動、百貨公告、餐廳社群與展覽票券，後續可再串正式優惠來源。", "kind": "fallback"},
+            {"title": f"{city}今日小驚喜", "body": "先看咖啡飲料、速食、商圈活動與社群話題，適合上班前快速掃一下。", "kind": "fallback"},
         ]
     return {
         "ok": True,
         "city": city,
         "context": context,
         "items": cards[:6],
-        "source_names": {"deals": "生活優轉活動、美食與每日好康整理"},
+        "source_names": {"surprise": "生活優轉每日小驚喜、活動、美食與好康整理"},
     }
 
 
@@ -1819,12 +1899,15 @@ class handler(BaseHTTPRequestHandler):
             qs = parse_qs(parsed.query or "")
             city = _site_param(qs, "city", "台北")
             payload = _site_weather_payload(city)
+            surprise = _site_today_surprise(city, limit=6)
+            payload.setdefault("source_names", {})["surprise"] = surprise["source_names"]["surprise"]
             payload.update({
                 "ok": True,
                 "plan": _site_param(qs, "plan", "通勤上班"),
                 "time": _site_param(qs, "time", "早上 7-9 點"),
                 "focus": _site_param(qs, "focus", "全部整理"),
                 "activities": _site_activities(city, "", limit=3),
+                "surprise": surprise,
             })
             _site_json(self, payload)
 
