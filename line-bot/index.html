@@ -1260,6 +1260,7 @@
       ntpc_garbage_truck: "新北市政府環保局垃圾車動態",
       taichung_garbage_schedule: "臺中市定時定點垃圾收運地點",
       ntpc_garbage_schedule: "新北市垃圾車表定清運路線",
+      moenv_garbage_route: "環境部環境管理署全國垃圾車清運路線查詢網",
       garbage_schedule_not_supported: "地方政府垃圾車清運時間地點",
       garbage_truck_not_supported: "地方政府垃圾車動態資料",
       fallback: "生活優轉參考建議"
@@ -1394,7 +1395,7 @@
         .map((item, index) => ({ href: item.maps_url, label: `開地圖 ${index + 1}` }));
       return `
         <h4>${html(data.city || "")}${html(data.district || "")} 垃圾車時間地點</h4>
-        <div class="result-grid">${cards || card("先輸入行政區或地址", "目前網站版先支援新北市、臺中市；例如：台中 西區、或新北 板橋區 民生路。")}</div>
+        <div class="result-grid">${cards || card("先輸入縣市、鄉鎮區或路名", "可查全台垃圾車清運時間表；例如：台南 仁德區 德善路、彰化市 山中街、台中 西區。")}</div>
         <div class="flow-note">即時車輛：${html(liveText)}。${sourceLabel(data.source_names || { schedule: data.source_name || data.source, live: data.live?.source_name })}。</div>
         ${mapLinks.length ? linkActions(mapLinks) : ""}
       `;

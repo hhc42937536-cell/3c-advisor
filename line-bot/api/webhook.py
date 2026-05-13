@@ -757,6 +757,16 @@ def _site_get_json(url: str, timeout: int = 8):
     return json.loads(raw.decode("utf-8", "replace"))
 
 
+def _site_get_text(url: str, timeout: int = 8):
+    req = urllib.request.Request(url, headers={"User-Agent": "LifeUturn/1.0"})
+    ctx = _ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = _ssl.CERT_NONE
+    with urllib.request.urlopen(req, timeout=timeout, context=ctx) as response:
+        raw = response.read()
+    return raw.decode("utf-8", "replace")
+
+
 def _site_weather_payload(city: str) -> dict:
     weather = _fetch_cwa_weather(city)
     oil = _fetch_quick_oil()
@@ -1101,6 +1111,30 @@ def _site_next_service_time(day_times: dict[int, tuple[str, str]], today: int) -
     return None, "", ""
 
 
+def _site_days_from_text(text: str) -> list[int]:
+    mapping = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "日": 7, "天": 7}
+    return [day for char, day in mapping.items() if char in str(text or "")]
+
+
+def _site_city_full_name(city: str) -> str:
+    aliases = {
+        "台北": "臺北市", "臺北": "臺北市", "台北市": "臺北市",
+        "新北": "新北市", "桃園": "桃園市",
+        "台中": "臺中市", "臺中": "臺中市", "台中市": "臺中市",
+        "台南": "臺南市", "臺南": "臺南市", "台南市": "臺南市",
+        "高雄": "高雄市", "基隆": "基隆市", "新竹": "新竹市", "嘉義市": "嘉義市",
+        "宜蘭": "宜蘭縣", "新竹縣": "新竹縣", "苗栗": "苗栗縣", "彰化": "彰化縣",
+        "南投": "南投縣", "雲林": "雲林縣", "嘉義": "嘉義縣", "屏東": "屏東縣",
+        "台東": "臺東縣", "臺東": "臺東縣", "花蓮": "花蓮縣", "澎湖": "澎湖縣",
+        "金門": "金門縣", "連江": "連江縣",
+    }
+    if city in aliases:
+        return aliases[city]
+    if city.endswith(("市", "縣")):
+        return city.replace("台", "臺")
+    return city
+
+
 def _site_maps_url(keyword: str) -> str:
     return f"https://www.google.com/maps/search/{urllib.parse.quote(str(keyword or '').strip())}/"
 
@@ -1108,7 +1142,10 @@ def _site_maps_url(keyword: str) -> str:
 def _site_garbage_query_parts(city: str, query: str) -> tuple[str, str]:
     text = f"{city} {query}".strip()
     district = ""
-    for match in re.findall(r"[\u4e00-\u9fff]{1,4}區", text):
+    city_names = {city, _site_city_full_name(city), _site_city_full_name(city).replace("臺", "台")}
+    for match in re.findall(r"[\u4e00-\u9fff]{1,5}[區鎮鄉市]", text):
+        if match in city_names:
+            continue
         district = match
         break
     if city in ("新北", "新北市") and not district:
@@ -1116,9 +1153,125 @@ def _site_garbage_query_parts(city: str, query: str) -> tuple[str, str]:
     if city in ("台中", "臺中") and not district:
         district = "西區"
     keywords = text
-    for word in ("新北市", "新北", "台中市", "臺中市", "台中", "臺中", district, "垃圾車", "垃圾", "清運", "時間", "地點"):
+    remove_words = set(city_names)
+    remove_words.update({name.replace("市", "").replace("縣", "") for name in city_names})
+    remove_words.update({name.replace("臺", "台") for name in list(remove_words)})
+    remove_words.update({district, "垃圾車", "垃圾", "清運", "時間", "地點"})
+    for word in sorted(remove_words, key=len, reverse=True):
         keywords = keywords.replace(word, " ")
     return district, " ".join(keywords.split())
+
+
+def _site_html_clean(raw: str) -> str:
+    import html as _html
+    text = re.sub(r"<[^>]+>", " ", raw or "")
+    return " ".join(_html.unescape(text).split())
+
+
+def _site_hwms_route_index() -> list:
+    try:
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "garbage_route_index.json")
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh).get("routes", [])
+    except Exception:
+        return []
+
+
+def _site_hwms_route_stops(route: dict, keyword: str, today: int, now_minutes: int, limit: int = 8) -> list:
+    url = f"https://hwms.moenv.gov.tw/dispPageBox/trans.aspx?ddsPageID=LINEINFO&dbid={route.get('dbid')}"
+    html = _site_get_text(url, timeout=10)
+    items = []
+    for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", html, flags=re.S | re.I):
+        cells = [_site_html_clean(cell) for cell in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", tr, flags=re.S | re.I)]
+        if len(cells) < 6 or not cells[0].isdigit() or not re.match(r"^\d{1,2}:\d{2}$", cells[2]):
+            continue
+        location = cells[1]
+        if keyword and keyword not in location and keyword not in route.get("route", "") and keyword not in route.get("code", ""):
+            continue
+        garbage_days = _site_days_from_text(cells[3])
+        service_day, display_time, _ = _site_next_service_time({day: (cells[2], cells[2]) for day in garbage_days}, today)
+        minutes = _site_minutes(display_time)
+        is_today = service_day == today
+        items.append({
+            "district": route.get("district", ""),
+            "village": "",
+            "name": location,
+            "location": location,
+            "time": display_time,
+            "time_range": display_time,
+            "service_day": "今日" if is_today else f"週{_site_weekday_text([service_day])}" if service_day else "",
+            "car": "",
+            "route": route.get("route", ""),
+            "garbage_days": cells[3],
+            "recycle_days": cells[5],
+            "food_waste_days": cells[4],
+            "today": is_today,
+            "minutes": minutes,
+            "passed": is_today and minutes is not None and minutes < now_minutes,
+            "maps_url": _site_maps_url(f"{route.get('country','')}{route.get('district','')}{location}"),
+            "source": "moenv_garbage_route",
+        })
+        if len(items) >= limit:
+            break
+    return items
+
+
+def _site_hwms_schedule(city: str, district: str, keyword: str, query: str, limit: int = 8) -> dict:
+    now, today, now_minutes = _site_today_info()
+    country = _site_city_full_name(city)
+    routes = [r for r in _site_hwms_route_index() if r.get("country") == country]
+    if district:
+        routes = [r for r in routes if r.get("district") == district]
+    ranked = []
+    for route in routes:
+        haystack = f"{route.get('route','')} {route.get('code','')} {route.get('method','')} {route.get('district','')}"
+        score = 10 if district and route.get("district") == district else 0
+        if keyword and keyword in haystack:
+            score += 20
+        if "沿線清運" in route.get("method", ""):
+            score += 2
+        ranked.append((score, route))
+    ranked.sort(key=lambda item: (-item[0], item[1].get("code", "")))
+    items = []
+    tried = []
+    stop_keyword = "" if any(keyword in f"{r.get('route','')} {r.get('code','')}" for _, r in ranked[:5]) else keyword
+    search_routes = [route for _, route in ranked[:24 if stop_keyword else 8]]
+    for route in search_routes:
+        tried.append(route)
+        try:
+            batch = _site_hwms_route_stops(route, stop_keyword, today, now_minutes, limit=limit)
+            items.extend(batch)
+        except Exception:
+            continue
+        if len(items) >= limit:
+            break
+    if not items and stop_keyword:
+        for _, route in ranked[:8]:
+            if route not in tried:
+                tried.append(route)
+            try:
+                items.extend(_site_hwms_route_stops(route, "", today, now_minutes, limit=limit))
+            except Exception:
+                continue
+            if len(items) >= limit:
+                break
+    items.sort(key=lambda item: (
+        0 if item.get("today") and not item.get("passed") else 1 if item.get("today") else 2,
+        item.get("minutes") if item.get("minutes") is not None else 9999,
+    ))
+    return {
+        "ok": bool(items),
+        "city": country.replace("臺", "台").replace("市", "").replace("縣", "") if country else city,
+        "district": district,
+        "query": query,
+        "updated_at": now.strftime("%Y-%m-%d %H:%M"),
+        "source": "moenv_garbage_route",
+        "source_name": "環境部環境管理署全國垃圾車清運路線查詢網",
+        "items": items[:limit],
+        "routes": tried[:5],
+        "live": _site_garbage_trucks(city, limit=3),
+        "source_names": {"schedule": "環境部環境管理署全國垃圾車清運路線查詢網"},
+    }
 
 
 def _site_normalize_taichung_schedule(row: dict, today: int, now_minutes: int) -> dict:
@@ -1226,16 +1379,7 @@ def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
             rows = [row for row in rows if not district or _site_fix_text(row.get("area", "")) == district]
             items = [_site_normalize_taichung_schedule(row, today, now_minutes) for row in rows]
         else:
-            return {
-                "ok": False,
-                "city": city,
-                "district": district,
-                "query": query,
-                "source": source,
-                "source_name": "目前網站版先支援新北市、臺中市垃圾車清運時間地點",
-                "items": [],
-                "live": _site_garbage_trucks(city, limit=3),
-            }
+            return _site_hwms_schedule(city, district, keyword, query, limit=limit)
     except Exception as exc:
         return {
             "ok": False,
@@ -1258,6 +1402,8 @@ def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
                 filtered.append(item)
         if filtered:
             items = filtered
+    if not items:
+        return _site_hwms_schedule(city, district, keyword, query, limit=limit)
     items.sort(key=lambda item: (
         0 if item.get("today") and not item.get("passed") else 1 if item.get("today") else 2,
         item.get("minutes") if item.get("minutes") is not None else 9999,
