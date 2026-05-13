@@ -9,6 +9,7 @@ import sys
 import json
 import os
 import re
+import datetime
 import hashlib
 import hmac
 import urllib.request
@@ -1071,6 +1072,213 @@ def _site_garbage_trucks(city: str, limit: int = 6) -> dict:
     }
 
 
+def _site_minutes(value: str):
+    try:
+        parts = str(value or "").strip().split(":")
+        if len(parts) < 2:
+            return None
+        return int(parts[0]) * 60 + int(parts[1])
+    except Exception:
+        return None
+
+
+def _site_today_info():
+    now = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
+    return now, now.isoweekday(), now.hour * 60 + now.minute
+
+
+def _site_weekday_text(days: list[int]) -> str:
+    labels = {1: "一", 2: "二", 3: "三", 4: "四", 5: "五", 6: "六", 7: "日"}
+    return "、".join(labels.get(day, "") for day in days if day in labels)
+
+
+def _site_next_service_time(day_times: dict[int, tuple[str, str]], today: int) -> tuple[int | None, str, str]:
+    for offset in range(0, 7):
+        day = ((today + offset - 1) % 7) + 1
+        start, end = day_times.get(day, ("", ""))
+        if start:
+            return day, start, end or start
+    return None, "", ""
+
+
+def _site_maps_url(keyword: str) -> str:
+    return f"https://www.google.com/maps/search/{urllib.parse.quote(str(keyword or '').strip())}/"
+
+
+def _site_garbage_query_parts(city: str, query: str) -> tuple[str, str]:
+    text = f"{city} {query}".strip()
+    district = ""
+    for match in re.findall(r"[\u4e00-\u9fff]{1,4}區", text):
+        district = match
+        break
+    if city in ("新北", "新北市") and not district:
+        district = "板橋區"
+    if city in ("台中", "臺中") and not district:
+        district = "西區"
+    keywords = text
+    for word in ("新北市", "新北", "台中市", "臺中市", "台中", "臺中", district, "垃圾車", "垃圾", "清運", "時間", "地點"):
+        keywords = keywords.replace(word, " ")
+    return district, " ".join(keywords.split())
+
+
+def _site_normalize_taichung_schedule(row: dict, today: int, now_minutes: int) -> dict:
+    garbage_days = []
+    recycle_days = []
+    day_times = {}
+    for day in range(1, 8):
+        g_start = _site_fix_text(row.get(f"g_d{day}_time_s", ""))
+        g_end = _site_fix_text(row.get(f"g_d{day}_time_e", ""))
+        r_start = _site_fix_text(row.get(f"r_d{day}_time_s", ""))
+        if g_start:
+            garbage_days.append(day)
+            day_times[day] = (g_start, g_end or g_start)
+        if r_start:
+            recycle_days.append(day)
+    service_day, today_time, today_end = _site_next_service_time(day_times, today)
+    minutes = _site_minutes(today_time)
+    is_today = service_day == today
+    return {
+        "district": _site_fix_text(row.get("area", "")),
+        "village": _site_fix_text(row.get("village", "")),
+        "name": _site_fix_text(row.get("caption", "")),
+        "location": _site_fix_text(row.get("caption", "")),
+        "time": today_time,
+        "time_range": f"{today_time}-{today_end}" if today_time and today_end and today_time != today_end else today_time,
+        "service_day": "今日" if is_today else f"週{_site_weekday_text([service_day])}" if service_day else "",
+        "car": _site_fix_text(row.get("car_licence", "")),
+        "route": _site_fix_text(row.get("task_type", "")),
+        "garbage_days": _site_weekday_text(garbage_days),
+        "recycle_days": _site_weekday_text(recycle_days),
+        "today": is_today,
+        "minutes": minutes,
+        "passed": is_today and minutes is not None and minutes < now_minutes,
+        "maps_url": _site_maps_url(f"台中市{_site_fix_text(row.get('area', ''))}{_site_fix_text(row.get('caption', ''))}"),
+        "source": "taichung_garbage_schedule",
+    }
+
+
+def _site_normalize_ntpc_schedule(row: dict, today: int, now_minutes: int) -> dict:
+    names = {
+        1: "monday", 2: "tuesday", 3: "wednesday", 4: "thursday",
+        5: "friday", 6: "saturday", 7: "sunday",
+    }
+    garbage_days = [day for day, key in names.items() if _site_fix_text(row.get(f"garbage{key}", "")) == "Y"]
+    recycle_days = [day for day, key in names.items() if _site_fix_text(row.get(f"recycling{key}", "")) == "Y"]
+    food_days = [day for day, key in names.items() if _site_fix_text(row.get(f"foodscraps{key}", "")) == "Y"]
+    schedule_time = _site_fix_text(row.get("time", ""))
+    service_day, display_time, _ = _site_next_service_time({day: (schedule_time, schedule_time) for day in garbage_days}, today)
+    minutes = _site_minutes(display_time)
+    is_today = service_day == today
+    location = _site_fix_text(row.get("name", ""))
+    district = _site_fix_text(row.get("city", ""))
+    return {
+        "district": district,
+        "village": _site_fix_text(row.get("village", "")),
+        "name": location,
+        "location": location,
+        "time": display_time,
+        "time_range": display_time,
+        "service_day": "今日" if is_today else f"週{_site_weekday_text([service_day])}" if service_day else "",
+        "car": "",
+        "route": _site_fix_text(row.get("linename", "")),
+        "garbage_days": _site_weekday_text(garbage_days),
+        "recycle_days": _site_weekday_text(recycle_days),
+        "food_waste_days": _site_weekday_text(food_days),
+        "today": is_today,
+        "minutes": minutes,
+        "passed": is_today and minutes is not None and minutes < now_minutes,
+        "lat": row.get("latitude", ""),
+        "lng": row.get("longitude", ""),
+        "maps_url": _site_maps_url(f"新北市{district}{location}"),
+        "source": "ntpc_garbage_schedule",
+    }
+
+
+def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
+    now, today, now_minutes = _site_today_info()
+    district, keyword = _site_garbage_query_parts(city, query)
+    source_name = "地方政府垃圾車清運時間地點"
+    rows = []
+    source = "garbage_schedule_not_supported"
+    canonical_city = city
+    try:
+        if city in ("新北", "新北市"):
+            canonical_city = "新北"
+            source = "ntpc_garbage_schedule"
+            source_name = "新北市垃圾車表定清運路線"
+            params = urllib.parse.urlencode({"page": 0, "size": 500, "city": district})
+            rows = _site_get_json(f"https://data.ntpc.gov.tw/api/datasets/edc3ad26-8ae7-4916-a00b-bc6048d19bf8/json?{params}")
+            items = [_site_normalize_ntpc_schedule(row, today, now_minutes) for row in rows]
+        elif city in ("台中", "臺中"):
+            canonical_city = "台中"
+            source = "taichung_garbage_schedule"
+            source_name = "臺中市定時定點垃圾收運地點"
+            cache_key = "site:taichung_garbage_schedule"
+            cached = _redis_get(cache_key)
+            if cached:
+                rows = json.loads(cached) if isinstance(cached, str) else cached
+            else:
+                rows = _site_get_json("https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=68d1a87f-7baa-4b50-8408-c36a3a7eda68", timeout=12)
+                try:
+                    _redis_set(cache_key, json.dumps(rows, ensure_ascii=False), ttl=86400)
+                except Exception:
+                    pass
+            rows = [row for row in rows if not district or _site_fix_text(row.get("area", "")) == district]
+            items = [_site_normalize_taichung_schedule(row, today, now_minutes) for row in rows]
+        else:
+            return {
+                "ok": False,
+                "city": city,
+                "district": district,
+                "query": query,
+                "source": source,
+                "source_name": "目前網站版先支援新北市、臺中市垃圾車清運時間地點",
+                "items": [],
+                "live": _site_garbage_trucks(city, limit=3),
+            }
+    except Exception as exc:
+        return {
+            "ok": False,
+            "city": canonical_city,
+            "district": district,
+            "query": query,
+            "source": source,
+            "source_name": source_name,
+            "error": str(exc),
+            "items": [],
+            "live": _site_garbage_trucks(city, limit=3),
+        }
+
+    if keyword:
+        terms = [term for term in re.split(r"\s+", keyword) if term]
+        filtered = []
+        for item in items:
+            haystack = " ".join(str(item.get(k, "")) for k in ("district", "village", "name", "location", "route", "car"))
+            if all(term in haystack for term in terms):
+                filtered.append(item)
+        if filtered:
+            items = filtered
+    items.sort(key=lambda item: (
+        0 if item.get("today") and not item.get("passed") else 1 if item.get("today") else 2,
+        item.get("minutes") if item.get("minutes") is not None else 9999,
+    ))
+    return {
+        "ok": True,
+        "city": canonical_city,
+        "district": district,
+        "query": query,
+        "updated_at": now.strftime("%Y-%m-%d %H:%M"),
+        "source": source,
+        "source_name": source_name,
+        "items": items[:limit],
+        "live": _site_garbage_trucks(city, limit=3),
+        "source_names": {
+            "schedule": source_name,
+            "live": _site_garbage_trucks(city, limit=1).get("source_name", "地方政府垃圾車動態資料"),
+        },
+    }
+
+
 def _site_govdata(city: str) -> dict:
     waste = _site_waste_stats(city)
     trucks = _site_garbage_trucks(city)
@@ -1289,6 +1497,12 @@ class handler(BaseHTTPRequestHandler):
             qs = parse_qs(parsed.query or "")
             city = _site_param(qs, "city", "台中")
             _site_json(self, _site_govdata(city))
+
+        elif parsed.path == "/api/site_garbage":
+            qs = parse_qs(parsed.query or "")
+            city = _site_param(qs, "city", "台中")
+            query = _site_param(qs, "q", "")
+            _site_json(self, _site_garbage_schedule(city, query, limit=8))
 
         elif parsed.path == "/api/site_tech":
             qs = parse_qs(parsed.query or "")

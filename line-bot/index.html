@@ -855,7 +855,7 @@
                 <div class="demo-box">
                   <div class="control-grid">
                     <label class="field" for="tool-topic">選一個工具
-                      <select id="tool-topic"><option>政府資料生活雷達</option><option>3C 選購</option><option>防詐檢查</option><option>法律白話</option><option>健康小幫手</option><option>停車查詢</option></select>
+                      <select id="tool-topic"><option>垃圾車時間地點</option><option>政府資料生活雷達</option><option>3C 選購</option><option>防詐檢查</option><option>法律白話</option><option>健康小幫手</option><option>停車查詢</option></select>
                     </label>
                     <label class="field" for="tool-detail">情境
                       <textarea id="tool-detail" aria-label="工具情境">想買一支拍照好、續航夠的手機</textarea>
@@ -879,6 +879,7 @@
                 <button class="data-item" type="button" data-tool="3C 選購"><strong>3C 選購</strong><span>完整網站</span></button>
                 <button class="data-item" type="button" data-tool="法律白話"><strong>法律白話</strong><span>完整網站</span></button>
                 <button class="data-item" type="button" data-tool="防詐檢查"><strong>防詐檢查</strong><span>貼文字 / 截圖</span></button>
+                <button class="data-item" type="button" data-tool="垃圾車時間地點"><strong>垃圾車</strong><span>時間 / 地點</span></button>
                 <button class="data-item" type="button" data-tool="停車查詢"><strong>停車 / 裁罰</strong><span>查詢工具</span></button>
               </div>
             </div>
@@ -900,7 +901,7 @@
             <button class="roadmap-item" type="button" data-tool="法律白話"><b>防詐與法律</b><span>可疑訊息分析、法律白話引導</span><em class="level mid">小工具</em></button>
             <button class="roadmap-item" type="button" data-tool="健康小幫手"><b>健康提醒</b><span>BMI、飲水、睡眠、壓力與卡路里</span><em class="level">小工具</em></button>
             <button class="roadmap-item" type="button" data-tool="停車查詢"><b>停車查詢</b><span>停車場、費率、附近順路安排</span><em class="level">延伸</em></button>
-            <button class="roadmap-item" type="button" data-tool="政府資料生活雷達"><b>交通與垃圾車</b><span>公車動態、垃圾車 GPS、回收分類</span><em class="level">規劃中</em></button>
+            <button class="roadmap-item" type="button" data-tool="垃圾車時間地點"><b>垃圾車時間地點</b><span>表定時間、清運點、即時車輛位置</span><em class="level">可查詢</em></button>
             <button class="roadmap-item" type="button" data-tool="法律白話" data-detail="想了解違規裁罰試算與條例查詢"><b>裁罰試算</b><span>違規裁罰試算與條例查詢</span><em class="level">規劃中</em></button>
           </div>
         </div>
@@ -1183,6 +1184,7 @@
       const detail = document.querySelector("#tool-detail");
       const budget = document.querySelector("#tool-budget");
       const examples = {
+        "垃圾車時間地點": ["台中 西區", "今晚"],
         "政府資料生活雷達": ["台中", "城市生活"],
         "3C 選購": ["想買一支拍照好、續航夠的手機", "30000"],
         "防詐檢查": ["陌生簡訊說包裹卡關，要我點連結付款", "0"],
@@ -1256,6 +1258,9 @@
       moenv_national_waste: "環境部全國一般廢棄物產生量",
       taichung_garbage_truck: "臺中市政府環保局垃圾車動態",
       ntpc_garbage_truck: "新北市政府環保局垃圾車動態",
+      taichung_garbage_schedule: "臺中市定時定點垃圾收運地點",
+      ntpc_garbage_schedule: "新北市垃圾車表定清運路線",
+      garbage_schedule_not_supported: "地方政府垃圾車清運時間地點",
       garbage_truck_not_supported: "地方政府垃圾車動態資料",
       fallback: "生活優轉參考建議"
     };
@@ -1271,6 +1276,13 @@
       const response = await fetch(url, { headers: { "Accept": "application/json" } });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.json();
+    }
+
+    function cityFromText(text, fallback = "台中") {
+      const source = `${text || ""} ${fallback || ""}`;
+      const cities = ["台北", "新北", "桃園", "台中", "臺中", "台南", "高雄", "基隆", "新竹", "苗栗", "彰化", "南投", "雲林", "嘉義", "屏東", "宜蘭", "花蓮", "台東", "澎湖", "金門", "連江"];
+      const found = cities.find((city) => source.includes(city));
+      return found === "臺中" ? "台中" : (found || fallback);
     }
 
     function renderMorning(data) {
@@ -1364,6 +1376,30 @@
       `;
     }
 
+    function renderGarbage(data) {
+      const items = data.items || [];
+      const cards = items.map((item) => {
+        const status = item.today ? (item.passed ? "今日已過" : "今日可倒") : `下次${item.service_day || ""}`;
+        const recycle = item.recycle_days ? `｜回收：${item.recycle_days}` : "";
+        const car = item.car ? `｜車號 ${item.car}` : "";
+        const place = [item.district, item.village, item.location].filter(Boolean).join(" ");
+        return card(`${item.time_range || item.time || "時間未標示"} ${status}`, `${place}${car}｜${item.route || "清運點"}${recycle}`);
+      }).join("");
+      const liveItems = data.live?.items || [];
+      const liveText = liveItems.length
+        ? liveItems.slice(0, 2).map((item) => `${item.car || "車輛"}：${item.location || "無位置"} ${item.time || ""}`).join("；")
+        : "目前沒有可顯示的即時車輛位置";
+      const mapLinks = items.slice(0, 3)
+        .filter((item) => item.maps_url)
+        .map((item, index) => ({ href: item.maps_url, label: `開地圖 ${index + 1}` }));
+      return `
+        <h4>${html(data.city || "")}${html(data.district || "")} 垃圾車時間地點</h4>
+        <div class="result-grid">${cards || card("先輸入行政區或地址", "目前網站版先支援新北市、臺中市；例如：台中 西區、或新北 板橋區 民生路。")}</div>
+        <div class="flow-note">即時車輛：${html(liveText)}。${sourceLabel(data.source_names || { schedule: data.source_name || data.source, live: data.live?.source_name })}。</div>
+        ${mapLinks.length ? linkActions(mapLinks) : ""}
+      `;
+    }
+
     function renderTech(data) {
       const cards = (data.items || []).map((item) => {
         const price = item.price ? `${item.price}｜` : "";
@@ -1441,8 +1477,14 @@
         const data = await getJson(`/api/site_parking?city=${encodeURIComponent(city)}`);
         return renderParking(data);
       }
+      if (key === "tools" && document.querySelector("#tool-topic").value === "垃圾車時間地點") {
+        const detail = document.querySelector("#tool-detail").value.trim();
+        const city = cityFromText(detail, document.querySelector("#morning-city").value || "台中");
+        const data = await getJson(`/api/site_garbage?city=${encodeURIComponent(city)}&q=${encodeURIComponent(detail)}`);
+        return renderGarbage(data);
+      }
       if (key === "tools" && document.querySelector("#tool-topic").value === "政府資料生活雷達") {
-        const city = document.querySelector("#tool-detail").value.trim() || document.querySelector("#morning-city").value || "台中";
+        const city = cityFromText(document.querySelector("#tool-detail").value.trim(), document.querySelector("#morning-city").value || "台中");
         const data = await getJson(`/api/site_govdata?city=${encodeURIComponent(city)}`);
         return renderGovData(data);
       }
@@ -1479,6 +1521,8 @@
     document.querySelectorAll("[data-demo]").forEach((button) => {
       button.addEventListener("click", () => runDemo(button.dataset.demo));
     });
+
+    updateToolFields();
 
     fetchSiteMarkup("morning")
       .then((markup) => setResult("morning", markup))
