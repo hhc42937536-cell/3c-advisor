@@ -831,7 +831,10 @@
                       <select id="food-people"><option>1 人</option><option>2 人</option><option>3-4 人</option><option>5 人以上</option></select>
                     </label>
                   </div>
-                  <button class="btn primary" data-demo="food">推薦餐廳方向</button>
+                  <div class="quick-actions">
+                    <button class="btn primary" data-demo="food">推薦餐廳方向</button>
+                    <button type="button" id="use-food-location">使用目前位置</button>
+                  </div>
                   <div class="result" id="food-result">選條件後會整理 3 個可執行的吃飯選項。</div>
                 </div>
               </div>
@@ -990,6 +993,7 @@
     const card = (title, body) => `<div class="result-card"><strong>${html(title)}</strong><span>${html(body)}</span></div>`;
     const actions = (items) => `<div class="quick-actions">${items.map((item) => `<button type="button" data-open="${html(item.key)}">${html(item.label)}</button>`).join("")}</div>`;
     const linkActions = (items) => `<div class="quick-actions">${items.map((item) => `<a href="${html(item.href)}" target="_blank" rel="noreferrer">${html(item.label)}</a>`).join("")}</div>`;
+    let foodLocation = null;
     let parkingLocation = null;
     function summaryTitle(time, city) {
       const prefix = String(time || "").includes("晚上")
@@ -1170,6 +1174,7 @@
       cpc_live_or_cache: "台灣中油油價公告",
       bot_live_or_cache: "臺灣銀行牌告匯率",
       crawler_cache_or_bib_gourmand: "生活優轉整理的美食名單、米其林必比登與 Google 地圖資訊",
+      google_places_live: "Google 地圖附近餐廳",
       accupass_crawler_cache_or_activity_fallback: "Accupass、文化部藝文活動資料、活動網站與部落格",
       restaurant_cache: "生活優轉整理的美食名單",
       crawler_cache: "生活優轉整理的活動名單",
@@ -1251,12 +1256,21 @@
       const items = data.items || [];
       const cards = items.slice(0, 4).map((item) => {
         const place = item.area || item.address || data.city;
-        return card(item.name, `${place}｜${item.desc || item.type || "美食資訊"}｜${readableSource(item.source)}`);
+        const dist = item.distance_m ? `｜距離 ${item.distance_m}m` : "";
+        return card(item.name, `${place}${dist}｜${item.desc || item.type || "美食資訊"}｜${readableSource(item.source)}`);
       }).join("");
+      const mapLinks = items.slice(0, 3)
+        .filter((item) => item.url)
+        .map((item, index) => ({ href: item.url, label: `開地圖 ${index + 1}` }));
+      const modeText = data.nearby ? "附近餐廳推薦" : `${data.mood || "美食"}推薦`;
+      const note = data.nearby
+        ? "已依目前位置優先排序，適合手機版直接找附近可去的餐廳。"
+        : "已整理生活優轉美食名單與必比登資訊。";
       return `
-        <h4>${html(data.city)} ${html(data.mood || "美食")}推薦</h4>
+        <h4>${html(data.city)} ${html(modeText)}</h4>
         <div class="result-grid">${cards || card("目前沒有資料", "目前沒有找到這個城市的推薦，先改查城市特色或稍後再試。")}</div>
-        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。已整理生活優轉美食名單與必比登資訊。</div>
+        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。${note}</div>
+        ${mapLinks.length ? linkActions(mapLinks) : ""}
         ${actions([{ key: "activity", label: "用同城市找週末活動" }, { key: "tools", label: "即時找車位" }])}
       `;
     }
@@ -1358,7 +1372,8 @@
         const mood = document.querySelector("#food-mood").value;
         const budget = document.querySelector("#food-budget").value;
         const people = document.querySelector("#food-people").value;
-        const data = await getJson(`/api/site_food?city=${encodeURIComponent(city)}&mood=${encodeURIComponent(mood)}&budget=${encodeURIComponent(budget)}&people=${encodeURIComponent(people)}`);
+        const loc = foodLocation ? `&lat=${encodeURIComponent(foodLocation.lat)}&lon=${encodeURIComponent(foodLocation.lon)}` : "";
+        const data = await getJson(`/api/site_food?city=${encodeURIComponent(city)}&mood=${encodeURIComponent(mood)}&budget=${encodeURIComponent(budget)}&people=${encodeURIComponent(people)}${loc}`);
         return renderFood(data);
       }
       if (key === "activity") {
@@ -1392,6 +1407,23 @@
 
     document.querySelectorAll("[data-demo]").forEach((button) => {
       button.addEventListener("click", () => runDemo(button.dataset.demo));
+    });
+
+    document.querySelector("#use-food-location").addEventListener("click", () => {
+      if (!navigator.geolocation) {
+        setResult("food", `<h4>無法取得定位</h4><div class="flow-note">這個瀏覽器不支援定位，請改用城市和情境查詢。</div>`);
+        return;
+      }
+      setResult("food", `<h4>正在取得目前位置...</h4><div class="flow-note">手機會跳出定位授權，允許後會優先推薦附近餐廳。</div>`);
+      navigator.geolocation.getCurrentPosition((position) => {
+        foodLocation = {
+          lat: position.coords.latitude.toFixed(6),
+          lon: position.coords.longitude.toFixed(6),
+        };
+        runDemo("food");
+      }, () => {
+        setResult("food", `<h4>定位未開啟</h4><div class="flow-note">請允許定位，或改用城市、情境與預算查詢。</div>`);
+      }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 180000 });
     });
 
     document.querySelector("#use-parking-location").addEventListener("click", () => {

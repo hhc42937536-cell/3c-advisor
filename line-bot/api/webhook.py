@@ -803,12 +803,35 @@ def _site_weather_payload(city: str) -> dict:
     }
 
 
-def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str = "", limit: int = 6) -> list:
+def _site_float(value, default=None):
+    try:
+        if value in ("", None):
+            return default
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str = "", limit: int = 6,
+                      lat: float = None, lon: float = None) -> list:
     try:
         from modules.food_utils import _maps_url as _site_maps_url
     except Exception:
         def _site_maps_url(keyword: str, area: str = "") -> str:
             return f"https://www.google.com/maps/search/{urllib.parse.quote((area + ' ' + keyword).strip())}/"
+    live_places = []
+    if lat is not None and lon is not None:
+        keyword_map = {
+            "快速解決": "附近 小吃 便當 麵 飯",
+            "朋友聚餐": "附近 餐廳 聚餐 火鍋 燒肉 合菜",
+            "想吃特色": "附近 在地美食 特色餐廳",
+            "約會舒服": "附近 餐廳 咖啡 甜點 餐酒館",
+        }
+        try:
+            from utils.google_places import nearby_places as _site_nearby_places
+            live_places = _site_nearby_places(lat, lon, radius=1800, keyword=keyword_map.get(mood, "附近 餐廳 美食"))
+        except Exception:
+            live_places = []
     try:
         from modules.food_runtime import _RESTAURANT_CACHE
         pool = list(_RESTAURANT_CACHE.get(city, []))
@@ -820,6 +843,22 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
             pool = list(_BIB_GOURMAND.get(city, []))
         except Exception:
             pool = []
+    coord_counts = {}
+    if pool:
+        for row in pool:
+            r_lat = _site_float(row.get("lat"))
+            r_lng = _site_float(row.get("lng"))
+            if r_lat is not None and r_lng is not None:
+                key = (round(r_lat, 6), round(r_lng, 6))
+                coord_counts[key] = coord_counts.get(key, 0) + 1
+
+    def has_precise_coords(row) -> bool:
+        r_lat = _site_float(row.get("lat"))
+        r_lng = _site_float(row.get("lng"))
+        if r_lat is None or r_lng is None:
+            return False
+        return coord_counts.get((round(r_lat, 6), round(r_lng, 6)), 0) <= 3
+
     if mood and pool:
         group_words = ["餐廳", "火鍋", "鍋", "熱炒", "合菜", "台菜", "中式", "日式", "韓式", "燒肉", "串燒", "海鮮", "牛排", "義式", "餐酒", "酒館", "居酒屋", "包廂"]
         snack_words = ["小吃", "肉圓", "碗粿", "蚵仔", "米糕", "牛肉湯", "虱目魚", "蝦仁飯", "蝦仁肉圓", "臭豆腐", "鹽酥", "雞排", "滷味", "甜品", "豆花", "冰", "飲料", "飯糰", "肉粽", "春捲", "肉粿", "排骨酥", "豆簽", "鴨頭", "鱔魚", "攤"]
@@ -837,6 +876,16 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
             text = f"{body} {typed}"
             score = 0
             score += sum(5 for k in mood_keywords if k in text)
+            r_lat = _site_float(row.get("lat"))
+            r_lng = _site_float(row.get("lng"))
+            if lat is not None and lon is not None and has_precise_coords(row):
+                dist = _haversine(lat, lon, r_lat, r_lng)
+                if dist <= 1200:
+                    score += 8
+                elif dist <= 3000:
+                    score += 4
+                elif dist > 8000:
+                    score -= 8
             if mood == "朋友聚餐":
                 score += sum(10 for k in group_words if k in body)
                 score += sum(2 for k in group_words if k in typed)
@@ -867,6 +916,52 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
                 pool = [r for score, _, r in scored if score > 0] + [r for score, _, r in scored if score <= 0]
         else:
             pool = [r for score, _, r in scored if score > 0] + [r for score, _, r in scored if score <= 0]
+    if lat is not None and lon is not None and pool:
+        annotated_pool = []
+        for r in pool:
+            row = dict(r)
+            if has_precise_coords(row):
+                row["_distance_m"] = _haversine(lat, lon, _site_float(row.get("lat")), _site_float(row.get("lng")))
+            annotated_pool.append(row)
+        if mood == "朋友聚餐":
+            close_pool = [r for r in annotated_pool if isinstance(r.get("_distance_m"), (int, float)) and r["_distance_m"] <= 5000]
+            unknown_pool = [r for r in annotated_pool if not isinstance(r.get("_distance_m"), (int, float))]
+            far_pool = [r for r in annotated_pool if isinstance(r.get("_distance_m"), (int, float)) and r["_distance_m"] > 5000]
+            pool = close_pool + unknown_pool + far_pool
+        else:
+            nearby_pool = [r for r in annotated_pool if isinstance(r.get("_distance_m"), (int, float)) and r["_distance_m"] <= 5000]
+            far_pool = [r for r in annotated_pool if r not in nearby_pool]
+            nearby_pool.sort(key=lambda row: row.get("_distance_m", 999999))
+            pool = nearby_pool + far_pool
+    if live_places:
+        live_items = []
+        for place in live_places:
+            p_lat = _site_float(place.get("lat"))
+            p_lng = _site_float(place.get("lng"))
+            dist = _haversine(lat, lon, p_lat, p_lng) if p_lat is not None and p_lng is not None else None
+            rating = place.get("rating") or 0
+            reviews = place.get("user_ratings_total") or 0
+            desc_bits = []
+            if rating:
+                desc_bits.append(f"Google 評分 {rating}")
+            if reviews:
+                desc_bits.append(f"{reviews} 則評論")
+            if place.get("open_now") is True:
+                desc_bits.append("目前營業中")
+            live_items.append({
+                "name": place.get("name", ""),
+                "type": "附近餐廳",
+                "desc": "，".join(desc_bits) or "Google 地圖附近餐廳",
+                "area": "目前位置附近",
+                "address": place.get("addr", ""),
+                "lat": p_lat,
+                "lng": p_lng,
+                "_distance_m": dist,
+                "url": f"https://maps.google.com/?q=place_id:{place.get('place_id')}" if place.get("place_id") else _site_maps_url(place.get("name", ""), city),
+                "source": "google_places_live",
+            })
+        live_items.sort(key=lambda row: row.get("_distance_m") if row.get("_distance_m") is not None else 999999)
+        pool = live_items[:4] + pool
     items = []
     seen_names = set()
     for r in pool:
@@ -876,14 +971,20 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
         seen_names.add(name)
         area = r.get("town") or r.get("area") or city
         desc = str(r.get("desc") or r.get("type") or "生活優轉整理的美食資訊").strip()
+        r_lat = _site_float(r.get("lat"))
+        r_lng = _site_float(r.get("lng"))
+        dist = r.get("_distance_m")
+        if dist is None and lat is not None and lon is not None and has_precise_coords(r):
+            dist = _haversine(lat, lon, r_lat, r_lng)
         items.append({
             "name": name,
             "type": r.get("type", ""),
             "desc": desc[:90],
             "area": area,
             "address": r.get("addr", ""),
-            "lat": r.get("lat"),
-            "lng": r.get("lng"),
+            "lat": r_lat,
+            "lng": r_lng,
+            "distance_m": int(dist) if isinstance(dist, (int, float)) else "",
             "url": r.get("url") or _site_maps_url(name, city),
             "source": r.get("source") or "restaurant_cache",
         })
@@ -1731,15 +1832,24 @@ class handler(BaseHTTPRequestHandler):
             qs = parse_qs(parsed.query or "")
             city = _site_param(qs, "city", "台北")
             mood = _site_param(qs, "mood", "")
+            budget = _site_param(qs, "budget", "")
+            people = _site_param(qs, "people", "")
+            lat = _site_float(_site_param(qs, "lat", ""))
+            lon = _site_float(_site_param(qs, "lon", ""))
+            if lat is not None and lon is not None:
+                city = _city_from_coords(lat, lon) or city
             payload = {
                 "ok": True,
                 "city": city,
                 "mood": mood,
-                "budget": _site_param(qs, "budget", ""),
-                "people": _site_param(qs, "people", ""),
-                "items": _site_restaurants(city, mood, _site_param(qs, "budget", ""), _site_param(qs, "people", ""), limit=6),
+                "budget": budget,
+                "people": people,
+                "lat": lat,
+                "lon": lon,
+                "nearby": lat is not None and lon is not None,
+                "items": _site_restaurants(city, mood, budget, people, limit=6, lat=lat, lon=lon),
                 "sources": {"food": "crawler_cache_or_bib_gourmand"},
-                "source_names": {"food": "生活優轉整理的美食名單、米其林必比登與 Google 地圖資訊"},
+                "source_names": {"food": "Google 地圖附近餐廳、生活優轉整理的美食名單與米其林必比登" if lat is not None and lon is not None else "生活優轉整理的美食名單、米其林必比登與 Google 地圖資訊"},
             }
             _site_json(self, payload)
 
