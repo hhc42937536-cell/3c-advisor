@@ -341,7 +341,7 @@
 
     .feature-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 12px;
     }
     .feature-card {
@@ -637,7 +637,7 @@
       .menu-frame { margin: 0 auto; }
       .feature-grid { grid-template-columns: repeat(2, 1fr); }
       .workspace { grid-template-columns: 1fr; }
-      .tabs { grid-template-columns: repeat(4, 1fr); border-right: 0; border-bottom: 1px solid var(--line); }
+      .tabs { grid-template-columns: repeat(3, 1fr); border-right: 0; border-bottom: 1px solid var(--line); }
       .tab { text-align: center; }
       .section-head { display: block; }
       .section-head p { margin-top: 12px; }
@@ -669,9 +669,9 @@
     <nav class="wrap">
       <a class="brand" href="#top" aria-label="生活優轉首頁"><span class="mark">優</span>生活優轉</a>
       <div class="links">
-        <a href="#features">一天流程</a>
+        <a href="#features">三大主軸</a>
         <a href="#workspace">使用看看</a>
-        <a href="#roadmap">延伸工具</a>
+        <a href="#roadmap">工具盤點</a>
         <a href="#line">LINE</a>
       </div>
     </nav>
@@ -702,7 +702,7 @@
             <span class="chip">早安摘要</span>
             <span class="chip">吃飯決策</span>
             <span class="chip">活動資訊</span>
-            <span class="chip">其他工具往下看</span>
+            <span class="chip">工具庫另外盤點</span>
           </div>
         </div>
         <div class="visual">
@@ -726,13 +726,12 @@
       <div class="wrap">
         <div class="section-head">
           <h2>三個主方向，串起一天。</h2>
-          <p>先整理早晨資訊，再處理吃什麼，最後安排活動。其他工具留在需要時使用，不搶主流程。</p>
+          <p>先整理早晨資訊，再處理吃什麼，最後安排活動。其他工具先拆到工具庫盤點，不再混在主流程裡。</p>
         </div>
         <div class="feature-grid">
           <button class="feature-card" type="button" data-jump="morning"><div class="icon">今</div><h3>今日摘要</h3><p>天氣穿搭、帶傘提醒、油價、匯率與今日小提醒。</p><div class="mini-tags"><span>出門前確認</span><span>CWA / Finance</span></div></button>
           <button class="feature-card" type="button" data-jump="food"><div class="icon">食</div><h3>今天吃什麼</h3><p>美食推薦、必比登、聚餐選擇、城市特色、定位找餐廳。</p><div class="mini-tags"><span>餐廳比較</span><span>Google Places</span></div></button>
           <button class="feature-card" type="button" data-jump="activity"><div class="icon">去</div><h3>活動資訊</h3><p>Accupass 活動、展覽、市集、地區活動與假日提醒。</p><div class="mini-tags"><span>活動篩選</span><span>公開資料</span></div></button>
-          <button class="feature-card" type="button" data-jump="tools"><div class="icon">＋</div><h3>衍生小工具</h3><p>停車、3C 選購、健康、法律、防詐騙，放在需要時再打開。</p><div class="mini-tags"><span>生活工具</span><span>輔助入口</span></div></button>
         </div>
       </div>
     </section>
@@ -741,14 +740,13 @@
       <div class="wrap">
         <div class="section-head">
           <h2>網站版把一天展開來看。</h2>
-          <p>LINE 適合快速問一句；網站版適合把早安摘要、吃飯決策、活動資訊展開成可比較、可篩選的工具。</p>
+          <p>LINE 適合快速問一句；網站版先聚焦在早安摘要、吃飯決策、活動資訊。其他工具先拆開整理，避免主線越做越散。</p>
         </div>
         <div class="workspace">
           <div class="tabs" role="tablist" aria-label="網站功能">
             <button class="tab" role="tab" aria-selected="true" data-tab="morning">今日摘要</button>
             <button class="tab" role="tab" aria-selected="false" data-tab="food">今天吃什麼</button>
             <button class="tab" role="tab" aria-selected="false" data-tab="activity">活動資訊</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="tools">其他工具</button>
           </div>
 
           <div class="panel active" id="panel-morning" role="tabpanel">
@@ -850,8 +848,8 @@
           <div class="panel" id="panel-tools" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>需要時再打開的小工具。</h3>
-                <p>這些不是一天流程的主線，但在特定情境很有用：3C 選購、防詐法律、健康、停車與裁罰試算。</p>
+                <h3>工具暫存區。</h3>
+                <p>這裡先保留可以測資料與互動的工具，後續再決定要留在生活優轉、獨立成站，或移回 LINE bot。</p>
                 <div class="demo-box">
                   <div class="control-grid">
                     <label class="field" for="tool-topic">選一個工具
@@ -892,17 +890,19 @@
       <div class="wrap">
         <div class="roadmap-card">
           <div class="roadmap-copy">
-            <span class="badge"><i></i>延伸工具</span>
-            <h2>主流程之外，需要時再用。</h2>
-            <p>3C 選購、法律、防詐、健康、停車、裁罰試算都是衍生工具。它們會保留在網站裡，但不再干擾「早安、吃飯、活動」三個主方向。</p>
+            <span class="badge"><i></i>工具拆分盤點</span>
+            <h2>先把工具全部攤開，再決定誰屬於生活優轉。</h2>
+            <p>生活優轉主軸先收斂成「今日摘要、今天吃什麼、活動資訊」。下面這些工具先獨立盤點，有些適合當生活優轉的延伸，有些可能更適合拆成自己的產品。</p>
           </div>
           <div class="roadmap">
-            <button class="roadmap-item" type="button" data-tool="3C 選購"><b>3C 選購</b><span>產品推薦、規格解讀、升級判斷</span><em class="level">小工具</em></button>
-            <button class="roadmap-item" type="button" data-tool="法律白話"><b>防詐與法律</b><span>可疑訊息分析、法律白話引導</span><em class="level mid">小工具</em></button>
-            <button class="roadmap-item" type="button" data-tool="健康小幫手"><b>健康提醒</b><span>BMI、飲水、睡眠、壓力與卡路里</span><em class="level">小工具</em></button>
-            <button class="roadmap-item" type="button" data-tool="停車查詢"><b>停車查詢</b><span>停車場、費率、附近順路安排</span><em class="level">延伸</em></button>
-            <button class="roadmap-item" type="button" data-tool="垃圾車時間地點"><b>垃圾車時間地點</b><span>表定時間、清運點、即時車輛位置</span><em class="level">可查詢</em></button>
-            <button class="roadmap-item" type="button" data-tool="法律白話" data-detail="想了解違規裁罰試算與條例查詢"><b>裁罰試算</b><span>違規裁罰試算與條例查詢</span><em class="level">規劃中</em></button>
+            <button class="roadmap-item" type="button" data-tool="垃圾車時間地點"><b>垃圾車時間地點</b><span>全台清運時間、清運點、地圖入口，偏城市生活工具。</span><em class="level">可留</em></button>
+            <button class="roadmap-item" type="button" data-tool="停車查詢"><b>停車查詢</b><span>停車場、費率、附近順路安排，可和吃飯/活動串聯。</span><em class="level">可留</em></button>
+            <button class="roadmap-item" type="button" data-tool="3C 選購"><b>3C 選購</b><span>產品推薦、規格解讀、升級判斷，內容完整度高，適合獨立站。</span><em class="level mid">可拆</em></button>
+            <button class="roadmap-item" type="button" data-tool="防詐檢查"><b>防詐檢查</b><span>貼文字或截圖判斷可疑訊息，適合和 LINE bot 保持連動。</span><em class="level">保留評估</em></button>
+            <button class="roadmap-item" type="button" data-tool="法律白話"><b>法律白話</b><span>租屋、消費、勞資、詐騙求助等主題，可能適合獨立法律小站。</span><em class="level mid">可拆</em></button>
+            <button class="roadmap-item" type="button" data-tool="健康小幫手"><b>健康提醒</b><span>BMI、飲水、睡眠、壓力與卡路里，先保留為低優先工具。</span><em class="level">待整理</em></button>
+            <button class="roadmap-item" type="button" data-tool="政府資料生活雷達"><b>政府資料生活雷達</b><span>環境統計、城市資料、公開資料探索，適合當資料實驗區。</span><em class="level">實驗區</em></button>
+            <button class="roadmap-item" type="button" data-tool="法律白話" data-detail="想了解違規裁罰試算與條例查詢"><b>裁罰試算</b><span>違規裁罰試算與條例查詢，和停車/交通工具合併評估。</span><em class="level">規劃中</em></button>
           </div>
         </div>
       </div>
