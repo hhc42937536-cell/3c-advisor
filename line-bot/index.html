@@ -1240,10 +1240,11 @@
     }
 
     function cityFromText(text, fallback = "台中") {
-      const source = `${text || ""} ${fallback || ""}`;
       const cities = ["台北", "新北", "桃園", "台中", "臺中", "台南", "高雄", "基隆", "新竹", "苗栗", "彰化", "南投", "雲林", "嘉義", "屏東", "宜蘭", "花蓮", "台東", "澎湖", "金門", "連江"];
-      const found = cities.find((city) => source.includes(city));
-      return found === "臺中" ? "台中" : (found || fallback);
+      const foundInText = cities.find((city) => (text || "").includes(city));
+      const foundInFallback = cities.find((city) => (fallback || "").includes(city));
+      const found = foundInText || foundInFallback || fallback;
+      return found === "臺中" ? "台中" : found;
     }
 
     function renderMorning(data) {
