@@ -879,20 +879,20 @@
             <div class="panel-layout">
               <div>
                 <h3>即時找車位。</h3>
-                <p>先把停車查詢升成主功能：用城市查停車場、剩餘車位與費率。垃圾車、健康提醒、今日優惠先放在同區作為衍生工具。</p>
+                <p>找車位獨立成一項主功能。現在先查停車場、剩餘車位與費率；之後可以往導航、預約、月租、共享車位方向加強，做得更像 GLIKE 或 Uspace。</p>
                 <div class="demo-box">
                   <div class="control-grid">
-                    <label class="field" for="tool-topic">選一個工具
-                      <select id="tool-topic"><option>停車查詢</option><option>垃圾車時間地點</option><option>健康小幫手</option><option>今日當地優惠</option></select>
+                    <label class="field" for="parking-city">城市
+                      <select id="parking-city"><option>台北</option><option>新北</option><option>桃園</option><option>台中</option><option>台南</option><option>高雄</option></select>
                     </label>
-                    <label class="field" for="tool-detail">情境
-                      <textarea id="tool-detail" aria-label="工具情境">台南美術館</textarea>
+                    <label class="field" for="parking-destination">目的地
+                      <textarea id="parking-destination" aria-label="停車目的地">台南美術館</textarea>
                     </label>
-                    <label class="field" for="tool-level">偏好
-                      <select id="tool-level"><option>日常提醒</option><option>BMI</option><option>喝水</option><option>睡眠</option><option>壓力</option><option>飲食</option></select>
+                    <label class="field" for="parking-priority">排序偏好
+                      <select id="parking-priority"><option>剩餘車位優先</option><option>離目的地最近</option><option>費率較低</option><option>適合活動周邊</option></select>
                     </label>
-                    <label class="field" for="tool-budget">補充數值
-                      <input id="tool-budget" value="每小時 40" aria-label="補充數值">
+                    <label class="field" for="parking-note">補充需求
+                      <input id="parking-note" value="每小時 40 以內" aria-label="停車補充需求">
                     </label>
                   </div>
                   <button class="btn primary" data-demo="tools">即時找車位</button>
@@ -900,10 +900,10 @@
                 </div>
               </div>
               <div class="data-list">
-                <button class="data-item" type="button" data-tool="垃圾車時間地點"><strong>垃圾車</strong><span>時間 / 地點</span></button>
-                <button class="data-item" type="button" data-tool="停車查詢"><strong>停車查詢</strong><span>車位 / 費率</span></button>
-                <button class="data-item" type="button" data-tool="健康小幫手"><strong>健康提醒</strong><span>日常照護</span></button>
-                <button class="data-item" type="button" data-tool="今日當地優惠"><strong>今日優惠</strong><span>吃飯 / 活動</span></button>
+                <div class="data-item"><strong>即時車位</strong><span>TDX 停車場資料</span></div>
+                <div class="data-item"><strong>費率比較</strong><span>後續加強</span></div>
+                <div class="data-item"><strong>導航 / 預約</strong><span>未來版本</span></div>
+                <div class="data-item"><strong>月租 / 共享</strong><span>可朝 GLIKE、Uspace 方向做</span></div>
               </div>
             </div>
           </div>
@@ -922,10 +922,9 @@
           <div>
             <h3 class="split-title">留在生活優轉</h3>
             <div class="roadmap">
-              <button class="roadmap-item" type="button" data-tool="垃圾車時間地點"><b>垃圾車時間地點</b><span>全台清運時間、清運點、地圖入口，符合「今天生活要處理」。</span><em class="level">保留</em></button>
-              <button class="roadmap-item" type="button" data-tool="停車查詢"><b>停車查詢</b><span>停車場、費率、附近順路安排，可以和吃飯/活動串聯。</span><em class="level">保留</em></button>
-              <button class="roadmap-item" type="button" data-tool="健康小幫手"><b>健康提醒</b><span>喝水、睡眠、壓力、BMI，作為早安今日好料旁邊的日常照護。</span><em class="level">保留</em></button>
-              <button class="roadmap-item" type="button" data-tool="今日當地優惠"><b>今日當地優惠</b><span>餐飲、活動、商圈優惠，接在今天吃什麼與週末活動後面。</span><em class="level">新增</em></button>
+              <div class="roadmap-item"><b>垃圾車時間地點</b><span>全台清運時間、清運點、地圖入口，符合「今天生活要處理」。</span><em class="level">衍生</em></div>
+              <div class="roadmap-item"><b>健康提醒</b><span>喝水、睡眠、壓力、BMI，作為早安今日好料旁邊的日常照護。</span><em class="level">衍生</em></div>
+              <div class="roadmap-item"><b>今日當地優惠</b><span>餐飲、活動、商圈優惠，接在今天吃什麼與週末活動後面。</span><em class="level">衍生</em></div>
             </div>
           </div>
         </div>
@@ -1103,41 +1102,20 @@
         `;
       },
       tools: () => {
-        const topic = document.querySelector("#tool-topic").value;
-        const detail = document.querySelector("#tool-detail").value.trim() || "目前沒有補充情境";
-        const level = document.querySelector("#tool-level").value;
-        const value = document.querySelector("#tool-budget").value.trim() || "未設定";
-        const toolCards = {
-          "健康小幫手": [
-            ["今日目標", `以 ${level} 模式處理：先補水、走路、睡眠三件事。`],
-            ["飲水提醒", `若體重或目標數值為 ${value}，可先用少量多次方式，不要一次灌水。`],
-            ["壓力檢查", "如果連續疲累，先調整睡眠與咖啡因，再看是否需要就醫。"],
-            ["紀錄", `你的情境：${detail}`]
-          ],
-          "今日當地優惠": [
-            ["優惠方向", `以「${detail}」附近為主，優先整理餐飲、咖啡、展覽與商圈活動。`],
-            ["使用時機", "適合接在今天吃什麼或週末活動後面，用來決定要去哪一區。"],
-            ["篩選原則", "只放今天可用、地點明確、規則清楚的優惠；不放看起來像廣告但無法行動的內容。"],
-            ["下一步", "後續可串接商圈公告、百貨活動、餐廳優惠與在地活動清單。"]
-          ],
-          "停車查詢": [
-            ["目的地", `以「${detail}」為目的地，先找步行 8-12 分鐘內的停車場。`],
-            ["費率策略", "市中心先選公有停車場；商圈假日要準備第二停車點。"],
-            ["順路安排", "停好車後接餐廳或活動，避免移車。"],
-            ["補充", `停車或行程補充：${value}`]
-          ],
-          "垃圾車時間地點": [
-            ["查詢方式", `以「${detail}」查縣市、行政區、路名或清運點。`],
-            ["重點", "優先顯示今天可倒、下次清運時間、地點與地圖連結。"],
-            ["即時資料", "若該縣市有開放動態資料，會一併顯示最近垃圾車位置。"],
-            ["下一步", "輸入越接近地址或路名，結果越容易縮小。"]
-          ]
-        };
-        const cards = (toolCards[topic] || toolCards["今日當地優惠"]).map(([title, body]) => card(title, body)).join("");
+        const city = document.querySelector("#parking-city").value;
+        const destination = document.querySelector("#parking-destination").value.trim() || city;
+        const priority = document.querySelector("#parking-priority").value;
+        const note = document.querySelector("#parking-note").value.trim() || "未設定";
+        const cards = [
+          ["目的地", `以「${destination}」查 ${city} 可用停車場。`],
+          ["排序偏好", `先依「${priority}」整理，之後可加入距離、步行時間與導航。`],
+          ["費率需求", `補充條件：${note}。目前先顯示 TDX 可取得的車位與場站資訊。`],
+          ["下一步", "可再往預約車位、共享車位、月租、熱門活動周邊停車建議加強。"]
+        ].map(([title, body]) => card(title, body)).join("");
         return `
-          <h4>${html(topic)}結果</h4>
+          <h4>${html(city)} 即時找車位</h4>
           <div class="result-grid">${cards}</div>
-          <div class="flow-note">這些建議會依你輸入的情境整理，適合先快速判斷方向。</div>
+          <div class="flow-note">找車位會獨立發展，不再和垃圾車、健康提醒、今日優惠混在同一個表單。</div>
         `;
       }
     };
@@ -1150,9 +1128,7 @@
 
     function openTool(topic, detail = "") {
       activateTab("tools");
-      setSelectValue("#tool-topic", topic);
-      updateToolFields();
-      if (detail) document.querySelector("#tool-detail").value = detail;
+      if (topic === "停車查詢" && detail) document.querySelector("#parking-destination").value = detail;
       scrollToWorkspace();
       runDemo("tools");
     }
@@ -1170,12 +1146,6 @@
         return;
       }
 
-      const toolButton = event.target.closest("[data-tool]");
-      if (toolButton) {
-        openTool(toolButton.dataset.tool, toolButton.dataset.detail || "");
-        return;
-      }
-
       const presetButton = event.target.closest("[data-preset]");
       if (!presetButton) return;
       const key = presetButton.dataset.preset;
@@ -1189,26 +1159,6 @@
       }
       scrollToWorkspace();
       runDemo(key);
-    });
-
-    function updateToolFields() {
-      const topic = document.querySelector("#tool-topic").value;
-      const detail = document.querySelector("#tool-detail");
-      const budget = document.querySelector("#tool-budget");
-      const examples = {
-        "垃圾車時間地點": ["台中 西區", "今晚"],
-        "今日當地優惠": ["台南 中西區 晚餐或展覽", "今天"],
-        "健康小幫手": ["最近睡不好、下午容易累", "70"],
-        "停車查詢": ["台南美術館", "每小時 40"]
-      };
-      const sample = examples[topic] || examples["今日當地優惠"];
-      detail.value = sample[0];
-      budget.value = sample[1];
-    }
-
-    document.querySelector("#tool-topic").addEventListener("change", () => {
-      updateToolFields();
-      runDemo("tools");
     });
 
     const SOURCE_NAMES = {
@@ -1402,30 +1352,11 @@
         const data = await getJson(`/api/site_activity?city=${encodeURIComponent(city)}&time=${encodeURIComponent(time)}&type=${encodeURIComponent(type)}&pace=${encodeURIComponent(pace)}`);
         return renderActivity(data);
       }
-      if (key === "tools" && document.querySelector("#tool-topic").value === "停車查詢") {
-        const detail = document.querySelector("#tool-detail").value.trim();
-        const city = cityFromText(detail, document.querySelector("#morning-city").value || "台北");
+      if (key === "tools") {
+        const detail = document.querySelector("#parking-destination").value.trim();
+        const city = cityFromText(detail, document.querySelector("#parking-city").value || "台北");
         const data = await getJson(`/api/site_parking?city=${encodeURIComponent(city)}`);
         return renderParking(data);
-      }
-      if (key === "tools" && document.querySelector("#tool-topic").value === "垃圾車時間地點") {
-        const detail = document.querySelector("#tool-detail").value.trim();
-        const city = cityFromText(detail, document.querySelector("#morning-city").value || "台中");
-        const data = await getJson(`/api/site_garbage?city=${encodeURIComponent(city)}&q=${encodeURIComponent(detail)}`);
-        return renderGarbage(data);
-      }
-      if (key === "tools" && document.querySelector("#tool-topic").value === "健康小幫手") {
-        const text = document.querySelector("#tool-detail").value.trim();
-        const mode = document.querySelector("#tool-level").value;
-        const value = document.querySelector("#tool-budget").value.trim();
-        const data = await getJson(`/api/site_health?text=${encodeURIComponent(text)}&mode=${encodeURIComponent(mode)}&value=${encodeURIComponent(value)}`);
-        return renderHealth(data);
-      }
-      if (key === "tools" && document.querySelector("#tool-topic").value === "今日當地優惠") {
-        const detail = document.querySelector("#tool-detail").value.trim();
-        const city = cityFromText(detail, document.querySelector("#morning-city").value || "台北");
-        const data = await getJson(`/api/site_deals?city=${encodeURIComponent(city)}&context=${encodeURIComponent(detail)}`);
-        return renderDeals(data);
       }
       return samples[key]();
     }
@@ -1444,8 +1375,6 @@
     document.querySelectorAll("[data-demo]").forEach((button) => {
       button.addEventListener("click", () => runDemo(button.dataset.demo));
     });
-
-    updateToolFields();
 
     fetchSiteMarkup("morning")
       .then((markup) => setResult("morning", markup))
