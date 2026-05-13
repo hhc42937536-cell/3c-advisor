@@ -1799,7 +1799,7 @@ def _site_surprise_cache() -> dict:
 
 def _site_today_surprise(city: str, limit: int = 6) -> dict:
     cache = _site_surprise_cache()
-    today = datetime.date.today()
+    today = (datetime.datetime.utcnow() + datetime.timedelta(hours=8)).date()
     yesterday = today - datetime.timedelta(days=1)
     items = []
     seen = set()
