@@ -895,12 +895,15 @@
                       <input id="parking-note" value="每小時 40 以內" aria-label="停車補充需求">
                     </label>
                   </div>
-                  <button class="btn primary" data-demo="tools">即時找車位</button>
+                  <div class="quick-actions">
+                    <button class="btn primary" data-demo="tools">即時找車位</button>
+                    <button type="button" id="use-parking-location">使用目前位置</button>
+                  </div>
                   <div class="result" id="tools-result">輸入目的地或城市，會查詢可用停車場與車位資訊。</div>
                 </div>
               </div>
               <div class="data-list">
-                <div class="data-item"><strong>即時車位</strong><span>TDX 停車場資料</span></div>
+                <div class="data-item"><strong>即時車位</strong><span>TDX + 地方政府資料</span></div>
                 <div class="data-item"><strong>費率比較</strong><span>後續加強</span></div>
                 <div class="data-item"><strong>導航 / 預約</strong><span>未來版本</span></div>
                 <div class="data-item"><strong>月租 / 共享</strong><span>可朝 GLIKE、Uspace 方向做</span></div>
@@ -987,6 +990,7 @@
     const card = (title, body) => `<div class="result-card"><strong>${html(title)}</strong><span>${html(body)}</span></div>`;
     const actions = (items) => `<div class="quick-actions">${items.map((item) => `<button type="button" data-open="${html(item.key)}">${html(item.label)}</button>`).join("")}</div>`;
     const linkActions = (items) => `<div class="quick-actions">${items.map((item) => `<a href="${html(item.href)}" target="_blank" rel="noreferrer">${html(item.label)}</a>`).join("")}</div>`;
+    let parkingLocation = null;
     function summaryTitle(time, city) {
       const prefix = String(time || "").includes("晚上")
         ? "晚間出門摘要"
@@ -1172,6 +1176,9 @@
       activity_fallback: "生活優轉推薦活動",
       tdx_live: "TDX 運輸資料流通服務平臺",
       tdx_unavailable: "TDX 運輸資料流通服務平臺暫時無法取得",
+      nearby_parking_live: "TDX、地方政府停車資料與路邊停車即時資料",
+      parking_lot_live: "TDX 與地方政府停車場資料",
+      ntpc_street_live: "新北市路邊停車格即時資料",
       moenv_waste_clearance: "環境部一般廢棄物清運統計",
       moenv_national_waste: "環境部全國一般廢棄物產生量",
       taichung_garbage_truck: "臺中市政府環保局垃圾車動態",
@@ -1271,13 +1278,23 @@
     function renderParking(data) {
       const items = data.items || [];
       const cards = items.slice(0, 4).map((item) => {
+        const kind = item.type === "street" ? "路邊停車" : "停車場";
         const spaces = item.available !== "" ? `剩餘 ${item.available} / ${item.total || "—"}` : `總車位 ${item.total || "—"}`;
-        return card(item.name, `${spaces}｜${item.address || data.city}｜${item.source}`);
+        const dist = item.distance_m ? `｜距離 ${item.distance_m}m` : "";
+        const fare = item.fare ? `｜${item.fare}` : "";
+        return card(`${kind}｜${item.name}`, `${spaces}${dist}${fare}｜${item.address || data.city}`);
       }).join("");
+      const summary = data.street_count || data.lot_count
+        ? `附近找到 ${data.street_count || 0} 條路邊路段、${data.lot_count || 0} 個停車場。`
+        : "可查詢停車場與剩餘車位。";
+      const mapLinks = items.slice(0, 3)
+        .filter((item) => item.maps_url)
+        .map((item, index) => ({ href: item.maps_url, label: `導航 ${index + 1}` }));
       return `
-        <h4>${html(data.city)} 停車查詢</h4>
+        <h4>${html(data.city)} 即時找車位</h4>
         <div class="result-grid">${cards || card("TDX 暫無資料", "目前 TDX 沒回傳這個城市的停車場資料，請稍後再試。")}</div>
-        <div class="flow-note">資料來源：${html(readableSource(data.source || "tdx_unavailable"))}。可查詢停車場與剩餘車位。</div>
+        <div class="flow-note">${sourceLabel(data.source_names || { parking: readableSource(data.source || "tdx_unavailable") })}。${summary}</div>
+        ${mapLinks.length ? linkActions(mapLinks) : ""}
       `;
     }
 
@@ -1355,7 +1372,8 @@
       if (key === "tools") {
         const detail = document.querySelector("#parking-destination").value.trim();
         const city = cityFromText(detail, document.querySelector("#parking-city").value || "台北");
-        const data = await getJson(`/api/site_parking?city=${encodeURIComponent(city)}`);
+        const loc = parkingLocation ? `&lat=${encodeURIComponent(parkingLocation.lat)}&lon=${encodeURIComponent(parkingLocation.lon)}` : "";
+        const data = await getJson(`/api/site_parking?city=${encodeURIComponent(city)}${loc}`);
         return renderParking(data);
       }
       return samples[key]();
@@ -1374,6 +1392,24 @@
 
     document.querySelectorAll("[data-demo]").forEach((button) => {
       button.addEventListener("click", () => runDemo(button.dataset.demo));
+    });
+
+    document.querySelector("#use-parking-location").addEventListener("click", () => {
+      if (!navigator.geolocation) {
+        setResult("tools", `<h4>無法取得定位</h4><div class="flow-note">這個瀏覽器不支援定位，請改用城市或目的地查詢。</div>`);
+        return;
+      }
+      setResult("tools", `<h4>正在取得目前位置...</h4><div class="flow-note">手機會跳出定位授權，允許後會查附近路邊格與停車場。</div>`);
+      navigator.geolocation.getCurrentPosition((position) => {
+        parkingLocation = {
+          lat: position.coords.latitude.toFixed(6),
+          lon: position.coords.longitude.toFixed(6),
+        };
+        document.querySelector("#parking-destination").value = "目前位置附近";
+        runDemo("tools");
+      }, () => {
+        setResult("tools", `<h4>定位未開啟</h4><div class="flow-note">請允許定位，或手動輸入目的地/城市查詢。</div>`);
+      }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 180000 });
     });
 
     fetchSiteMarkup("morning")

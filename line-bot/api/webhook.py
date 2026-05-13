@@ -976,6 +976,61 @@ def _site_parking(city: str, limit: int = 6) -> dict:
     return {"ok": True, "city": city, "tdx_city": tdx_city, "source": "tdx_live", "items": items}
 
 
+def _site_nearby_parking(lat: float, lon: float, city: str = "", limit: int = 8) -> dict:
+    try:
+        from modules.parking import _get_nearby_parking
+        data = _get_nearby_parking(lat, lon, radius=2000)
+    except Exception as exc:
+        return {
+            "ok": False,
+            "city": city,
+            "source": "parking_nearby_error",
+            "error": str(exc)[:120],
+            "items": [],
+        }
+
+    street = data.get("street", []) if isinstance(data, dict) else []
+    lots = data.get("lot", []) if isinstance(data, dict) else []
+    tdx_city = data.get("city", "") if isinstance(data, dict) else ""
+    items = []
+    for row in (street + lots)[:limit]:
+        lat2 = row.get("lat")
+        lon2 = row.get("lon")
+        dist = row.get("dist")
+        items.append({
+            "name": row.get("name") or ("路邊停車格" if row.get("type") == "street" else "停車場"),
+            "address": row.get("addr", ""),
+            "fare": row.get("fare", ""),
+            "total": row.get("total", ""),
+            "available": row.get("available", ""),
+            "lat": lat2,
+            "lng": lon2,
+            "distance_m": int(dist) if isinstance(dist, (int, float)) else "",
+            "type": row.get("type", "lot"),
+            "maps_url": f"https://www.google.com/maps/dir/?api=1&destination={lat2},{lon2}" if lat2 and lon2 else "",
+            "source": "ntpc_street_live" if row.get("type") == "street" else "parking_lot_live",
+        })
+    sources = {
+        "nearby": (
+            "新北市路邊停車格即時資料、地方政府停車資料與 TDX"
+            if street else
+            "地方政府停車資料與 TDX"
+        )
+    }
+    return {
+        "ok": True,
+        "city": city or tdx_city,
+        "tdx_city": tdx_city,
+        "lat": lat,
+        "lon": lon,
+        "source": "nearby_parking_live",
+        "source_names": sources,
+        "street_count": len(street),
+        "lot_count": len(lots),
+        "items": items,
+    }
+
+
 _SITE_COUNTY_NAMES = {
     "台北": "臺北市", "臺北": "臺北市", "新北": "新北市", "桃園": "桃園市",
     "台中": "臺中市", "臺中": "臺中市", "台南": "臺南市", "臺南": "臺南市",
@@ -1707,7 +1762,17 @@ class handler(BaseHTTPRequestHandler):
         elif parsed.path == "/api/site_parking":
             qs = parse_qs(parsed.query or "")
             city = _site_param(qs, "city", "台北")
-            _site_json(self, _site_parking(city, limit=8))
+            lat = _site_param(qs, "lat", "")
+            lon = _site_param(qs, "lon", "")
+            try:
+                lat_f = float(lat) if lat else None
+                lon_f = float(lon) if lon else None
+            except ValueError:
+                lat_f = lon_f = None
+            if lat_f is not None and lon_f is not None:
+                _site_json(self, _site_nearby_parking(lat_f, lon_f, city, limit=8))
+            else:
+                _site_json(self, _site_parking(city, limit=8))
 
         elif parsed.path == "/api/site_garbage":
             qs = parse_qs(parsed.query or "")
