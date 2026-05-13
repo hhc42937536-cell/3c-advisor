@@ -59,23 +59,15 @@
       "dest": "api/webhook.py"
     },
     {
-      "src": "/api/site_govdata",
-      "dest": "api/webhook.py"
-    },
-    {
       "src": "/api/site_garbage",
       "dest": "api/webhook.py"
     },
     {
-      "src": "/api/site_tech",
+      "src": "/api/site_health",
       "dest": "api/webhook.py"
     },
     {
-      "src": "/api/site_legal",
-      "dest": "api/webhook.py"
-    },
-    {
-      "src": "/api/site_fraud",
+      "src": "/api/site_deals",
       "dest": "api/webhook.py"
     },
     {

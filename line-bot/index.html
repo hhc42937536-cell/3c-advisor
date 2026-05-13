@@ -536,7 +536,6 @@
       text-decoration: none;
       font-size: 13px;
     }
-    .fraud-upload[hidden] { display: none; }
     .ocr-status {
       margin-top: 4px;
       color: var(--muted);
@@ -872,25 +871,21 @@
           <div class="panel" id="panel-tools" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>工具暫存區。</h3>
-                <p>這裡先保留可以測資料與互動的工具，後續再決定要留在生活優轉、獨立成站，或移回 LINE bot。</p>
+                <h3>生活小工具。</h3>
+                <p>把今天可能馬上會用到的查詢放在一起：倒垃圾、停車、健康提醒與在地優惠。</p>
                 <div class="demo-box">
                   <div class="control-grid">
                     <label class="field" for="tool-topic">選一個工具
                       <select id="tool-topic"><option>垃圾車時間地點</option><option>停車查詢</option><option>健康小幫手</option><option>今日當地優惠</option></select>
                     </label>
                     <label class="field" for="tool-detail">情境
-                      <textarea id="tool-detail" aria-label="工具情境">想買一支拍照好、續航夠的手機</textarea>
+                      <textarea id="tool-detail" aria-label="工具情境">台南 中西區 晚餐或展覽</textarea>
                     </label>
                     <label class="field" for="tool-level">偏好
-                      <select id="tool-level"><option>保守安全</option><option>快速判斷</option><option>詳細比較</option><option>省錢優先</option></select>
+                      <select id="tool-level"><option>日常提醒</option><option>BMI</option><option>喝水</option><option>睡眠</option><option>壓力</option><option>飲食</option></select>
                     </label>
-                    <label class="field" for="tool-budget">預算 / 數值
-                      <input id="tool-budget" value="30000" aria-label="預算或數值">
-                    </label>
-                    <label class="field fraud-upload full" for="fraud-image" hidden>上傳可疑對話截圖
-                      <input id="fraud-image" type="file" accept="image/*" aria-label="上傳可疑對話截圖">
-                      <span class="ocr-status" id="fraud-ocr-status">會先辨識圖片中的文字，再用防詐規則判斷。</span>
+                    <label class="field" for="tool-budget">補充數值
+                      <input id="tool-budget" value="今天" aria-label="補充數值">
                     </label>
                   </div>
                   <button class="btn primary" data-demo="tools">產生建議</button>
@@ -1103,30 +1098,11 @@
         const topic = document.querySelector("#tool-topic").value;
         const detail = document.querySelector("#tool-detail").value.trim() || "目前沒有補充情境";
         const level = document.querySelector("#tool-level").value;
-        const budget = document.querySelector("#tool-budget").value.trim() || "未設定";
-        const risky = /連結|付款|匯款|驗證碼|投資|中獎|包裹|帳號|密碼/.test(detail);
+        const value = document.querySelector("#tool-budget").value.trim() || "未設定";
         const toolCards = {
-          "3C 選購": [
-            ["需求整理", `情境：${detail}。預算 ${budget}，先鎖定拍照、續航、重量三個指標。`],
-            ["購買建議", level === "省錢優先" ? "先看上一代旗艦或官方福利品。" : "先列 2-3 台候選，再比較保固、容量與充電。"],
-            ["避雷", "不要只看跑分；日常體驗更看螢幕、電量、重量與售後。"],
-            ["下一步", "把候選商品規格貼進來，可以做更細的比較表。"]
-          ],
-          "防詐檢查": [
-            ["初步風險", risky ? "高風險：內容出現付款、連結、驗證碼或投資等常見詐騙關鍵字。" : "目前沒有明顯高風險字，但仍要確認來源。"],
-            ["先做這件事", "不要點連結，不要提供個資，改從官方 App 或客服電話確認。"],
-            ["保存證據", "保留截圖、電話、帳號、網址，必要時可打 165。"],
-            ["判斷依據", `你的情境：${detail}`]
-          ],
-          "法律白話": [
-            ["問題拆解", `先把事件、對象、金額、時間整理清楚：${detail}`],
-            ["可先準備", "契約、對話紀錄、收據、照片與時間線。"],
-            ["下一步", "先釐清是消費、租屋、交通或勞資，再找對應窗口。"],
-            ["提醒", "網站只做白話整理，不取代專業法律諮詢。"]
-          ],
           "健康小幫手": [
             ["今日目標", `以 ${level} 模式處理：先補水、走路、睡眠三件事。`],
-            ["飲水提醒", `若體重或目標數值為 ${budget}，可先用少量多次方式，不要一次灌水。`],
+            ["飲水提醒", `若體重或目標數值為 ${value}，可先用少量多次方式，不要一次灌水。`],
             ["壓力檢查", "如果連續疲累，先調整睡眠與咖啡因，再看是否需要就醫。"],
             ["紀錄", `你的情境：${detail}`]
           ],
@@ -1140,16 +1116,16 @@
             ["目的地", `以「${detail}」為目的地，先找步行 8-12 分鐘內的停車場。`],
             ["費率策略", "市中心先選公有停車場；商圈假日要準備第二停車點。"],
             ["順路安排", "停好車後接餐廳或活動，避免移車。"],
-            ["預算", `停車或行程預算：${budget}`]
+            ["補充", `停車或行程補充：${value}`]
           ],
-          "政府資料生活雷達": [
-            ["城市資料", `以「${detail}」查政府開放資料裡的垃圾車、垃圾清運與環境統計。`],
-            ["能看什麼", "新北與台中可看垃圾車動態；各縣市可看環境部清運與回收統計。"],
-            ["用途", "今日摘要之外，多一層城市生活狀態，適合提醒倒垃圾與了解城市環境趨勢。"],
-            ["資料來源", "data.gov.tw、環境部、地方政府開放資料平台。"]
+          "垃圾車時間地點": [
+            ["查詢方式", `以「${detail}」查縣市、行政區、路名或清運點。`],
+            ["重點", "優先顯示今天可倒、下次清運時間、地點與地圖連結。"],
+            ["即時資料", "若該縣市有開放動態資料，會一併顯示最近垃圾車位置。"],
+            ["下一步", "輸入越接近地址或路名，結果越容易縮小。"]
           ]
         };
-        const cards = (toolCards[topic] || toolCards["3C 選購"]).map(([title, body]) => card(title, body)).join("");
+        const cards = (toolCards[topic] || toolCards["今日當地優惠"]).map(([title, body]) => card(title, body)).join("");
         return `
           <h4>${html(topic)}結果</h4>
           <div class="result-grid">${cards}</div>
@@ -1214,62 +1190,17 @@
       const examples = {
         "垃圾車時間地點": ["台中 西區", "今晚"],
         "今日當地優惠": ["台南 中西區 晚餐或展覽", "今天"],
-        "政府資料生活雷達": ["台中", "城市生活"],
-        "3C 選購": ["想買一支拍照好、續航夠的手機", "30000"],
-        "防詐檢查": ["陌生簡訊說包裹卡關，要我點連結付款", "0"],
-        "法律白話": ["租屋押金退租時被扣清潔費", "押金 2 個月"],
         "健康小幫手": ["最近睡不好、下午容易累", "70"],
         "停車查詢": ["台南美術館", "每小時 40"]
       };
       const sample = examples[topic] || examples["今日當地優惠"];
       detail.value = sample[0];
       budget.value = sample[1];
-      document.querySelector(".fraud-upload").hidden = topic !== "防詐檢查";
     }
 
     document.querySelector("#tool-topic").addEventListener("change", () => {
       updateToolFields();
       runDemo("tools");
-    });
-
-    document.addEventListener("click", (event) => {
-      const legalTopic = event.target.closest("[data-legal-topic]");
-      if (!legalTopic) return;
-      document.querySelector("#tool-topic").value = "法律白話";
-      document.querySelector("#tool-detail").value = legalTopic.dataset.legalTopic;
-      updateToolFields();
-      document.querySelector("#tool-detail").value = legalTopic.dataset.legalTopic;
-      runDemo("tools");
-    });
-
-    async function loadTesseract() {
-      if (window.Tesseract) return window.Tesseract;
-      await new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-      return window.Tesseract;
-    }
-
-    document.querySelector("#fraud-image").addEventListener("change", async (event) => {
-      const file = event.target.files?.[0];
-      if (!file) return;
-      const status = document.querySelector("#fraud-ocr-status");
-      status.textContent = "正在辨識圖片中的文字，第一次載入會稍等一下...";
-      try {
-        const Tesseract = await loadTesseract();
-        const result = await Tesseract.recognize(file, "chi_tra+eng");
-        const text = (result.data?.text || "").trim();
-        document.querySelector("#tool-detail").value = text || "圖片文字不清楚，請改貼可疑訊息文字。";
-        status.textContent = text ? "已讀到圖片文字，正在判斷風險。" : "圖片文字不清楚，可以改貼訊息文字再判斷。";
-        runDemo("tools");
-      } catch (error) {
-        console.error(error);
-        status.textContent = "圖片辨識暫時失敗，請直接貼上可疑文字。";
-      }
     });
 
     const SOURCE_NAMES = {
@@ -1391,21 +1322,6 @@
       `;
     }
 
-    function renderGovData(data) {
-      const cards = (data.cards || [])
-        .map((item) => card(item.title, `${item.body}｜${readableSource(item.source)}`))
-        .join("");
-      const truckItems = data.garbage_trucks?.items || [];
-      const truckCards = truckItems.slice(0, 2)
-        .map((item) => card(`垃圾車 ${item.car || ""}`, `${item.location || "無位置"}｜${item.time || ""}`))
-        .join("");
-      return `
-        <h4>${html(data.city)}政府資料生活雷達</h4>
-        <div class="result-grid">${cards || card("目前沒有城市資料", "這個城市暫時沒有可用的政府資料生活卡。")}${truckCards}</div>
-        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。資料來自 data.gov.tw 及各機關開放資料。</div>
-      `;
-    }
-
     function renderGarbage(data) {
       const items = data.items || [];
       const cards = items.map((item) => {
@@ -1430,50 +1346,25 @@
       `;
     }
 
-    function renderTech(data) {
-      const cards = (data.items || []).map((item) => {
-        const price = item.price ? `${item.price}｜` : "";
-        return card(item.name, `${price}${item.summary || ""}｜${item.reason || "適合日常使用"}`);
-      }).join("");
-      return `
-        <h4>${html(data.device || "3C")} 選購建議</h4>
-        <div class="result-grid">${cards || card("先開完整 3C 顧問", "這個條件暫時沒有篩到合適產品，可以到完整網站用更多條件比較。")}</div>
-        <div class="flow-note">${sourceLabel(data.source_names)}。網站版會先給快速候選，完整比較請開 3C 選購顧問。</div>
-        ${linkActions([{ href: data.full_site || "https://hhc42937536-cell.github.io/3c-advisor/", label: "開啟完整 3C 選購網站" }])}
-      `;
-    }
-
-    function renderLegal(data) {
-      const parts = String(data.content || "").split(/\n{2,}/).filter(Boolean).slice(0, 4);
-      const cards = parts.map((part, index) => {
-        const lines = part.split("\n").filter(Boolean);
-        return card(index === 0 ? (data.title || data.topic || "法律白話") : (lines[0] || "重點"), lines.join(" "));
-      }).join("");
-      const topicButtons = (data.topics || []).slice(0, 6)
-        .map((topic) => `<button type="button" data-legal-topic="${html(topic)}">${html(topic)}</button>`)
+    function renderHealth(data) {
+      const cards = (data.items || [])
+        .map((item) => card(item.title, item.body))
         .join("");
       return `
-        <h4>${html(data.title || "法律白話")}</h4>
-        <div class="result-grid">${cards || card("開啟法律常識網站", "這題需要更多脈絡，建議開完整法律網站查詢。")}</div>
-        <div class="quick-actions">${topicButtons}</div>
-        <div class="flow-note">${sourceLabel(data.source_names)}。這是一般性說明，不取代專業法律諮詢。</div>
-        ${linkActions([{ href: data.full_site || "https://hhc42937536-cell.github.io/legal-guide/", label: "開啟完整法律網站" }])}
+        <h4>健康提醒</h4>
+        <div class="result-grid">${cards || card("今日健康提醒", "先補水、走 10 分鐘、晚上固定時間睡。")}</div>
+        <div class="flow-note">${sourceLabel(data.source_names)}。僅供日常提醒，不取代醫療建議。</div>
       `;
     }
 
-    function renderFraud(data) {
-      const riskClass = data.risk === "high" ? "高風險" : data.risk === "medium" ? "可疑" : "低風險";
-      const patterns = (data.patterns || []).length ? data.patterns.join("、") : "沒有命中明顯特徵";
+    function renderDeals(data) {
+      const cards = (data.items || [])
+        .map((item) => card(item.title, item.body))
+        .join("");
       return `
-        <h4>${html(riskClass)}：${html(data.title || "防詐檢查")}</h4>
-        <div class="result-grid">
-          ${card("判斷結果", data.summary || "已完成初步判斷。")}
-          ${card("偵測特徵", patterns)}
-          ${card("建議動作", data.action || "有疑慮請撥打 165。")}
-          ${card("分數", `風險分數 ${data.score || 0}，本工具僅供初步參考。`)}
-        </div>
-        <div class="flow-note">${sourceLabel(data.source_names)}。可以貼文字，也可以上傳對話截圖先做文字辨識。</div>
-        ${linkActions([{ href: "tel:165", label: "撥打 165" }, { href: "https://165.npa.gov.tw/", label: "開啟 165 官網" }])}
+        <h4>${html(data.city || "")} 今日當地優惠</h4>
+        <div class="result-grid">${cards || card("今日優惠方向", "先看餐飲、活動、商圈公告與票券資訊。")}</div>
+        <div class="flow-note">${sourceLabel(data.source_names)}。優先整理今天可用、地點明確、可以接續吃飯或活動的資訊。</div>
       `;
     }
 
@@ -1513,26 +1404,18 @@
         const data = await getJson(`/api/site_garbage?city=${encodeURIComponent(city)}&q=${encodeURIComponent(detail)}`);
         return renderGarbage(data);
       }
-      if (key === "tools" && document.querySelector("#tool-topic").value === "政府資料生活雷達") {
-        const city = cityFromText(document.querySelector("#tool-detail").value.trim(), document.querySelector("#morning-city").value || "台中");
-        const data = await getJson(`/api/site_govdata?city=${encodeURIComponent(city)}`);
-        return renderGovData(data);
-      }
-      if (key === "tools" && document.querySelector("#tool-topic").value === "3C 選購") {
+      if (key === "tools" && document.querySelector("#tool-topic").value === "健康小幫手") {
         const text = document.querySelector("#tool-detail").value.trim();
-        const budget = document.querySelector("#tool-budget").value.trim();
-        const data = await getJson(`/api/site_tech?text=${encodeURIComponent(text)}&budget=${encodeURIComponent(budget)}`);
-        return renderTech(data);
+        const mode = document.querySelector("#tool-level").value;
+        const value = document.querySelector("#tool-budget").value.trim();
+        const data = await getJson(`/api/site_health?text=${encodeURIComponent(text)}&mode=${encodeURIComponent(mode)}&value=${encodeURIComponent(value)}`);
+        return renderHealth(data);
       }
-      if (key === "tools" && document.querySelector("#tool-topic").value === "法律白話") {
-        const topic = document.querySelector("#tool-detail").value.trim();
-        const data = await getJson(`/api/site_legal?topic=${encodeURIComponent(topic)}`);
-        return renderLegal(data);
-      }
-      if (key === "tools" && document.querySelector("#tool-topic").value === "防詐檢查") {
-        const text = document.querySelector("#tool-detail").value.trim();
-        const data = await getJson(`/api/site_fraud?text=${encodeURIComponent(text.slice(0, 1800))}`);
-        return renderFraud(data);
+      if (key === "tools" && document.querySelector("#tool-topic").value === "今日當地優惠") {
+        const detail = document.querySelector("#tool-detail").value.trim();
+        const city = cityFromText(detail, document.querySelector("#morning-city").value || "台北");
+        const data = await getJson(`/api/site_deals?city=${encodeURIComponent(city)}&context=${encodeURIComponent(detail)}`);
+        return renderDeals(data);
       }
       return samples[key]();
     }

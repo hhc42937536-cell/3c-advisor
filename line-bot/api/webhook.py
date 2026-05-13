@@ -1583,6 +1583,76 @@ def _site_fraud_advice(text: str) -> dict:
     }
 
 
+def _site_health_advice(text: str, mode: str = "", value: str = "") -> dict:
+    query = " ".join(part for part in [mode, text, value] if part).strip()
+    cards = []
+    try:
+        from modules.health_basic import parse_height_weight
+        height, weight = parse_height_weight(query)
+    except Exception:
+        height, weight = None, None
+    if height and weight:
+        bmi = round(weight / ((height / 100) ** 2), 1)
+        if bmi < 18.5:
+            status = "偏瘦，先確認飲食是否足量"
+        elif bmi < 24:
+            status = "落在一般範圍，維持規律作息"
+        elif bmi < 27:
+            status = "稍微偏高，可從走路與飲食份量開始"
+        else:
+            status = "偏高，建議逐步調整並視情況諮詢專業人員"
+        cards.append({"title": f"BMI {bmi}", "body": status})
+    if any(word in query for word in ["喝水", "飲水", "水量"]) or mode == "喝水":
+        weight_num = _site_first_number(value, 60)
+        water = int(weight_num * 30)
+        cards.append({"title": "今日喝水量", "body": f"先抓約 {water:,} ml，分 6-8 次喝，不用一次喝完。"})
+    if any(word in query for word in ["睡", "失眠", "累"]) or mode == "睡眠":
+        cards.append({"title": "睡眠提醒", "body": "下午後少咖啡因，睡前 30 分鐘降低螢幕刺激，明早再看精神狀態。"})
+    if any(word in query for word in ["壓力", "焦慮", "煩"]) or mode == "壓力":
+        cards.append({"title": "壓力檢查", "body": "先做 3 分鐘慢呼吸，列出今天只需要完成的一件事，避免把所有問題一次扛起來。"})
+    if any(word in query for word in ["熱量", "卡路里", "減重", "飲食"]) or mode == "飲食":
+        cards.append({"title": "飲食提醒", "body": "先把含糖飲、炸物和宵夜降頻，正餐保留蛋白質與蔬菜，比硬節食更穩。"})
+    if not cards:
+        cards = [
+            {"title": "今日健康提醒", "body": "先補水、走 10 分鐘、晚上固定時間睡。生活優轉先做日常提醒，不取代醫療建議。"},
+            {"title": "可輸入", "body": "例如：170cm 70kg、喝水 65公斤、睡不好、壓力很大。"},
+        ]
+    return {
+        "ok": True,
+        "query": query,
+        "items": cards[:4],
+        "source_names": {"health": "生活優轉 LINE bot 健康小幫手規則"},
+    }
+
+
+def _site_local_deals(city: str, context: str = "") -> dict:
+    city = city or "台北"
+    cards = []
+    try:
+        from modules.weather import _get_city_local_deal, _get_national_deal
+        local = _get_city_local_deal(city, "site")
+        national = _get_national_deal(city, "site")
+        cards.append({"title": f"{local[0]} {local[1]}", "body": local[2], "kind": "local"})
+        cards.append({"title": f"{national[0]} {national[1]}", "body": national[2], "kind": "national"})
+    except Exception:
+        pass
+    for event in _site_activities(city, "", limit=2):
+        cards.append({"title": event.get("name", "在地活動"), "body": f"{event.get('area', city)}｜{event.get('date', '')}｜{event.get('desc', '')[:54]}", "kind": "activity", "url": event.get("url", "")})
+    for food in _site_restaurants(city, "想吃特色", "不限制", "2 人", limit=2):
+        cards.append({"title": food.get("name", "在地美食"), "body": f"{food.get('area', city)}｜{food.get('desc', '')[:64]}", "kind": "food", "url": food.get("url", "")})
+    if not cards:
+        cards = [
+            {"title": f"{city}今日優惠方向", "body": "先看商圈活動、百貨公告、餐廳社群與展覽票券，後續可再串正式優惠來源。", "kind": "fallback"},
+        ]
+    return {
+        "ok": True,
+        "city": city,
+        "context": context,
+        "items": cards[:6],
+        "source_names": {"deals": "生活優轉活動、美食與每日好康整理"},
+    }
+
+
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         """健康檢查 + 快取預熱"""
@@ -1639,32 +1709,24 @@ class handler(BaseHTTPRequestHandler):
             city = _site_param(qs, "city", "台北")
             _site_json(self, _site_parking(city, limit=8))
 
-        elif parsed.path == "/api/site_govdata":
-            qs = parse_qs(parsed.query or "")
-            city = _site_param(qs, "city", "台中")
-            _site_json(self, _site_govdata(city))
-
         elif parsed.path == "/api/site_garbage":
             qs = parse_qs(parsed.query or "")
             city = _site_param(qs, "city", "台中")
             query = _site_param(qs, "q", "")
             _site_json(self, _site_garbage_schedule(city, query, limit=8))
 
-        elif parsed.path == "/api/site_tech":
-            qs = parse_qs(parsed.query or "")
-            text = _site_param(qs, "text", "想買一支拍照好、續航夠的手機")
-            budget = _site_param(qs, "budget", "")
-            _site_json(self, _site_tech_advice(text, budget))
-
-        elif parsed.path == "/api/site_legal":
-            qs = parse_qs(parsed.query or "")
-            topic = _site_param(qs, "topic", "租屋糾紛")
-            _site_json(self, _site_legal_advice(topic))
-
-        elif parsed.path == "/api/site_fraud":
+        elif parsed.path == "/api/site_health":
             qs = parse_qs(parsed.query or "")
             text = _site_param(qs, "text", "")
-            _site_json(self, _site_fraud_advice(text))
+            mode = _site_param(qs, "mode", "")
+            value = _site_param(qs, "value", "")
+            _site_json(self, _site_health_advice(text, mode, value))
+
+        elif parsed.path == "/api/site_deals":
+            qs = parse_qs(parsed.query or "")
+            city = _site_param(qs, "city", "台北")
+            context = _site_param(qs, "context", "")
+            _site_json(self, _site_local_deals(city, context))
 
         elif parsed.path in ("/api/warm_cache", "/api/webhook"):
             import threading as _th
