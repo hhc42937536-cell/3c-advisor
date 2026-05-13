@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fff2cf">
-  <meta name="description" content="生活優轉 Life Uturn：整合美食、停車、天氣、活動、理財、健康、安全與 3C 建議的日常生活助理。">
+  <meta name="description" content="生活優轉 Life Uturn：早安今日好料、今天吃什麼、每週週末活動自動更新與即時找車位的日常生活助理。">
   <title>生活優轉 Life Uturn</title>
   <style>
     :root {
@@ -154,10 +154,10 @@
     }
     .task-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
       margin-top: 28px;
-      max-width: 780px;
+      max-width: 760px;
     }
     .task-card {
       min-height: 142px;
@@ -203,6 +203,7 @@
     }
     .task-card:nth-child(2) .task-icon { background: #fff1c7; }
     .task-card:nth-child(3) .task-icon { background: #e8eefb; }
+    .task-card:nth-child(4) .task-icon { background: #ffe2d7; }
     .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
     .btn {
       display: inline-flex;
@@ -341,7 +342,7 @@
 
     .feature-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
     }
     .feature-card {
@@ -660,7 +661,7 @@
       .menu-frame { margin: 0 auto; }
       .feature-grid { grid-template-columns: repeat(2, 1fr); }
       .workspace { grid-template-columns: 1fr; }
-      .tabs { grid-template-columns: repeat(3, 1fr); border-right: 0; border-bottom: 1px solid var(--line); }
+      .tabs { grid-template-columns: repeat(4, 1fr); border-right: 0; border-bottom: 1px solid var(--line); }
       .tab { text-align: center; }
       .section-head { display: block; }
       .section-head p { margin-top: 12px; }
@@ -692,7 +693,7 @@
     <nav class="wrap">
       <a class="brand" href="#top" aria-label="生活優轉首頁"><span class="mark">優</span>生活優轉</a>
       <div class="links">
-        <a href="#features">三大主軸</a>
+        <a href="#features">四大功能</a>
         <a href="#workspace">使用看看</a>
         <a href="#roadmap">工具盤點</a>
         <a href="#line">LINE</a>
@@ -706,31 +707,35 @@
         <div>
           <span class="badge"><i></i>從早晨開始安排今天</span>
           <h1>從早安開始，<span>安排今天</span></h1>
-          <p class="lead">生活優轉的主線是一整天的生活節奏：早晨先看天氣穿搭、油價匯率與今日提醒；接著決定今天吃什麼；再看看附近活動或週末去哪裡。</p>
+          <p class="lead">生活優轉網站先把 LINE bot 的四大功能展開：早安今日好料、今天吃什麼、每週週末活動自動更新，以及即時找車位。</p>
           <div class="task-grid" aria-label="主要任務入口">
             <button class="task-card" data-jump="morning">
               <span class="task-icon">早</span>
-              <span><h2>今日摘要</h2><p>天氣、穿搭、油價、匯率與今日小提醒。</p></span>
+              <span><h2>早安今日好料</h2><p>天氣穿搭、油價、匯率、洗曬與今日小提醒。</p></span>
             </button>
             <button class="task-card" data-jump="food">
               <span class="task-icon">食</span>
               <span><h2>今天吃什麼</h2><p>用城市、定位、聚餐情境整理推薦方向。</p></span>
             </button>
             <button class="task-card" data-jump="activity">
-              <span class="task-icon">去</span>
-              <span><h2>活動資訊</h2><p>活動、市集、展覽、假日安排一次看。</p></span>
+              <span class="task-icon">週</span>
+              <span><h2>週末活動自動更新</h2><p>每週整理展覽、市集、活動與假日安排。</p></span>
+            </button>
+            <button class="task-card" data-jump="tools">
+              <span class="task-icon">停</span>
+              <span><h2>即時找車位</h2><p>用 TDX 停車資料找附近停車場與剩餘車位。</p></span>
             </button>
           </div>
           <div class="chips">
-            <span class="chip">早安摘要</span>
+            <span class="chip">早安今日好料</span>
             <span class="chip">吃飯決策</span>
-            <span class="chip">活動資訊</span>
-            <span class="chip">工具庫另外盤點</span>
+            <span class="chip">週末活動</span>
+            <span class="chip">即時車位</span>
           </div>
         </div>
         <div class="visual">
           <div class="morning-card">
-            <span class="badge"><i></i>今日摘要</span>
+            <span class="badge"><i></i>早安今日好料</span>
             <h2>出門前先看這張。</h2>
             <p>把天氣、穿搭、油價、匯率和小提醒收在同一張卡片，不用開很多頁。</p>
             <div class="morning-list">
@@ -748,13 +753,14 @@
     <section class="band" id="features">
       <div class="wrap">
         <div class="section-head">
-          <h2>三個主方向，串起一天。</h2>
-          <p>先整理早晨資訊，再處理吃什麼，最後安排活動。其他工具先拆到工具庫盤點，不再混在主流程裡。</p>
+          <h2>四大功能先放清楚。</h2>
+          <p>先把 LINE bot 已經成立的四大主功能搬進網站，再判斷哪些衍生工具要留、哪些應該獨立出去。</p>
         </div>
         <div class="feature-grid">
-          <button class="feature-card" type="button" data-jump="morning"><div class="icon">今</div><h3>今日摘要</h3><p>天氣穿搭、帶傘提醒、油價、匯率與今日小提醒。</p><div class="mini-tags"><span>出門前確認</span><span>CWA / Finance</span></div></button>
+          <button class="feature-card" type="button" data-jump="morning"><div class="icon">早</div><h3>早安今日好料</h3><p>天氣穿搭、帶傘提醒、油價、匯率、洗曬與今日小提醒。</p><div class="mini-tags"><span>早晨推送</span><span>CWA / CPC / 匯率</span></div></button>
           <button class="feature-card" type="button" data-jump="food"><div class="icon">食</div><h3>今天吃什麼</h3><p>美食推薦、必比登、聚餐選擇、城市特色、定位找餐廳。</p><div class="mini-tags"><span>餐廳比較</span><span>Google Places</span></div></button>
-          <button class="feature-card" type="button" data-jump="activity"><div class="icon">去</div><h3>活動資訊</h3><p>Accupass 活動、展覽、市集、地區活動與假日提醒。</p><div class="mini-tags"><span>活動篩選</span><span>公開資料</span></div></button>
+          <button class="feature-card" type="button" data-jump="activity"><div class="icon">週</div><h3>每週週末活動自動更新</h3><p>Accupass 活動、展覽、市集、地區活動與假日提醒。</p><div class="mini-tags"><span>週末清單</span><span>自動更新</span></div></button>
+          <button class="feature-card" type="button" data-jump="tools"><div class="icon">停</div><h3>即時找車位</h3><p>停車場、剩餘車位、費率與附近順路安排。</p><div class="mini-tags"><span>TDX</span><span>即時車位</span></div></button>
         </div>
       </div>
     </section>
@@ -762,21 +768,22 @@
     <section class="band" id="workspace">
       <div class="wrap">
         <div class="section-head">
-          <h2>網站版把一天展開來看。</h2>
-          <p>LINE 適合快速問一句；網站版先聚焦在早安摘要、吃飯決策、活動資訊。其他工具先拆開整理，避免主線越做越散。</p>
+          <h2>網站版先補齊 LINE bot 四大功能。</h2>
+          <p>這裡不是工具雜燴，而是把早安、吃飯、週末活動、即時車位四條主線做成可操作的網站。</p>
         </div>
         <div class="workspace">
           <div class="tabs" role="tablist" aria-label="網站功能">
-            <button class="tab" role="tab" aria-selected="true" data-tab="morning">今日摘要</button>
+            <button class="tab" role="tab" aria-selected="true" data-tab="morning">早安今日好料</button>
             <button class="tab" role="tab" aria-selected="false" data-tab="food">今天吃什麼</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="activity">活動資訊</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="activity">週末活動自動更新</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="tools">即時找車位</button>
           </div>
 
           <div class="panel active" id="panel-morning" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>出門前，先看今日摘要。</h3>
-                <p>把一天中常查的資訊放在一起：天氣穿搭、油價、匯率、洗曬與今日提醒。</p>
+                <h3>早安，先看今日好料。</h3>
+                <p>把早上最常查的資訊放在一起：天氣穿搭、油價、匯率、洗曬與今日小提醒。</p>
                 <div class="demo-box">
                   <div class="control-grid">
                     <label class="field" for="morning-city">所在城市
@@ -792,8 +799,8 @@
                       <select id="morning-focus"><option>穿搭與雨具</option><option>油價與匯率</option><option>洗曬與行程</option><option>全部整理</option></select>
                     </label>
                   </div>
-                  <button class="btn primary" data-demo="morning">產生今日摘要</button>
-                  <div class="result" id="morning-result">選好城市、時段與今天重點，會產生可直接看的今日摘要。</div>
+                  <button class="btn primary" data-demo="morning">產生早安今日好料</button>
+                  <div class="result" id="morning-result">選好城市、時段與今天重點，會產生可直接看的早安今日好料。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -839,7 +846,7 @@
           <div class="panel" id="panel-activity" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>活動資訊怎麼安排？</h3>
+                <h3>每週週末活動自動更新。</h3>
                 <p>活動、展覽、市集、假日提醒整理成適合瀏覽的清單，網站比聊天更適合慢慢挑。</p>
                 <div class="demo-box">
                   <div class="control-grid">
@@ -856,7 +863,7 @@
                       <select id="activity-pace"><option>輕鬆半天</option><option>排滿一點</option><option>雨天備案</option><option>順路吃飯</option></select>
                     </label>
                   </div>
-                  <button class="btn primary" data-demo="activity">產生活動清單</button>
+                  <button class="btn primary" data-demo="activity">產生週末活動清單</button>
                   <div class="result" id="activity-result">選好條件後會整理活動清單與安排順序。</div>
                 </div>
               </div>
@@ -871,25 +878,25 @@
           <div class="panel" id="panel-tools" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>生活小工具。</h3>
-                <p>把今天可能馬上會用到的查詢放在一起：倒垃圾、停車、健康提醒與在地優惠。</p>
+                <h3>即時找車位。</h3>
+                <p>先把停車查詢升成主功能：用城市查停車場、剩餘車位與費率。垃圾車、健康提醒、今日優惠先放在同區作為衍生工具。</p>
                 <div class="demo-box">
                   <div class="control-grid">
                     <label class="field" for="tool-topic">選一個工具
-                      <select id="tool-topic"><option>垃圾車時間地點</option><option>停車查詢</option><option>健康小幫手</option><option>今日當地優惠</option></select>
+                      <select id="tool-topic"><option>停車查詢</option><option>垃圾車時間地點</option><option>健康小幫手</option><option>今日當地優惠</option></select>
                     </label>
                     <label class="field" for="tool-detail">情境
-                      <textarea id="tool-detail" aria-label="工具情境">台南 中西區 晚餐或展覽</textarea>
+                      <textarea id="tool-detail" aria-label="工具情境">台南美術館</textarea>
                     </label>
                     <label class="field" for="tool-level">偏好
                       <select id="tool-level"><option>日常提醒</option><option>BMI</option><option>喝水</option><option>睡眠</option><option>壓力</option><option>飲食</option></select>
                     </label>
                     <label class="field" for="tool-budget">補充數值
-                      <input id="tool-budget" value="今天" aria-label="補充數值">
+                      <input id="tool-budget" value="每小時 40" aria-label="補充數值">
                     </label>
                   </div>
-                  <button class="btn primary" data-demo="tools">產生建議</button>
-                  <div class="result" id="tools-result">選工具並填情境，會產生可採取的下一步。</div>
+                  <button class="btn primary" data-demo="tools">即時找車位</button>
+                  <div class="result" id="tools-result">輸入目的地或城市，會查詢可用停車場與車位資訊。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -908,17 +915,17 @@
       <div class="wrap">
         <div class="roadmap-card">
           <div class="roadmap-copy">
-            <span class="badge"><i></i>保留工具</span>
-            <h2>生活優轉只留下今天會用到的工具。</h2>
-            <p>主軸維持「今日摘要、今天吃什麼、活動資訊」。工具區只放能直接幫今天生活做決定的功能，避免網站變成雜亂工具箱。</p>
+            <span class="badge"><i></i>衍生工具</span>
+            <h2>四大主功能之外，再慢慢決定工具去留。</h2>
+            <p>生活優轉主線先固定為：早安今日好料、今天吃什麼、每週週末活動自動更新、即時找車位。下面這些先當衍生工具整理。</p>
           </div>
           <div>
             <h3 class="split-title">留在生活優轉</h3>
             <div class="roadmap">
               <button class="roadmap-item" type="button" data-tool="垃圾車時間地點"><b>垃圾車時間地點</b><span>全台清運時間、清運點、地圖入口，符合「今天生活要處理」。</span><em class="level">保留</em></button>
               <button class="roadmap-item" type="button" data-tool="停車查詢"><b>停車查詢</b><span>停車場、費率、附近順路安排，可以和吃飯/活動串聯。</span><em class="level">保留</em></button>
-              <button class="roadmap-item" type="button" data-tool="健康小幫手"><b>健康提醒</b><span>喝水、睡眠、壓力、BMI，作為今日摘要旁邊的日常照護。</span><em class="level">保留</em></button>
-              <button class="roadmap-item" type="button" data-tool="今日當地優惠"><b>今日當地優惠</b><span>餐飲、活動、商圈優惠，接在今天吃什麼與活動資訊後面。</span><em class="level">新增</em></button>
+              <button class="roadmap-item" type="button" data-tool="健康小幫手"><b>健康提醒</b><span>喝水、睡眠、壓力、BMI，作為早安今日好料旁邊的日常照護。</span><em class="level">保留</em></button>
+              <button class="roadmap-item" type="button" data-tool="今日當地優惠"><b>今日當地優惠</b><span>餐飲、活動、商圈優惠，接在今天吃什麼與週末活動後面。</span><em class="level">新增</em></button>
             </div>
           </div>
         </div>
@@ -930,7 +937,7 @@
         <div class="cta">
           <div>
             <h2>早安可以在 LINE 推送，細節交給網站展開。</h2>
-            <p>LINE 適合早晨推一張今日摘要；網站適合把天氣、吃飯、活動與各種小工具展開成可比較、可篩選的頁面。</p>
+            <p>LINE 適合早晨推一張早安今日好料；網站適合把吃飯、週末活動與即時找車位展開成可比較、可篩選的頁面。</p>
           </div>
           <a class="btn" href="https://line.me/R/" target="_blank" rel="noreferrer">開啟 LINE</a>
         </div>
@@ -957,6 +964,7 @@
       button.addEventListener("click", () => {
         activateTab(button.dataset.jump);
         scrollToWorkspace();
+        runDemo(button.dataset.jump);
       });
     });
 
@@ -986,8 +994,8 @@
         : String(time || "").includes("下午")
           ? "午後出門摘要"
           : String(time || "").includes("上午") || String(time || "").includes("早上")
-            ? "早晨摘要"
-            : "今日摘要";
+            ? "早安今日好料"
+            : "今日好料";
       return `${city || ""} ${prefix}`.trim();
     }
     function planAdvice(plan, time) {
@@ -999,7 +1007,7 @@
           : ["通勤提醒", "先看降雨、油價與停車點；若要開車，建議出門前確認路況。"],
         "外出跑行程": ["行程提醒", `${afternoon || night ? "外出前" : "出門前"}先排室內備案，地點之間保留 15-20 分鐘緩衝。`],
         "在家工作": ["在家提醒", "重點放在洗曬、飲水與下午精神管理；油價匯率可當日常參考即可。"],
-        "週末出遊": ["出遊提醒", "先看天氣與活動，再決定吃飯地點；若要開車，停車點要比餐廳更早確認。"]
+        "週末出遊": ["出遊提醒", "先看每週週末活動自動更新，再決定吃飯地點；若要開車，停車點要比餐廳更早確認。"]
       };
       return map[plan] || ["今日提醒", "先把必要行程排好，再決定吃飯與活動。"];
     }
@@ -1011,9 +1019,9 @@
         return ["油價 / 匯率重點", `${oilText}；${rateText}。有開車或換匯需求時再深入看。`];
       }
       if (focus === "洗曬與行程") {
-        return ["洗曬與行程", activity ? `先留意天氣，再看 ${activity.name}。` : "先看降雨機率，再安排洗曬、採買或附近活動。"];
+        return ["洗曬與行程", activity ? `先留意天氣，再看 ${activity.name}。` : "先看降雨機率，再安排洗曬、採買或週末活動。"];
       }
-      return ["今日小提醒", activity ? `${activity.name}｜${readableSource(activity.source)}` : "先決定吃飯，再看附近活動。"];
+      return ["今日小提醒", activity ? `${activity.name}｜${readableSource(activity.source)}` : "先決定吃飯，再看週末活動。"];
     }
 
     function setResult(key, markup) {
@@ -1043,7 +1051,7 @@
           ? "下一步可以先處理洗曬與健康提醒，晚點再看吃飯或活動。"
           : plan === "週末出遊"
             ? "下一步可以接著決定吃什麼，再把活動與停車一起安排。"
-            : "下一步可以接著決定今天吃什麼，再看活動資訊。";
+            : "下一步可以接著決定今天吃什麼，再看週末活動。";
         return `
           <h4>${html(summaryTitle(time, city))}</h4>
           <div class="result-grid">
@@ -1053,7 +1061,7 @@
             ${card(focusTitle, focusBody)}
           </div>
           <div class="flow-note">${nextStep}</div>
-          ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看活動資訊" }])}
+          ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看週末活動" }])}
         `;
       },
       food: () => {
@@ -1071,8 +1079,8 @@
             ${card(profile.food[2], `備案：附近咖啡或甜點店，適合吃完接活動或等朋友。`)}
             ${card("決策建議", `先用「距離 15 分鐘內」縮小範圍，再用預算 ${budget} 排序。`)}
           </div>
-          <div class="flow-note">下一步：吃飯地點確定後，可以看同區活動，避免行程斷掉。</div>
-          ${actions([{ key: "activity", label: "用同城市找活動" }, { key: "tools", label: "開停車小工具" }])}
+          <div class="flow-note">下一步：吃飯地點確定後，可以看同區週末活動，避免行程斷掉。</div>
+          ${actions([{ key: "activity", label: "用同城市找週末活動" }, { key: "tools", label: "即時找車位" }])}
         `;
       },
       activity: () => {
@@ -1083,15 +1091,15 @@
         const profile = cityProfiles[city] || cityProfiles["台北"];
         const rainPlan = pace === "雨天備案" ? "優先選室內場館，保留咖啡店備案。" : "先排主活動，再留一段彈性時間。";
         return `
-          <h4>${html(city)} ${html(time)}活動安排</h4>
+          <h4>${html(city)} ${html(time)}週末活動自動更新</h4>
           <div class="result-grid">
             ${card(`${type}主活動`, `${profile.event}。步調：${pace}，建議先確認開放時間與是否需預約。`)}
             ${card("順路安排", `${profile.area} 周邊先接吃飯，再安排第二站，移動成本最低。`)}
             ${card("天氣備案", rainPlan)}
             ${card("交通提醒", profile.parking)}
           </div>
-          <div class="flow-note">下一步：若活動需要開車或買設備，再開延伸工具處理細節。</div>
-          ${actions([{ key: "food", label: "附近吃什麼" }, { key: "tools", label: "開延伸工具" }])}
+          <div class="flow-note">下一步：若活動需要開車，先用即時找車位確認停車點。</div>
+          ${actions([{ key: "food", label: "附近吃什麼" }, { key: "tools", label: "即時找車位" }])}
         `;
       },
       tools: () => {
@@ -1108,7 +1116,7 @@
           ],
           "今日當地優惠": [
             ["優惠方向", `以「${detail}」附近為主，優先整理餐飲、咖啡、展覽與商圈活動。`],
-            ["使用時機", "適合接在今天吃什麼或活動資訊後面，用來決定要去哪一區。"],
+            ["使用時機", "適合接在今天吃什麼或週末活動後面，用來決定要去哪一區。"],
             ["篩選原則", "只放今天可用、地點明確、規則清楚的優惠；不放看起來像廣告但無法行動的內容。"],
             ["下一步", "後續可串接商圈公告、百貨活動、餐廳優惠與在地活動清單。"]
           ],
@@ -1268,7 +1276,7 @@
         ? "下一步可以先處理洗曬與健康提醒，晚點再看吃飯或活動。"
         : plan === "週末出遊"
           ? "下一步可以接著決定吃什麼，再把活動與停車一起安排。"
-          : "下一步可以接著決定吃什麼或看活動。";
+          : "下一步可以接著決定吃什麼或看週末活動。";
       return `
         <h4>${html(summaryTitle(data.time, data.city))}</h4>
         <div class="result-grid">
@@ -1278,7 +1286,7 @@
           ${card(focusTitle, focusBody)}
         </div>
         <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。${nextStep}</div>
-        ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看活動資訊" }])}
+        ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看週末活動" }])}
       `;
     }
 
@@ -1292,7 +1300,7 @@
         <h4>${html(data.city)} ${html(data.mood || "美食")}推薦</h4>
         <div class="result-grid">${cards || card("目前沒有資料", "目前沒有找到這個城市的推薦，先改查城市特色或稍後再試。")}</div>
         <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。已整理生活優轉美食名單與必比登資訊。</div>
-        ${actions([{ key: "activity", label: "用同城市找活動" }, { key: "tools", label: "開停車小工具" }])}
+        ${actions([{ key: "activity", label: "用同城市找週末活動" }, { key: "tools", label: "即時找車位" }])}
       `;
     }
 
@@ -1300,13 +1308,13 @@
       const items = data.items || [];
       const cards = items.slice(0, 4).map((item) => {
         const date = item.date ? `${item.date}｜` : "";
-        return card(item.name, `${date}${item.desc || "活動資訊"}｜${readableSource(item.source)}`);
+        return card(item.name, `${date}${item.desc || "週末活動資訊"}｜${readableSource(item.source)}`);
       }).join("");
       return `
-        <h4>${html(data.city)} ${html(data.time || "")}${html(data.type || "活動")}資訊</h4>
+        <h4>${html(data.city)} ${html(data.time || "")}${html(data.type || "活動")}週末活動自動更新</h4>
         <div class="result-grid">${cards || card("目前沒有活動", "目前沒有找到符合條件的活動，可以換城市或類型再試。")}</div>
-        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。已整理 Accupass、文化部藝文活動與在地活動資訊。</div>
-        ${actions([{ key: "food", label: "附近吃什麼" }, { key: "tools", label: "開延伸工具" }])}
+        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。已整理 Accupass、文化部藝文活動與在地週末活動。</div>
+        ${actions([{ key: "food", label: "附近吃什麼" }, { key: "tools", label: "即時找車位" }])}
       `;
     }
 
@@ -1395,7 +1403,8 @@
         return renderActivity(data);
       }
       if (key === "tools" && document.querySelector("#tool-topic").value === "停車查詢") {
-        const city = document.querySelector("#morning-city").value || "台北";
+        const detail = document.querySelector("#tool-detail").value.trim();
+        const city = cityFromText(detail, document.querySelector("#morning-city").value || "台北");
         const data = await getJson(`/api/site_parking?city=${encodeURIComponent(city)}`);
         return renderParking(data);
       }
