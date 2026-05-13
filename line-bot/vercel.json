@@ -63,6 +63,10 @@
       "dest": "api/webhook.py"
     },
     {
+      "src": "/api/site_garbage",
+      "dest": "api/webhook.py"
+    },
+    {
       "src": "/api/site_tech",
       "dest": "api/webhook.py"
     },
