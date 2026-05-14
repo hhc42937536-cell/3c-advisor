@@ -1401,18 +1401,18 @@ def _site_rail_stations(operator: str, token: str) -> list:
 
 
 def _site_find_rail_station(stations: list, text: str) -> dict | None:
-    key = re.sub(r"(台鐵|臺鐵|高鐵|火車站|車站|站|\s)+", "", str(text or ""))
+    key = re.sub(r"(台鐵|臺鐵|高鐵|火車站|車站|站|\s)+", "", str(text or "")).replace("臺", "台")
     if not key:
         return None
     for station in stations:
         name = _site_rail_station_name(station)
-        compact = re.sub(r"(火車站|車站|站|\s)+", "", name)
+        compact = re.sub(r"(火車站|車站|站|\s)+", "", name).replace("臺", "台")
         sid = str(station.get("StationID") or station.get("StationCode") or "")
         if key == compact or key == sid:
             return station
     for station in stations:
         name = _site_rail_station_name(station)
-        compact = re.sub(r"(火車站|車站|站|\s)+", "", name)
+        compact = re.sub(r"(火車站|車站|站|\s)+", "", name).replace("臺", "台")
         if key in compact or compact in key:
             return station
     return None
@@ -1469,8 +1469,13 @@ def _site_rail_schedule(origin: str, destination: str, operator_hint: str = "", 
             })
             if len(items) >= limit:
                 break
+        if not items:
+            items = [{
+                "title": "目前沒有可顯示班次",
+                "body": f"已辨識為{_RAIL_OPERATOR_LABELS.get(operator, operator)} {_site_rail_station_name(origin_station)} → {_site_rail_station_name(dest_station)}，但 TDX 今日時刻沒有回傳接下來的班次。",
+            }]
         return {
-            "ok": bool(items),
+            "ok": bool(rows),
             "city": "",
             "mode": "rail",
             "title": f"{_RAIL_OPERATOR_LABELS.get(operator, operator)}時刻",
