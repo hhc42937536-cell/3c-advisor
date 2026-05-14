@@ -1547,23 +1547,24 @@ def _site_rail_schedule(origin: str, destination: str, operator_hint: str = "", 
 
 def _site_youbike(city: str, query: str = "", limit: int = 8) -> dict:
     token = _get_tdx_token()
-    if not token:
-        return {"ok": False, "city": city, "mode": "bike", "source": "tdx_unavailable", "items": [], "source_names": {"transport": "TDX 運輸資料流通服務平臺"}}
     tdx_city = _SITE_TDX_CITY.get(city.replace("市", "").replace("縣", ""), _SITE_TDX_CITY.get(city, "Taipei"))
-    stations = _tdx_get_any(f"Bike/Station/City/{tdx_city}?$format=JSON", token, timeout=8, versions=("v2", "v3"))
-    availability = _tdx_get_any(f"Bike/Availability/City/{tdx_city}?$format=JSON", token, timeout=8, versions=("v2", "v3"))
+    stations = []
+    availability = []
+    if token:
+        stations = _tdx_get_any(f"Bike/Station/City/{tdx_city}?$format=JSON", token, timeout=8, versions=("v2",))
+        availability = _tdx_get_any(f"Bike/Availability/City/{tdx_city}?$format=JSON", token, timeout=8, versions=("v2",))
     avail_by_id = {}
     for row in availability:
         sid = str(row.get("StationUID") or row.get("StationID") or "")
         if sid:
             avail_by_id[sid] = row
-    q = _site_fix_text(query)
+    q = _site_fix_text(query).replace("臺", "台")
     items = []
     for station in stations:
         name = _site_text(station.get("StationName") or station.get("StationNameZh"), "")
         address = _site_text(station.get("StationAddress") or station.get("StationAddressZh"), "")
         area = _site_text(station.get("ServiceArea") or station.get("LocationCityCode"), city)
-        haystack = _site_fix_text(f"{name} {address} {area}")
+        haystack = _site_fix_text(f"{name} {address} {area}").replace("臺", "台")
         if q and q not in haystack:
             continue
         sid = str(station.get("StationUID") or station.get("StationID") or "")
@@ -1590,14 +1591,40 @@ def _site_youbike(city: str, query: str = "", limit: int = 8) -> dict:
             rent = _site_first_number(avail.get("AvailableRentBikes") or avail.get("AvailableRentBikesCount"), 0)
             ret = _site_first_number(avail.get("AvailableReturnBikes") or avail.get("AvailableReturnBikesCount"), 0)
             items.append({"title": name or "YouBike 站點", "body": f"{address or city}｜可借 {int(rent)}、可還 {int(ret)}", "source": "tdx_youbike_live"})
+    if not items and tdx_city == "Taipei":
+        q = _site_fix_text(query).replace("臺", "台")
+        try:
+            rows = _site_get_json("https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json", timeout=8)
+        except Exception:
+            rows = []
+        for row in rows:
+            name = _site_fix_text(row.get("sna", ""))
+            address = _site_fix_text(row.get("ar", ""))
+            area = _site_fix_text(row.get("sarea", ""))
+            haystack = _site_fix_text(f"{name} {address} {area}").replace("臺", "台")
+            if q and q not in haystack:
+                continue
+            rent = _site_first_number(row.get("available_rent_bikes"), 0)
+            ret = _site_first_number(row.get("available_return_bikes"), 0)
+            total = _site_first_number(row.get("Quantity"), 0)
+            items.append({
+                "title": name or "YouBike 站點",
+                "body": f"{address or area}｜可借 {int(rent)}、可還 {int(ret)}" + (f"、總柱 {int(total)}" if total else ""),
+                "rent": int(rent),
+                "return": int(ret),
+                "capacity": int(total) if total else "",
+                "source": "taipei_youbike_live",
+            })
+            if len(items) >= limit:
+                break
     return {
         "ok": bool(items),
         "city": city,
         "mode": "bike",
         "title": "YouBike 即時站點",
         "items": items,
-        "source": "tdx_youbike_live",
-        "source_names": {"transport": "TDX 運輸資料流通服務平臺：公共自行車站點與即時可借可還"},
+        "source": "tdx_youbike_live" if stations else "taipei_youbike_live",
+        "source_names": {"transport": "TDX 運輸資料流通服務平臺與臺北市 YouBike 即時資料"},
     }
 
 
@@ -1875,13 +1902,15 @@ def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
     q = _site_road_query(query or "")
     if q in ("", "即時路況", "路況"):
         q = "國道1號"
-    freeway_sections = _site_freeway_sections()
-    freeway_rows, freeway_updated_at = _site_freeway_live()
-    highway_sections = _site_highway_sections()
-    highway_rows, highway_updated_at = _site_highway_live()
+    route_pattern = _site_road_route_pattern(q)
+    needs_highway = bool(route_pattern) or q in ("台", "臺")
+    needs_freeway = not needs_highway or q.startswith("國道") or q.startswith("國")
+    freeway_sections = _site_freeway_sections() if needs_freeway else {}
+    freeway_rows, freeway_updated_at = _site_freeway_live() if needs_freeway else ([], "")
+    highway_sections = _site_highway_sections() if needs_highway else {}
+    highway_rows, highway_updated_at = _site_highway_live() if needs_highway else ([], "")
     updated_at = highway_updated_at or freeway_updated_at
     level_label = {0: "無資料", 1: "順暢", 2: "車多", 3: "壅塞", 4: "嚴重壅塞"}
-    route_pattern = _site_road_route_pattern(q)
     matches = []
     tagged_rows = [(row, freeway_sections) for row in freeway_rows] + [(row, highway_sections) for row in highway_rows]
     for row, sections in tagged_rows:
