@@ -1232,10 +1232,20 @@
       return `資料來源：${values.join("、")}`;
     };
 
-    async function getJson(url) {
-      const response = await fetch(url, { headers: { "Accept": "application/json" } });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return response.json();
+    async function getJson(url, timeoutMs = 15000) {
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(url, {
+          headers: { "Accept": "application/json" },
+          signal: controller.signal,
+          cache: "no-store"
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      } finally {
+        window.clearTimeout(timer);
+      }
     }
 
     function cityFromText(text, fallback = "台中") {
@@ -1460,12 +1470,12 @@
 
     async function runUtility(key) {
       const runId = ++utilityRunId;
-      setUtilityResult(`<h4>正在查詢...</h4><div class="flow-note">正在抓清運時間地點，不載入地圖，會比之前快很多。</div>`);
+      setUtilityResult(`<h4>正在查詢...</h4><div class="flow-note">正在抓清運時間地點；如果資料源太慢，10 秒後會自動停止等待。</div>`);
       try {
         const city = document.querySelector("#utility-city")?.value || "新北";
         const place = document.querySelector("#utility-place")?.value.trim() || "";
         if (key === "garbage") {
-          const data = await getJson(`/api/site_garbage?city=${encodeURIComponent(city)}&query=${encodeURIComponent(place)}`);
+          const data = await getJson(`/api/site_garbage?city=${encodeURIComponent(city)}&query=${encodeURIComponent(place)}&t=${Date.now()}`, 10000);
           if (runId !== utilityRunId) return;
           setUtilityResult(renderGarbage(data));
           return;
@@ -1478,7 +1488,8 @@
       } catch (error) {
         if (runId !== utilityRunId) return;
         console.error(error);
-        setUtilityResult(`<h4>目前連線不穩</h4><div class="flow-note">這個工具會查即時資料，請稍後再試。</div>`);
+        const isTimeout = error?.name === "AbortError";
+        setUtilityResult(`<h4>${isTimeout ? "資料源回應太慢" : "目前連線不穩"}</h4><div class="flow-note">${isTimeout ? "這次查詢已自動停止，避免畫面卡住。請縮小範圍或再按一次查詢。" : "這個工具會查即時資料，請稍後再試。"}</div>`);
       }
     }
 
