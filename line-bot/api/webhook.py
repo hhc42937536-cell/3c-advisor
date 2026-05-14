@@ -1366,6 +1366,56 @@ def _site_nearby_parking(lat: float, lon: float, city: str = "", limit: int = 8)
     }
 
 
+def _site_transport(city: str, mode: str = "parking", origin: str = "", destination: str = "", route: str = "", lat: float | None = None, lon: float | None = None) -> dict:
+    if mode == "parking":
+        if lat is not None and lon is not None:
+            data = _site_nearby_parking(lat, lon, city, limit=8)
+        else:
+            data = _site_parking(city, limit=8)
+        data["mode"] = "parking"
+        data.setdefault("source_names", {"parking": data.get("source_name") or "TDX 與地方政府停車資料"})
+        return data
+
+    source_names = {
+        "rail": "TDX 運輸資料流通服務平臺：台鐵與高鐵時刻資料",
+        "bus": "TDX 運輸資料流通服務平臺：公車路線、站牌與預估到站資料",
+        "road": "TDX 運輸資料流通服務平臺：即時路況、事件與道路旅行時間資料",
+    }
+    labels = {
+        "rail": "台鐵 / 高鐵時刻",
+        "bus": "公車動態",
+        "road": "即時路況",
+    }
+    hints = {
+        "rail": [
+            ("起訖站", f"{origin or '請輸入出發站'} → {destination or '請輸入目的站'}"),
+            ("查詢內容", "下一版會接台鐵/高鐵班次、行車時間與轉乘提醒。"),
+            ("資料需求", "需要標準站名或站碼，例如：台北、板橋、台中、左營。"),
+        ],
+        "bus": [
+            ("路線或站牌", route or origin or "請輸入公車路線、站牌或地標"),
+            ("查詢內容", "下一版會接公車預估到站、行駛方向與附近站牌。"),
+            ("資料需求", "需要城市與路線名稱；定位後可做附近站牌。"),
+        ],
+        "road": [
+            ("查詢範圍", destination or origin or city),
+            ("查詢內容", "下一版會接壅塞、事故、施工與替代道路提醒。"),
+            ("使用情境", "可放進早安卡、活動出發前與停車查詢前。"),
+        ],
+    }
+    selected = mode if mode in labels else "rail"
+    return {
+        "ok": True,
+        "city": city,
+        "mode": selected,
+        "title": labels[selected],
+        "items": [{"title": title, "body": body} for title, body in hints[selected]],
+        "source": f"tdx_{selected}_planned",
+        "source_names": {"transport": source_names[selected]},
+        "status": "planned",
+    }
+
+
 _SITE_COUNTY_NAMES = {
     "台北": "臺北市", "臺北": "臺北市", "新北": "新北市", "桃園": "桃園市",
     "台中": "臺中市", "臺中": "臺中市", "台南": "臺南市", "臺南": "臺南市",
@@ -2615,6 +2665,22 @@ class handler(BaseHTTPRequestHandler):
                 _site_json(self, _site_nearby_parking(lat_f, lon_f, city, limit=8))
             else:
                 _site_json(self, _site_parking(city, limit=8))
+
+        elif parsed.path == "/api/site_transport":
+            qs = parse_qs(parsed.query or "")
+            city = _site_param(qs, "city", "台北")
+            mode = _site_param(qs, "mode", "parking")
+            origin = _site_param(qs, "origin", "")
+            destination = _site_param(qs, "destination", "")
+            route = _site_param(qs, "route", "")
+            lat = _site_param(qs, "lat", "")
+            lon = _site_param(qs, "lon", "")
+            try:
+                lat_f = float(lat) if lat else None
+                lon_f = float(lon) if lon else None
+            except ValueError:
+                lat_f = lon_f = None
+            _site_json(self, _site_transport(city, mode, origin, destination, route, lat_f, lon_f))
 
         elif parsed.path == "/api/site_garbage":
             qs = parse_qs(parsed.query or "")
