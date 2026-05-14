@@ -1507,12 +1507,27 @@
       const [planTitle, planBody] = planAdvice(plan, data.time);
       const [focusTitle, focusBody] = focusAdvice(focus, weatherText, oilText, rateText, activity);
       const surpriseItems = data.surprise?.items || [];
-      const deal = surpriseItems.find((item) => item.kind === "deal" || item.kind === "brand") || surpriseItems[0];
-      const topic = surpriseItems.find((item) => item.kind === "topic");
-      const surpriseBody = [
-        deal ? `${deal.title}：${deal.body}` : "",
-        topic ? `${topic.title}：${topic.body}` : ""
-      ].filter(Boolean).join("；") || "今天先看咖啡飲料、品牌優惠與社群話題，給早上多一點可聊的素材。";
+      const surpriseLabel = {
+        deal: "優惠",
+        brand: "品牌",
+        topic: "話題",
+        activity: "活動",
+        local: "在地",
+        national: "全台",
+        food: "美食",
+        talk: "破冰"
+      };
+      const surpriseLimit = focus === "今日小驚喜" ? 8 : 6;
+      const surpriseCards = surpriseItems.slice(0, surpriseLimit).map((item) => {
+        const label = surpriseLabel[item.kind] || "分享";
+        const rawBody = item.kind === "deal" && item.body === "情報"
+          ? "省錢板好康，適合丟群組問要不要一起買。"
+          : (item.body || item.title);
+        const body = item.kind === "topic" || item.kind === "talk"
+          ? `可以聊：${rawBody}`
+          : `可以分享：${rawBody}`;
+        return card(`今日小驚喜｜${label}`, `${item.title}｜${body}`);
+      }).join("") || card("今日小驚喜｜分享", "可以分享：咖啡飲料、品牌優惠、在地活動與上班破冰話題。");
       const secondaryCard = focus === "油價與匯率"
         ? card("天氣穿搭", data.outfit || "依天氣調整穿搭與雨具")
         : card("油價 / 匯率", `${oilText}；${rateText}`);
@@ -1528,8 +1543,8 @@
           ${card("空氣品質 / 紫外線", `${airText}；${uvText}`)}
           ${card(planTitle, planBody)}
           ${secondaryCard}
-          ${card(focusTitle, focusBody)}
-          ${card("今日小驚喜", surpriseBody)}
+          ${focus === "今日小驚喜" ? "" : card(focusTitle, focusBody)}
+          ${surpriseCards}
         </div>
         <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。${nextStep}</div>
         ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看週末活動" }])}

@@ -14,6 +14,7 @@ import time
 import concurrent.futures
 import hashlib
 import hmac
+import html as py_html
 import urllib.request
 import urllib.parse
 import ssl as _ssl
@@ -3230,7 +3231,9 @@ def _site_today_surprise(city: str, limit: int = 10) -> dict:
     seen = set()
 
     def add_item(title: str, body: str, kind: str, url: str = ""):
-        key = (title or "").strip()
+        title = py_html.unescape(str(title or "")).strip()
+        body = py_html.unescape(str(body or "")).strip()
+        key = title
         if not key or key in seen:
             return
         seen.add(key)
@@ -3238,7 +3241,8 @@ def _site_today_surprise(city: str, limit: int = 10) -> dict:
 
     for deal in cache.get("deals", [])[:4]:
         tag = deal.get("tag") or "網友好康"
-        add_item(f"今日好康｜{tag}", deal.get("title", ""), "deal", deal.get("url", ""))
+        title = deal.get("title", "")
+        add_item(f"今日好康｜{title}", tag, "deal", deal.get("url", ""))
 
     if today <= datetime.date(2026, 5, 26):
         add_item("速食好康｜肯德基", "5/12 起限時兩週，報稅季主題優惠可留意買桶餐送餐盒活動。", "brand", "https://tw.stock.yahoo.com/news/5%E6%9C%88%E5%A0%B1%E7%A8%85%E6%95%91%E6%98%9F-%E8%82%AF%E5%BE%B7%E5%9F%BA%E8%B2%B7-%E6%A1%B6%E9%80%81-%E7%9B%92-%E9%BA%A5%E7%95%B6%E5%8B%9E%E8%B2%B7-080602569.html")
@@ -3258,6 +3262,16 @@ def _site_today_surprise(city: str, limit: int = 10) -> dict:
 
     if not any(item.get("kind") == "topic" for item in items):
         add_item(f"{yesterday.month}/{yesterday.day} 社群話題", "Threads 公開頁暫時沒有抓到穩定熱門文，先用今日好康或新歌當同事破冰話題。", "topic")
+
+    office_talks = [
+        ("上班話題｜今天喝什麼", "可以揪同事看咖啡、手搖或超商優惠，順手決定下午茶。", "talk"),
+        ("上班話題｜午餐怎麼揪", "先看附近活動與優惠，再決定要內用、外帶或順路買。", "talk"),
+        ("分享題｜今天省到什麼", "看到買一送一、點數兌換或品牌優惠，可以直接丟群組問誰要一起。", "talk"),
+    ]
+    for title, body, kind in office_talks:
+        if len(items) >= limit:
+            break
+        add_item(title, body, kind)
 
     if len(items) < limit:
         activity_items, _ = _site_activities(city, "", limit=4)
@@ -3437,8 +3451,8 @@ class handler(BaseHTTPRequestHandler):
             qs = parse_qs(parsed.query or "")
             city = _site_param(qs, "city", "台北")
             payload = _site_weather_payload(city)
-            surprise = _site_today_surprise(city, limit=6)
-            activity_items, activity_meta = _site_activities(city, "", limit=3)
+            surprise = _site_today_surprise(city, limit=10)
+            activity_items, activity_meta = _site_activities(city, "", limit=4)
             payload.setdefault("source_names", {})["surprise"] = surprise["source_names"]["surprise"]
             payload.update({
                 "ok": True,
