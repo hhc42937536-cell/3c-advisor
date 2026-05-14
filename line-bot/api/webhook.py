@@ -1478,6 +1478,7 @@ def _site_rail_schedule(origin: str, destination: str, operator_hint: str = "", 
         operators = ["TRA", "THSR"]
     now, _, now_minutes = _site_today_info()
     today = now.strftime("%Y-%m-%d")
+    tomorrow = (now + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
     for operator in operators:
         stations = _site_rail_stations(operator, token)
         origin_station = _site_find_rail_station(stations, origin)
@@ -1486,14 +1487,30 @@ def _site_rail_schedule(origin: str, destination: str, operator_hint: str = "", 
             continue
         origin_id = str(origin_station.get("StationID") or "")
         dest_id = str(dest_station.get("StationID") or "")
-        timetable_paths = [
-            f"Rail/{operator}/DailyTimetable/OD/{origin_id}/to/{dest_id}/{today}?$format=JSON",
-            f"Rail/{operator}/DailyTrainTimetable/OD/{origin_id}/to/{dest_id}/{today}?$format=JSON",
-        ]
         rows = []
-        for path in timetable_paths:
-            rows = _tdx_get_any(path, token, timeout=10, versions=("v2", "v3"))
-            if rows:
+        service_date = today
+        for date_value in (today, tomorrow):
+            timetable_paths = [
+                f"Rail/{operator}/DailyTimetable/OD/{origin_id}/to/{dest_id}/{date_value}?$format=JSON",
+                f"Rail/{operator}/DailyTrainTimetable/OD/{origin_id}/to/{dest_id}/{date_value}?$format=JSON",
+            ]
+            date_rows = []
+            for path in timetable_paths:
+                date_rows = _tdx_get_any(path, token, timeout=10, versions=("v2", "v3"))
+                if date_rows:
+                    break
+            if not date_rows:
+                continue
+            rows = date_rows
+            service_date = date_value
+            has_future = False
+            for row in rows:
+                origin_stop = row.get("OriginStopTime") or row.get("OriginStop") or {}
+                depart = origin_stop.get("DepartureTime") or origin_stop.get("ArrivalTime") or ""
+                if service_date != today or (_site_minutes(depart) is not None and _site_minutes(depart) >= now_minutes):
+                    has_future = True
+                    break
+            if has_future:
                 break
         items = []
         for row in rows:
@@ -1502,13 +1519,14 @@ def _site_rail_schedule(origin: str, destination: str, operator_hint: str = "", 
             dest_stop = row.get("DestinationStopTime") or row.get("DestinationStop") or {}
             depart = origin_stop.get("DepartureTime") or origin_stop.get("ArrivalTime") or ""
             arrive = dest_stop.get("ArrivalTime") or dest_stop.get("DepartureTime") or ""
-            if depart and _site_minutes(depart) is not None and _site_minutes(depart) < now_minutes:
+            if service_date == today and depart and _site_minutes(depart) is not None and _site_minutes(depart) < now_minutes:
                 continue
+            date_label = "" if service_date == today else "明天 "
             train_no = train.get("TrainNo") or train.get("TrainNumber") or ""
             train_type = _site_text(train.get("TrainTypeName") or train.get("TrainType"), _RAIL_OPERATOR_LABELS.get(operator, operator))
             vehicle = f" {train_type}" if train_type and train_type != _RAIL_OPERATOR_LABELS.get(operator, operator) else ""
             items.append({
-                "title": f"{depart or '未標示'} → {arrive or '未標示'}",
+                "title": f"{date_label}{depart or '未標示'} → {arrive or '未標示'}",
                 "body": f"{_RAIL_OPERATOR_LABELS.get(operator, operator)}{vehicle} {train_no}｜{_site_rail_station_name(origin_station)} → {_site_rail_station_name(dest_station)}",
                 "depart": depart,
                 "arrive": arrive,
