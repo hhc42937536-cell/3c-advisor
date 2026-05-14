@@ -85,7 +85,7 @@ def fetch_aqi(city: str, *, moe_key: str, aqi_station: dict) -> dict:
         req = urllib.request.Request(url, headers={"User-Agent": "LineBot/1.0"})
         with urllib.request.urlopen(req, timeout=3) as response:
             data = json.loads(response.read().decode("utf-8"))
-        recs = data.get("records", [])
+        recs = data if isinstance(data, list) else data.get("records", [])
         if not recs:
             return {"ok": False}
         rec = next((row for row in recs if (row.get("sitename") or row.get("SiteName") or "") == station), recs[0])
