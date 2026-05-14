@@ -1528,7 +1528,7 @@ def _site_maps_url(keyword: str) -> str:
 
 def _site_geocode_address(address: str) -> tuple[float | None, float | None]:
     query = " ".join(str(address or "").split())
-    if not query or not GOOGLE_PLACES_API_KEY:
+    if not query:
         return None, None
     cache_key = f"site:geocode:{query}"
     try:
@@ -1541,20 +1541,50 @@ def _site_geocode_address(address: str) -> tuple[float | None, float | None]:
                 return lat, lng
     except Exception:
         pass
+    if GOOGLE_PLACES_API_KEY:
+        try:
+            params = urllib.parse.urlencode({
+                "address": f"{query} 台灣",
+                "language": "zh-TW",
+                "region": "tw",
+                "key": GOOGLE_PLACES_API_KEY,
+            })
+            data = _site_get_json(f"https://maps.googleapis.com/maps/api/geocode/json?{params}", timeout=5)
+            results = data.get("results") or []
+            if results:
+                location = results[0].get("geometry", {}).get("location", {})
+                lat = _site_float(location.get("lat"))
+                lng = _site_float(location.get("lng"))
+                if lat is not None and lng is not None:
+                    try:
+                        _redis_set(cache_key, json.dumps({"lat": lat, "lng": lng}, ensure_ascii=False), ttl=86400 * 30)
+                    except Exception:
+                        pass
+                    return lat, lng
+        except Exception as exc:
+            print(f"[geocode] google geocoding failed: {query[:80]} {exc}")
+        try:
+            from utils.google_places import text_search as _site_text_search
+            results = _site_text_search(query, max_results=1)
+            if results:
+                lat = _site_float(results[0].get("lat"))
+                lng = _site_float(results[0].get("lng"))
+                if lat is not None and lng is not None:
+                    try:
+                        _redis_set(cache_key, json.dumps({"lat": lat, "lng": lng}, ensure_ascii=False), ttl=86400 * 30)
+                    except Exception:
+                        pass
+                    return lat, lng
+        except Exception as exc:
+            print(f"[geocode] google places text failed: {query[:80]} {exc}")
     try:
-        params = urllib.parse.urlencode({
-            "address": f"{query} 台灣",
-            "language": "zh-TW",
-            "region": "tw",
-            "key": GOOGLE_PLACES_API_KEY,
-        })
-        data = _site_get_json(f"https://maps.googleapis.com/maps/api/geocode/json?{params}", timeout=5)
-        results = data.get("results") or []
-        if not results:
+        data = _site_nominatim_search(query)
+        if not data:
+            data = _site_nominatim_search(_site_road_level_query(query))
+        if not data:
             return None, None
-        location = results[0].get("geometry", {}).get("location", {})
-        lat = _site_float(location.get("lat"))
-        lng = _site_float(location.get("lng"))
+        lat = _site_float(data[0].get("lat"))
+        lng = _site_float(data[0].get("lon"))
         if lat is None or lng is None:
             return None, None
         try:
@@ -1563,13 +1593,49 @@ def _site_geocode_address(address: str) -> tuple[float | None, float | None]:
             pass
         return lat, lng
     except Exception as exc:
-        print(f"[geocode] garbage address failed: {query[:80]} {exc}")
+        print(f"[geocode] osm geocoding failed: {query[:80]} {exc}")
         return None, None
+
+
+def _site_nominatim_search(query: str) -> list:
+    if not query:
+        return []
+    params = urllib.parse.urlencode({
+        "format": "jsonv2",
+        "limit": 1,
+        "countrycodes": "tw",
+        "accept-language": "zh-TW",
+        "q": query,
+    })
+    req = urllib.request.Request(
+        f"https://nominatim.openstreetmap.org/search?{params}",
+        headers={"User-Agent": "LifeUturn/1.0 (https://line-bot-kappa.vercel.app/)"},
+    )
+    ctx = _ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = _ssl.CERT_NONE
+    with urllib.request.urlopen(req, timeout=5, context=ctx) as response:
+        return json.loads(response.read().decode("utf-8", "replace"))
+
+
+def _site_road_level_query(query: str) -> str:
+    text = re.sub(r"\s+", "", str(query or ""))
+    # OSM 對台灣門牌常查不到，改用道路層級當最後 fallback。
+    text = re.sub(r"\d+(?:之\d+)?(?:號|巷|弄|樓|F).*", "", text)
+    return text
+
+
+def _site_google_key_available() -> bool:
+    return bool(GOOGLE_PLACES_API_KEY)
+
+
+def _site_garbage_geocode_limit(limit: int) -> int:
+    return limit if _site_google_key_available() else min(limit, 8)
 
 
 def _site_enrich_garbage_coords(items: list, city: str, limit: int = 24) -> None:
     city_full = _site_city_full_name(city).replace("臺", "台")
-    for item in items[:limit]:
+    for item in items[:_site_garbage_geocode_limit(limit)]:
         if item.get("lat") and item.get("lng"):
             continue
         address = "".join([
