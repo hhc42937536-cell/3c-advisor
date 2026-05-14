@@ -1637,6 +1637,15 @@ def _site_road_query(value: str) -> str:
     return text
 
 
+def _site_road_route_pattern(query: str):
+    q = _site_road_query(query).replace("臺", "台").replace(" ", "")
+    match = re.fullmatch(r"台(\d+)([甲乙丙丁戊己庚辛壬癸]?)(?:線|號)?", q)
+    if not match:
+        return None
+    number, branch = match.groups()
+    return re.compile(rf"台{re.escape(number + branch)}(?:線|號|快速道路|_|$)")
+
+
 def _site_freeway_sections() -> dict:
     now = time.time()
     if _FREEWAY_SECTIONS_CACHE["items"] and now - _FREEWAY_SECTIONS_CACHE["loaded_at"] < 86400:
@@ -1872,14 +1881,21 @@ def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
     highway_rows, highway_updated_at = _site_highway_live()
     updated_at = highway_updated_at or freeway_updated_at
     level_label = {0: "無資料", 1: "順暢", 2: "車多", 3: "壅塞", 4: "嚴重壅塞"}
+    route_pattern = _site_road_route_pattern(q)
     matches = []
     tagged_rows = [(row, freeway_sections) for row in freeway_rows] + [(row, highway_sections) for row in highway_rows]
     for row, sections in tagged_rows:
         section = sections.get(row.get("section_id"), {})
+        route_text = _site_road_query(" ".join([
+            row.get("road_name", ""), row.get("section_name", ""),
+            section.get("road", ""), section.get("name", ""),
+        ])).replace("臺", "台").replace(" ", "")
         haystack = _site_road_query(" ".join([
             row.get("section_name", ""), row.get("road_name", ""), row.get("section_start", ""), row.get("section_end", ""),
             section.get("name", ""), section.get("road", ""), section.get("start", ""), section.get("end", ""),
         ]))
+        if route_pattern and not route_pattern.search(route_text):
+            continue
         if q and q not in haystack:
             continue
         speed = int(row.get("speed") or 0)
