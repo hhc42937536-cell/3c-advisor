@@ -914,7 +914,7 @@
                 <div class="demo-box">
                   <div class="control-grid">
                     <label class="field" for="transport-mode">交通項目
-                      <select id="transport-mode"><option value="rail">台鐵 / 高鐵時刻</option><option value="bus">公車動態</option><option value="road">即時路況</option></select>
+                      <select id="transport-mode"><option value="rail">台鐵 / 高鐵時刻</option><option value="bike">YouBike 即時站點</option><option value="bus">公車動態</option><option value="road">即時路況</option></select>
                     </label>
                     <label class="field" for="commute-city">城市
                       <select id="commute-city"><option>台北</option><option>新北</option><option>桃園</option><option>台中</option><option>台南</option><option>高雄</option></select>
@@ -937,7 +937,7 @@
                 <button class="data-item" type="button" data-preset="traffic" data-mode="rail"><strong>台鐵 / 高鐵</strong><span>時刻 / 轉乘</span></button>
                 <button class="data-item" type="button" data-preset="traffic" data-mode="bus"><strong>公車動態</strong><span>到站 / 附近站牌</span></button>
                 <button class="data-item" type="button" data-preset="traffic" data-mode="road"><strong>即時路況</strong><span>事故 / 壅塞</span></button>
-                <button class="data-item" type="button" data-preset="traffic" data-mode="bus"><strong>YouBike</strong><span>下一步接站點空位</span></button>
+                <button class="data-item" type="button" data-preset="traffic" data-mode="bike"><strong>YouBike</strong><span>可借 / 可還</span></button>
               </div>
             </div>
           </div>
@@ -1319,12 +1319,15 @@
       google_places_text_search: "Google 地圖搜尋資訊",
       city_specialties: "生活優轉各縣市特色美食資料",
       surprise: "生活優轉每日小驚喜",
+      moenv_aqi_live: "環境部空氣品質監測網",
+      uvi_estimate: "依天氣與時段估算紫外線風險",
       accupass_crawler_cache_or_activity_fallback: "Accupass、文化部藝文活動資料、活動網站與部落格",
       restaurant_cache: "生活優轉整理的美食名單",
       crawler_cache: "生活優轉整理的活動名單",
       activity_fallback: "生活優轉推薦活動",
       tdx_live: "TDX 運輸資料流通服務平臺",
       tdx_unavailable: "TDX 運輸資料流通服務平臺暫時無法取得",
+      tdx_youbike_live: "TDX 運輸資料流通服務平臺：公共自行車站點與即時可借可還",
       nearby_parking_live: "TDX、地方政府停車資料與路邊停車即時資料",
       parking_lot_live: "TDX 與地方政府停車場資料",
       ntpc_street_live: "新北市路邊停車格即時資料",
@@ -1375,6 +1378,8 @@
 
     function renderMorning(data) {
       const weather = data.weather || {};
+      const aqi = data.aqi || {};
+      const uvi = data.uvi || {};
       const oil = data.oil || {};
       const rates = data.rates || {};
       const plan = data.plan || "通勤上班";
@@ -1384,6 +1389,8 @@
         : "即時天氣暫時取不到，先用保守穿搭提醒";
       const oilText = oil["95"] ? `95 無鉛 ${oil["95"]}，92 無鉛 ${oil["92"] || "—"}` : "油價資料暫時取不到";
       const rateText = rates.USD ? `USD 賣出 ${rates.USD.spot_sell}，JPY 賣出 ${rates.JPY?.spot_sell || "—"}` : "匯率資料暫時取不到";
+      const airText = aqi.ok ? aqi.label.replace(/\s+/g, " ") : "AQI 暫時取不到，敏感族群外出可先保守戴口罩。";
+      const uvText = uvi.ok ? uvi.label.replace(/\s+/g, " ") : "紫外線暫時取不到，白天外出仍建議防曬。";
       const activity = (data.activities || [])[0];
       const [planTitle, planBody] = planAdvice(plan, data.time);
       const [focusTitle, focusBody] = focusAdvice(focus, weatherText, oilText, rateText, activity);
@@ -1406,6 +1413,7 @@
         <h4>${html(summaryTitle(data.time, data.city))}</h4>
         <div class="result-grid">
           ${card("氣象署天氣", weatherText)}
+          ${card("空氣品質 / 紫外線", `${airText}；${uvText}`)}
           ${card(planTitle, planBody)}
           ${secondaryCard}
           ${card(focusTitle, focusBody)}

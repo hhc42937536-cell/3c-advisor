@@ -73,7 +73,7 @@ from modules.food     import (
 from modules.weather  import (
     build_weather_message, build_weather_region_picker,
     build_morning_summary, _fetch_cwa_weather,
-    _fetch_quick_oil, _fetch_quick_rates,
+    _fetch_quick_oil, _fetch_quick_rates, _fetch_aqi, _estimate_uvi,
     _set_user_city, _get_user_city, _build_morning_city_picker,
 )
 from modules.health   import build_health_message, build_mood_support, parse_height_weight
@@ -786,11 +786,14 @@ def _site_weather_payload(city: str) -> dict:
     weather = _fetch_cwa_weather(city)
     oil = _fetch_quick_oil()
     rates = _fetch_quick_rates()
+    aqi = _fetch_aqi(city)
+    uvi = {"ok": False}
     outfit = "查無即時天氣，先用薄外套與雨具做保守準備"
     if weather.get("ok"):
         pop = int(weather.get("pop", 0))
         min_t = int(weather.get("min_t", 20))
         max_t = int(weather.get("max_t", 25))
+        uvi = _estimate_uvi(str(weather.get("wx", "")), max_t)
         if max_t >= 30:
             outfit = "炎熱，選透氣衣物、防曬與補水"
         elif min_t <= 18:
@@ -799,20 +802,25 @@ def _site_weather_payload(city: str) -> dict:
             outfit = "舒適溫度，穿搭以輕便為主"
         if pop >= 40:
             outfit += "，雨具建議放包包"
-    live_payload = _site_garbage_trucks(city, limit=3, query=query, district=district)
     return {
         "city": city,
         "weather": weather,
+        "aqi": aqi,
+        "uvi": uvi,
         "oil": oil,
         "rates": rates,
         "outfit": outfit,
         "sources": {
             "weather": "cwa_live" if weather.get("ok") else "fallback",
+            "aqi": "moenv_aqi_live" if aqi.get("ok") else "fallback",
+            "uvi": "uvi_estimate" if uvi.get("ok") else "fallback",
             "oil": "cpc_live_or_cache" if oil else "fallback",
             "rates": "bot_live_or_cache" if rates else "fallback",
         },
         "source_names": {
             "weather": "交通部中央氣象署" if weather.get("ok") else "生活優轉參考建議",
+            "aqi": "環境部空氣品質監測網" if aqi.get("ok") else "生活優轉參考建議",
+            "uvi": "依天氣與時段估算紫外線風險" if uvi.get("ok") else "生活優轉參考建議",
             "oil": "台灣中油油價公告" if oil else "生活優轉參考建議",
             "rates": "臺灣銀行牌告匯率" if rates else "生活優轉參考建議",
         },
@@ -1528,6 +1536,62 @@ def _site_rail_schedule(origin: str, destination: str, operator_hint: str = "", 
     }
 
 
+def _site_youbike(city: str, query: str = "", limit: int = 8) -> dict:
+    token = _get_tdx_token()
+    if not token:
+        return {"ok": False, "city": city, "mode": "bike", "source": "tdx_unavailable", "items": [], "source_names": {"transport": "TDX 運輸資料流通服務平臺"}}
+    tdx_city = _SITE_TDX_CITY.get(city.replace("市", "").replace("縣", ""), _SITE_TDX_CITY.get(city, "Taipei"))
+    stations = _tdx_get_any(f"Bike/Station/City/{tdx_city}?$format=JSON", token, timeout=8, versions=("v2", "v3"))
+    availability = _tdx_get_any(f"Bike/Availability/City/{tdx_city}?$format=JSON", token, timeout=8, versions=("v2", "v3"))
+    avail_by_id = {}
+    for row in availability:
+        sid = str(row.get("StationUID") or row.get("StationID") or "")
+        if sid:
+            avail_by_id[sid] = row
+    q = _site_fix_text(query)
+    items = []
+    for station in stations:
+        name = _site_text(station.get("StationName") or station.get("StationNameZh"), "")
+        address = _site_text(station.get("StationAddress") or station.get("StationAddressZh"), "")
+        area = _site_text(station.get("ServiceArea") or station.get("LocationCityCode"), city)
+        haystack = _site_fix_text(f"{name} {address} {area}")
+        if q and q not in haystack:
+            continue
+        sid = str(station.get("StationUID") or station.get("StationID") or "")
+        avail = avail_by_id.get(sid, {})
+        rent = _site_first_number(avail.get("AvailableRentBikes") or avail.get("AvailableRentBikesDetail") or avail.get("AvailableRentBikesCount"), 0)
+        ret = _site_first_number(avail.get("AvailableReturnBikes") or avail.get("AvailableReturnBikesCount"), 0)
+        total = _site_first_number(station.get("BikesCapacity") or avail.get("BikesCapacity"), 0)
+        items.append({
+            "title": name or "YouBike 站點",
+            "body": f"{address or area}｜可借 {int(rent)}、可還 {int(ret)}" + (f"、總柱 {int(total)}" if total else ""),
+            "rent": int(rent),
+            "return": int(ret),
+            "capacity": int(total) if total else "",
+            "source": "tdx_youbike_live",
+        })
+        if len(items) >= limit:
+            break
+    if q and not items:
+        for station in stations[:limit]:
+            name = _site_text(station.get("StationName") or station.get("StationNameZh"), "")
+            address = _site_text(station.get("StationAddress") or station.get("StationAddressZh"), "")
+            sid = str(station.get("StationUID") or station.get("StationID") or "")
+            avail = avail_by_id.get(sid, {})
+            rent = _site_first_number(avail.get("AvailableRentBikes") or avail.get("AvailableRentBikesCount"), 0)
+            ret = _site_first_number(avail.get("AvailableReturnBikes") or avail.get("AvailableReturnBikesCount"), 0)
+            items.append({"title": name or "YouBike 站點", "body": f"{address or city}｜可借 {int(rent)}、可還 {int(ret)}", "source": "tdx_youbike_live"})
+    return {
+        "ok": bool(items),
+        "city": city,
+        "mode": "bike",
+        "title": "YouBike 即時站點",
+        "items": items,
+        "source": "tdx_youbike_live",
+        "source_names": {"transport": "TDX 運輸資料流通服務平臺：公共自行車站點與即時可借可還"},
+    }
+
+
 def _site_transport(city: str, mode: str = "parking", origin: str = "", destination: str = "", route: str = "", lat: float | None = None, lon: float | None = None) -> dict:
     if mode == "parking":
         if lat is not None and lon is not None:
@@ -1541,15 +1605,20 @@ def _site_transport(city: str, mode: str = "parking", origin: str = "", destinat
     if mode == "rail":
         return _site_rail_schedule(origin, destination, route, limit=6)
 
+    if mode == "bike":
+        return _site_youbike(city, destination or origin or route, limit=8)
+
     source_names = {
         "rail": "TDX 運輸資料流通服務平臺：台鐵與高鐵時刻資料",
         "bus": "TDX 運輸資料流通服務平臺：公車路線、站牌與預估到站資料",
         "road": "TDX 運輸資料流通服務平臺：即時路況、事件與道路旅行時間資料",
+        "bike": "TDX 運輸資料流通服務平臺：公共自行車站點與即時可借可還",
     }
     labels = {
         "rail": "台鐵 / 高鐵時刻",
         "bus": "公車動態",
         "road": "即時路況",
+        "bike": "YouBike 即時站點",
     }
     hints = {
         "rail": [
@@ -1566,6 +1635,11 @@ def _site_transport(city: str, mode: str = "parking", origin: str = "", destinat
             ("查詢範圍", destination or origin or city),
             ("查詢內容", "下一版會接壅塞、事故、施工與替代道路提醒。"),
             ("使用情境", "可放進早安卡、活動出發前與停車查詢前。"),
+        ],
+        "bike": [
+            ("站點或地標", destination or origin or route or city),
+            ("查詢內容", "YouBike 站點、可借車數與可還空位。"),
+            ("使用情境", "捷運、公車最後一哩路或短程移動。"),
         ],
     }
     selected = mode if mode in labels else "rail"
