@@ -1374,10 +1374,11 @@
       const items = data.items || [];
       const cards = items.slice(0, 24).map((item) => {
         const status = item.today ? (item.passed ? "今日已過" : "今日可倒") : `下次${item.service_day || ""}`;
+        const match = item.match === "exact" ? "輸入地點" : item.match === "nearby" ? "附近站點" : "清運站點";
         const recycle = item.recycle_days ? `｜回收：${item.recycle_days}` : "";
         const car = item.car ? `｜車號 ${item.car}` : "";
         const place = [item.district, item.village, item.location].filter(Boolean).join(" ");
-        return card(`${item.time_range || item.time || "時間未標示"} ${status}`, `${place}${car}｜${item.route || "清運點"}${recycle}`);
+        return card(`${item.time_range || item.time || "時間未標示"} ${status}`, `${match}｜${place}${car}｜${item.route || "清運點"}${recycle}`);
       }).join("");
       const liveItems = data.live?.items || [];
       const liveText = liveItems.length
@@ -1388,7 +1389,7 @@
         .map((item, index) => ({ href: item.maps_url, label: `開地圖 ${index + 1}` }));
       return `
         <h4>${html(data.city || "")}${html(data.district || "")} 垃圾車時間地點</h4>
-        <div class="result-grid">${cards || card("先選縣市，必要時再輸入區域或路名", "不輸入地點會先列出這個縣市可取得的多個清運點；輸入路名後會縮小範圍。")}</div>
+        <div class="result-grid">${cards || card("先選縣市，必要時再輸入區域或路名", "不輸入地點會先列出這個縣市可取得的多個清運點；輸入路名後會列出命中地點與同一路線前後站。")}</div>
         <div class="flow-note">即時車輛：${html(liveText)}。${sourceLabel(data.source_names || { schedule: data.source_name || data.source, live: data.live?.source_name })}。</div>
         ${mapLinks.length ? linkActions(mapLinks) : ""}
       `;

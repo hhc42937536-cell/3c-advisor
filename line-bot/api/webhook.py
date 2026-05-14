@@ -1758,12 +1758,30 @@ def _site_hwms_route_rows(route: dict, timeout: float = 3) -> list:
     return rows
 
 
-def _site_hwms_route_stops(route: dict, keyword: str, today: int, now_minutes: int, limit: int = 8, timeout: float = 3) -> list:
+def _site_hwms_route_stops(route: dict, keyword: str, today: int, now_minutes: int, limit: int = 8, timeout: float = 3, context_radius: int = 6) -> list:
     items = []
-    for row in _site_hwms_route_rows(route, timeout=timeout):
+    rows = _site_hwms_route_rows(route, timeout=timeout)
+    candidate_rows = rows
+    exact_locations = set()
+    if keyword:
+        route_matches = keyword in route.get("route", "") or keyword in route.get("code", "")
+        matched_indices = [
+            index for index, row in enumerate(rows)
+            if keyword in str(row.get("location") or "")
+        ]
+        if matched_indices:
+            exact_locations = {str(rows[index].get("location") or "") for index in matched_indices}
+            selected = set()
+            for index in matched_indices:
+                start = max(0, index - context_radius)
+                end = min(len(rows), index + context_radius + 1)
+                selected.update(range(start, end))
+            candidate_rows = [rows[index] for index in sorted(selected)]
+        elif not route_matches:
+            return []
+
+    for row in candidate_rows:
         location = str(row.get("location") or "")
-        if keyword and keyword not in location and keyword not in route.get("route", "") and keyword not in route.get("code", ""):
-            continue
         schedule_time = str(row.get("time") or "")
         garbage_days = _site_days_from_text(row.get("garbage_days", ""))
         service_day, display_time, _ = _site_next_service_time({day: (schedule_time, schedule_time) for day in garbage_days}, today, now_minutes)
@@ -1786,6 +1804,7 @@ def _site_hwms_route_stops(route: dict, keyword: str, today: int, now_minutes: i
             "minutes": minutes,
             "passed": is_today and minutes is not None and minutes < now_minutes,
             "maps_url": _site_maps_url(f"{route.get('country','')}{route.get('district','')}{location}"),
+            "match": "exact" if location in exact_locations else "nearby" if keyword else "route",
             "source": "moenv_garbage_route",
         })
         if len(items) >= limit:
