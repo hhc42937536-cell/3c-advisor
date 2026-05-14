@@ -1612,6 +1612,8 @@ _BUS_STATUS_TEXT = {
 
 _FREEWAY_SECTIONS_CACHE = {"loaded_at": 0.0, "items": {}}
 _FREEWAY_TRAFFIC_CACHE = {"loaded_at": 0.0, "items": [], "updated_at": ""}
+_HIGHWAY_SECTIONS_CACHE = {"loaded_at": 0.0, "items": {}}
+_HIGHWAY_TRAFFIC_CACHE = {"loaded_at": 0.0, "items": [], "updated_at": ""}
 
 
 def _site_xml_text(node, name: str, default: str = "") -> str:
@@ -1777,15 +1779,102 @@ def _site_freeway_live() -> tuple[list, str]:
         return _FREEWAY_TRAFFIC_CACHE["items"] or [], _FREEWAY_TRAFFIC_CACHE["updated_at"] or ""
 
 
+def _site_highway_sections() -> dict:
+    now = time.time()
+    if _HIGHWAY_SECTIONS_CACHE["items"] and now - _HIGHWAY_SECTIONS_CACHE["loaded_at"] < 86400:
+        return _HIGHWAY_SECTIONS_CACHE["items"]
+    token = _get_tdx_token()
+    if not token:
+        return {}
+    try:
+        data = _tdx_get_any(
+            "Road/Traffic/Section/Highway?$format=JSON",
+            token,
+            timeout=8,
+            versions=("v2", "v3"),
+        )
+        sections = {}
+        for row in data:
+            sid = _site_text(row.get("SectionID") or row.get("LinkID") or row.get("RoadSectionID"), "")
+            if not sid:
+                continue
+            start = _site_text(row.get("RoadSectionStart") or row.get("SectionStart") or row.get("Start"), "")
+            end = _site_text(row.get("RoadSectionEnd") or row.get("SectionEnd") or row.get("End"), "")
+            road = _site_text(row.get("RoadName"), "")
+            name = _site_text(row.get("SectionName"), "") or f"{road}({start}到{end})"
+            sections[sid] = {
+                "section_id": sid,
+                "name": name,
+                "road": road,
+                "direction": _site_text(row.get("RoadDirection"), ""),
+                "start": start,
+                "end": end,
+                "length": _site_text(row.get("SectionLength"), ""),
+                "speed_limit": _site_text(row.get("SpeedLimit"), ""),
+            }
+        if sections:
+            _HIGHWAY_SECTIONS_CACHE.update({"loaded_at": now, "items": sections})
+        return sections
+    except Exception as exc:
+        print(f"[road] highway sections failed: {exc}")
+        return _HIGHWAY_SECTIONS_CACHE["items"] or {}
+
+
+def _site_highway_live() -> tuple[list, str]:
+    now = time.time()
+    if _HIGHWAY_TRAFFIC_CACHE["items"] and now - _HIGHWAY_TRAFFIC_CACHE["loaded_at"] < 60:
+        return _HIGHWAY_TRAFFIC_CACHE["items"], _HIGHWAY_TRAFFIC_CACHE["updated_at"]
+    token = _get_tdx_token()
+    if not token:
+        return [], ""
+    try:
+        data = _tdx_get_any(
+            "Road/Traffic/Live/Highway?$format=JSON",
+            token,
+            timeout=8,
+            versions=("v2", "v3"),
+        )
+        rows = []
+        updated_at = ""
+        for row in data:
+            sid = _site_text(row.get("SectionID") or row.get("LinkID") or row.get("RoadSectionID"), "")
+            if not sid:
+                continue
+            updated_at = updated_at or _site_text(row.get("DataCollectTime") or row.get("UpdateTime"), "")
+            rows.append({
+                "section_id": sid,
+                "section_name": _site_text(row.get("SectionName"), ""),
+                "road_name": _site_text(row.get("RoadName"), ""),
+                "road_direction": _site_text(row.get("RoadDirection"), ""),
+                "section_start": _site_text(row.get("RoadSectionStart") or row.get("SectionStart"), ""),
+                "section_end": _site_text(row.get("RoadSectionEnd") or row.get("SectionEnd"), ""),
+                "travel_time": _site_first_number(row.get("TravelTime"), 0),
+                "speed": _site_first_number(row.get("TravelSpeed"), 0),
+                "level": _site_first_number(row.get("CongestionLevel"), 0),
+                "level_id": _site_text(row.get("CongestionLevelID"), ""),
+                "collect_time": _site_text(row.get("DataCollectTime"), ""),
+            })
+        if rows:
+            _HIGHWAY_TRAFFIC_CACHE.update({"loaded_at": now, "items": rows, "updated_at": updated_at})
+        return rows, updated_at
+    except Exception as exc:
+        print(f"[road] highway live failed: {exc}")
+        return _HIGHWAY_TRAFFIC_CACHE["items"] or [], _HIGHWAY_TRAFFIC_CACHE["updated_at"] or ""
+
+
 def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
     q = _site_road_query(query or "")
     if q in ("", "即時路況", "路況"):
         q = "國道1號"
-    sections = _site_freeway_sections()
-    rows, updated_at = _site_freeway_live()
+    freeway_sections = _site_freeway_sections()
+    freeway_rows, freeway_updated_at = _site_freeway_live()
+    highway_sections = _site_highway_sections()
+    highway_rows, highway_updated_at = _site_highway_live()
+    updated_at = highway_updated_at or freeway_updated_at
     level_label = {0: "無資料", 1: "順暢", 2: "車多", 3: "壅塞", 4: "嚴重壅塞"}
     matches = []
-    for row in rows:
+    tagged_rows = [(row, freeway_sections) for row in freeway_rows] + [(row, highway_sections) for row in highway_rows]
+    for row, sections in tagged_rows:
         section = sections.get(row.get("section_id"), {})
         haystack = _site_road_query(" ".join([
             row.get("section_name", ""), row.get("road_name", ""), row.get("section_start", ""), row.get("section_end", ""),
@@ -1807,12 +1896,12 @@ def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
             "body": "｜".join([bit for bit in body_bits if bit]),
             "speed": speed,
             "level": level,
-            "source": "freeway_live_traffic",
+            "source": "road_live_traffic",
         })
     matches.sort(key=lambda item: (-(item.get("level") or 0), item.get("speed") or 999, item.get("title", "")))
     if not matches and q != "國道1號":
         fallback = _site_road_live(city, "國道1號", limit=limit)
-        fallback["notice"] = f"沒有找到「{q}」的高速公路即時路況，先顯示國道1號較需要注意的路段。"
+        fallback["notice"] = f"沒有找到「{q}」的國道或省道即時路況，先顯示國道1號較需要注意的路段。"
         return fallback
     return {
         "ok": bool(matches),
@@ -1822,8 +1911,8 @@ def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
         "title": f"{q} 即時路況",
         "updated_at": updated_at,
         "items": matches[:limit],
-        "source": "freeway_live_traffic",
-        "source_names": {"transport": "高速公路局路段即時路況動態資訊"},
+        "source": "road_live_traffic",
+        "source_names": {"transport": "TDX、高速公路局與公路局發布路段即時路況資料"},
     }
 
 
