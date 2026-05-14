@@ -1328,6 +1328,15 @@ _SITE_TDX_CITY = {
     "台北": "Taipei", "臺北": "Taipei", "新北": "NewTaipei", "桃園": "Taoyuan",
     "台中": "Taichung", "臺中": "Taichung", "台南": "Tainan", "臺南": "Tainan",
     "高雄": "Kaohsiung", "基隆": "Keelung", "新竹": "Hsinchu", "嘉義": "Chiayi",
+    "新竹縣": "HsinchuCounty", "苗栗": "MiaoliCounty", "苗栗縣": "MiaoliCounty",
+    "彰化": "ChanghuaCounty", "彰化縣": "ChanghuaCounty", "南投": "NantouCounty",
+    "南投縣": "NantouCounty", "雲林": "YunlinCounty", "雲林縣": "YunlinCounty",
+    "嘉義縣": "ChiayiCounty", "屏東": "PingtungCounty", "屏東縣": "PingtungCounty",
+    "宜蘭": "YilanCounty", "宜蘭縣": "YilanCounty", "花蓮": "HualienCounty",
+    "花蓮縣": "HualienCounty", "台東": "TaitungCounty", "臺東": "TaitungCounty",
+    "台東縣": "TaitungCounty", "臺東縣": "TaitungCounty", "澎湖": "PenghuCounty",
+    "澎湖縣": "PenghuCounty", "金門": "KinmenCounty", "金門縣": "KinmenCounty",
+    "連江": "LienchiangCounty", "連江縣": "LienchiangCounty",
 }
 
 
@@ -1592,6 +1601,101 @@ def _site_youbike(city: str, query: str = "", limit: int = 8) -> dict:
     }
 
 
+_BUS_STATUS_TEXT = {
+    0: "",
+    1: "尚未發車",
+    2: "交管不停靠",
+    3: "末班車已過",
+    4: "今日未營運",
+}
+
+
+def _site_route_text(value) -> str:
+    if isinstance(value, dict):
+        return _site_text(value.get("Zh_tw") or value.get("ZhTw") or value.get("En"), "")
+    return _site_text(value, "")
+
+
+def _site_bus_eta(city: str, route: str = "", stop_keyword: str = "", limit: int = 10) -> dict:
+    city_key = city.replace("市", "").replace("縣", "")
+    tdx_city = _SITE_TDX_CITY.get(city_key, _SITE_TDX_CITY.get(city, "Taipei"))
+    route_name = _site_fix_text(route or "")
+    keyword = _site_fix_text(stop_keyword or "")
+    if not route_name:
+        return {
+            "ok": False,
+            "city": city,
+            "mode": "bus",
+            "title": "公車動態",
+            "items": [
+                {"title": "請先輸入公車路線", "body": "在「路線 / 道路」填 307、藍15、紅56 這類路線名稱；站牌或地標可填在出發地/目的地。"}
+            ],
+            "source": "tdx_bus_live",
+            "source_names": {"transport": "TDX 運輸資料流通服務平臺：公車預估到站資料"},
+        }
+    token = _get_tdx_token()
+    if not token:
+        return {"ok": False, "city": city, "mode": "bus", "title": "公車動態", "items": [], "source": "tdx_unavailable", "source_names": {"transport": "TDX 運輸資料流通服務平臺"}}
+    encoded_route = urllib.parse.quote(route_name, safe="")
+    rows = _tdx_get_any(
+        f"Bus/EstimatedTimeOfArrival/City/{tdx_city}/{encoded_route}?$format=JSON",
+        token,
+        timeout=8,
+        versions=("v2", "v3"),
+    )
+    items = []
+    for row in rows:
+        stop_name = _site_route_text(row.get("StopName"))
+        route_label = _site_route_text(row.get("RouteName")) or route_name
+        direction = _site_first_number(row.get("Direction"), 0)
+        status = _site_first_number(row.get("StopStatus"), 0)
+        estimate = row.get("EstimateTime")
+        plate = _site_text(row.get("PlateNumb"), "")
+        if keyword and keyword not in _site_fix_text(f"{stop_name} {row.get('StopUID','')} {row.get('StopID','')}"):
+            continue
+        if estimate is not None and _site_first_number(estimate, -1) >= 0:
+            minutes = max(0, int(round(_site_first_number(estimate, 0) / 60)))
+            eta = "進站中" if minutes == 0 else f"約 {minutes} 分鐘"
+            sort_key = minutes
+        else:
+            eta = _BUS_STATUS_TEXT.get(status, "尚無預估")
+            sort_key = 999 + status
+        if not stop_name:
+            continue
+        direction_text = "去程" if direction == 0 else "返程"
+        body = f"{route_label}｜{direction_text}｜{eta}"
+        if plate:
+            body += f"｜車號 {plate}"
+        items.append({
+            "title": stop_name,
+            "body": body,
+            "route": route_label,
+            "direction": direction,
+            "eta_minutes": sort_key if sort_key < 999 else None,
+            "source": "tdx_bus_live",
+            "_sort": sort_key,
+        })
+    items.sort(key=lambda item: (item.get("_sort", 9999), item.get("direction", 0), item.get("title", "")))
+    for item in items:
+        item.pop("_sort", None)
+    if not items and keyword:
+        rows_without_filter = _site_bus_eta(city, route_name, "", limit=limit)
+        rows_without_filter["items"] = rows_without_filter.get("items", [])[:limit]
+        rows_without_filter["title"] = f"{route_name} 公車動態"
+        rows_without_filter["notice"] = f"沒有找到包含「{keyword}」的站牌，先顯示此路線接下來較快到站的站牌。"
+        return rows_without_filter
+    return {
+        "ok": bool(items),
+        "city": city,
+        "mode": "bus",
+        "route": route_name,
+        "title": f"{route_name} 公車動態",
+        "items": items[:limit],
+        "source": "tdx_bus_live",
+        "source_names": {"transport": "TDX 運輸資料流通服務平臺：公車預估到站資料"},
+    }
+
+
 def _site_transport(city: str, mode: str = "parking", origin: str = "", destination: str = "", route: str = "", lat: float | None = None, lon: float | None = None) -> dict:
     if mode == "parking":
         if lat is not None and lon is not None:
@@ -1607,6 +1711,10 @@ def _site_transport(city: str, mode: str = "parking", origin: str = "", destinat
 
     if mode == "bike":
         return _site_youbike(city, destination or origin or route, limit=8)
+
+    if mode == "bus":
+        stop_keyword = origin or destination
+        return _site_bus_eta(city, route or destination or origin, stop_keyword, limit=10)
 
     source_names = {
         "rail": "TDX 運輸資料流通服務平臺：台鐵與高鐵時刻資料",

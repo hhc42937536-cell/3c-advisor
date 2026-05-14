@@ -912,7 +912,7 @@
             <div class="panel-layout">
               <div>
                 <h3>今天怎麼去。</h3>
-                <p>把台鐵/高鐵、公車動態、即時路況與之後的 YouBike 放在同一個出門決策裡。</p>
+                <p>把台鐵/高鐵、公車動態、即時路況與 YouBike 放在同一個出門決策裡。</p>
                 <div class="demo-box">
                   <div class="control-grid">
                     <label class="field" for="transport-mode">交通項目
@@ -937,7 +937,7 @@
               </div>
               <div class="data-list">
                 <button class="data-item" type="button" data-preset="traffic" data-mode="rail"><strong>台鐵 / 高鐵</strong><span>時刻 / 轉乘</span></button>
-                <button class="data-item" type="button" data-preset="traffic" data-mode="bus"><strong>公車動態</strong><span>到站 / 附近站牌</span></button>
+                <button class="data-item" type="button" data-preset="traffic" data-mode="bus" data-route="307" data-origin="台北車站"><strong>公車動態</strong><span>到站 / 附近站牌</span></button>
                 <button class="data-item" type="button" data-preset="traffic" data-mode="road"><strong>即時路況</strong><span>事故 / 壅塞</span></button>
                 <button class="data-item" type="button" data-preset="traffic" data-mode="bike"><strong>YouBike</strong><span>可借 / 可還</span></button>
               </div>
@@ -1317,6 +1317,9 @@
       }
       if (key === "traffic") {
         setSelectValue("#transport-mode", presetButton.dataset.mode);
+        if (presetButton.dataset.route) document.querySelector("#transport-route").value = presetButton.dataset.route;
+        if (presetButton.dataset.origin) document.querySelector("#transport-origin").value = presetButton.dataset.origin;
+        if (presetButton.dataset.destination) document.querySelector("#commute-destination").value = presetButton.dataset.destination;
       }
       if (key === "parking") {
         setSelectValue("#parking-city", presetButton.dataset.city);
@@ -1346,6 +1349,7 @@
       activity_fallback: "生活優轉推薦活動",
       tdx_live: "TDX 運輸資料流通服務平臺",
       tdx_unavailable: "TDX 運輸資料流通服務平臺暫時無法取得",
+      tdx_bus_live: "TDX 運輸資料流通服務平臺：公車預估到站資料",
       tdx_youbike_live: "TDX 運輸資料流通服務平臺：公共自行車站點與即時可借可還",
       nearby_parking_live: "TDX、地方政府停車資料與路邊停車即時資料",
       parking_lot_live: "TDX 與地方政府停車場資料",
@@ -1534,10 +1538,11 @@
         `;
       }
       const cards = (data.items || []).map((item) => card(item.title, item.body)).join("");
+      const notice = data.notice ? `${data.notice}。` : "";
       return `
         <h4>${html(data.city || "")} ${html(data.title || "今天怎麼去")}</h4>
         <div class="result-grid">${cards || card("今天怎麼去", "先選交通項目並輸入出發地、目的地或路線。")}</div>
-        <div class="flow-note">${sourceLabel(data.source_names)}。這個項目已放入交通主功能，後續會接即時查詢。</div>
+        <div class="flow-note">${html(notice)}${sourceLabel(data.source_names)}。</div>
       `;
     }
 
