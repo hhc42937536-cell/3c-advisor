@@ -1893,7 +1893,7 @@ def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
         haystack = _site_road_query(" ".join([
             row.get("section_name", ""), row.get("road_name", ""), row.get("section_start", ""), row.get("section_end", ""),
             section.get("name", ""), section.get("road", ""), section.get("start", ""), section.get("end", ""),
-        ]))
+        ])).replace("臺", "台")
         if route_pattern and not route_pattern.search(route_text):
             continue
         if q and q not in haystack:
