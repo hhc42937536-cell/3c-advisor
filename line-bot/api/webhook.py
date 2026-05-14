@@ -2825,6 +2825,8 @@ class handler(BaseHTTPRequestHandler):
                     "TOKEN_set": bool(CHANNEL_ACCESS_TOKEN),
                     "TOKEN_len": len(CHANNEL_ACCESS_TOKEN),
                     "TOKEN_prefix": CHANNEL_ACCESS_TOKEN[:30] + "..." if CHANNEL_ACCESS_TOKEN else "EMPTY",
+                    "VERCEL_REGION": os.environ.get("VERCEL_REGION", ""),
+                    "VERCEL_DEPLOYMENT_ID": os.environ.get("VERCEL_DEPLOYMENT_ID", ""),
                 },
             }
             # 1. Check bot info
