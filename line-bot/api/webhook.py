@@ -469,6 +469,7 @@ _TDX_CACHE_TTL = 90            # 快取 90 秒（即時性夠用）
 # 停車結果快取（座標格子，約 2km×2km，共用結果避免重複計算）
 _parking_result_cache: dict = {}   # "lat2_lon2" -> (timestamp, messages)
 _PARKING_RESULT_TTL = 180          # 3 分鐘
+_site_parking_json_cache: dict = {}  # "lat2_lon2_limit" -> (timestamp, payload)
 
 def _peek_parking_cache(lat: float, lon: float):
     """快速查停車結果快取（不觸發任何 API）
@@ -1373,6 +1374,19 @@ def _site_parking(city: str, limit: int = 6) -> dict:
 
 
 def _site_nearby_parking(lat: float, lon: float, city: str = "", limit: int = 8) -> dict:
+    cache_key = f"site_parking_{_parking_cache_key(lat, lon)}_{limit}"
+    cached = _redis_get(cache_key)
+    if isinstance(cached, dict):
+        cached["cached"] = True
+        return cached
+    cached_pair = _site_parking_json_cache.get(cache_key)
+    if cached_pair:
+        ts, cached_payload = cached_pair
+        if time.time() - ts < _PARKING_RESULT_TTL:
+            payload = dict(cached_payload)
+            payload["cached"] = True
+            return payload
+
     try:
         from modules.parking import _get_nearby_parking
         data = _get_nearby_parking(lat, lon, radius=2000)
@@ -1413,7 +1427,7 @@ def _site_nearby_parking(lat: float, lon: float, city: str = "", limit: int = 8)
             "地方政府停車資料與 TDX"
         )
     }
-    return {
+    payload = {
         "ok": True,
         "city": city or tdx_city,
         "tdx_city": tdx_city,
@@ -1425,6 +1439,9 @@ def _site_nearby_parking(lat: float, lon: float, city: str = "", limit: int = 8)
         "lot_count": len(lots),
         "items": items,
     }
+    _site_parking_json_cache[cache_key] = (time.time(), payload)
+    _redis_set(cache_key, payload, ttl=_PARKING_RESULT_TTL)
+    return payload
 
 
 _RAIL_OPERATOR_LABELS = {"TRA": "台鐵", "THSR": "高鐵"}

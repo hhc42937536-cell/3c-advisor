@@ -1900,11 +1900,12 @@
 
     document.querySelector("#use-parking-location").addEventListener("click", () => {
       if (!navigator.geolocation) {
-        setResult("parking", `<h4>無法取得定位</h4><div class="flow-note">這個瀏覽器不支援定位，請改用城市或目的地查詢。</div>`);
+        setResult("parking", `<h4>無法取得定位</h4><div class="flow-note">這個瀏覽器不支援定位。可以先用城市和目的地類型查詢，或開 Google 地圖搜尋附近停車場。</div>${linkActions([{ href: "https://www.google.com/maps/search/停車場/", label: "開 Google 地圖" }])}`);
         return;
       }
-      setResult("parking", `<h4>正在取得目前位置...</h4><div class="flow-note">手機會跳出定位授權，允許後會查附近路邊格與停車場。</div>`);
-      navigator.geolocation.getCurrentPosition((position) => {
+      setResult("parking", `<h4>正在取得目前位置...</h4><div class="flow-note">會優先使用手機最近一次定位，通常幾秒內就能查附近車位。</div>`);
+      let retriedPreciseParking = false;
+      const runParkingByPosition = (position) => {
         parkingLocation = {
           lat: position.coords.latitude.toFixed(6),
           lon: position.coords.longitude.toFixed(6),
@@ -1912,9 +1913,17 @@
         setSelectValue("#parking-destination", "目前位置附近");
         setSelectValue("#parking-landmark", "");
         runDemo("parking");
-      }, () => {
-        setResult("parking", `<h4>定位未開啟</h4><div class="flow-note">請允許定位，或手動輸入目的地/城市查詢。</div>`);
-      }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 180000 });
+      };
+      const handleParkingGeoError = () => {
+        if (!retriedPreciseParking) {
+          retriedPreciseParking = true;
+          setResult("parking", `<h4>定位還在確認...</h4><div class="flow-note">快速定位沒有立即回應，正在改用較精準定位再試一次。</div>`);
+          navigator.geolocation.getCurrentPosition(runParkingByPosition, handleParkingGeoError, { enableHighAccuracy: true, timeout: 7000, maximumAge: 600000 });
+          return;
+        }
+        setResult("parking", `<h4>定位未開啟或回應太慢</h4><div class="flow-note">請允許定位，或先用城市與目的地類型查詢。也可以開 Google 地圖搜尋附近停車場。</div>${linkActions([{ href: "https://www.google.com/maps/search/停車場/", label: "開 Google 地圖" }])}`);
+      };
+      navigator.geolocation.getCurrentPosition(runParkingByPosition, handleParkingGeoError, { enableHighAccuracy: false, timeout: 3000, maximumAge: 600000 });
     });
 
     fetchSiteMarkup("morning")
