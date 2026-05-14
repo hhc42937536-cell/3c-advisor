@@ -1430,7 +1430,14 @@ def _site_garbage_trucks(city: str, limit: int = 6, query: str = "", district: s
         source_name = "臺南市政府環境保護局垃圾車 GPS 即時資料"
         url = "https://soa.tainan.gov.tw/Api/Service/Get/2c8a70d5-06f2-4353-9e92-c40d33bcd969"
         try:
-            payload = _site_get_json(url, timeout=8)
+            cache_key = "site:tainan_garbage_gps"
+            try:
+                payload = _site_get_json(url, timeout=3)
+                _redis_set(cache_key, payload, ttl=90)
+            except Exception:
+                payload = _redis_get(cache_key)
+                if not payload:
+                    raise
             rows = payload.get("data", []) if isinstance(payload, dict) else payload
             strict_terms, broad_terms = _site_garbage_keyword_variants(query)
             district_term = _site_garbage_match_text(district)
