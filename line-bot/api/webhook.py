@@ -812,8 +812,47 @@ def _site_float(value, default=None):
         return default
 
 
+def _site_auto_meal_period() -> str:
+    now = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
+    hour = now.hour
+    if 5 <= hour < 10:
+        return "早餐"
+    if 10 <= hour < 14:
+        return "午餐"
+    if 14 <= hour < 17:
+        return "下午茶"
+    if 17 <= hour < 21:
+        return "晚餐"
+    return "消夜"
+
+
+def _site_meal_period(meal: str = "") -> str:
+    meal = (meal or "").strip()
+    if meal in ("早餐", "午餐", "下午茶", "晚餐", "消夜"):
+        return meal
+    return _site_auto_meal_period()
+
+
+def _site_food_keyword(mood: str = "", meal: str = "") -> str:
+    period = _site_meal_period(meal)
+    meal_keywords = {
+        "早餐": "早餐 早午餐 飯糰 蛋餅 咖啡",
+        "午餐": "午餐 便當 麵 飯 簡餐",
+        "下午茶": "下午茶 咖啡 甜點 飲料 輕食",
+        "晚餐": "晚餐 餐廳 火鍋 燒肉 合菜",
+        "消夜": "消夜 宵夜 鹽酥雞 滷味 串燒 小吃",
+    }
+    mood_keywords = {
+        "快速解決": "快速 外帶 便當 麵 飯",
+        "朋友聚餐": "聚餐 餐廳 火鍋 燒肉 合菜",
+        "想吃特色": "在地美食 特色餐廳 必吃",
+        "約會舒服": "餐廳 咖啡 甜點 餐酒館",
+    }
+    return f"附近 {meal_keywords.get(period, '餐廳 美食')} {mood_keywords.get(mood, '')}".strip()
+
+
 def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str = "", limit: int = 6,
-                      lat: float = None, lon: float = None) -> list:
+                      lat: float = None, lon: float = None, meal: str = "") -> list:
     try:
         from modules.food_utils import _maps_url as _site_maps_url
     except Exception:
@@ -821,15 +860,9 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
             return f"https://www.google.com/maps/search/{urllib.parse.quote((area + ' ' + keyword).strip())}/"
     live_places = []
     if lat is not None and lon is not None:
-        keyword_map = {
-            "快速解決": "附近 小吃 便當 麵 飯",
-            "朋友聚餐": "附近 餐廳 聚餐 火鍋 燒肉 合菜",
-            "想吃特色": "附近 在地美食 特色餐廳",
-            "約會舒服": "附近 餐廳 咖啡 甜點 餐酒館",
-        }
         try:
             from utils.google_places import nearby_places as _site_nearby_places
-            live_places = _site_nearby_places(lat, lon, radius=1800, keyword=keyword_map.get(mood, "附近 餐廳 美食"))
+            live_places = _site_nearby_places(lat, lon, radius=2600, keyword=_site_food_keyword(mood, meal))
         except Exception:
             live_places = []
     try:
@@ -876,6 +909,21 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
             text = f"{body} {typed}"
             score = 0
             score += sum(5 for k in mood_keywords if k in text)
+            meal_period = _site_meal_period(meal)
+            meal_words = {
+                "早餐": ["早餐", "早午餐", "飯糰", "蛋餅", "粥", "豆漿", "咖啡"],
+                "午餐": ["午餐", "便當", "麵", "飯", "粥", "簡餐", "小吃"],
+                "下午茶": ["下午茶", "咖啡", "甜點", "蛋糕", "飲料", "輕食", "冰"],
+                "晚餐": ["晚餐", "餐廳", "火鍋", "燒肉", "合菜", "牛排", "海鮮", "居酒屋"],
+                "消夜": ["消夜", "宵夜", "鹽酥", "滷味", "串燒", "燒烤", "小吃", "酒館"],
+            }.get(meal_period, [])
+            score += sum(6 for k in meal_words if k in text)
+            if meal_period in ("晚餐", "消夜") and any(k in text for k in ["早餐", "早午餐", "飯糰", "蛋餅", "豆漿"]):
+                score -= 10
+            if meal_period == "早餐" and any(k in text for k in ["酒館", "居酒屋", "燒肉", "火鍋", "牛排"]):
+                score -= 8
+            if any(k in text for k in ["伴手禮", "蜜餞", "茶行", "禮盒", "名產"]):
+                score -= 12
             r_lat = _site_float(row.get("lat"))
             r_lng = _site_float(row.get("lng"))
             if lat is not None and lon is not None and has_precise_coords(row):
@@ -960,13 +1008,23 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
                 "url": f"https://maps.google.com/?q=place_id:{place.get('place_id')}" if place.get("place_id") else _site_maps_url(place.get("name", ""), city),
                 "source": "google_places_live",
             })
-        live_items.sort(key=lambda row: row.get("_distance_m") if row.get("_distance_m") is not None else 999999)
-        pool = live_items[:4] + pool
+        today_key = (datetime.datetime.utcnow() + datetime.timedelta(hours=8)).strftime("%Y%m%d")
+        def live_sort_key(row):
+            dist = row.get("_distance_m")
+            distance_bucket = int(dist // 500) if isinstance(dist, (int, float)) else 99
+            seed = f"{today_key}:{_site_meal_period(meal)}:{row.get('name','')}"
+            variety = int(hashlib.md5(seed.encode("utf-8")).hexdigest()[:6], 16)
+            return (distance_bucket, variety)
+        live_items.sort(key=live_sort_key)
+        pool = live_items[:12] + pool
     items = []
     seen_names = set()
     for r in pool:
         name = str(r.get("name") or "").strip()
         if not name or name in seen_names:
+            continue
+        text_for_filter = f"{name} {r.get('type','')} {r.get('desc','')}"
+        if r.get("source") != "google_places_live" and any(k in text_for_filter for k in ["伴手禮", "蜜餞", "茶行", "禮盒", "名產"]):
             continue
         seen_names.add(name)
         area = r.get("town") or r.get("area") or city
@@ -2090,6 +2148,7 @@ class handler(BaseHTTPRequestHandler):
             mood = _site_param(qs, "mood", "")
             budget = _site_param(qs, "budget", "")
             people = _site_param(qs, "people", "")
+            meal = _site_meal_period(_site_param(qs, "meal", ""))
             mode = _site_param(qs, "mode", "city")
             destination = _site_param(qs, "destination", "")
             lat = _site_float(_site_param(qs, "lat", ""))
@@ -2109,7 +2168,7 @@ class handler(BaseHTTPRequestHandler):
                     "food": "生活優轉城市特色資料、Google 地圖資訊與美食爬蟲整理"
                 }
             else:
-                items = _site_restaurants(city, mood, budget, people, limit=6, lat=lat, lon=lon)
+                items = _site_restaurants(city, mood, budget, people, limit=12, lat=lat, lon=lon, meal=meal)
                 if lat is not None and lon is not None:
                     source_names = {
                         "food": "Google 地圖附近餐廳、生活優轉整理的美食名單與米其林必比登"
@@ -2120,6 +2179,7 @@ class handler(BaseHTTPRequestHandler):
                 "mood": mood,
                 "budget": budget,
                 "people": people,
+                "meal": meal,
                 "mode": mode,
                 "destination": destination,
                 "destination_info": destination_info,

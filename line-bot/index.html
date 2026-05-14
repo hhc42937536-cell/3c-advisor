@@ -827,6 +827,9 @@
                     <label class="field" for="food-mood">吃飯情境
                       <select id="food-mood"><option>快速解決</option><option>朋友聚餐</option><option>想吃特色</option><option>約會舒服</option></select>
                     </label>
+                    <label class="field" for="food-meal">吃飯時段
+                      <select id="food-meal"><option value="auto">依現在時間</option><option>早餐</option><option>午餐</option><option>下午茶</option><option>晚餐</option><option>消夜</option></select>
+                    </label>
                     <label class="field" for="food-budget">預算
                       <select id="food-budget"><option>200 以內</option><option>200-500</option><option>500-1000</option><option>不限制</option></select>
                     </label>
@@ -842,12 +845,12 @@
                     <button type="button" id="use-food-location">使用目前位置</button>
                     <button type="button" id="use-food-destination">查目的地美食</button>
                   </div>
-                  <div class="result" id="food-result">選條件後會整理 3 個可執行的吃飯選項。</div>
+                  <div class="result" id="food-result">選條件後會整理更多附近餐廳，可依早餐、午餐、晚餐或消夜切換。</div>
                 </div>
               </div>
               <div class="data-list">
-                <button class="data-item" type="button" data-preset="food" data-mode="current" data-mood="快速解決"><strong>定位找餐廳</strong><span>附近可外帶</span></button>
-                <button class="data-item" type="button" data-preset="food" data-mode="destination" data-mood="朋友聚餐"><strong>目的地美食</strong><span>先點再出發</span></button>
+                <button class="data-item" type="button" data-preset="food" data-mode="current" data-mood="快速解決" data-meal="午餐"><strong>定位找餐廳</strong><span>午餐 / 外帶</span></button>
+                <button class="data-item" type="button" data-preset="food" data-mode="destination" data-mood="朋友聚餐" data-meal="晚餐"><strong>目的地美食</strong><span>先點再出發</span></button>
                 <button class="data-item" type="button" data-preset="food" data-mode="popular" data-mood="想吃特色"><strong>熱門美食</strong><span>各縣市必吃</span></button>
                 <button class="data-item" type="button" data-preset="food" data-mode="latest"><strong>最新美食</strong><span>新開 / 打卡</span></button>
                 <button class="data-item" type="button" data-preset="food" data-mode="souvenir"><strong>伴手禮</strong><span>名產禮盒</span></button>
@@ -1171,6 +1174,7 @@
       if (key === "food") {
         setSelectValue("#food-mood", presetButton.dataset.mood);
         setSelectValue("#food-mode", presetButton.dataset.mode);
+        setSelectValue("#food-meal", presetButton.dataset.meal);
       }
       if (key === "activity") {
         setSelectValue("#activity-type", presetButton.dataset.type);
@@ -1277,12 +1281,12 @@
 
     function renderFood(data) {
       const items = data.items || [];
-      const cards = items.slice(0, 4).map((item) => {
+      const cards = items.slice(0, 10).map((item) => {
         const place = item.area || item.address || data.city;
         const dist = item.distance_m ? `｜距離 ${item.distance_m}m` : "";
         return card(item.name, `${place}${dist}｜${item.desc || item.type || "美食資訊"}｜${readableSource(item.source)}`);
       }).join("");
-      const mapLinks = items.slice(0, 3)
+      const mapLinks = items.slice(0, 6)
         .filter((item) => item.url)
         .map((item, index) => ({ href: item.url, label: `開地圖 ${index + 1}` }));
       const modeLabel = {
@@ -1293,9 +1297,10 @@
         souvenir: "必買伴手禮",
         city: `${data.mood || "美食"}推薦`
       };
-      const modeText = modeLabel[data.mode] || (data.nearby ? "附近餐廳推薦" : `${data.mood || "美食"}推薦`);
+      const mealText = data.meal ? `${data.meal} ` : "";
+      const modeText = `${mealText}${modeLabel[data.mode] || (data.nearby ? "附近餐廳推薦" : `${data.mood || "美食"}推薦`)}`;
       const note = data.nearby
-        ? "已依位置優先排序，適合先開地圖、電話點餐或到店外帶，減少等待時間。"
+        ? "已依位置與吃飯時段整理更多候選，適合固定公司或住家附近輪流挑，也方便先開地圖、電話點餐或到店外帶。"
         : data.mode === "popular" || data.mode === "latest" || data.mode === "souvenir"
           ? "已整理城市特色、Google 地圖與生活優轉美食資料，適合做旅遊或送禮清單。"
         : "已整理生活優轉美食名單與必比登資訊。";
@@ -1403,6 +1408,7 @@
       if (key === "food") {
         const city = document.querySelector("#food-city").value;
         const mood = document.querySelector("#food-mood").value;
+        const meal = document.querySelector("#food-meal").value;
         const budget = document.querySelector("#food-budget").value;
         const people = document.querySelector("#food-people").value;
         const mode = document.querySelector("#food-mode").value;
@@ -1415,7 +1421,7 @@
         }
         const loc = mode === "current" && foodLocation ? `&lat=${encodeURIComponent(foodLocation.lat)}&lon=${encodeURIComponent(foodLocation.lon)}` : "";
         const dest = mode === "destination" ? `&destination=${encodeURIComponent(destination)}` : "";
-        const data = await getJson(`/api/site_food?city=${encodeURIComponent(city)}&mood=${encodeURIComponent(mood)}&budget=${encodeURIComponent(budget)}&people=${encodeURIComponent(people)}&mode=${encodeURIComponent(mode)}${dest}${loc}`);
+        const data = await getJson(`/api/site_food?city=${encodeURIComponent(city)}&mood=${encodeURIComponent(mood)}&meal=${encodeURIComponent(meal)}&budget=${encodeURIComponent(budget)}&people=${encodeURIComponent(people)}&mode=${encodeURIComponent(mode)}${dest}${loc}`);
         return renderFood(data);
       }
       if (key === "activity") {
