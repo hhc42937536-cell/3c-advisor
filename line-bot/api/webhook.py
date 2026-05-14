@@ -1526,7 +1526,7 @@ def _site_garbage_trucks(city: str, limit: int = 6, query: str = "", district: s
             return {"ok": bool(items), "city": "台南", "source": "tainan_garbage_gps", "source_name": source_name, "items": items}
         except Exception as exc:
             return {"ok": False, "city": city, "source": "tainan_garbage_gps", "source_name": source_name, "error": str(exc), "items": []}
-    if city in ("台中", "臺中"):
+    if city in ("台中", "臺中", "台中市", "臺中市"):
         source_name = "臺中市政府環保局垃圾車動態"
         url = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=c923ad20-2ec6-43b9-b3ab-54527e99f7bc"
         try:
@@ -2019,7 +2019,7 @@ def _site_hwms_schedule(city: str, district: str, keyword: str, query: str, limi
     ))
     return {
         "ok": bool(items),
-        "city": country.replace("臺", "台").replace("市", "").replace("縣", "") if country else city,
+        "city": country.replace("臺", "台") if country else city,
         "district": district,
         "query": query,
         "updated_at": now.strftime("%Y-%m-%d %H:%M"),
@@ -2114,7 +2114,7 @@ def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
     canonical_city = city
     try:
         if city in ("新北", "新北市"):
-            canonical_city = "新北"
+            canonical_city = "新北市"
             source = "ntpc_garbage_schedule"
             source_name = "新北市垃圾車表定清運路線"
             rows = []
@@ -2123,8 +2123,8 @@ def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
                 params = urllib.parse.urlencode({"page": 0, "size": 160, "city": area})
                 rows.extend(_site_get_json(f"https://data.ntpc.gov.tw/api/datasets/edc3ad26-8ae7-4916-a00b-bc6048d19bf8/json?{params}"))
             items = [_site_normalize_ntpc_schedule(row, today, now_minutes) for row in rows]
-        elif city in ("台中", "臺中"):
-            canonical_city = "台中"
+        elif city in ("台中", "臺中", "台中市", "臺中市"):
+            canonical_city = "台中市"
             source = "taichung_garbage_schedule"
             source_name = "臺中市定時定點垃圾收運地點"
             cache_key = "site:taichung_garbage_schedule"
