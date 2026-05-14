@@ -11,6 +11,7 @@ import os
 import re
 import datetime
 import time
+import concurrent.futures
 import hashlib
 import hmac
 import urllib.request
@@ -1814,18 +1815,43 @@ def _site_hwms_schedule(city: str, district: str, keyword: str, query: str, limi
     started_at = time.monotonic()
     deadline = started_at + (8.5 if stop_keyword else 6.0)
     search_routes = [route for _, route in ranked[:14 if stop_keyword else 8]]
-    for route in search_routes:
-        remaining = deadline - time.monotonic()
-        if remaining <= 0:
-            break
-        tried.append(route)
+    if stop_keyword and search_routes:
+        workers = min(10, len(search_routes))
+        executor = concurrent.futures.ThreadPoolExecutor(max_workers=workers)
+        futures = {
+            executor.submit(_site_hwms_route_stops, route, stop_keyword, today, now_minutes, limit, 4.0): route
+            for route in search_routes
+        }
         try:
-            batch = _site_hwms_route_stops(route, stop_keyword, today, now_minutes, limit=limit, timeout=min(2.0, remaining))
-            items.extend(batch)
-        except Exception:
-            continue
-        if len(items) >= limit or (stop_keyword and batch):
-            break
+            for future in concurrent.futures.as_completed(futures, timeout=max(0.1, deadline - time.monotonic())):
+                route = futures[future]
+                tried.append(route)
+                try:
+                    batch = future.result()
+                    items.extend(batch)
+                except Exception:
+                    continue
+                if batch or len(items) >= limit:
+                    break
+        except concurrent.futures.TimeoutError:
+            pass
+        finally:
+            for future in futures:
+                future.cancel()
+            executor.shutdown(wait=False, cancel_futures=True)
+    else:
+        for route in search_routes:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                break
+            tried.append(route)
+            try:
+                batch = _site_hwms_route_stops(route, stop_keyword, today, now_minutes, limit=limit, timeout=min(2.0, remaining))
+                items.extend(batch)
+            except Exception:
+                continue
+            if len(items) >= limit:
+                break
     if not items and stop_keyword:
         for _, route in ranked[:8]:
             remaining = deadline - time.monotonic()
