@@ -1926,7 +1926,7 @@ def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
             "items": [],
             "source": "road_live_traffic",
             "source_names": {"transport": "TDX、高速公路局與公路局發布路段即時路況資料"},
-            "notice": f"目前沒有「{q}」的即時路況資料；可改查國道1號、台61、台9，或輸入較大範圍例如「台」。",
+            "notice": f"目前沒有「{q}」的即時路況資料；可改查其他路線，或輸入較大範圍例如「台」。",
         }
     if not matches and q != "國道1號":
         fallback = _site_road_live(city, "國道1號", limit=limit)
