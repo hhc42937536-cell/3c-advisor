@@ -358,8 +358,8 @@ def _tdx_get_versioned(path: str, token: str, timeout: int = 20, version: str = 
             data = json.loads(raw.decode("utf-8"))
             if isinstance(data, list):
                 return data
-            # TDX City 端點回傳 {"CarParks": [...]} 或 {"ParkingAvailabilities": [...]}
-            for key in ("CarParks", "ParkingAvailabilities", "ParkingLots", "RoadSections"):
+            # TDX City 端點常以資料類型包在外層，例如停車、YouBike 或道路路段。
+            for key in ("CarParks", "ParkingAvailabilities", "ParkingLots", "RoadSections", "Stations", "StationAvailabilities", "BikeStations", "BikeAvailabilities"):
                 if key in data and isinstance(data[key], list):
                     return data[key]
             # 最後嘗試第一個 list 值
