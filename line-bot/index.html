@@ -815,11 +815,14 @@
             <div class="panel-layout">
               <div>
                 <h3>今天想吃什麼？</h3>
-                <p>用城市和情境快速產生推薦方向，適合不知道吃什麼、想找在地特色或聚餐選擇時使用。</p>
+                <p>可用目前位置找附近美食，也能輸入目的地先找餐廳，出發前決定好，到了直接拿或入座。</p>
                 <div class="demo-box">
                   <div class="control-grid">
+                    <label class="field" for="food-mode">查詢方式
+                      <select id="food-mode"><option value="city">城市推薦</option><option value="current">目前位置附近</option><option value="destination">目的地附近</option><option value="popular">各縣市熱門美食</option><option value="latest">最新美食</option><option value="souvenir">必買伴手禮</option></select>
+                    </label>
                     <label class="field" for="food-city">城市
-                      <select id="food-city"><option>台北</option><option>新北</option><option>台中</option><option>台南</option><option>高雄</option></select>
+                      <select id="food-city"><option>台北</option><option>新北</option><option>基隆</option><option>桃園</option><option>新竹</option><option>苗栗</option><option>台中</option><option>彰化</option><option>南投</option><option>雲林</option><option>嘉義</option><option>台南</option><option>高雄</option><option>屏東</option><option>宜蘭</option><option>花蓮</option><option>台東</option><option>澎湖</option><option>金門</option><option>連江</option></select>
                     </label>
                     <label class="field" for="food-mood">吃飯情境
                       <select id="food-mood"><option>快速解決</option><option>朋友聚餐</option><option>想吃特色</option><option>約會舒服</option></select>
@@ -830,18 +833,24 @@
                     <label class="field" for="food-people">人數
                       <select id="food-people"><option>1 人</option><option>2 人</option><option>3-4 人</option><option>5 人以上</option></select>
                     </label>
+                    <label class="field" for="food-destination">目的地 / 地標
+                      <input id="food-destination" value="台南美術館" aria-label="目的地或地標">
+                    </label>
                   </div>
                   <div class="quick-actions">
                     <button class="btn primary" data-demo="food">推薦餐廳方向</button>
                     <button type="button" id="use-food-location">使用目前位置</button>
+                    <button type="button" id="use-food-destination">查目的地美食</button>
                   </div>
                   <div class="result" id="food-result">選條件後會整理 3 個可執行的吃飯選項。</div>
                 </div>
               </div>
               <div class="data-list">
-                <button class="data-item" type="button" data-preset="food" data-mood="快速解決"><strong>定位找餐廳</strong><span>可查詢</span></button>
-                <button class="data-item" type="button" data-preset="food" data-mood="想吃特色"><strong>必比登資料</strong><span>推薦參考</span></button>
-                <button class="data-item" type="button" data-preset="food" data-mood="朋友聚餐"><strong>聚餐選擇</strong><span>多人適用</span></button>
+                <button class="data-item" type="button" data-preset="food" data-mode="current" data-mood="快速解決"><strong>定位找餐廳</strong><span>附近可外帶</span></button>
+                <button class="data-item" type="button" data-preset="food" data-mode="destination" data-mood="朋友聚餐"><strong>目的地美食</strong><span>先點再出發</span></button>
+                <button class="data-item" type="button" data-preset="food" data-mode="popular" data-mood="想吃特色"><strong>熱門美食</strong><span>各縣市必吃</span></button>
+                <button class="data-item" type="button" data-preset="food" data-mode="latest"><strong>最新美食</strong><span>新開 / 打卡</span></button>
+                <button class="data-item" type="button" data-preset="food" data-mode="souvenir"><strong>伴手禮</strong><span>名產禮盒</span></button>
               </div>
             </div>
           </div>
@@ -1159,7 +1168,10 @@
       const key = presetButton.dataset.preset;
       activateTab(key);
       if (key === "morning") setSelectValue("#morning-focus", presetButton.dataset.focus);
-      if (key === "food") setSelectValue("#food-mood", presetButton.dataset.mood);
+      if (key === "food") {
+        setSelectValue("#food-mood", presetButton.dataset.mood);
+        setSelectValue("#food-mode", presetButton.dataset.mode);
+      }
       if (key === "activity") {
         setSelectValue("#activity-type", presetButton.dataset.type);
         setSelectValue("#activity-time", presetButton.dataset.time);
@@ -1175,6 +1187,8 @@
       bot_live_or_cache: "臺灣銀行牌告匯率",
       crawler_cache_or_bib_gourmand: "生活優轉整理的美食名單、米其林必比登與 Google 地圖資訊",
       google_places_live: "Google 地圖附近餐廳",
+      google_places_text_search: "Google 地圖搜尋資訊",
+      city_specialties: "生活優轉各縣市特色美食資料",
       surprise: "生活優轉每日小驚喜",
       accupass_crawler_cache_or_activity_fallback: "Accupass、文化部藝文活動資料、活動網站與部落格",
       restaurant_cache: "生活優轉整理的美食名單",
@@ -1271,9 +1285,19 @@
       const mapLinks = items.slice(0, 3)
         .filter((item) => item.url)
         .map((item, index) => ({ href: item.url, label: `開地圖 ${index + 1}` }));
-      const modeText = data.nearby ? "附近餐廳推薦" : `${data.mood || "美食"}推薦`;
+      const modeLabel = {
+        current: "目前位置附近",
+        destination: `${data.destination || data.destination_info?.name || "目的地"}附近`,
+        popular: "各縣市熱門美食",
+        latest: "最新美食",
+        souvenir: "必買伴手禮",
+        city: `${data.mood || "美食"}推薦`
+      };
+      const modeText = modeLabel[data.mode] || (data.nearby ? "附近餐廳推薦" : `${data.mood || "美食"}推薦`);
       const note = data.nearby
-        ? "已依目前位置優先排序，適合手機版直接找附近可去的餐廳。"
+        ? "已依位置優先排序，適合先開地圖、電話點餐或到店外帶，減少等待時間。"
+        : data.mode === "popular" || data.mode === "latest" || data.mode === "souvenir"
+          ? "已整理城市特色、Google 地圖與生活優轉美食資料，適合做旅遊或送禮清單。"
         : "已整理生活優轉美食名單與必比登資訊。";
       return `
         <h4>${html(data.city)} ${html(modeText)}</h4>
@@ -1381,8 +1405,17 @@
         const mood = document.querySelector("#food-mood").value;
         const budget = document.querySelector("#food-budget").value;
         const people = document.querySelector("#food-people").value;
-        const loc = foodLocation ? `&lat=${encodeURIComponent(foodLocation.lat)}&lon=${encodeURIComponent(foodLocation.lon)}` : "";
-        const data = await getJson(`/api/site_food?city=${encodeURIComponent(city)}&mood=${encodeURIComponent(mood)}&budget=${encodeURIComponent(budget)}&people=${encodeURIComponent(people)}${loc}`);
+        const mode = document.querySelector("#food-mode").value;
+        const destination = document.querySelector("#food-destination").value.trim();
+        if (mode === "current" && !foodLocation) {
+          return `<h4>先取得目前位置</h4><div class="flow-note">按「使用目前位置」後，會依定位推薦附近可外帶或可先點餐的餐廳。</div>`;
+        }
+        if (mode === "destination" && !destination) {
+          return `<h4>先輸入目的地</h4><div class="flow-note">可以輸入地標、商圈或地址，例如：台南美術館、台北信義區、左營高鐵站。</div>`;
+        }
+        const loc = mode === "current" && foodLocation ? `&lat=${encodeURIComponent(foodLocation.lat)}&lon=${encodeURIComponent(foodLocation.lon)}` : "";
+        const dest = mode === "destination" ? `&destination=${encodeURIComponent(destination)}` : "";
+        const data = await getJson(`/api/site_food?city=${encodeURIComponent(city)}&mood=${encodeURIComponent(mood)}&budget=${encodeURIComponent(budget)}&people=${encodeURIComponent(people)}&mode=${encodeURIComponent(mode)}${dest}${loc}`);
         return renderFood(data);
       }
       if (key === "activity") {
@@ -1419,6 +1452,7 @@
     });
 
     document.querySelector("#use-food-location").addEventListener("click", () => {
+      setSelectValue("#food-mode", "current");
       if (!navigator.geolocation) {
         setResult("food", `<h4>無法取得定位</h4><div class="flow-note">這個瀏覽器不支援定位，請改用城市和情境查詢。</div>`);
         return;
@@ -1433,6 +1467,11 @@
       }, () => {
         setResult("food", `<h4>定位未開啟</h4><div class="flow-note">請允許定位，或改用城市、情境與預算查詢。</div>`);
       }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 180000 });
+    });
+
+    document.querySelector("#use-food-destination").addEventListener("click", () => {
+      setSelectValue("#food-mode", "destination");
+      runDemo("food");
     });
 
     document.querySelector("#use-parking-location").addEventListener("click", () => {

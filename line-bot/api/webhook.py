@@ -993,6 +993,179 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
     return items
 
 
+_SITE_CITY_CENTERS = {
+    "台北": (25.0478, 121.5319), "新北": (25.0110, 121.4600),
+    "桃園": (24.9937, 121.3010), "台中": (24.1477, 120.6736),
+    "台南": (22.9972, 120.2120), "高雄": (22.6273, 120.3014),
+    "基隆": (25.1276, 121.7392), "新竹": (24.8138, 120.9675),
+    "苗栗": (24.5602, 120.8214), "彰化": (24.0757, 120.5440),
+    "南投": (23.9609, 120.9719), "雲林": (23.7092, 120.4313),
+    "嘉義": (23.4801, 120.4491), "屏東": (22.6761, 120.4940),
+    "宜蘭": (24.7591, 121.7537), "花蓮": (23.9872, 121.6015),
+    "台東": (22.7972, 121.0714), "澎湖": (23.5711, 119.5793),
+    "金門": (24.4493, 118.3767), "連江": (26.1602, 119.9517),
+}
+
+
+def _site_geocode_destination(destination: str, city: str = "") -> dict:
+    query = (destination or "").strip()
+    if not query:
+        return {}
+    try:
+        from utils.google_places import text_search as _site_text_search
+        results = _site_text_search(f"{query} 台灣", max_results=1)
+    except Exception:
+        results = []
+    if results:
+        first = results[0]
+        lat = _site_float(first.get("lat"))
+        lon = _site_float(first.get("lng"))
+        if lat is not None and lon is not None:
+            return {
+                "name": first.get("name") or query,
+                "address": first.get("addr") or query,
+                "lat": lat,
+                "lon": lon,
+                "city": _city_from_coords(lat, lon) or city,
+                "source": "google_places_text_search",
+            }
+    inferred_city = city or ""
+    for c in _SITE_CITY_CENTERS:
+        if c in query:
+            inferred_city = c
+            break
+    center = _SITE_CITY_CENTERS.get(inferred_city)
+    if center:
+        return {
+            "name": query,
+            "address": query,
+            "lat": center[0],
+            "lon": center[1],
+            "city": inferred_city,
+            "source": "city_center_fallback",
+        }
+    return {"name": query, "address": query, "city": city, "source": "unresolved_destination"}
+
+
+def _site_special_food(city: str, mode: str = "popular", limit: int = 6) -> list:
+    city = city or "台北"
+    if mode in ("souvenir", "popular"):
+        try:
+            path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "city_specialties.json")
+            with open(path, encoding="utf-8") as f:
+                data = json.load(f)
+            rows = list(data.get(city, []))
+        except Exception:
+            rows = []
+        if mode == "souvenir":
+            souvenir_words = ["伴手禮", "餅", "糕", "糖", "禮盒", "名產", "麻糬", "豆干", "貢糖", "牛舌"]
+            filtered = [r for r in rows if any(w in f"{r.get('name','')} {r.get('desc','')}" for w in souvenir_words)]
+            rows = filtered or rows
+        items = []
+        for r in rows[:limit]:
+            key = r.get("key") or f"{city} {r.get('name', '')}"
+            items.append({
+                "name": r.get("name", ""),
+                "type": "伴手禮" if mode == "souvenir" else "城市熱門",
+                "desc": r.get("desc", ""),
+                "area": city,
+                "address": "",
+                "lat": None,
+                "lng": None,
+                "distance_m": "",
+                "url": f"https://www.google.com/maps/search/{urllib.parse.quote(key)}/",
+                "source": "city_specialties",
+            })
+        if mode == "souvenir" and len(items) < min(limit, 4):
+            for keyword in [f"{city} 伴手禮", f"{city} 名產", f"{city} 禮盒", f"{city} 老店"]:
+                if len(items) >= limit:
+                    break
+                if any(keyword == item.get("name") for item in items):
+                    continue
+                items.append({
+                    "name": keyword,
+                    "type": "伴手禮",
+                    "desc": "可開地圖查看附近店家、評論與營業狀態。",
+                    "area": city,
+                    "address": "",
+                    "lat": None,
+                    "lng": None,
+                    "distance_m": "",
+                    "url": f"https://www.google.com/maps/search/{urllib.parse.quote(keyword)}/",
+                    "source": "city_specialties",
+                })
+        if items:
+            return items
+
+    query_map = {
+        "latest": f"{city} 最新 開幕 美食 必吃 餐廳",
+        "souvenir": f"{city} 伴手禮 老店 禮盒 名產",
+        "popular": f"{city} 熱門 美食 必吃 餐廳",
+    }
+    try:
+        from utils.google_places import text_search as _site_text_search
+        places = _site_text_search(query_map.get(mode, query_map["popular"]), max_results=limit)
+    except Exception:
+        places = []
+    items = []
+    for p in places:
+        rating = p.get("rating") or 0
+        reviews = p.get("user_ratings_total") or 0
+        desc = "Google 地圖搜尋結果"
+        if rating:
+            desc = f"Google 評分 {rating}" + (f"，{reviews} 則評論" if reviews else "")
+        items.append({
+            "name": p.get("name", ""),
+            "type": "最新美食" if mode == "latest" else ("伴手禮" if mode == "souvenir" else "熱門美食"),
+            "desc": desc,
+            "area": city,
+            "address": p.get("addr", ""),
+            "lat": _site_float(p.get("lat")),
+            "lng": _site_float(p.get("lng")),
+            "distance_m": "",
+            "url": f"https://maps.google.com/?q=place_id:{p.get('place_id')}" if p.get("place_id") else f"https://www.google.com/maps/search/{urllib.parse.quote(p.get('name', '') + ' ' + city)}/",
+            "source": "google_places_text_search",
+        })
+    if not items and mode == "latest":
+        try:
+            from modules.food_runtime import _RESTAURANT_CACHE
+            pool = list(_RESTAURANT_CACHE.get(city, []))
+        except Exception:
+            pool = []
+        for r in pool[:limit]:
+            name = r.get("name", "")
+            if not name:
+                continue
+            items.append({
+                "name": name,
+                "type": "最新美食候選",
+                "desc": str(r.get("desc") or r.get("type") or "生活優轉整理的在地美食")[:90],
+                "area": r.get("town") or city,
+                "address": r.get("addr", ""),
+                "lat": _site_float(r.get("lat")),
+                "lng": _site_float(r.get("lng")),
+                "distance_m": "",
+                "url": f"https://www.google.com/maps/search/{urllib.parse.quote(city + ' ' + name)}/",
+                "source": "restaurant_cache",
+            })
+    if not items and mode == "souvenir":
+        for keyword in [f"{city} 伴手禮", f"{city} 名產", f"{city} 禮盒", f"{city} 老店"]:
+            label = keyword.replace(city, "").strip()
+            items.append({
+                "name": keyword,
+                "type": "伴手禮",
+                "desc": "可開地圖查看附近店家、評論與營業狀態。",
+                "area": city,
+                "address": "",
+                "lat": None,
+                "lng": None,
+                "distance_m": "",
+                "url": f"https://www.google.com/maps/search/{urllib.parse.quote(keyword)}/",
+                "source": "city_specialties",
+            })
+    return items
+
+
 def _site_activities(city: str, category: str = "", limit: int = 6) -> list:
     category_map = {
         "展覽": "市集展覽",
@@ -1917,22 +2090,45 @@ class handler(BaseHTTPRequestHandler):
             mood = _site_param(qs, "mood", "")
             budget = _site_param(qs, "budget", "")
             people = _site_param(qs, "people", "")
+            mode = _site_param(qs, "mode", "city")
+            destination = _site_param(qs, "destination", "")
             lat = _site_float(_site_param(qs, "lat", ""))
             lon = _site_float(_site_param(qs, "lon", ""))
+            destination_info = {}
+            source_names = {"food": "生活優轉整理的美食名單、米其林必比登與 Google 地圖資訊"}
+            if mode == "destination" and destination:
+                destination_info = _site_geocode_destination(destination, city)
+                lat = destination_info.get("lat")
+                lon = destination_info.get("lon")
+                city = destination_info.get("city") or city
             if lat is not None and lon is not None:
                 city = _city_from_coords(lat, lon) or city
+            if mode in ("popular", "latest", "souvenir"):
+                items = _site_special_food(city, mode, limit=8)
+                source_names = {
+                    "food": "生活優轉城市特色資料、Google 地圖資訊與美食爬蟲整理"
+                }
+            else:
+                items = _site_restaurants(city, mood, budget, people, limit=6, lat=lat, lon=lon)
+                if lat is not None and lon is not None:
+                    source_names = {
+                        "food": "Google 地圖附近餐廳、生活優轉整理的美食名單與米其林必比登"
+                    }
             payload = {
                 "ok": True,
                 "city": city,
                 "mood": mood,
                 "budget": budget,
                 "people": people,
+                "mode": mode,
+                "destination": destination,
+                "destination_info": destination_info,
                 "lat": lat,
                 "lon": lon,
                 "nearby": lat is not None and lon is not None,
-                "items": _site_restaurants(city, mood, budget, people, limit=6, lat=lat, lon=lon),
+                "items": items,
                 "sources": {"food": "crawler_cache_or_bib_gourmand"},
-                "source_names": {"food": "Google 地圖附近餐廳、生活優轉整理的美食名單與米其林必比登" if lat is not None and lon is not None else "生活優轉整理的美食名單、米其林必比登與 Google 地圖資訊"},
+                "source_names": source_names,
             }
             _site_json(self, payload)
 
