@@ -502,6 +502,94 @@
       font-weight: 900;
       text-decoration: none;
     }
+    .activity-summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin: 10px 0 12px;
+      white-space: normal;
+    }
+    .activity-summary span {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 250, 240, .82);
+      padding: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .activity-summary b {
+      display: block;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .activity-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 8px 0 12px;
+    }
+    .activity-tags span {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: white;
+      padding: 6px 9px;
+      color: var(--soft-ink);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: normal;
+    }
+    .activity-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 10px;
+    }
+    .activity-card {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid rgba(38, 49, 43, .16);
+      border-radius: 10px;
+      background: white;
+      white-space: normal;
+    }
+    .activity-card .rank {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--green);
+      background: var(--green-soft);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .activity-card strong {
+      display: block;
+      margin-bottom: 4px;
+      line-height: 1.35;
+    }
+    .activity-card small {
+      display: block;
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.55;
+    }
+    .activity-card a {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 9px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+      text-decoration: none;
+      white-space: nowrap;
+    }
     .quick-actions {
       display: flex;
       flex-wrap: wrap;
@@ -663,6 +751,9 @@
       .task-card { box-shadow: 4px 4px 0 var(--ink); }
       .morning-card, .workspace, .roadmap-card, .cta { box-shadow: 5px 5px 0 var(--ink); }
       .stats, .tabs, .input-row, .task-grid, .control-grid, .result-grid { grid-template-columns: 1fr; }
+      .activity-summary { grid-template-columns: 1fr; }
+      .activity-card { grid-template-columns: 28px minmax(0, 1fr); }
+      .activity-card a { grid-column: 2; width: fit-content; }
       .note { position: static; margin: 14px auto 0; max-width: none; }
       .panel { padding: 16px; }
       .roadmap-item, .split-row { grid-template-columns: 1fr; }
@@ -1486,19 +1577,45 @@
     function renderActivity(data) {
       const items = data.items || [];
       const meta = data.meta || {};
-      const cards = items.map((item) => {
+      const categoryTags = Object.entries(meta.category_counts || {})
+        .filter(([, count]) => count)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 8)
+        .map(([name, count]) => `<span>${html(name)} ${html(count)}</span>`)
+        .join("");
+      const sourceTags = (meta.source_list || [])
+        .slice(0, 8)
+        .map((name) => `<span>${html(name)}</span>`)
+        .join("");
+      const rows = items.map((item, index) => {
         const date = item.date ? `${item.date}｜` : "";
         const category = item.category ? `${item.category}｜` : "";
         const body = `${category}${date}${item.desc || "週末活動資訊"}｜${readableSource(item.source)}`;
-        const link = item.url ? `<a href="${html(item.url)}" target="_blank" rel="noreferrer">看活動頁</a>` : "";
-        return `<div class="result-card"><strong>${html(item.name)}</strong><span>${html(body)}</span>${link}</div>`;
+        const link = item.url ? `<a href="${html(item.url)}" target="_blank" rel="noreferrer">活動頁</a>` : "";
+        return `
+          <div class="activity-card">
+            <span class="rank">${index + 1}</span>
+            <span><strong>${html(item.name)}</strong><small>${html(body)}</small></span>
+            ${link}
+          </div>
+        `;
       }).join("");
       const sourceCount = meta.source_count ? `，來源 ${meta.source_count} 個` : "";
       const sourceList = (meta.source_list || []).length ? `：${html((meta.source_list || []).join("、"))}` : "";
       const countText = meta.total_count ? `已顯示 ${items.length} / ${meta.total_count} 筆${sourceCount}${sourceList}` : `已顯示 ${items.length} 筆`;
+      const summary = `
+        <div class="activity-summary">
+          <span><b>${html(items.length)}</b>目前列出</span>
+          <span><b>${html(meta.total_count || items.length)}</b>符合條件</span>
+          <span><b>${html(meta.source_count || (meta.source_list || []).length || 1)}</b>資料來源</span>
+        </div>
+      `;
       return `
         <h4>${html(data.city)} ${html(data.time || "")}${html(data.type || "活動")}週末活動自動更新</h4>
-        <div class="result-grid">${cards || card("目前沒有活動", "目前沒有找到符合條件的活動，可以換城市或類型再試。")}</div>
+        ${summary}
+        ${categoryTags ? `<div class="activity-tags">${categoryTags}</div>` : ""}
+        ${sourceTags ? `<div class="activity-tags">${sourceTags}</div>` : ""}
+        <div class="activity-list">${rows || card("目前沒有活動", "目前沒有找到符合條件的活動，可以換城市或類型再試。")}</div>
         <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。${countText}</div>
         ${actions([{ key: "food", label: "附近吃什麼" }, { key: "parking", label: "找車位" }])}
       `;
