@@ -4,6 +4,16 @@
     "source": "環境部環境管理署全國垃圾車清運路線查詢網",
     "counties": ["基隆市", "臺北市", "新北市", "桃園市", "新竹市", "新竹縣", "苗栗縣", "臺中市", "彰化縣", "南投縣", "雲林縣", "嘉義市", "嘉義縣", "臺南市", "高雄市", "屏東縣", "宜蘭縣", "花蓮縣", "臺東縣", "澎湖縣", "金門縣", "連江縣"]
   },
+  "schedule_city_sources": [
+    {
+      "city": "臺北市",
+      "status": "audited_not_primary",
+      "source": "臺北市政府環保局垃圾車點位路線資訊",
+      "dataset_url": "https://data.taipei/dataset/detail?id=6bb3304b-4f46-4bb0-8cd1-60c66dcd1cae",
+      "api_url": "https://data.taipei/api/frontstage/tpeod/dataset/resource.download?rid=a6e90031-7ec4-4089-afb5-361a4efe7202",
+      "note": "有座標與抵達時間，但資料集未明列每週收運日；目前仍以環境部全國清運路線作主要表定來源。"
+    }
+  ],
   "live_gps": [
     {
       "city": "臺南市",
@@ -36,5 +46,6 @@
       "fields": ["lineid", "car", "time", "location", "X", "Y", "SpeedValue", "OverSpeed"]
     }
   ],
+  "runtime_note": "台南與高雄 GPS 本機可抓取，但 Vercel hkg1 正式環境目前對地方政府 API 仍會 timeout；需台灣端代理或排程快取才能穩定。",
   "next_live_gps_audit": ["臺北市", "桃園市", "新竹市", "新竹縣", "苗栗縣", "彰化縣", "南投縣", "雲林縣", "嘉義市", "嘉義縣", "屏東縣", "宜蘭縣", "花蓮縣", "臺東縣", "澎湖縣", "金門縣", "連江縣"]
 }

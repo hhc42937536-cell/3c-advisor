@@ -786,6 +786,7 @@ def _site_weather_payload(city: str) -> dict:
             outfit = "舒適溫度，穿搭以輕便為主"
         if pop >= 40:
             outfit += "，雨具建議放包包"
+    live_payload = _site_garbage_trucks(city, limit=3, query=query, district=district)
     return {
         "city": city,
         "weather": weather,
@@ -1432,7 +1433,7 @@ def _site_garbage_trucks(city: str, limit: int = 6, query: str = "", district: s
         try:
             cache_key = "site:kaohsiung_garbage_gps"
             try:
-                payload = _site_get_json(url, timeout=3)
+                payload = _site_get_json(url, timeout=1)
                 _redis_set(cache_key, payload, ttl=90)
             except Exception:
                 payload = _redis_get(cache_key)
@@ -1482,7 +1483,7 @@ def _site_garbage_trucks(city: str, limit: int = 6, query: str = "", district: s
         try:
             cache_key = "site:tainan_garbage_gps"
             try:
-                payload = _site_get_json(url, timeout=3)
+                payload = _site_get_json(url, timeout=1)
                 _redis_set(cache_key, payload, ttl=90)
             except Exception:
                 payload = _redis_get(cache_key)
@@ -2027,8 +2028,11 @@ def _site_hwms_schedule(city: str, district: str, keyword: str, query: str, limi
         "source_name": "環境部環境管理署全國垃圾車清運路線查詢網",
         "items": items[:limit],
         "routes": tried[:5],
-        "live": _site_garbage_trucks(city, limit=3, query=query, district=district),
-        "source_names": {"schedule": "環境部環境管理署全國垃圾車清運路線查詢網"},
+        "live": live_payload,
+        "source_names": {
+            "schedule": "環境部環境管理署全國垃圾車清運路線查詢網",
+            "live": live_payload.get("source_name", "地方政府垃圾車動態資料"),
+        },
     }
 
 
@@ -2182,6 +2186,7 @@ def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
                         break
         if diversified:
             items = diversified
+    live_payload = _site_garbage_trucks(city, limit=3, query=query, district=district)
     return {
         "ok": True,
         "city": canonical_city,
@@ -2191,10 +2196,10 @@ def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
         "source": source,
         "source_name": source_name,
         "items": items[:limit],
-        "live": _site_garbage_trucks(city, limit=3, query=query, district=district),
+        "live": live_payload,
         "source_names": {
             "schedule": source_name,
-            "live": _site_garbage_trucks(city, limit=1, query=query, district=district).get("source_name", "地方政府垃圾車動態資料"),
+            "live": live_payload.get("source_name", "地方政府垃圾車動態資料"),
         },
     }
 
@@ -2615,6 +2620,15 @@ class handler(BaseHTTPRequestHandler):
             city = _site_param(qs, "city", "台中")
             query = _site_param(qs, "query", "") or _site_param(qs, "q", "")
             _site_json(self, _site_garbage_schedule(city, query, limit=24))
+
+        elif parsed.path == "/api/site_garbage_sources":
+            try:
+                path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "garbage_sources.json")
+                with open(path, encoding="utf-8") as fh:
+                    payload = json.load(fh)
+                _site_json(self, payload)
+            except Exception as exc:
+                _site_json(self, {"ok": False, "error": str(exc), "live_gps": []})
 
         elif parsed.path == "/api/site_health":
             qs = parse_qs(parsed.query or "")

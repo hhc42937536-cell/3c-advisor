@@ -64,6 +64,10 @@
       "dest": "api/webhook.py"
     },
     {
+      "src": "/api/site_garbage_sources",
+      "dest": "api/webhook.py"
+    },
+    {
       "src": "/api/site_health",
       "dest": "api/webhook.py"
     },
