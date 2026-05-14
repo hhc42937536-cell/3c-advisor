@@ -78,10 +78,10 @@ def fetch_aqi(city: str, *, moe_key: str, aqi_station: dict) -> dict:
         return {"ok": False}
     station = aqi_station.get(city, city)
     url = (
-        "https://data.moenv.gov.tw/api/v2/aqx_p_432"
-        f"?api_key={moe_key}&limit=3&sort=ImportDate+desc"
-        f"&filters=SiteName,EQ,{urllib.parse.quote(station)}"
-        "&format=JSON&fields=SiteName,AQI,Status,PM2.5,Pollutant"
+        "https://data.moenv.gov.tw/api/v2/AQX_P_432"
+        f"?api_key={moe_key}&limit=3&sort=publishtime+desc"
+        f"&filters=sitename,EQ,{urllib.parse.quote(station)}"
+        "&format=JSON&fields=sitename,aqi,status,pm2.5,pollutant"
     )
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "LineBot/1.0"})
@@ -91,10 +91,10 @@ def fetch_aqi(city: str, *, moe_key: str, aqi_station: dict) -> dict:
         if not recs:
             return {"ok": False}
         rec = recs[0]
-        aqi = int(rec.get("AQI") or 0)
-        status = rec.get("Status", "")
-        pm25 = rec.get("PM2.5", "")
-        pollutant = rec.get("Pollutant", "")
+        aqi = int(rec.get("aqi") or rec.get("AQI") or 0)
+        status = rec.get("status") or rec.get("Status") or ""
+        pm25 = rec.get("pm2.5") or rec.get("PM2.5") or ""
+        pollutant = rec.get("pollutant") or rec.get("Pollutant") or ""
         if aqi <= 50:
             color, emoji = "#2E7D32", "🟢"
         elif aqi <= 100:
