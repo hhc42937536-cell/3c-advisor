@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fff2cf">
-  <meta name="description" content="生活優轉 Life Uturn：早安今日好料、今天吃什麼、每週週末活動自動更新、找車位、今天怎麼去與生活工具的日常助理。">
+  <meta name="description" content="生活優轉 Life Uturn：早安今日好料、今天吃什麼、週末活動、找車位、今天怎麼去與常用快查的日常助理。">
   <title>生活優轉 Life Uturn</title>
   <style>
     :root {
@@ -126,8 +126,8 @@
     }
     h1 {
       margin: 22px 0 18px;
-      font-size: clamp(48px, 8vw, 94px);
-      line-height: .95;
+      font-size: clamp(44px, 7vw, 82px);
+      line-height: 1;
       letter-spacing: 0;
     }
     h1 span {
@@ -160,8 +160,8 @@
       max-width: 760px;
     }
     .task-card {
-      min-height: 142px;
-      padding: 18px;
+      min-height: 132px;
+      padding: 16px;
       border: 2px solid var(--ink);
       border-radius: 12px;
       background: rgba(255, 250, 240, .88);
@@ -191,7 +191,7 @@
     }
     .task-card h2 {
       margin: 0 0 6px;
-      font-size: 23px;
+      font-size: 21px;
       line-height: 1.2;
     }
     .task-card p {
@@ -262,7 +262,7 @@
     }
     .morning-card h2 {
       margin: 10px 0 8px;
-      font-size: 30px;
+      font-size: 28px;
       line-height: 1.1;
     }
     .morning-card p {
@@ -312,11 +312,9 @@
     .menu-top small { color: var(--muted); font-size: 13px; }
     .menu-frame img { width: 100%; display: block; border: 1px solid var(--line); border-radius: 9px; }
     .note {
-      position: absolute;
-      z-index: 3;
-      right: 4px;
-      bottom: -62px;
+      position: static;
       max-width: 238px;
+      margin: 14px 0 0 auto;
       padding: 14px 15px;
       border: 2px solid var(--ink);
       border-radius: 10px;
@@ -766,16 +764,12 @@
     <nav class="wrap">
       <a class="brand" href="#top" aria-label="生活優轉首頁"><span class="mark">優</span>生活優轉</a>
       <div class="links">
-        <a href="#workspace">主功能</a>
-        <a href="#workspace">使用看看</a>
+        <a href="#workspace">今天要做什麼</a>
+        <a href="#workspace" data-jump="food">吃什麼</a>
+        <a href="#workspace" data-jump="activity">週末活動</a>
         <a href="#workspace" data-nav-parking>找車位</a>
         <a href="#workspace" data-jump="traffic">今天怎麼去</a>
-        <a href="#life-tools">生活工具</a>
         <a href="#life-tools" data-nav-utility="garbage">垃圾車</a>
-        <a href="#life-tools" data-nav-utility="deals">今日優惠</a>
-        <a href="#life-tools" data-nav-utility="invoice">發票對獎</a>
-        <a href="#life-tools" data-nav-utility="facilities">附近設施</a>
-        <a href="#line">LINE</a>
       </div>
     </nav>
   </header>
@@ -786,7 +780,7 @@
         <div>
           <span class="badge"><i></i>從早晨開始安排今天</span>
           <h1>從早安開始，<span>安排今天</span></h1>
-          <p class="lead">生活優轉網站先把 LINE bot 的功能展開：早安今日好料、今天吃什麼、每週週末活動自動更新、找車位、今天怎麼去與生活工具。</p>
+          <p class="lead">早上先看天氣、穿搭、油價與今日提醒；接著挑餐廳、活動和停車點，日常常用資訊一次整理好。</p>
           <div class="task-grid" aria-label="主要任務入口">
             <button class="task-card" data-jump="morning">
               <span class="task-icon">早</span>
@@ -798,7 +792,7 @@
             </button>
             <button class="task-card" data-jump="activity">
               <span class="task-icon">週</span>
-              <span><h2>週末活動自動更新</h2><p>每週整理展覽、市集、活動與假日安排。</p></span>
+              <span><h2>週末活動</h2><p>展覽、市集、親子、戶外活動整理成清單。</p></span>
             </button>
             <button class="task-card" data-jump="parking">
               <span class="task-icon">停</span>
@@ -810,7 +804,7 @@
             </button>
             <button class="task-card" data-jump="tools">
               <span class="task-icon">工</span>
-              <span><h2>生活工具</h2><p>垃圾車、今日優惠與日常快查。</p></span>
+              <span><h2>常用快查</h2><p>垃圾車、今日優惠、發票與附近設施。</p></span>
             </button>
           </div>
           <div class="chips">
@@ -819,7 +813,7 @@
             <span class="chip">週末活動</span>
             <span class="chip">找車位</span>
             <span class="chip">今天怎麼去</span>
-            <span class="chip">生活工具</span>
+            <span class="chip">常用快查</span>
           </div>
         </div>
         <div class="visual">
@@ -834,7 +828,7 @@
               <button class="morning-item" type="button" data-preset="morning" data-focus="今日小驚喜"><strong>今日小驚喜</strong><span>優惠、話題、活動</span></button>
             </div>
           </div>
-          <div class="note">LINE 可以快速推送早安；網站適合展開看細節。</div>
+          <div class="note">想快速做決定，就從左邊六個入口開始。</div>
         </div>
       </div>
     </section>
@@ -842,17 +836,17 @@
     <section class="band" id="workspace">
       <div class="wrap">
         <div class="section-head">
-          <h2>網站版把日常主線展開。</h2>
-          <p>這裡不是工具雜燴，而是把早安、吃飯、週末活動、找車位與今天怎麼去做成可操作的網站。</p>
+          <h2>先選你現在要做的事。</h2>
+          <p>每個區塊都可以直接查，不用先理解功能分類；選城市、地點或情境後，就會產生結果。</p>
         </div>
         <div class="workspace">
           <div class="tabs" role="tablist" aria-label="網站功能">
             <button class="tab" role="tab" aria-selected="true" data-tab="morning">早安今日好料</button>
             <button class="tab" role="tab" aria-selected="false" data-tab="food">今天吃什麼</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="activity">週末活動自動更新</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="activity">週末活動</button>
             <button class="tab" role="tab" aria-selected="false" data-tab="parking">找車位</button>
             <button class="tab" role="tab" aria-selected="false" data-tab="traffic">今天怎麼去</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="tools">生活工具</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="tools">常用快查</button>
           </div>
 
           <div class="panel active" id="panel-morning" role="tabpanel">
@@ -875,8 +869,8 @@
                       <select id="morning-focus"><option>穿搭與雨具</option><option>油價與匯率</option><option>今日小驚喜</option><option>全部整理</option></select>
                     </label>
                   </div>
-                  <button class="btn primary" data-demo="morning">產生早安今日好料</button>
-                  <div class="result" id="morning-result">選好城市、時段與今天重點，會產生可直接看的早安今日好料。</div>
+                  <button class="btn primary" data-demo="morning">查看今日摘要</button>
+                  <div class="result" id="morning-result">選好城市、時段與今天重點，這裡會整理今天出門前最需要看的資訊。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -937,8 +931,8 @@
           <div class="panel" id="panel-activity" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>每週週末活動自動更新。</h3>
-                <p>活動、展覽、市集、假日提醒整理成適合瀏覽的清單，網站比聊天更適合慢慢挑。</p>
+                <h3>週末想去哪？</h3>
+                <p>依城市、時間與活動類型整理展覽、市集、親子與戶外活動，先挑活動，再安排吃飯和交通。</p>
                 <div class="demo-box">
                   <div class="control-grid">
                     <label class="field" for="activity-city">城市
@@ -954,8 +948,8 @@
                       <select id="activity-pace"><option>輕鬆半天</option><option>排滿一點</option><option>雨天備案</option><option>順路吃飯</option></select>
                     </label>
                   </div>
-                  <button class="btn primary" data-demo="activity">產生週末活動清單</button>
-                  <div class="result" id="activity-result">選好條件後會整理活動清單與安排順序。</div>
+                  <button class="btn primary" data-demo="activity">查活動清單</button>
+                  <div class="result" id="activity-result">選好條件後，這裡會列出符合條件的活動、日期與活動頁連結。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -970,7 +964,7 @@
             <div class="panel-layout">
               <div>
                 <h3>即時找車位。</h3>
-                <p>找車位獨立成主功能：用城市、目的地或目前位置查停車場、路邊格、剩餘車位與費率。</p>
+                <p>用城市、目的地或目前位置查停車場、路邊格、剩餘車位與費率，先知道哪裡比較好停。</p>
                 <div class="demo-box">
                   <div class="control-grid">
                     <label class="field" for="parking-city">城市
@@ -1003,7 +997,7 @@
             <div class="panel-layout">
               <div>
                 <h3>今天怎麼去。</h3>
-                <p>把台鐵/高鐵、公車動態、即時路況與 YouBike 放在同一個出門決策裡。</p>
+                <p>查台鐵、高鐵、公車到站、即時路況與 YouBike，可用在通勤、出遊或活動前確認路線。</p>
                 <div class="demo-box">
                   <div class="control-grid">
                     <label class="field" for="transport-mode">交通項目
@@ -1023,7 +1017,7 @@
                     </label>
                   </div>
                   <button class="btn primary" data-demo="traffic">查今天怎麼去</button>
-                  <div class="result" id="traffic-result">選交通項目後查詢；台鐵/高鐵會查 TDX 時刻，公車與路況會逐步補齊。</div>
+                  <div class="result" id="traffic-result">選交通項目後查詢，這裡會顯示班次、到站時間、路況或 YouBike 站點。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -1038,18 +1032,18 @@
           <div class="panel" id="panel-tools" role="tabpanel">
             <div class="panel-layout">
               <div>
-                <h3>生活工具。</h3>
-                <p>把不屬於五大主線、但日常很常用的功能收在這裡；垃圾車、今日優惠先做成可查入口。</p>
+                <h3>常用快查。</h3>
+                <p>臨時需要查的資訊放在這裡：垃圾車時間、今日優惠、發票對獎和附近生活設施。</p>
                 <div class="demo-box">
                   <div class="result ready" id="tools-result">
-                    <h4>常用工具入口</h4>
+                    <h4>常用快查入口</h4>
                     <div class="result-grid">
                       <div class="result-card"><strong>垃圾車時間地點</strong><span>查清運點、時間與回收日。</span></div>
                       <div class="result-card"><strong>今日當地優惠</strong><span>咖啡飲料、品牌優惠、在地活動與社群話題。</span></div>
                       <div class="result-card"><strong>統一發票對獎</strong><span>輸入 8 碼號碼，快速比對最新公告。</span></div>
                       <div class="result-card"><strong>附近生活設施</strong><span>藥局、超商、醫院、郵局、ATM、洗衣店。</span></div>
                     </div>
-                    <div class="flow-note">下方「生活工具」區可以查垃圾車、今日優惠、發票對獎與附近生活設施。</div>
+                    <div class="flow-note">點選下方按鈕，就能直接查垃圾車、今日優惠、發票對獎與附近生活設施。</div>
                   </div>
                   <div class="quick-actions">
                     <button type="button" data-nav-utility="garbage">查垃圾車</button>
@@ -1075,9 +1069,9 @@
       <div class="wrap">
         <div class="roadmap-card">
           <div class="roadmap-copy">
-            <span class="badge"><i></i>生活工具</span>
+            <span class="badge"><i></i>常用快查</span>
             <h2>常用小工具，直接查。</h2>
-            <p>這裡放獨立生活工具：垃圾車時間地點、今日當地優惠、發票對獎與附近生活設施。找車位已經升級成上方主功能，這裡不重複。</p>
+            <p>需要倒垃圾、找優惠、對發票或查附近藥局超商時，直接在這裡輸入縣市和地點。</p>
           </div>
           <div>
             <h3 class="split-title">快速入口</h3>
@@ -1086,7 +1080,7 @@
                 <select id="utility-city"><option>臺北市</option><option selected>新北市</option><option>基隆市</option><option>桃園市</option><option>新竹市</option><option>新竹縣</option><option>苗栗縣</option><option>臺中市</option><option>彰化縣</option><option>南投縣</option><option>雲林縣</option><option>嘉義市</option><option>嘉義縣</option><option>臺南市</option><option>高雄市</option><option>屏東縣</option><option>宜蘭縣</option><option>花蓮縣</option><option>臺東縣</option><option>澎湖縣</option><option>金門縣</option><option>連江縣</option></select>
               </label>
               <label class="field" for="utility-place">鄉鎮區 / 路名 / 地標（可留空）
-                <input id="utility-place" value="" placeholder="例：板橋區 文化路" aria-label="生活工具查詢地點">
+                <input id="utility-place" value="" placeholder="例：板橋區 文化路" aria-label="常用快查地點">
               </label>
               <label class="field" for="utility-number">發票號碼（對獎時填）
                 <input id="utility-number" value="" maxlength="8" inputmode="numeric" placeholder="例：12345678" aria-label="統一發票號碼">
@@ -1101,23 +1095,12 @@
               <button class="roadmap-item" type="button" data-utility="invoice"><b>統一發票對獎</b><span>輸入 8 碼號碼，快速比對財政部最新已公告獎號。</span><em class="level">查詢</em></button>
               <button class="roadmap-item" type="button" data-utility="facilities"><b>附近生活設施</b><span>查藥局、超商、醫院、郵局、ATM 與洗衣店。</span><em class="level">查詢</em></button>
             </div>
-            <div class="result" id="utility-result">選一個生活工具，這裡會直接顯示查詢結果。</div>
+            <div class="result" id="utility-result">選一個項目，這裡會直接顯示查詢結果。</div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="band" id="line">
-      <div class="wrap">
-        <div class="cta">
-          <div>
-            <h2>早安可以在 LINE 推送，細節交給網站展開。</h2>
-            <p>LINE 適合早晨推一張早安今日好料；網站適合把吃飯、週末活動、找車位與交通路線展開成可比較、可篩選的頁面。</p>
-          </div>
-          <a class="btn" href="https://line.me/R/" target="_blank" rel="noreferrer">開啟 LINE</a>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer>
@@ -1186,9 +1169,9 @@
           : ["通勤提醒", "先看降雨、油價與停車點；若要開車，建議出門前確認路況。"],
         "外出跑行程": ["行程提醒", `${afternoon || night ? "外出前" : "出門前"}先排室內備案，地點之間保留 15-20 分鐘緩衝。`],
         "在家工作": ["在家提醒", "重點放在洗曬、飲水與下午精神管理；油價匯率可當日常參考即可。"],
-        "週末出遊": ["出遊提醒", "先看每週週末活動自動更新，再決定吃飯地點；若要開車，停車點要比餐廳更早確認。"]
+        "週末出遊": ["出遊提醒", "先看週末活動，再決定吃飯地點；若要開車，停車點要比餐廳更早確認。"]
       };
-      return map[plan] || ["今日提醒", "先把必要行程排好，再決定吃飯與活動。"];
+      return map[plan] || ["今日提醒", "先確認必要行程，再決定吃飯與活動。"];
     }
     function focusAdvice(focus, weatherText, oilText, rateText, activity) {
       if (focus === "穿搭與雨具") {
@@ -1277,7 +1260,7 @@
         const profile = cityProfiles[city] || cityProfiles["台北"];
         const rainPlan = pace === "雨天備案" ? "優先選室內場館，保留咖啡店備案。" : "先排主活動，再留一段彈性時間。";
         return `
-          <h4>${html(city)} ${html(time)}週末活動自動更新</h4>
+          <h4>${html(city)} ${html(time)}活動清單</h4>
           <div class="result-grid">
             ${card(`${type}主活動`, `${profile.event}。步調：${pace}，建議先確認開放時間與是否需預約。`)}
             ${card("順路安排", `${profile.area} 周邊先接吃飯，再安排第二站，移動成本最低。`)}
@@ -1296,12 +1279,12 @@
           ["查詢地點", `${city} ${destination}`],
           ["停車需求", note],
           ["資料內容", "停車場、路邊格、剩餘車位與費率。"],
-          ["下一步", "未來可加入步行距離、月租、預約與 USPACE 類型的私有車位。"]
+          ["使用建議", "先看剩餘車位和費率，再決定要停近一點或走幾分鐘省停車費。"]
         ].map(([title, body]) => card(title, body)).join("");
         return `
           <h4>${html(city)} 即時找車位</h4>
           <div class="result-grid">${cards}</div>
-          <div class="flow-note">找車位是獨立主功能，不再和垃圾車或一般交通混在一起。</div>
+          <div class="flow-note">若目的地附近太滿，可以改查捷運站、高鐵站或商圈外圍停車。</div>
         `;
       },
       traffic: () => {
@@ -1319,24 +1302,24 @@
         return `
           <h4>${html(city)} 今天怎麼去</h4>
           <div class="result-grid">${cards}</div>
-          <div class="flow-note">台鐵/高鐵已接 TDX；公車、路況與 YouBike 會逐步補齊。</div>
+          <div class="flow-note">如果是出門前查詢，建議同時確認回程班次或附近可還車位。</div>
         `;
       },
       tools: () => `
-        <h4>生活工具入口</h4>
+        <h4>常用快查入口</h4>
         <div class="result-grid">
           ${card("垃圾車時間地點", "查清運點、時間與回收日。")}
           ${card("今日當地優惠", "咖啡飲料、品牌優惠、在地活動與社群話題。")}
         </div>
-        <div class="flow-note">下方生活工具區可直接查詢。</div>
+        <div class="flow-note">選一個項目後，結果會直接顯示在下方。</div>
       `,
       garbage: () => {
         const city = document.querySelector("#utility-city")?.value || "新北";
         const query = document.querySelector("#utility-place")?.value || "板橋區 文化路";
         return `
           <h4>${html(city)} 垃圾車時間地點</h4>
-          <div class="result-grid">${card("輸入地點後查詢", `目前條件：${city} ${query}。會優先顯示有座標的清運點與即時車輛。`)}</div>
-          <div class="flow-note">先顯示時間清單；需要導航時再開 Google Maps 搜尋該地點。</div>
+          <div class="result-grid">${card("輸入地點後查詢", `查詢條件：${city} ${query}。會優先顯示接下來可用的清運時間與地點。`)}</div>
+          <div class="flow-note">可以輸入行政區、路名或地標；範圍越明確，結果越接近你的位置。</div>
         `;
       }
     };
@@ -1611,7 +1594,7 @@
         </div>
       `;
       return `
-        <h4>${html(data.city)} ${html(data.time || "")}${html(data.type || "活動")}週末活動自動更新</h4>
+        <h4>${html(data.city)} ${html(data.time || "")}${html(data.type || "活動")}活動清單</h4>
         ${summary}
         ${categoryTags ? `<div class="activity-tags">${categoryTags}</div>` : ""}
         ${sourceTags ? `<div class="activity-tags">${sourceTags}</div>` : ""}
@@ -1638,7 +1621,7 @@
         .map((item, index) => ({ href: item.maps_url, label: `導航 ${index + 1}` }));
       return `
         <h4>${html(data.city)} 即時找車位</h4>
-        <div class="result-grid">${cards || card("TDX 暫無資料", "目前 TDX 沒回傳這個城市的停車場資料，請稍後再試。")}</div>
+        <div class="result-grid">${cards || card("目前查不到停車資料", "這個城市或地點暫時沒有可顯示的車位資料，請換地點或稍後再試。")}</div>
         <div class="flow-note">${sourceLabel(data.source_names || { parking: readableSource(data.source || "tdx_unavailable") })}。${summary}</div>
         ${mapLinks.length ? linkActions(mapLinks) : ""}
       `;
