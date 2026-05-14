@@ -12,6 +12,14 @@
       "dataset_url": "https://data.taipei/dataset/detail?id=6bb3304b-4f46-4bb0-8cd1-60c66dcd1cae",
       "api_url": "https://data.taipei/api/frontstage/tpeod/dataset/resource.download?rid=a6e90031-7ec4-4089-afb5-361a4efe7202",
       "note": "有座標與抵達時間，但資料集未明列每週收運日；目前仍以環境部全國清運路線作主要表定來源。"
+    },
+    {
+      "city": "桃園市",
+      "status": "official_system_audit",
+      "source": "桃園市政府環境管理處垃圾清運路線即時查詢系統",
+      "dataset_url": "https://route.tyoem.gov.tw/",
+      "api_url": "https://route.tyoem.gov.tw/web/dataManagerAgentWeb.jsp",
+      "note": "官方系統提供清運班表與即時 GPS，但端點為網站內部 POST 介面，需確認開放授權與穩定性後再接入。"
     }
   ],
   "live_gps": [
