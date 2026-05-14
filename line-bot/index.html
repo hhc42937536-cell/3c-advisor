@@ -901,7 +901,7 @@
           <div class="roadmap-copy">
             <span class="badge"><i></i>生活工具</span>
             <h2>常用小工具，直接查。</h2>
-            <p>這裡先放真正會常查的日常功能：垃圾車時間地點與今日當地優惠。四大主功能已經在上方，這裡不再重複。</p>
+            <p>這裡放獨立生活工具：垃圾車時間地點與今日當地優惠。停車查詢留在「出門交通」，不和垃圾車混在一起。</p>
           </div>
           <div>
             <h3 class="split-title">快速入口</h3>
@@ -909,16 +909,8 @@
               <label class="field" for="utility-city">所在縣市
                 <select id="utility-city"><option>臺北市</option><option selected>新北市</option><option>基隆市</option><option>桃園市</option><option>新竹市</option><option>新竹縣</option><option>苗栗縣</option><option>臺中市</option><option>彰化縣</option><option>南投縣</option><option>雲林縣</option><option>嘉義市</option><option>嘉義縣</option><option>臺南市</option><option>高雄市</option><option>屏東縣</option><option>宜蘭縣</option><option>花蓮縣</option><option>臺東縣</option><option>澎湖縣</option><option>金門縣</option><option>連江縣</option></select>
               </label>
-              <label class="field" for="utility-place">縮小範圍（可留空）
-                <input id="utility-place" value="" placeholder="例：板橋區 文化路" aria-label="垃圾車查詢地點">
-              </label>
-            </div>
-            <div class="control-grid" style="margin-top:10px">
-              <label class="field" for="garbage-city">垃圾車縣市
-                <select id="garbage-city"><option>臺北市</option><option selected>新北市</option><option>基隆市</option><option>桃園市</option><option>新竹市</option><option>新竹縣</option><option>苗栗縣</option><option>臺中市</option><option>彰化縣</option><option>南投縣</option><option>雲林縣</option><option>嘉義市</option><option>嘉義縣</option><option>臺南市</option><option>高雄市</option><option>屏東縣</option><option>宜蘭縣</option><option>花蓮縣</option><option>臺東縣</option><option>澎湖縣</option><option>金門縣</option><option>連江縣</option></select>
-              </label>
-              <label class="field" for="garbage-query">垃圾車地點
-                <input id="garbage-query" value="板橋區 文化路" aria-label="垃圾車查詢地點">
+              <label class="field" for="utility-place">鄉鎮區 / 路名 / 地標（可留空）
+                <input id="utility-place" value="" placeholder="例：板橋區 文化路" aria-label="生活工具查詢地點">
               </label>
             </div>
             <div class="roadmap">
@@ -1134,8 +1126,8 @@
       },
       tools: () => samples.traffic(),
       garbage: () => {
-        const city = document.querySelector("#garbage-city")?.value || "新北";
-        const query = document.querySelector("#garbage-query")?.value || "板橋區 文化路";
+        const city = document.querySelector("#utility-city")?.value || "新北";
+        const query = document.querySelector("#utility-place")?.value || "板橋區 文化路";
         return `
           <h4>${html(city)} 垃圾車時間地點</h4>
           <div class="result-grid">${card("輸入地點後查詢", `目前條件：${city} ${query}。會優先顯示有座標的清運點與即時車輛。`)}</div>
@@ -1487,8 +1479,8 @@
         return renderTransport(data);
       }
       if (key === "garbage") {
-        const city = document.querySelector("#garbage-city").value;
-        const query = document.querySelector("#garbage-query").value.trim();
+        const city = document.querySelector("#utility-city")?.value || "新北";
+        const query = document.querySelector("#utility-place")?.value.trim() || "";
         const data = await getJson(`/api/site_garbage?city=${encodeURIComponent(city)}&query=${encodeURIComponent(query)}`);
         return renderGarbage(data);
       }
@@ -1582,19 +1574,19 @@
 
     document.querySelector("#use-parking-location").addEventListener("click", () => {
       if (!navigator.geolocation) {
-        setResult("tools", `<h4>無法取得定位</h4><div class="flow-note">這個瀏覽器不支援定位，請改用城市或目的地查詢。</div>`);
+        setResult("traffic", `<h4>無法取得定位</h4><div class="flow-note">這個瀏覽器不支援定位，請改用城市或目的地查詢。</div>`);
         return;
       }
-      setResult("tools", `<h4>正在取得目前位置...</h4><div class="flow-note">手機會跳出定位授權，允許後會查附近路邊格與停車場。</div>`);
+      setResult("traffic", `<h4>正在取得目前位置...</h4><div class="flow-note">手機會跳出定位授權，允許後會查附近路邊格與停車場。</div>`);
       navigator.geolocation.getCurrentPosition((position) => {
         parkingLocation = {
           lat: position.coords.latitude.toFixed(6),
           lon: position.coords.longitude.toFixed(6),
         };
         document.querySelector("#parking-destination").value = "目前位置附近";
-        runDemo("tools");
+        runDemo("traffic");
       }, () => {
-        setResult("tools", `<h4>定位未開啟</h4><div class="flow-note">請允許定位，或手動輸入目的地/城市查詢。</div>`);
+        setResult("traffic", `<h4>定位未開啟</h4><div class="flow-note">請允許定位，或手動輸入目的地/城市查詢。</div>`);
       }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 180000 });
     });
 
