@@ -1022,6 +1022,7 @@
     const linkActions = (items) => `<div class="quick-actions">${items.map((item) => `<a href="${html(item.href)}" target="_blank" rel="noreferrer">${html(item.label)}</a>`).join("")}</div>`;
     let foodLocation = null;
     let parkingLocation = null;
+    let utilityRunId = 0;
     const garbageMapPayloads = {};
     const garbageMapInstances = {};
     function summaryTitle(time, city) {
@@ -1573,20 +1574,24 @@
     }
 
     async function runUtility(key) {
+      const runId = ++utilityRunId;
       setUtilityResult(`<h4>正在讀取資料...</h4><div class="flow-note">正在整理生活工具資料。</div>`);
       try {
         const city = document.querySelector("#utility-city")?.value || "新北";
         const place = document.querySelector("#utility-place")?.value.trim() || "";
         if (key === "garbage") {
           const data = await getJson(`/api/site_garbage?city=${encodeURIComponent(city)}&query=${encodeURIComponent(place)}`);
+          if (runId !== utilityRunId) return;
           setUtilityResult(renderGarbage(data));
           return;
         }
         if (key === "deals") {
           const data = await getJson(`/api/site_deals?city=${encodeURIComponent(city)}&context=${encodeURIComponent("上班日早上")}`);
+          if (runId !== utilityRunId) return;
           setUtilityResult(renderDeals(data));
         }
       } catch (error) {
+        if (runId !== utilityRunId) return;
         console.error(error);
         setUtilityResult(`<h4>目前連線不穩</h4><div class="flow-note">這個工具會查即時資料，請稍後再試。</div>`);
       }
@@ -1632,6 +1637,13 @@
       };
       const placeField = document.querySelector("#utility-place");
       if (placeField) placeField.value = defaults[event.target.value] || "";
+      utilityRunId++;
+      setUtilityResult(`選好縣市與範圍後，按「垃圾車時間地點」重新查詢。`);
+    });
+
+    document.querySelector("#utility-place")?.addEventListener("input", () => {
+      utilityRunId++;
+      setUtilityResult(`輸入完成後，按「垃圾車時間地點」重新查詢。`);
     });
 
     document.querySelector("#use-parking-location").addEventListener("click", () => {
