@@ -1535,11 +1535,13 @@ def _site_garbage_query_parts(city: str, query: str) -> tuple[str, str]:
             continue
         district = match
         break
+    if not district:
+        district = _site_garbage_district_alias(city, query)
     keywords = text
     remove_words = set(city_names)
     remove_words.update({name.replace("市", "").replace("縣", "") for name in city_names})
     remove_words.update({name.replace("臺", "台") for name in list(remove_words)})
-    remove_words.update({district, "垃圾車", "垃圾", "清運", "時間", "地點"})
+    remove_words.update({district, district.rstrip("區鎮鄉市"), "垃圾車", "垃圾", "清運", "時間", "地點"})
     for word in sorted(remove_words, key=len, reverse=True):
         keywords = keywords.replace(word, " ")
     return district, " ".join(keywords.split())
@@ -1558,6 +1560,26 @@ def _site_hwms_route_index() -> list:
             return json.load(fh).get("routes", [])
     except Exception:
         return []
+
+
+def _site_garbage_district_alias(city: str, query: str) -> str:
+    """Allow users to type 歸仁 instead of 歸仁區 when filtering garbage routes."""
+    compact = re.sub(r"\s+", "", str(query or ""))
+    if not compact:
+        return ""
+    country = _site_city_full_name(city)
+    districts = sorted({
+        route.get("district", "")
+        for route in _site_hwms_route_index()
+        if route.get("country") == country and route.get("district")
+    }, key=len, reverse=True)
+    for district in districts:
+        alias = district.rstrip("區鎮鄉市")
+        if not alias:
+            continue
+        if compact == alias or compact == district or compact.startswith(alias):
+            return district
+    return ""
 
 
 def _site_hwms_route_stops(route: dict, keyword: str, today: int, now_minutes: int, limit: int = 8) -> list:
