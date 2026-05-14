@@ -1639,6 +1639,39 @@ def _site_freeway_sections() -> dict:
     now = time.time()
     if _FREEWAY_SECTIONS_CACHE["items"] and now - _FREEWAY_SECTIONS_CACHE["loaded_at"] < 86400:
         return _FREEWAY_SECTIONS_CACHE["items"]
+    token = _get_tdx_token()
+    if token:
+        try:
+            data = _tdx_get_any(
+                "Road/Traffic/Section/Freeway?$format=JSON",
+                token,
+                timeout=8,
+                versions=("v2", "v3"),
+            )
+            sections = {}
+            for row in data:
+                sid = _site_text(row.get("SectionID") or row.get("LinkID") or row.get("RoadSectionID"), "")
+                if not sid:
+                    continue
+                start = _site_text(row.get("RoadSectionStart") or row.get("SectionStart") or row.get("Start"), "")
+                end = _site_text(row.get("RoadSectionEnd") or row.get("SectionEnd") or row.get("End"), "")
+                road = _site_text(row.get("RoadName"), "")
+                name = _site_text(row.get("SectionName"), "") or f"{road}({start}到{end})"
+                sections[sid] = {
+                    "section_id": sid,
+                    "name": name,
+                    "road": road,
+                    "direction": _site_text(row.get("RoadDirection"), ""),
+                    "start": start,
+                    "end": end,
+                    "length": _site_text(row.get("SectionLength"), ""),
+                    "speed_limit": _site_text(row.get("SpeedLimit"), ""),
+                }
+            if sections:
+                _FREEWAY_SECTIONS_CACHE.update({"loaded_at": now, "items": sections})
+                return sections
+        except Exception as exc:
+            print(f"[road] tdx sections failed: {exc}")
     try:
         req = urllib.request.Request(
             "https://tisvcloud.freeway.gov.tw/history/motc20/Section.xml",
