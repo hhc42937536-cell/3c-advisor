@@ -10,6 +10,7 @@ import json
 import os
 import re
 import datetime
+import time
 import hashlib
 import hmac
 import urllib.request
@@ -1712,19 +1713,59 @@ def _site_garbage_district_alias(city: str, query: str) -> str:
     return ""
 
 
-def _site_hwms_route_stops(route: dict, keyword: str, today: int, now_minutes: int, limit: int = 8) -> list:
+_HWMS_ROUTE_CACHE_TTL = 86400 * 14
+_hwms_route_rows_cache = {}
+
+
+def _site_hwms_route_rows(route: dict, timeout: float = 3) -> list:
+    dbid = str(route.get("dbid") or "")
+    if not dbid:
+        return []
+    cached_rows = _hwms_route_rows_cache.get(dbid)
+    if cached_rows is not None:
+        return cached_rows
+    cache_key = f"site:hwms_route_rows:{dbid}"
+    try:
+        cached = _redis_get(cache_key)
+        if isinstance(cached, str):
+            cached = json.loads(cached)
+        if isinstance(cached, list):
+            _hwms_route_rows_cache[dbid] = cached
+            return cached
+    except Exception:
+        pass
+
     url = f"https://hwms.moenv.gov.tw/dispPageBox/trans.aspx?ddsPageID=LINEINFO&dbid={route.get('dbid')}"
-    html = _site_get_text(url, timeout=10)
-    items = []
+    html = _site_get_text(url, timeout=max(1, timeout))
+    rows = []
     for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", html, flags=re.S | re.I):
         cells = [_site_html_clean(cell) for cell in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", tr, flags=re.S | re.I)]
         if len(cells) < 6 or not cells[0].isdigit() or not re.match(r"^\d{1,2}:\d{2}$", cells[2]):
             continue
-        location = cells[1]
+        rows.append({
+            "location": cells[1],
+            "time": cells[2],
+            "garbage_days": cells[3],
+            "food_waste_days": cells[4],
+            "recycle_days": cells[5],
+        })
+    _hwms_route_rows_cache[dbid] = rows
+    try:
+        _redis_set(cache_key, rows, ttl=_HWMS_ROUTE_CACHE_TTL)
+    except Exception:
+        pass
+    return rows
+
+
+def _site_hwms_route_stops(route: dict, keyword: str, today: int, now_minutes: int, limit: int = 8, timeout: float = 3) -> list:
+    items = []
+    for row in _site_hwms_route_rows(route, timeout=timeout):
+        location = str(row.get("location") or "")
         if keyword and keyword not in location and keyword not in route.get("route", "") and keyword not in route.get("code", ""):
             continue
-        garbage_days = _site_days_from_text(cells[3])
-        service_day, display_time, _ = _site_next_service_time({day: (cells[2], cells[2]) for day in garbage_days}, today, now_minutes)
+        schedule_time = str(row.get("time") or "")
+        garbage_days = _site_days_from_text(row.get("garbage_days", ""))
+        service_day, display_time, _ = _site_next_service_time({day: (schedule_time, schedule_time) for day in garbage_days}, today, now_minutes)
         minutes = _site_minutes(display_time)
         is_today = service_day == today
         items.append({
@@ -1737,9 +1778,9 @@ def _site_hwms_route_stops(route: dict, keyword: str, today: int, now_minutes: i
             "service_day": "今日" if is_today else f"週{_site_weekday_text([service_day])}" if service_day else "",
             "car": "",
             "route": route.get("route", ""),
-            "garbage_days": cells[3],
-            "recycle_days": cells[5],
-            "food_waste_days": cells[4],
+            "garbage_days": row.get("garbage_days", ""),
+            "recycle_days": row.get("recycle_days", ""),
+            "food_waste_days": row.get("food_waste_days", ""),
             "today": is_today,
             "minutes": minutes,
             "passed": is_today and minutes is not None and minutes < now_minutes,
@@ -1770,22 +1811,30 @@ def _site_hwms_schedule(city: str, district: str, keyword: str, query: str, limi
     items = []
     tried = []
     stop_keyword = "" if any(keyword in f"{r.get('route','')} {r.get('code','')}" for _, r in ranked[:5]) else keyword
-    search_routes = [route for _, route in ranked[:24 if stop_keyword else 8]]
+    started_at = time.monotonic()
+    deadline = started_at + (8.5 if stop_keyword else 6.0)
+    search_routes = [route for _, route in ranked[:14 if stop_keyword else 8]]
     for route in search_routes:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            break
         tried.append(route)
         try:
-            batch = _site_hwms_route_stops(route, stop_keyword, today, now_minutes, limit=limit)
+            batch = _site_hwms_route_stops(route, stop_keyword, today, now_minutes, limit=limit, timeout=min(2.0, remaining))
             items.extend(batch)
         except Exception:
             continue
-        if len(items) >= limit:
+        if len(items) >= limit or (stop_keyword and batch):
             break
     if not items and stop_keyword:
         for _, route in ranked[:8]:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                break
             if route not in tried:
                 tried.append(route)
             try:
-                items.extend(_site_hwms_route_stops(route, "", today, now_minutes, limit=limit))
+                items.extend(_site_hwms_route_stops(route, "", today, now_minutes, limit=limit, timeout=min(2.0, remaining)))
             except Exception:
                 continue
             if len(items) >= limit:

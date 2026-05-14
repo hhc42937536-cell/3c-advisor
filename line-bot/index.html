@@ -884,8 +884,8 @@
                       <input id="garbage-query" value="板橋區 文化路" aria-label="垃圾車查詢地點">
                     </label>
                   </div>
-                  <button class="btn primary" data-demo="garbage">查垃圾車地圖</button>
-                  <div class="result" id="garbage-result">輸入縣市與路名，會顯示清運時間、地點與地圖標記。</div>
+                  <button class="btn primary" data-demo="garbage">查垃圾車時間</button>
+                  <div class="result" id="garbage-result">輸入縣市與路名，會顯示接下來可用的清運時間與地點。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -919,7 +919,7 @@
               </label>
             </div>
             <div class="roadmap">
-              <button class="roadmap-item" type="button" data-utility="garbage"><b>垃圾車時間地點</b><span>查清運點、時間、回收日；有座標時直接顯示地圖。</span><em class="level">查詢</em></button>
+              <button class="roadmap-item" type="button" data-utility="garbage"><b>垃圾車時間地點</b><span>查清運點、時間與回收日；優先顯示還來得及使用的時段。</span><em class="level">查詢</em></button>
               <button class="roadmap-item" type="button" data-utility="deals"><b>今日當地優惠</b><span>咖啡飲料、品牌優惠、在地活動與社群話題。</span><em class="level">查詢</em></button>
             </div>
             <div class="result" id="utility-result">選一個生活工具，這裡會直接顯示查詢結果。</div>
@@ -1131,7 +1131,7 @@
         return `
           <h4>${html(city)} 垃圾車時間地點</h4>
           <div class="result-grid">${card("輸入地點後查詢", `目前條件：${city} ${query}。會優先顯示有座標的清運點與即時車輛。`)}</div>
-          <div class="flow-note">如果資料來源沒有提供座標，會先顯示時間清單與開地圖搜尋連結。</div>
+          <div class="flow-note">先顯示時間清單；需要導航時再開 Google Maps 搜尋該地點。</div>
         `;
       }
     };
@@ -1470,7 +1470,7 @@
 
     async function runUtility(key) {
       const runId = ++utilityRunId;
-      setUtilityResult(`<h4>正在查詢...</h4><div class="flow-note">正在抓清運時間地點；如果資料源太慢，10 秒後會自動停止等待。</div>`);
+      setUtilityResult(`<h4>正在查詢...</h4><div class="flow-note">正在抓清運時間地點；如果資料源太慢，會自動停止等待。</div>`);
       try {
         const city = document.querySelector("#utility-city")?.value || "新北";
         const place = document.querySelector("#utility-place")?.value.trim() || "";
