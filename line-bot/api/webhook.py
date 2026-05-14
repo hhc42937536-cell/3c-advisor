@@ -1366,6 +1366,105 @@ def _site_nearby_parking(lat: float, lon: float, city: str = "", limit: int = 8)
     }
 
 
+_RAIL_OPERATOR_LABELS = {"TRA": "台鐵", "THSR": "高鐵"}
+
+
+def _site_rail_station_name(station: dict) -> str:
+    return _site_text(station.get("StationName") or station.get("StationNameZh"), "")
+
+
+def _site_rail_stations(operator: str, token: str) -> list:
+    cache_key = f"site:rail_stations:{operator}"
+    cached = _redis_get(cache_key)
+    if cached:
+        return json.loads(cached) if isinstance(cached, str) else cached
+    rows = _tdx_get(f"Rail/{operator}/Station?$format=JSON", token, timeout=8)
+    try:
+        _redis_set(cache_key, rows, ttl=86400 * 7)
+    except Exception:
+        pass
+    return rows
+
+
+def _site_find_rail_station(stations: list, text: str) -> dict | None:
+    key = re.sub(r"(台鐵|臺鐵|高鐵|火車站|車站|站|\s)+", "", str(text or ""))
+    if not key:
+        return None
+    for station in stations:
+        name = _site_rail_station_name(station)
+        compact = re.sub(r"(火車站|車站|站|\s)+", "", name)
+        sid = str(station.get("StationID") or station.get("StationCode") or "")
+        if key == compact or key == sid:
+            return station
+    for station in stations:
+        name = _site_rail_station_name(station)
+        compact = re.sub(r"(火車站|車站|站|\s)+", "", name)
+        if key in compact or compact in key:
+            return station
+    return None
+
+
+def _site_rail_schedule(origin: str, destination: str, operator_hint: str = "", limit: int = 6) -> dict:
+    token = _get_tdx_token()
+    if not token:
+        return {"ok": False, "mode": "rail", "source": "tdx_unavailable", "items": [], "source_names": {"transport": "TDX 運輸資料流通服務平臺"}}
+    operators = ["THSR", "TRA"] if "高鐵" in operator_hint or "高鐵" in origin or "高鐵" in destination else ["TRA", "THSR"]
+    now, _, now_minutes = _site_today_info()
+    today = now.strftime("%Y-%m-%d")
+    for operator in operators:
+        stations = _site_rail_stations(operator, token)
+        origin_station = _site_find_rail_station(stations, origin)
+        dest_station = _site_find_rail_station(stations, destination)
+        if not origin_station or not dest_station:
+            continue
+        origin_id = str(origin_station.get("StationID") or "")
+        dest_id = str(dest_station.get("StationID") or "")
+        path = f"Rail/{operator}/DailyTimetable/OD/{origin_id}/to/{dest_id}/{today}?$format=JSON"
+        rows = _tdx_get(path, token, timeout=10)
+        items = []
+        for row in rows:
+            train = row.get("DailyTrainInfo") or row.get("TrainInfo") or {}
+            origin_stop = row.get("OriginStopTime") or row.get("OriginStop") or {}
+            dest_stop = row.get("DestinationStopTime") or row.get("DestinationStop") or {}
+            depart = origin_stop.get("DepartureTime") or origin_stop.get("ArrivalTime") or ""
+            arrive = dest_stop.get("ArrivalTime") or dest_stop.get("DepartureTime") or ""
+            if depart and _site_minutes(depart) is not None and _site_minutes(depart) < now_minutes:
+                continue
+            train_no = train.get("TrainNo") or train.get("TrainNumber") or ""
+            train_type = _site_text(train.get("TrainTypeName") or train.get("TrainType"), _RAIL_OPERATOR_LABELS.get(operator, operator))
+            items.append({
+                "title": f"{depart or '未標示'} → {arrive or '未標示'}",
+                "body": f"{_RAIL_OPERATOR_LABELS.get(operator, operator)} {train_type} {train_no}｜{_site_rail_station_name(origin_station)} → {_site_rail_station_name(dest_station)}",
+                "depart": depart,
+                "arrive": arrive,
+                "train_no": train_no,
+                "operator": operator,
+            })
+            if len(items) >= limit:
+                break
+        return {
+            "ok": bool(items),
+            "city": "",
+            "mode": "rail",
+            "title": f"{_RAIL_OPERATOR_LABELS.get(operator, operator)}時刻",
+            "origin": _site_rail_station_name(origin_station),
+            "destination": _site_rail_station_name(dest_station),
+            "items": items,
+            "source": f"tdx_{operator.lower()}_daily_timetable",
+            "source_names": {"transport": f"TDX 運輸資料流通服務平臺：{_RAIL_OPERATOR_LABELS.get(operator, operator)}每日時刻表"},
+        }
+    return {
+        "ok": False,
+        "mode": "rail",
+        "title": "台鐵 / 高鐵時刻",
+        "items": [
+            {"title": "找不到站名", "body": f"目前輸入：{origin or '未填'} → {destination or '未填'}，請改用標準站名，例如台北、板橋、台中、左營。"}
+        ],
+        "source": "tdx_rail_station_lookup",
+        "source_names": {"transport": "TDX 運輸資料流通服務平臺：台鐵與高鐵車站資料"},
+    }
+
+
 def _site_transport(city: str, mode: str = "parking", origin: str = "", destination: str = "", route: str = "", lat: float | None = None, lon: float | None = None) -> dict:
     if mode == "parking":
         if lat is not None and lon is not None:
@@ -1375,6 +1474,9 @@ def _site_transport(city: str, mode: str = "parking", origin: str = "", destinat
         data["mode"] = "parking"
         data.setdefault("source_names", {"parking": data.get("source_name") or "TDX 與地方政府停車資料"})
         return data
+
+    if mode == "rail":
+        return _site_rail_schedule(origin, destination, route, limit=6)
 
     source_names = {
         "rail": "TDX 運輸資料流通服務平臺：台鐵與高鐵時刻資料",

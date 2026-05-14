@@ -1388,6 +1388,14 @@
       if (data.mode === "parking" || data.source === "nearby_parking_live" || data.source === "tdx_live") {
         return renderParking(data);
       }
+      if (data.mode === "rail") {
+        const cards = (data.items || []).map((item) => card(item.title, item.body)).join("");
+        return `
+          <h4>${html(data.origin || "")}${data.origin ? " → " : ""}${html(data.destination || "")} ${html(data.title || "台鐵 / 高鐵時刻")}</h4>
+          <div class="result-grid">${cards || card("目前查不到後續班次", "請確認站名是否正確，或改用台北、板橋、台中、左營等標準站名。")}</div>
+          <div class="flow-note">${sourceLabel(data.source_names)}。顯示今日尚未出發的班次。</div>
+        `;
+      }
       const cards = (data.items || []).map((item) => card(item.title, item.body)).join("");
       return `
         <h4>${html(data.city || "")} ${html(data.title || "出門交通")}</h4>
