@@ -341,30 +341,6 @@
     h2 { margin: 0; font-size: clamp(32px, 5vw, 58px); line-height: 1.05; letter-spacing: 0; }
     .section-head p { max-width: 520px; margin: 0; color: var(--muted); line-height: 1.8; }
 
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-    .feature-card {
-      min-height: 214px;
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: rgba(255, 250, 240, .8);
-      box-shadow: 0 18px 38px rgba(38, 49, 43, .07);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      color: inherit;
-      cursor: pointer;
-      font: inherit;
-      text-align: left;
-      width: 100%;
-      transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
-    }
-    .feature-card:hover,
-    .feature-card:focus-visible,
     .data-item:hover,
     .data-item:focus-visible,
     .roadmap-item:hover,
@@ -376,7 +352,6 @@
       transform: translateY(-1px);
       outline: none;
     }
-    .feature-card { border-top: 6px solid rgba(47, 150, 109, .68); }
     .icon {
       width: 42px;
       height: 42px;
@@ -388,8 +363,6 @@
       box-shadow: 3px 3px 0 var(--ink);
       font-weight: 900;
     }
-    .feature-card h3 { margin: 0; font-size: 20px; }
-    .feature-card p { margin: 0; color: var(--muted); line-height: 1.65; font-size: 14px; }
     .mini-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
     .mini-tags span { padding: 5px 8px; border-radius: 999px; background: rgba(38, 49, 43, .06); font-size: 12px; font-weight: 900; color: var(--soft-ink); }
 
@@ -681,7 +654,6 @@
     @media (max-width: 960px) {
       .hero-grid, .panel-layout, .roadmap-card, .cta { grid-template-columns: 1fr; }
       .menu-frame { margin: 0 auto; }
-      .feature-grid { grid-template-columns: repeat(2, 1fr); }
       .workspace { grid-template-columns: 1fr; }
       .tabs { grid-template-columns: repeat(4, 1fr); border-right: 0; border-bottom: 1px solid var(--line); }
       .tab { text-align: center; }
@@ -702,7 +674,7 @@
       }
       .task-card { box-shadow: 4px 4px 0 var(--ink); }
       .morning-card, .workspace, .roadmap-card, .cta { box-shadow: 5px 5px 0 var(--ink); }
-      .stats, .feature-grid, .tabs, .input-row, .task-grid, .control-grid, .result-grid { grid-template-columns: 1fr; }
+      .stats, .tabs, .input-row, .task-grid, .control-grid, .result-grid { grid-template-columns: 1fr; }
       .note { position: static; margin: 14px auto 0; max-width: none; }
       .panel { padding: 16px; }
       .roadmap-item, .split-row { grid-template-columns: 1fr; }
@@ -715,7 +687,7 @@
     <nav class="wrap">
       <a class="brand" href="#top" aria-label="生活優轉首頁"><span class="mark">優</span>生活優轉</a>
       <div class="links">
-        <a href="#features">四大功能</a>
+        <a href="#workspace">四大功能</a>
         <a href="#workspace">使用看看</a>
         <a href="#life-tools">生活工具</a>
         <a href="#life-tools" data-nav-utility="garbage">垃圾車</a>
@@ -770,21 +742,6 @@
             </div>
           </div>
           <div class="note">LINE 可以快速推送早安；網站適合展開看細節。</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="band" id="features">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>四大功能先放清楚。</h2>
-          <p>先把 LINE bot 已經成立的四大主功能搬進網站，再判斷哪些衍生工具要留、哪些應該獨立出去。</p>
-        </div>
-        <div class="feature-grid">
-          <button class="feature-card" type="button" data-jump="morning"><div class="icon">早</div><h3>早安今日好料</h3><p>天氣穿搭、帶傘提醒、油價、匯率、今日優惠與社群話題。</p><div class="mini-tags"><span>早晨推送</span><span>CWA / CPC / 匯率</span></div></button>
-          <button class="feature-card" type="button" data-jump="food"><div class="icon">食</div><h3>今天吃什麼</h3><p>美食推薦、必比登、聚餐選擇、城市特色、定位找餐廳。</p><div class="mini-tags"><span>餐廳比較</span><span>Google Places</span></div></button>
-          <button class="feature-card" type="button" data-jump="activity"><div class="icon">週</div><h3>每週週末活動自動更新</h3><p>Accupass 活動、展覽、市集、地區活動與假日提醒。</p><div class="mini-tags"><span>週末清單</span><span>自動更新</span></div></button>
-          <button class="feature-card" type="button" data-jump="tools"><div class="icon">停</div><h3>即時找車位</h3><p>停車場、剩餘車位、費率與附近順路安排。</p><div class="mini-tags"><span>TDX</span><span>即時車位</span></div></button>
         </div>
       </div>
     </section>
