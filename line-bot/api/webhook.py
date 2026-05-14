@@ -1701,8 +1701,8 @@ def _site_freeway_sections() -> dict:
             data = _tdx_get_any(
                 "Road/Traffic/Section/Freeway?$format=JSON",
                 token,
-                timeout=8,
-                versions=("v2", "v3"),
+                timeout=5,
+                versions=("v2",),
             )
             sections = {}
             for row in data:
@@ -1733,7 +1733,7 @@ def _site_freeway_sections() -> dict:
             "https://tisvcloud.freeway.gov.tw/history/motc20/Section.xml",
             headers={"User-Agent": "LifeUturn/1.0"},
         )
-        with urllib.request.urlopen(req, timeout=10, context=_ssl._create_unverified_context()) as response:
+        with urllib.request.urlopen(req, timeout=3, context=_ssl._create_unverified_context()) as response:
             raw = response.read()
         import xml.etree.ElementTree as ET
         root = ET.fromstring(raw.decode("utf-8", errors="replace"))
@@ -1774,8 +1774,8 @@ def _site_freeway_live() -> tuple[list, str]:
             data = _tdx_get_any(
                 "Road/Traffic/Live/Freeway?$format=JSON",
                 token,
-                timeout=8,
-                versions=("v2", "v3"),
+                timeout=5,
+                versions=("v2",),
             )
             rows = []
             updated_at = ""
@@ -1807,7 +1807,7 @@ def _site_freeway_live() -> tuple[list, str]:
             "https://tisvcloud.freeway.gov.tw/history/motc20/LiveTraffic.xml",
             headers={"User-Agent": "LifeUturn/1.0"},
         )
-        with urllib.request.urlopen(req, timeout=10, context=_ssl._create_unverified_context()) as response:
+        with urllib.request.urlopen(req, timeout=3, context=_ssl._create_unverified_context()) as response:
             raw = response.read()
         import xml.etree.ElementTree as ET
         root = ET.fromstring(raw.decode("utf-8", errors="replace"))
@@ -1844,8 +1844,8 @@ def _site_highway_sections() -> dict:
         data = _tdx_get_any(
             "Road/Traffic/Section/Highway?$format=JSON",
             token,
-            timeout=8,
-            versions=("v2", "v3"),
+            timeout=5,
+            versions=("v2",),
         )
         sections = {}
         for row in data:
@@ -1885,8 +1885,8 @@ def _site_highway_live() -> tuple[list, str]:
         data = _tdx_get_any(
             "Road/Traffic/Live/Highway?$format=JSON",
             token,
-            timeout=8,
-            versions=("v2", "v3"),
+            timeout=5,
+            versions=("v2",),
         )
         rows = []
         updated_at = ""
@@ -1964,13 +1964,13 @@ def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
     matches.sort(key=lambda item: (-(item.get("level") or 0), item.get("speed") or 999, item.get("title", "")))
     if not matches and route_pattern:
         return {
-            "ok": False,
+            "ok": True,
             "city": city,
             "mode": "road",
             "query": q,
             "title": f"{q} 即時路況",
             "updated_at": updated_at,
-            "items": [],
+            "items": [{"title": "目前沒有可顯示路段", "body": f"沒有取得「{q}」的即時路況；可改查其他路線，或稍後再試。"}],
             "source": "road_live_traffic",
             "source_names": {"transport": "TDX、高速公路局與公路局發布路段即時路況資料"},
             "notice": f"目前沒有「{q}」的即時路況資料；可改查其他路線，或輸入較大範圍例如「台」。",
@@ -1979,6 +1979,8 @@ def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
         fallback = _site_road_live(city, "國道1號", limit=limit)
         fallback["notice"] = f"沒有找到「{q}」的國道或省道即時路況，先顯示國道1號較需要注意的路段。"
         return fallback
+    if not matches:
+        matches = [{"title": "目前路況資料源忙碌", "body": "即時路況暫時沒有回傳可顯示路段；請稍後再查，或改查台鐵、高鐵、公車與 YouBike。", "source": "road_live_traffic"}]
     return {
         "ok": bool(matches),
         "city": city,
