@@ -1425,7 +1425,50 @@ def _site_national_waste(limit: int = 3) -> list:
         return []
 
 
-def _site_garbage_trucks(city: str, limit: int = 6) -> dict:
+def _site_garbage_trucks(city: str, limit: int = 6, query: str = "", district: str = "") -> dict:
+    if city in ("台南", "臺南", "台南市", "臺南市"):
+        source_name = "臺南市政府環境保護局垃圾車 GPS 即時資料"
+        url = "https://soa.tainan.gov.tw/Api/Service/Get/2c8a70d5-06f2-4353-9e92-c40d33bcd969"
+        try:
+            payload = _site_get_json(url, timeout=8)
+            rows = payload.get("data", []) if isinstance(payload, dict) else payload
+            strict_terms, broad_terms = _site_garbage_keyword_variants(query)
+            district_term = _site_garbage_match_text(district)
+
+            def score(row: dict) -> int:
+                text = _site_garbage_match_text(f"{row.get('location', '')} {row.get('linid', '')} {row.get('car', '')}")
+                value = 0
+                if district_term and district_term in text:
+                    value += 20
+                if any(term and term in text for term in strict_terms):
+                    value += 40
+                if any(term and term in text for term in broad_terms):
+                    value += 10
+                return value
+
+            ranked = sorted(rows, key=lambda row: -score(row))
+            if query or district:
+                matched = [row for row in ranked if score(row) > 0]
+                if matched:
+                    ranked = matched
+            items = []
+            for row in ranked[:limit]:
+                lat = row.get("y", "")
+                lng = row.get("x", "")
+                location = _site_fix_text(row.get("location", ""))
+                items.append({
+                    "car": _site_fix_text(row.get("car", "")),
+                    "time": _site_fix_text(row.get("time", "")),
+                    "location": location,
+                    "district": district,
+                    "lat": lat,
+                    "lng": lng,
+                    "route": _site_fix_text(row.get("linid", "")),
+                    "maps_url": _site_maps_url(f"{lat},{lng}" if lat and lng else f"臺南市{location}"),
+                })
+            return {"ok": bool(items), "city": "台南", "source": "tainan_garbage_gps", "source_name": source_name, "items": items}
+        except Exception as exc:
+            return {"ok": False, "city": city, "source": "tainan_garbage_gps", "source_name": source_name, "error": str(exc), "items": []}
     if city in ("台中", "臺中"):
         source_name = "臺中市政府環保局垃圾車動態"
         url = "https://newdatacenter.taichung.gov.tw/api/v1/no-auth/resource.download?rid=c923ad20-2ec6-43b9-b3ab-54527e99f7bc"
@@ -1466,7 +1509,7 @@ def _site_garbage_trucks(city: str, limit: int = 6) -> dict:
         "ok": False,
         "city": city,
         "source": "garbage_truck_not_supported",
-        "source_name": "垃圾車動態資料目前支援新北市、臺中市",
+        "source_name": "垃圾車動態資料目前支援台南市、新北市、臺中市",
         "items": [],
     }
 
@@ -1927,7 +1970,7 @@ def _site_hwms_schedule(city: str, district: str, keyword: str, query: str, limi
         "source_name": "環境部環境管理署全國垃圾車清運路線查詢網",
         "items": items[:limit],
         "routes": tried[:5],
-        "live": _site_garbage_trucks(city, limit=3),
+        "live": _site_garbage_trucks(city, limit=3, query=query, district=district),
         "source_names": {"schedule": "環境部環境管理署全國垃圾車清運路線查詢網"},
     }
 
@@ -2051,7 +2094,7 @@ def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
             "source_name": source_name,
             "error": str(exc),
             "items": [],
-            "live": _site_garbage_trucks(city, limit=3),
+            "live": _site_garbage_trucks(city, limit=3, query=query, district=district),
         }
 
     if keyword:
@@ -2091,10 +2134,10 @@ def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
         "source": source,
         "source_name": source_name,
         "items": items[:limit],
-        "live": _site_garbage_trucks(city, limit=3),
+        "live": _site_garbage_trucks(city, limit=3, query=query, district=district),
         "source_names": {
             "schedule": source_name,
-            "live": _site_garbage_trucks(city, limit=1).get("source_name", "地方政府垃圾車動態資料"),
+            "live": _site_garbage_trucks(city, limit=1, query=query, district=district).get("source_name", "地方政府垃圾車動態資料"),
         },
     }
 
