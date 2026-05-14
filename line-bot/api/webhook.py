@@ -1718,6 +1718,29 @@ _HWMS_ROUTE_CACHE_TTL = 86400 * 14
 _hwms_route_rows_cache = {}
 
 
+def _site_garbage_match_text(value: str) -> str:
+    text = str(value or "").strip().lower()
+    text = text.translate(str.maketrans({
+        "０": "0", "１": "1", "２": "2", "３": "3", "４": "4",
+        "５": "5", "６": "6", "７": "7", "８": "8", "９": "9",
+        "一": "1", "二": "2", "三": "3", "四": "4", "五": "5",
+        "六": "6", "七": "7", "八": "8", "九": "9",
+    }))
+    return re.sub(r"\s+", "", text)
+
+
+def _site_garbage_keyword_variants(keyword: str) -> tuple[list[str], list[str]]:
+    compact = _site_garbage_match_text(keyword)
+    strict = [compact] if compact else []
+    broad = []
+    road_stem = re.sub(r"\d+(街|路|段|巷|弄).*", "", compact)
+    if len(road_stem) >= 2 and road_stem != compact:
+        broad.append(road_stem)
+    if len(compact) >= 2:
+        broad.append(compact[:2])
+    return (list(dict.fromkeys(strict)), list(dict.fromkeys(x for x in broad if x)))
+
+
 def _site_hwms_route_rows(route: dict, timeout: float = 3) -> list:
     dbid = str(route.get("dbid") or "")
     if not dbid:
@@ -1764,13 +1787,21 @@ def _site_hwms_route_stops(route: dict, keyword: str, today: int, now_minutes: i
     candidate_rows = rows
     exact_locations = set()
     if keyword:
-        route_matches = keyword in route.get("route", "") or keyword in route.get("code", "")
-        matched_indices = [
+        strict_terms, broad_terms = _site_garbage_keyword_variants(keyword)
+        route_text = _site_garbage_match_text(f"{route.get('route', '')} {route.get('code', '')}")
+        route_matches = any(term and term in route_text for term in strict_terms)
+        strict_indices = [
             index for index, row in enumerate(rows)
-            if keyword in str(row.get("location") or "")
+            if any(term and term in _site_garbage_match_text(row.get("location")) for term in strict_terms)
         ]
+        matched_indices = strict_indices
+        if not matched_indices:
+            matched_indices = [
+                index for index, row in enumerate(rows)
+                if any(term and term in _site_garbage_match_text(row.get("location")) for term in broad_terms)
+            ]
         if matched_indices:
-            exact_locations = {str(rows[index].get("location") or "") for index in matched_indices}
+            exact_locations = {str(rows[index].get("location") or "") for index in strict_indices}
             selected = set()
             for index in matched_indices:
                 start = max(0, index - context_radius)
@@ -1833,9 +1864,9 @@ def _site_hwms_schedule(city: str, district: str, keyword: str, query: str, limi
     stop_keyword = "" if any(keyword in f"{r.get('route','')} {r.get('code','')}" for _, r in ranked[:5]) else keyword
     started_at = time.monotonic()
     deadline = started_at + (8.5 if stop_keyword else 6.0)
-    search_routes = [route for _, route in ranked[:14 if stop_keyword else 8]]
+    search_routes = [route for _, route in ranked[:32 if stop_keyword else 8]]
     if stop_keyword and search_routes:
-        workers = min(10, len(search_routes))
+        workers = min(16, len(search_routes))
         executor = concurrent.futures.ThreadPoolExecutor(max_workers=workers)
         futures = {
             executor.submit(_site_hwms_route_stops, route, stop_keyword, today, now_minutes, limit, 4.0): route
@@ -1850,8 +1881,6 @@ def _site_hwms_schedule(city: str, district: str, keyword: str, query: str, limi
                     items.extend(batch)
                 except Exception:
                     continue
-                if batch or len(items) >= limit:
-                    break
         except concurrent.futures.TimeoutError:
             pass
         finally:

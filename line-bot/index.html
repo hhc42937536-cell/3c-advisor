@@ -1375,7 +1375,7 @@
       const cards = items.slice(0, 24).map((item) => {
         const status = item.today ? (item.passed ? "今日已過" : "今日可倒") : `下次${item.service_day || ""}`;
         const match = item.match === "exact" ? "輸入地點" : item.match === "nearby" ? "附近站點" : "清運站點";
-        const recycle = item.recycle_days ? `｜回收：${item.recycle_days}` : "";
+        const recycle = item.recycle_days && item.recycle_days !== "0" ? `｜回收：${item.recycle_days}` : "";
         const car = item.car ? `｜車號 ${item.car}` : "";
         const place = [item.district, item.village, item.location].filter(Boolean).join(" ");
         return card(`${item.time_range || item.time || "時間未標示"} ${status}`, `${match}｜${place}${car}｜${item.route || "清運點"}${recycle}`);
