@@ -718,6 +718,8 @@
         <a href="#features">四大功能</a>
         <a href="#workspace">使用看看</a>
         <a href="#life-tools">生活工具</a>
+        <a href="#life-tools" data-nav-utility="garbage">垃圾車</a>
+        <a href="#life-tools" data-nav-utility="deals">今日優惠</a>
         <a href="#line">LINE</a>
       </div>
     </nav>
@@ -973,9 +975,16 @@
           </div>
           <div>
             <h3 class="split-title">快速入口</h3>
+            <div class="control-grid">
+              <label class="field" for="utility-city">所在縣市
+                <select id="utility-city"><option>台北</option><option selected>新北</option><option>基隆</option><option>桃園</option><option>新竹</option><option>苗栗</option><option>台中</option><option>彰化</option><option>南投</option><option>雲林</option><option>嘉義</option><option>台南</option><option>高雄</option><option>屏東</option><option>宜蘭</option><option>花蓮</option><option>台東</option><option>澎湖</option><option>金門</option><option>連江</option></select>
+              </label>
+              <label class="field" for="utility-place">垃圾車查詢地點
+                <input id="utility-place" value="板橋區 文化路" aria-label="垃圾車查詢地點">
+              </label>
+            </div>
             <div class="roadmap">
               <button class="roadmap-item" type="button" data-utility="garbage"><b>垃圾車時間地點</b><span>查清運點、時間、回收日；有座標時直接顯示地圖。</span><em class="level">查詢</em></button>
-              <button class="roadmap-item" type="button" data-utility="health"><b>健康提醒</b><span>喝水、睡眠、壓力、BMI 與日常照護提醒。</span><em class="level">查詢</em></button>
               <button class="roadmap-item" type="button" data-utility="deals"><b>今日當地優惠</b><span>咖啡飲料、品牌優惠、在地活動與社群話題。</span><em class="level">查詢</em></button>
             </div>
             <div class="result" id="utility-result">選一個生活工具，這裡會直接顯示查詢結果。</div>
@@ -1210,6 +1219,14 @@
     }
 
     document.addEventListener("click", (event) => {
+      const navUtility = event.target.closest("[data-nav-utility]");
+      if (navUtility) {
+        event.preventDefault();
+        document.querySelector("#life-tools")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.setTimeout(() => runUtility(navUtility.dataset.navUtility), 260);
+        return;
+      }
+
       const utilityButton = event.target.closest("[data-utility]");
       if (utilityButton) {
         runUtility(utilityButton.dataset.utility);
@@ -1418,7 +1435,7 @@
     }
 
     function garbageMapPoints(data) {
-      const schedulePoints = (data.items || [])
+      const schedulePoints = (data.items || []).slice(0, 12)
         .map((item) => {
           const lat = numericCoord(item.lat);
           const lng = numericCoord(item.lng);
@@ -1433,22 +1450,7 @@
           };
         })
         .filter(Boolean);
-      const livePoints = (data.live?.items || [])
-        .map((item) => {
-          const lat = numericCoord(item.lat);
-          const lng = numericCoord(item.lng);
-          if (lat === null || lng === null) return null;
-          return {
-            lat,
-            lng,
-            kind: "即時車輛",
-            title: item.car || "垃圾車",
-            detail: `${item.location || "目前位置"} ${item.time || ""}`,
-            url: item.lat && item.lng ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(item.lat)},${encodeURIComponent(item.lng)}` : ""
-          };
-        })
-        .filter(Boolean);
-      return [...livePoints, ...schedulePoints];
+      return schedulePoints;
     }
 
     function renderGarbageMap(data) {
@@ -1461,7 +1463,7 @@
       return `
         <div class="map-panel">
           <div class="garbage-map" id="${mapId}" aria-label="垃圾車時間地點地圖"></div>
-          <div class="map-caption">地圖會標示可取得座標的清運點與即時垃圾車位置；點標記可看時間、路線與導航。</div>
+          <div class="map-caption">地圖先標示表定清運點，避免即時車輛距離太遠造成地圖縮放卡住；即時車輛位置會放在下方文字摘要。</div>
         </div>
       `;
     }
@@ -1607,18 +1609,14 @@
     async function runUtility(key) {
       setUtilityResult(`<h4>正在讀取資料...</h4><div class="flow-note">正在整理生活工具資料。</div>`);
       try {
+        const city = document.querySelector("#utility-city")?.value || "新北";
+        const place = document.querySelector("#utility-place")?.value.trim() || "";
         if (key === "garbage") {
-          const data = await getJson(`/api/site_garbage?city=${encodeURIComponent("新北")}&query=${encodeURIComponent("板橋區 文化路")}`);
+          const data = await getJson(`/api/site_garbage?city=${encodeURIComponent(city)}&query=${encodeURIComponent(place)}`);
           setUtilityResult(renderGarbage(data));
           return;
         }
-        if (key === "health") {
-          const data = await getJson(`/api/site_health?mode=${encodeURIComponent("日常照護")}&text=${encodeURIComponent("上班族久坐、喝水、睡眠、壓力")}`);
-          setUtilityResult(renderHealth(data));
-          return;
-        }
         if (key === "deals") {
-          const city = document.querySelector("#morning-city")?.value || "台北";
           const data = await getJson(`/api/site_deals?city=${encodeURIComponent(city)}&context=${encodeURIComponent("上班日早上")}`);
           setUtilityResult(renderDeals(data));
         }
@@ -1653,6 +1651,21 @@
     document.querySelector("#use-food-destination").addEventListener("click", () => {
       setSelectValue("#food-mode", "destination");
       runDemo("food");
+    });
+
+    document.querySelector("#utility-city")?.addEventListener("change", (event) => {
+      const defaults = {
+        "新北": "板橋區 文化路",
+        "台中": "西區 公益路",
+        "台北": "大安區 信義路",
+        "桃園": "桃園區 中正路",
+        "台南": "中西區 民生路",
+        "高雄": "苓雅區 中正路",
+        "彰化": "彰化市 中山路",
+        "屏東": "屏東市 民生路"
+      };
+      const placeField = document.querySelector("#utility-place");
+      if (placeField) placeField.value = defaults[event.target.value] || "";
     });
 
     document.querySelector("#use-parking-location").addEventListener("click", () => {
