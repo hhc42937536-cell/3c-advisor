@@ -500,6 +500,15 @@
       font-weight: 900;
       text-decoration: none;
     }
+    .result-card.clickable {
+      transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+    }
+    .result-card.clickable:hover,
+    .result-card.clickable:focus-within {
+      transform: translateY(-1px);
+      border-color: rgba(47, 154, 114, .5);
+      box-shadow: 0 8px 20px rgba(38, 49, 43, .08);
+    }
     .activity-summary {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1150,7 +1159,10 @@
       "'": "&#39;"
     })[char]);
 
-    const card = (title, body) => `<div class="result-card"><strong>${html(title)}</strong><span>${html(body)}</span></div>`;
+    const card = (title, body, url = "", linkLabel = "查看來源") => {
+      const link = url ? `<a href="${html(url)}" target="_blank" rel="noreferrer">${html(linkLabel)}</a>` : "";
+      return `<div class="result-card${url ? " clickable" : ""}"><strong>${html(title)}</strong><span>${html(body)}</span>${link}</div>`;
+    };
     const actions = (items) => `<div class="quick-actions">${items.map((item) => `<button type="button" data-open="${html(item.key)}">${html(item.label)}</button>`).join("")}</div>`;
     const linkActions = (items) => `<div class="quick-actions">${items.map((item) => `<a href="${html(item.href)}" target="_blank" rel="noreferrer">${html(item.label)}</a>`).join("")}</div>`;
     let foodLocation = null;
@@ -1516,16 +1528,30 @@
         national: "全台",
         food: "美食"
       };
-      const surpriseLimit = focus === "今日小驚喜" ? 8 : 6;
+      const surpriseLimit = focus === "今日小驚喜" ? 10 : 4;
       const surpriseCards = surpriseItems.slice(0, surpriseLimit).map((item) => {
         const label = surpriseLabel[item.kind] || "分享";
         const rawBody = item.body || item.title;
         const body = item.kind === "deal" && rawBody === "情報" ? "來源：省錢板 / 優惠情報" : rawBody;
-        return card(`今日小驚喜｜${label}`, `${item.title}｜${body}`);
+        const linkLabel = item.kind === "topic" ? "開 Threads" : item.kind === "activity" ? "看活動" : "看優惠";
+        return card(`今日小驚喜｜${label}`, `${item.title}｜${body}`, item.url || "", linkLabel);
       }).join("") || card("今日小驚喜｜暫無可靠資料", "目前沒有抓到可用的真實優惠或社群話題，先不硬塞補位內容。");
-      const secondaryCard = focus === "油價與匯率"
-        ? card("天氣穿搭", data.outfit || "依天氣調整穿搭與雨具")
-        : card("油價 / 匯率", `${oilText}；${rateText}`);
+      const outfitCard = card("穿搭重點", data.outfit || "依天氣調整穿搭與雨具");
+      const oilRateCard = card("油價 / 匯率", `${oilText}；${rateText}`);
+      const weatherCard = card("氣象署天氣", weatherText);
+      const airCard = card("空氣品質 / 紫外線", `${airText}；${uvText}`);
+      const planCard = card(planTitle, planBody);
+      const focusCard = card(focusTitle, focusBody);
+      let resultCards = "";
+      if (focus === "穿搭與雨具") {
+        resultCards = [weatherCard, outfitCard, airCard, planCard].join("");
+      } else if (focus === "油價與匯率") {
+        resultCards = [oilRateCard, planCard, weatherCard].join("");
+      } else if (focus === "今日小驚喜") {
+        resultCards = surpriseCards;
+      } else {
+        resultCards = [weatherCard, airCard, planCard, oilRateCard, focusCard, surpriseCards].join("");
+      }
       const nextStep = plan === "在家工作"
         ? "下一步可以先看洗曬與今日小驚喜，晚點再決定吃飯或活動。"
         : plan === "週末出遊"
@@ -1534,12 +1560,7 @@
       return `
         <h4>${html(summaryTitle(data.time, data.city))}</h4>
         <div class="result-grid">
-          ${card("氣象署天氣", weatherText)}
-          ${card("空氣品質 / 紫外線", `${airText}；${uvText}`)}
-          ${card(planTitle, planBody)}
-          ${secondaryCard}
-          ${focus === "今日小驚喜" ? "" : card(focusTitle, focusBody)}
-          ${surpriseCards}
+          ${resultCards}
         </div>
         <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。${nextStep}</div>
         ${actions([{ key: "food", label: "接著決定吃什麼" }, { key: "activity", label: "看看週末活動" }])}
@@ -1698,7 +1719,11 @@
 
     function renderDeals(data) {
       const cards = (data.items || [])
-        .map((item) => card(item.title, item.body))
+        .map((item) => {
+          const label = item.kind === "topic" ? "開 Threads" : item.kind === "activity" ? "看活動" : "看優惠";
+          const body = item.kind === "deal" && item.body === "情報" ? "來源：省錢板 / 優惠情報" : item.body;
+          return card(item.title, body, item.url || "", label);
+        })
         .join("");
       return `
         <h4>${html(data.city || "")} 今日小驚喜</h4>
