@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-15 05:24",
+  "updated_at": "2026-05-15 06:02",
   "songs": [
     {
       "name": "繞路",
@@ -44,54 +44,10 @@
   ],
   "deals": [
     {
-      "title": "必勝客優惠",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778746554.A.E87.html",
-      "tag": "情報"
-    },
-    {
-      "title": "pCloud 家庭日限時優惠",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778748822.A.F7E.html",
-      "tag": "情報"
-    },
-    {
-      "title": "美廉社 1250mL大瓶可樂特價26元",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778754014.A.0CF.html",
-      "tag": "情報"
-    },
-    {
-      "title": "台北 5/16-17 大狗麵線 會考生免費吃",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778761791.A.595.html",
-      "tag": "情報"
-    },
-    {
       "title": "uTagGO 速邁樂加油50 op點優惠券",
       "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778763034.A.F53.html",
-      "tag": "情報"
-    },
-    {
-      "title": "廣穎電通 記憶卡128G. 349元",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778769792.A.B4C.html",
-      "tag": "情報"
-    },
-    {
-      "title": "全家優惠券領取",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1778793489.A.CF0.html",
-      "tag": "情報"
-    },
-    {
-      "title": "2026年全台捐血贈品",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
-      "tag": "情報"
-    },
-    {
-      "title": "未滿1元集點抽獎資訊集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775756243.A.056.html",
-      "tag": "集中"
-    },
-    {
-      "title": "贈送集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775845713.A.018.html",
-      "tag": "集中"
+      "tag": "情報",
+      "desc": ""
     }
   ],
   "topics": [

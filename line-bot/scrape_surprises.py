@@ -38,6 +38,53 @@ SAFE_TOPIC_KW = [
     "台南", "高雄", "桃園", "新竹",
 ]
 
+LIFE_DEAL_KW = [
+    "咖啡", "手搖", "飲料", "茶", "早餐", "午餐", "晚餐", "餐", "美食", "甜點", "冰品", "冰棒",
+    "全家", "7-11", "711", "萊爾富", "OK", "超商", "全聯", "家樂福",
+    "麥當勞", "肯德基", "摩斯", "漢堡王", "必勝客", "星巴克", "路易莎", "cama",
+    "加油", "油價", "電影", "影城", "展覽", "市集", "活動", "買一送一", "優惠券",
+]
+
+DEAL_BLOCK_KW = [
+    "pCloud", "雲端", "記憶卡", "SSD", "硬碟", "電通", "螢幕", "耳機", "鍵盤", "滑鼠",
+    "抽獎", "集中文", "贈送", "捐血", "會考", "考生", "未滿1元", "信用卡核卡", "開箱",
+    "可樂", "大瓶", "美廉社", "優惠券領取",
+]
+
+
+def is_life_deal(title: str) -> bool:
+    text = re.sub(r"\s+", " ", title or "").strip()
+    if len(text) < 4:
+        return False
+    if text in {"必勝客優惠", "全家優惠", "麥當勞優惠", "肯德基優惠"}:
+        return False
+    if any(word.lower() in text.lower() for word in DEAL_BLOCK_KW):
+        return False
+    return any(word.lower() in text.lower() for word in LIFE_DEAL_KW)
+
+
+def scrape_ptt_excerpt(url: str, headers: dict, ctx, timeout: int = 8) -> str:
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=timeout, context=ctx) as resp:
+            html_text = resp.read().decode("utf-8", errors="ignore")
+        m = re.search(r'<div id="main-content"[^>]*>(.*?)<span class="f2">--', html_text, re.S)
+        content = m.group(1) if m else html_text
+        content = re.sub(r'<div class="article-metaline.*?</div>', '', content, flags=re.S)
+        content = re.sub(r'<div class="article-metaline-right.*?</div>', '', content, flags=re.S)
+        content = re.sub(r'<[^>]+>', ' ', content)
+        content = py_html.unescape(content)
+        lines = [re.sub(r"\s+", " ", line).strip() for line in content.splitlines()]
+        lines = [
+            line for line in lines
+            if len(line) >= 8
+            and not line.startswith(("※", "發信站", "Sent from", "http://", "https://"))
+            and "PTT" not in line[:20]
+        ]
+        return "；".join(lines[:2])[:90]
+    except Exception:
+        return ""
+
 
 def is_safe_topic(text: str) -> bool:
     text = re.sub(r"\s+", " ", text or "").strip()
@@ -114,11 +161,13 @@ def scrape_ptt_deals(limit=10):
                 continue
             # 移除標題前綴 [情報] [優惠] 等，但保留內容
             clean = re.sub(r'^\[[\w]+\]\s*', '', title)
-            if clean and len(clean) > 4:
+            if clean and len(clean) > 4 and is_life_deal(clean):
+                full_url = f"https://www.ptt.cc{href}"
                 deals.append({
                     "title": clean[:60],
-                    "url": f"https://www.ptt.cc{href}",
+                    "url": full_url,
                     "tag": re.findall(r'\[([\w]+)\]', title)[0] if re.findall(r'\[([\w]+)\]', title) else "",
+                    "desc": scrape_ptt_excerpt(full_url, headers, ctx),
                 })
             if len(deals) >= limit:
                 break
@@ -154,6 +203,8 @@ def scrape_dcard_deals(limit=10):
             if not title or not post_id:
                 continue
             if any(b in title for b in blocklist):
+                continue
+            if not is_life_deal(title):
                 continue
             if len(title) < 5:
                 continue
@@ -260,7 +311,7 @@ def scrape_threads_deals(limit_per_account: int = 5) -> list:
                 if len(text) < 8:
                     continue
                 # 過濾含優惠關鍵字的貼文
-                if any(kw in text for kw in _THREADS_DEAL_KW):
+                if any(kw in text for kw in _THREADS_DEAL_KW) and is_life_deal(text):
                     posts.append({
                         "title": text[:60],
                         "url": url,
@@ -391,7 +442,8 @@ def main():
         if t and t not in seen_titles:
             seen_titles.add(t)
             merged.append(d)
-    result["deals"] = merged[:25] or previous.get("deals", [])
+    previous_deals = [deal for deal in previous.get("deals", []) if is_life_deal(deal.get("title", ""))]
+    result["deals"] = merged[:25] or previous_deals
     topic_seen = set()
     topics = []
     for topic in threads_topics + dcard_topics:

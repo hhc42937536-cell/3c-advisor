@@ -3223,6 +3223,48 @@ def _site_safe_topic(text: str) -> bool:
     return bool(text.strip()) and not any(word.lower() in text.lower() for word in _SITE_SENSITIVE_TOPIC_KW)
 
 
+_SITE_LIFE_DEAL_KW = [
+    "咖啡", "手搖", "飲料", "茶", "早餐", "午餐", "晚餐", "餐", "美食", "甜點", "冰品", "冰棒",
+    "全家", "7-11", "711", "萊爾富", "OK", "超商", "全聯", "家樂福",
+    "麥當勞", "肯德基", "摩斯", "漢堡王", "必勝客", "星巴克", "路易莎", "cama",
+    "加油", "油價", "電影", "影城", "展覽", "市集", "活動", "買一送一", "優惠券",
+]
+
+_SITE_DEAL_BLOCK_KW = [
+    "pCloud", "雲端", "記憶卡", "SSD", "硬碟", "電通", "螢幕", "耳機", "鍵盤", "滑鼠",
+    "抽獎", "集中文", "贈送", "捐血", "會考", "考生", "未滿1元", "信用卡核卡", "開箱",
+    "可樂", "大瓶", "美廉社", "優惠券領取",
+]
+
+_SITE_CITY_WORDS = ["台北", "新北", "基隆", "桃園", "新竹", "苗栗", "台中", "彰化", "南投", "雲林", "嘉義", "台南", "高雄", "屏東", "宜蘭", "花蓮", "台東", "澎湖", "金門", "連江"]
+
+
+def _site_life_deal_ok(title: str, city: str = "") -> bool:
+    text = str(title or "").strip()
+    if not text or any(word.lower() in text.lower() for word in _SITE_DEAL_BLOCK_KW):
+        return False
+    if text in {"必勝客優惠", "全家優惠", "麥當勞優惠", "肯德基優惠"}:
+        return False
+    city_key = (city or "").replace("臺", "台").replace("市", "").replace("縣", "")
+    mentioned_cities = [c for c in _SITE_CITY_WORDS if c in text.replace("臺", "台")]
+    if mentioned_cities and city_key and city_key not in mentioned_cities:
+        return False
+    return any(word.lower() in text.lower() for word in _SITE_LIFE_DEAL_KW)
+
+
+def _site_life_deal_body(title: str, desc: str = "") -> str:
+    if desc:
+        return desc
+    text = str(title or "")
+    if any(word in text for word in ("加油", "油價", "速邁樂", "uTagGO")):
+        return "通勤或開車族可看，點開確認領取方式與使用條件。"
+    if any(word in text for word in ("咖啡", "飲料", "手搖", "全家", "7-11", "711", "超商")):
+        return "上班前買咖啡、飲料或補給時可順手確認。"
+    if any(word in text for word in ("餐", "必勝客", "麥當勞", "肯德基", "摩斯")):
+        return "午餐、晚餐或同事揪團前可先確認優惠條件。"
+    return "日常可用優惠，點開確認適用門市、時間與條件。"
+
+
 def _site_surprise_cache() -> dict:
     global _SURPRISE_CACHE
     if _SURPRISE_CACHE is not None:
@@ -3261,7 +3303,9 @@ def _site_today_surprise(city: str, limit: int = 10) -> dict:
     for deal in cache.get("deals", [])[:8]:
         tag = deal.get("tag") or "網友好康"
         title = deal.get("title", "")
-        add_item(f"今日好康｜{title}", tag, "deal", deal.get("url", ""))
+        if _site_life_deal_ok(title, city):
+            body = _site_life_deal_body(title, deal.get("desc", ""))
+            add_item(f"生活優惠｜{title}", body, "deal", deal.get("url", ""))
 
     if today <= datetime.date(2026, 5, 26):
         add_item("速食好康｜肯德基", "5/12 起限時兩週，報稅季主題優惠可留意買桶餐送餐盒活動。", "brand", "https://tw.stock.yahoo.com/news/5%E6%9C%88%E5%A0%B1%E7%A8%85%E6%95%91%E6%98%9F-%E8%82%AF%E5%BE%B7%E5%9F%BA%E8%B2%B7-%E6%A1%B6%E9%80%81-%E7%9B%92-%E9%BA%A5%E7%95%B6%E5%8B%9E%E8%B2%B7-080602569.html")
