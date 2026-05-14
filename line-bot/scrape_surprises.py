@@ -22,6 +22,33 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="repla
 
 OUTPUT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "surprise_cache.json")
 
+SENSITIVE_KW = [
+    "政治", "選舉", "立委", "總統", "政黨", "藍白", "藍綠", "統獨", "中國", "台獨",
+    "戰爭", "軍事", "攻擊", "恐怖", "爆炸", "槍", "砍", "殺", "自殺", "死亡", "命案",
+    "性侵", "性騷", "偷拍", "外流", "裸", "情色", "約炮", "成人", "18禁",
+    "仇恨", "歧視", "種族", "移工", "身障", "宗教", "炎上", "公審", "霸凌",
+    "詐騙手法", "毒品", "大麻", "賭博", "博弈", "血", "屍", "遺體",
+]
+
+SAFE_TOPIC_KW = [
+    "美食", "咖啡", "手搖", "飲料", "旅遊", "景點", "展覽", "電影", "影集", "音樂",
+    "穿搭", "保養", "生活", "上班", "通勤", "寵物", "貓", "狗", "省錢", "優惠",
+    "超商", "全家", "711", "全聯", "職場", "午餐", "晚餐", "早餐", "台北", "台中",
+    "台南", "高雄", "桃園", "新竹",
+]
+
+
+def is_safe_topic(text: str) -> bool:
+    text = re.sub(r"\s+", " ", text or "").strip()
+    if len(text) < 8:
+        return False
+    if any(word.lower() in text.lower() for word in SENSITIVE_KW):
+        return False
+    # 有安全關鍵字優先收；沒有也可留短日常句，但避免太像個人情緒文。
+    if any(word in text for word in SAFE_TOPIC_KW):
+        return True
+    return len(text) <= 48 and not any(mark in text for mark in ["?", "？", "求助", "抱怨", "吵架"])
+
 
 def scrape_kkbox_new_songs(limit=10):
     """爬 KKBOX 華語新歌日榜（從頁面內嵌 JS 變數 chart 抓資料）"""
@@ -144,6 +171,51 @@ def scrape_dcard_deals(limit=10):
         return []
 
 
+def scrape_dcard_topics(limit=20):
+    """爬 Dcard 熱門日常話題，過濾敏感議題後作為上班破冰素材。"""
+    print("[Dcard topics] 開始爬熱門話題...")
+    urls = [
+        ("閒聊", "https://www.dcard.tw/_api/forums/talk/posts?popular=true&limit=30"),
+        ("美食", "https://www.dcard.tw/_api/forums/food/posts?popular=true&limit=30"),
+        ("旅遊", "https://www.dcard.tw/_api/forums/travel/posts?popular=true&limit=30"),
+        ("電影", "https://www.dcard.tw/_api/forums/movie/posts?popular=true&limit=30"),
+        ("穿搭", "https://www.dcard.tw/_api/forums/dressup/posts?popular=true&limit=30"),
+    ]
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Referer": "https://www.dcard.tw/",
+        "Accept": "application/json",
+    }
+    topics = []
+    seen = set()
+    for label, url in urls:
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=12) as resp:
+                data = json.loads(resp.read().decode("utf-8", errors="ignore"))
+            for post in data:
+                title = re.sub(r"\s+", " ", post.get("title", "")).strip()
+                post_id = post.get("id", "")
+                if not title or not post_id or title in seen:
+                    continue
+                if not is_safe_topic(title):
+                    continue
+                seen.add(title)
+                topics.append({
+                    "title": title[:70],
+                    "url": f"https://www.dcard.tw/f/{post.get('forumAlias') or label}/p/{post_id}",
+                    "tag": f"Dcard {label}",
+                })
+                if len(topics) >= limit:
+                    print(f"[Dcard topics] 抓到 {len(topics)} 筆")
+                    return topics
+            time.sleep(0.5)
+        except Exception as e:
+            print(f"[Dcard topics] {label} 失敗（跳過）: {e}")
+    print(f"[Dcard topics] 抓到 {len(topics)} 筆")
+    return topics
+
+
 # Threads 好康帳號清單
 _THREADS_ACCOUNTS = [
     "info.talk_tw",           # 好康情報誌：速食/超商即時優惠
@@ -240,7 +312,7 @@ def scrape_threads_topics(limit_per_account: int = 5) -> list:
                 except Exception:
                     text = raw
                 text = re.sub(r"\s+", " ", text).strip()
-                if len(text) < 12 or any(word in text for word in blocklist):
+                if len(text) < 12 or any(word in text for word in blocklist) or not is_safe_topic(text):
                     continue
                 key = text[:30]
                 if key in seen:
@@ -266,6 +338,14 @@ def main():
     print(f"今日小驚喜爬蟲 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("=" * 50)
 
+    previous = {}
+    if os.path.exists(OUTPUT_FILE):
+        try:
+            with open(OUTPUT_FILE, encoding="utf-8") as f:
+                previous = json.load(f)
+        except Exception:
+            previous = {}
+
     result = {
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "songs": [],
@@ -274,7 +354,7 @@ def main():
     }
 
     # 爬 KKBOX
-    result["songs"] = scrape_kkbox_new_songs(limit=10)
+    result["songs"] = scrape_kkbox_new_songs(limit=10) or previous.get("songs", [])
     time.sleep(1)
 
     # 爬 PTT + Dcard，合併去重後最多保留 20 筆
@@ -285,7 +365,8 @@ def main():
 
     # 爬 Threads 即時好康（非官方，失敗不影響整體）
     threads = scrape_threads_deals()
-    topics = scrape_threads_topics()
+    threads_topics = scrape_threads_topics()
+    dcard_topics = scrape_dcard_topics()
 
     # 合併：Threads 最新鮮放最前，再接 PTT、Dcard，標題去重
     seen_titles = set()
@@ -295,8 +376,19 @@ def main():
         if t and t not in seen_titles:
             seen_titles.add(t)
             merged.append(d)
-    result["deals"] = merged[:25]
-    result["topics"] = topics[:20]
+    result["deals"] = merged[:25] or previous.get("deals", [])
+    topic_seen = set()
+    topics = []
+    for topic in threads_topics + dcard_topics:
+        title = topic.get("title", "").strip()
+        if title and title not in topic_seen and is_safe_topic(title):
+            topic_seen.add(title)
+            topics.append(topic)
+    result["topics"] = topics[:20] or previous.get("topics", [])
+    if not topics and previous.get("topics"):
+        print("[topics] 本次抓取失敗，保留上一版社群話題快取")
+    if not merged and previous.get("deals"):
+        print("[deals] 本次抓取失敗，保留上一版優惠快取")
 
     # 寫出
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
@@ -305,7 +397,7 @@ def main():
     print(f"\n✅ 已寫入 {OUTPUT_FILE}")
     print(f"   新歌: {len(result['songs'])} 首")
     print(f"   好康: {len(result['deals'])} 篇（Threads {len(threads)} + PTT {len(ptt)} + Dcard {len(dcard)}）")
-    print(f"   話題: {len(result['topics'])} 篇")
+    print(f"   話題: {len(result['topics'])} 篇（Threads {len(threads_topics)} + Dcard {len(dcard_topics)}，已過濾敏感議題）")
 
 
 if __name__ == "__main__":

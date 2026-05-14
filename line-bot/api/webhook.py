@@ -3209,6 +3209,19 @@ def _site_health_advice(text: str, mode: str = "", value: str = "") -> dict:
 
 _SURPRISE_CACHE = None
 
+_SITE_SENSITIVE_TOPIC_KW = [
+    "政治", "選舉", "立委", "總統", "政黨", "藍白", "藍綠", "統獨", "中國", "台獨",
+    "戰爭", "軍事", "攻擊", "恐怖", "爆炸", "槍", "砍", "殺", "自殺", "死亡", "命案",
+    "性侵", "性騷", "偷拍", "外流", "裸", "情色", "約炮", "成人", "18禁",
+    "仇恨", "歧視", "種族", "移工", "身障", "宗教", "炎上", "公審", "霸凌",
+    "詐騙手法", "毒品", "大麻", "賭博", "博弈", "血", "屍", "遺體",
+]
+
+
+def _site_safe_topic(text: str) -> bool:
+    text = str(text or "")
+    return bool(text.strip()) and not any(word.lower() in text.lower() for word in _SITE_SENSITIVE_TOPIC_KW)
+
 
 def _site_surprise_cache() -> dict:
     global _SURPRISE_CACHE
@@ -3233,11 +3246,35 @@ def _site_today_surprise(city: str, limit: int = 10) -> dict:
     def add_item(title: str, body: str, kind: str, url: str = ""):
         title = py_html.unescape(str(title or "")).strip()
         body = py_html.unescape(str(body or "")).strip()
+        if kind == "topic" and not _site_safe_topic(f"{title} {body}"):
+            return
         key = title
         if not key or key in seen:
             return
         seen.add(key)
         items.append({"title": title[:48], "body": body[:110], "kind": kind, "url": url})
+
+    for topic in cache.get("topics", [])[:6]:
+        tag = topic.get("tag") or "Threads"
+        add_item(f"{yesterday.month}/{yesterday.day} 社群話題｜{tag}", topic.get("title", ""), "topic", topic.get("url", ""))
+
+    songs = cache.get("songs", [])
+    if songs and len(items) < 4:
+        pick = songs[today.timetuple().tm_yday % len(songs)]
+        add_item("破冰話題｜今日新歌", f"可以聊《{pick.get('name', '')}》— {pick.get('artist', '')}，適合上班前分享。", "topic")
+
+    if not any(item.get("kind") == "topic" for item in items):
+        add_item(f"{yesterday.month}/{yesterday.day} 社群話題", "Threads / Dcard 暫時沒有抓到穩定熱門文，先用今日好康或新歌當同事破冰話題。", "topic")
+
+    office_talks = [
+        ("上班話題｜今天喝什麼", "可以揪同事看咖啡、手搖或超商優惠，順手決定下午茶。", "talk"),
+        ("上班話題｜午餐怎麼揪", "先看附近活動與優惠，再決定要內用、外帶或順路買。", "talk"),
+        ("分享題｜今天省到什麼", "看到買一送一、點數兌換或品牌優惠，可以直接丟群組問誰要一起。", "talk"),
+    ]
+    for title, body, kind in office_talks:
+        if len(items) >= limit:
+            break
+        add_item(title, body, kind)
 
     for deal in cache.get("deals", [])[:4]:
         tag = deal.get("tag") or "網友好康"
@@ -3251,28 +3288,6 @@ def _site_today_surprise(city: str, limit: int = 10) -> dict:
     if today <= datetime.date(2026, 5, 24):
         add_item("咖啡飲料｜路易莎", "5/6-5/24 指定飲品買一送一，早上買咖啡前可先看門市活動。", "brand", "https://www.callingtaiwan.com.tw/%E6%89%8B%E6%90%96%E8%8C%B6%E9%80%A3%E9%8E%96%E5%92%96%E5%95%A1%E8%B6%85%E5%95%86%E5%92%96%E5%95%A1%E5%84%AA%E6%83%A0/")
 
-    for topic in cache.get("topics", [])[:4]:
-        tag = topic.get("tag") or "Threads"
-        add_item(f"{yesterday.month}/{yesterday.day} 社群話題｜{tag}", topic.get("title", ""), "topic", topic.get("url", ""))
-
-    songs = cache.get("songs", [])
-    if songs:
-        pick = songs[today.timetuple().tm_yday % len(songs)]
-        add_item("破冰話題｜今日新歌", f"可以聊《{pick.get('name', '')}》— {pick.get('artist', '')}，適合上班前分享。", "topic")
-
-    if not any(item.get("kind") == "topic" for item in items):
-        add_item(f"{yesterday.month}/{yesterday.day} 社群話題", "Threads 公開頁暫時沒有抓到穩定熱門文，先用今日好康或新歌當同事破冰話題。", "topic")
-
-    office_talks = [
-        ("上班話題｜今天喝什麼", "可以揪同事看咖啡、手搖或超商優惠，順手決定下午茶。", "talk"),
-        ("上班話題｜午餐怎麼揪", "先看附近活動與優惠，再決定要內用、外帶或順路買。", "talk"),
-        ("分享題｜今天省到什麼", "看到買一送一、點數兌換或品牌優惠，可以直接丟群組問誰要一起。", "talk"),
-    ]
-    for title, body, kind in office_talks:
-        if len(items) >= limit:
-            break
-        add_item(title, body, kind)
-
     if len(items) < limit:
         activity_items, _ = _site_activities(city, "", limit=4)
         for event in activity_items:
@@ -3285,7 +3300,7 @@ def _site_today_surprise(city: str, limit: int = 10) -> dict:
         "yesterday": yesterday.isoformat(),
         "items": items[:limit],
         "source_names": {
-            "surprise": "生活優轉每日小驚喜、品牌優惠公開資訊、Threads/社群公開頁與活動資料"
+            "surprise": "生活優轉每日小驚喜、Threads / Dcard 熱門話題、品牌優惠公開資訊與活動資料（已過濾敏感議題）"
         },
     }
 
