@@ -3210,7 +3210,7 @@ def _site_health_advice(text: str, mode: str = "", value: str = "") -> dict:
 _SURPRISE_CACHE = None
 
 _SITE_SENSITIVE_TOPIC_KW = [
-    "政治", "選舉", "立委", "總統", "政黨", "藍白", "藍綠", "統獨", "中國", "台獨",
+    "政治", "選舉", "立委", "總統", "政黨", "藍白", "藍綠", "統獨", "中國", "台獨", "革命",
     "戰爭", "軍事", "攻擊", "恐怖", "爆炸", "槍", "砍", "殺", "自殺", "死亡", "命案",
     "性侵", "性騷", "偷拍", "外流", "裸", "情色", "約炮", "成人", "18禁",
     "仇恨", "歧視", "種族", "移工", "身障", "宗教", "炎上", "公審", "霸凌",
@@ -3258,25 +3258,7 @@ def _site_today_surprise(city: str, limit: int = 10) -> dict:
         tag = topic.get("tag") or "Threads"
         add_item(f"{yesterday.month}/{yesterday.day} 社群話題｜{tag}", topic.get("title", ""), "topic", topic.get("url", ""))
 
-    songs = cache.get("songs", [])
-    if songs and len(items) < 4:
-        pick = songs[today.timetuple().tm_yday % len(songs)]
-        add_item("破冰話題｜今日新歌", f"可以聊《{pick.get('name', '')}》— {pick.get('artist', '')}，適合上班前分享。", "topic")
-
-    if not any(item.get("kind") == "topic" for item in items):
-        add_item(f"{yesterday.month}/{yesterday.day} 社群話題", "Threads / Dcard 暫時沒有抓到穩定熱門文，先用今日好康或新歌當同事破冰話題。", "topic")
-
-    office_talks = [
-        ("上班話題｜今天喝什麼", "可以揪同事看咖啡、手搖或超商優惠，順手決定下午茶。", "talk"),
-        ("上班話題｜午餐怎麼揪", "先看附近活動與優惠，再決定要內用、外帶或順路買。", "talk"),
-        ("分享題｜今天省到什麼", "看到買一送一、點數兌換或品牌優惠，可以直接丟群組問誰要一起。", "talk"),
-    ]
-    for title, body, kind in office_talks:
-        if len(items) >= limit:
-            break
-        add_item(title, body, kind)
-
-    for deal in cache.get("deals", [])[:4]:
+    for deal in cache.get("deals", [])[:8]:
         tag = deal.get("tag") or "網友好康"
         title = deal.get("title", "")
         add_item(f"今日好康｜{title}", tag, "deal", deal.get("url", ""))

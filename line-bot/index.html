@@ -1514,20 +1514,15 @@
         activity: "活動",
         local: "在地",
         national: "全台",
-        food: "美食",
-        talk: "破冰"
+        food: "美食"
       };
       const surpriseLimit = focus === "今日小驚喜" ? 8 : 6;
       const surpriseCards = surpriseItems.slice(0, surpriseLimit).map((item) => {
         const label = surpriseLabel[item.kind] || "分享";
-        const rawBody = item.kind === "deal" && item.body === "情報"
-          ? "省錢板好康，適合丟群組問要不要一起買。"
-          : (item.body || item.title);
-        const body = item.kind === "topic" || item.kind === "talk"
-          ? `可以聊：${rawBody}`
-          : `可以分享：${rawBody}`;
+        const rawBody = item.body || item.title;
+        const body = item.kind === "deal" && rawBody === "情報" ? "來源：省錢板 / 優惠情報" : rawBody;
         return card(`今日小驚喜｜${label}`, `${item.title}｜${body}`);
-      }).join("") || card("今日小驚喜｜分享", "可以分享：咖啡飲料、品牌優惠、在地活動與上班破冰話題。");
+      }).join("") || card("今日小驚喜｜暫無可靠資料", "目前沒有抓到可用的真實優惠或社群話題，先不硬塞補位內容。");
       const secondaryCard = focus === "油價與匯率"
         ? card("天氣穿搭", data.outfit || "依天氣調整穿搭與雨具")
         : card("油價 / 匯率", `${oilText}；${rateText}`);

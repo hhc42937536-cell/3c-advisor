@@ -23,7 +23,7 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="repla
 OUTPUT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "surprise_cache.json")
 
 SENSITIVE_KW = [
-    "政治", "選舉", "立委", "總統", "政黨", "藍白", "藍綠", "統獨", "中國", "台獨",
+    "政治", "選舉", "立委", "總統", "政黨", "藍白", "藍綠", "統獨", "中國", "台獨", "革命",
     "戰爭", "軍事", "攻擊", "恐怖", "爆炸", "槍", "砍", "殺", "自殺", "死亡", "命案",
     "性侵", "性騷", "偷拍", "外流", "裸", "情色", "約炮", "成人", "18禁",
     "仇恨", "歧視", "種族", "移工", "身障", "宗教", "炎上", "公審", "霸凌",
@@ -32,6 +32,7 @@ SENSITIVE_KW = [
 
 SAFE_TOPIC_KW = [
     "美食", "咖啡", "手搖", "飲料", "旅遊", "景點", "展覽", "電影", "影集", "音樂",
+    "影城", "動漫", "演唱會", "巡演", "新歌", "開幕", "限定活動",
     "穿搭", "保養", "生活", "上班", "通勤", "寵物", "貓", "狗", "省錢", "優惠",
     "超商", "全家", "711", "全聯", "職場", "午餐", "晚餐", "早餐", "台北", "台中",
     "台南", "高雄", "桃園", "新竹",
@@ -252,7 +253,7 @@ def scrape_threads_deals(limit_per_account: int = 5) -> list:
             text_candidates = re.findall(r'"text"\s*:\s*"((?:[^"\\]|\\.){10,120})"', html)
             for raw in text_candidates:
                 try:
-                    text = raw.encode().decode("unicode_escape")
+                    text = raw.encode().decode("unicode_escape") if "\\u" in raw else raw
                 except Exception:
                     text = raw
                 text = text.strip()
@@ -302,13 +303,27 @@ def scrape_threads_topics(limit_per_account: int = 5) -> list:
     for account in accounts:
         try:
             url = f"https://www.threads.net/@{account}"
+            text_candidates = []
             req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=15) as resp:
                 html = resp.read().decode("utf-8", errors="ignore")
-            text_candidates = re.findall(r'"text"\s*:\s*"((?:[^"\\]|\\.){14,180})"', html)
+            text_candidates.extend(re.findall(r'"text"\s*:\s*"((?:[^"\\]|\\.){14,180})"', html))
+            reader_url = "https://r.jina.ai/http://r.jina.ai/http://" + url
+            reader_req = urllib.request.Request(reader_url, headers={"User-Agent": headers["User-Agent"]})
+            with urllib.request.urlopen(reader_req, timeout=20) as resp:
+                markdown = resp.read().decode("utf-8", errors="ignore")
+            lines = [re.sub(r"\s+", " ", line).strip() for line in markdown.splitlines()]
+            for idx, line in enumerate(lines):
+                if re.match(r"\[\d+[hm]\]\(https://www\.threads\.net/@", line):
+                    for candidate in lines[idx + 1:idx + 6]:
+                        if not candidate or candidate.startswith(("![", "[@", "#", "Photo", "Translate", "追蹤")):
+                            continue
+                        if 14 <= len(candidate) <= 180:
+                            text_candidates.append(candidate)
+                        break
             for raw in text_candidates:
                 try:
-                    text = raw.encode().decode("unicode_escape")
+                    text = raw.encode().decode("unicode_escape") if "\\u" in raw else raw
                 except Exception:
                     text = raw
                 text = re.sub(r"\s+", " ", text).strip()
