@@ -1422,7 +1422,12 @@ def _site_rail_schedule(origin: str, destination: str, operator_hint: str = "", 
     token = _get_tdx_token()
     if not token:
         return {"ok": False, "mode": "rail", "source": "tdx_unavailable", "items": [], "source_names": {"transport": "TDX 運輸資料流通服務平臺"}}
-    operators = ["THSR", "TRA"] if "高鐵" in operator_hint or "高鐵" in origin or "高鐵" in destination else ["TRA", "THSR"]
+    if "高鐵" in operator_hint or "高鐵" in origin or "高鐵" in destination:
+        operators = ["THSR"]
+    elif "台鐵" in operator_hint or "臺鐵" in operator_hint or "台鐵" in origin or "臺鐵" in origin or "台鐵" in destination or "臺鐵" in destination:
+        operators = ["TRA"]
+    else:
+        operators = ["TRA", "THSR"]
     now, _, now_minutes = _site_today_info()
     today = now.strftime("%Y-%m-%d")
     for operator in operators:
@@ -1453,9 +1458,10 @@ def _site_rail_schedule(origin: str, destination: str, operator_hint: str = "", 
                 continue
             train_no = train.get("TrainNo") or train.get("TrainNumber") or ""
             train_type = _site_text(train.get("TrainTypeName") or train.get("TrainType"), _RAIL_OPERATOR_LABELS.get(operator, operator))
+            vehicle = f" {train_type}" if train_type and train_type != _RAIL_OPERATOR_LABELS.get(operator, operator) else ""
             items.append({
                 "title": f"{depart or '未標示'} → {arrive or '未標示'}",
-                "body": f"{_RAIL_OPERATOR_LABELS.get(operator, operator)} {train_type} {train_no}｜{_site_rail_station_name(origin_station)} → {_site_rail_station_name(dest_station)}",
+                "body": f"{_RAIL_OPERATOR_LABELS.get(operator, operator)}{vehicle} {train_no}｜{_site_rail_station_name(origin_station)} → {_site_rail_station_name(dest_station)}",
                 "depart": depart,
                 "arrive": arrive,
                 "train_no": train_no,
