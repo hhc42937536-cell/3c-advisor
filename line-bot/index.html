@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#fff2cf">
   <meta name="description" content="生活優轉 Life Uturn：早安今日好料、今天吃什麼、每週週末活動自動更新與即時找車位的日常生活助理。">
   <title>生活優轉 Life Uturn</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQhPmxLkF9dSNxl6d6CkXnJYo8Vj7k=" crossorigin="">
   <style>
     :root {
       --ink: #26312b;
@@ -553,6 +554,27 @@
       font-weight: 900;
       white-space: normal;
     }
+    .map-panel {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      background: white;
+    }
+    .garbage-map {
+      width: 100%;
+      height: 320px;
+      min-height: 320px;
+    }
+    .map-caption {
+      padding: 10px 12px;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 250, 240, .92);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.55;
+    }
     .data-list { display: grid; gap: 10px; }
     .data-item {
       padding: 13px;
@@ -916,6 +938,18 @@
                   </div>
                   <div class="result" id="tools-result">輸入目的地或城市，會查詢可用停車場與車位資訊。</div>
                 </div>
+                <div class="demo-box">
+                  <div class="control-grid">
+                    <label class="field" for="garbage-city">垃圾車縣市
+                      <select id="garbage-city"><option>新北</option><option>台中</option><option>台北</option><option>桃園</option><option>台南</option><option>高雄</option><option>彰化</option><option>屏東</option></select>
+                    </label>
+                    <label class="field" for="garbage-query">鄉鎮區 / 路名 / 地標
+                      <input id="garbage-query" value="板橋區 文化路" aria-label="垃圾車查詢地點">
+                    </label>
+                  </div>
+                  <button class="btn primary" data-demo="garbage">查垃圾車地圖</button>
+                  <div class="result" id="garbage-result">輸入縣市與路名，會顯示清運時間、地點與地圖標記。</div>
+                </div>
               </div>
               <div class="data-list">
                 <div class="data-item"><strong>即時車位</strong><span>TDX + 地方政府資料</span></div>
@@ -966,6 +1000,7 @@
     <div class="wrap">Life Uturn 生活優轉 · 日常生活助理</div>
   </footer>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
     const tabs = document.querySelectorAll(".tab");
     const panels = document.querySelectorAll(".panel");
@@ -1007,6 +1042,8 @@
     const linkActions = (items) => `<div class="quick-actions">${items.map((item) => `<a href="${html(item.href)}" target="_blank" rel="noreferrer">${html(item.label)}</a>`).join("")}</div>`;
     let foodLocation = null;
     let parkingLocation = null;
+    const garbageMapPayloads = {};
+    const garbageMapInstances = {};
     function summaryTitle(time, city) {
       const prefix = String(time || "").includes("晚上")
         ? "晚間出門摘要"
@@ -1048,6 +1085,7 @@
       if (!target) return;
       target.classList.add("ready");
       target.innerHTML = markup;
+      window.setTimeout(initializeGarbageMaps, 0);
     }
 
     const samples = {
@@ -1136,6 +1174,15 @@
           <h4>${html(city)} 即時找車位</h4>
           <div class="result-grid">${cards}</div>
           <div class="flow-note">找車位會獨立發展，不再和垃圾車、健康提醒、今日優惠混在同一個表單。</div>
+        `;
+      },
+      garbage: () => {
+        const city = document.querySelector("#garbage-city")?.value || "新北";
+        const query = document.querySelector("#garbage-query")?.value || "板橋區 文化路";
+        return `
+          <h4>${html(city)} 垃圾車時間地點</h4>
+          <div class="result-grid">${card("輸入地點後查詢", `目前條件：${city} ${query}。會優先顯示有座標的清運點與即時車輛。`)}</div>
+          <div class="flow-note">如果資料來源沒有提供座標，會先顯示時間清單與開地圖搜尋連結。</div>
         `;
       }
     };
@@ -1350,6 +1397,88 @@
       `;
     }
 
+    function numericCoord(value) {
+      const number = Number(value);
+      return Number.isFinite(number) ? number : null;
+    }
+
+    function garbageMapPoints(data) {
+      const schedulePoints = (data.items || [])
+        .map((item) => {
+          const lat = numericCoord(item.lat);
+          const lng = numericCoord(item.lng);
+          if (lat === null || lng === null) return null;
+          return {
+            lat,
+            lng,
+            kind: "清運點",
+            title: item.location || item.name || "垃圾車清運點",
+            detail: `${item.time_range || item.time || "時間未標示"}｜${[item.district, item.village].filter(Boolean).join(" ")}｜${item.route || ""}`,
+            url: item.maps_url || ""
+          };
+        })
+        .filter(Boolean);
+      const livePoints = (data.live?.items || [])
+        .map((item) => {
+          const lat = numericCoord(item.lat);
+          const lng = numericCoord(item.lng);
+          if (lat === null || lng === null) return null;
+          return {
+            lat,
+            lng,
+            kind: "即時車輛",
+            title: item.car || "垃圾車",
+            detail: `${item.location || "目前位置"} ${item.time || ""}`,
+            url: item.lat && item.lng ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(item.lat)},${encodeURIComponent(item.lng)}` : ""
+          };
+        })
+        .filter(Boolean);
+      return [...livePoints, ...schedulePoints];
+    }
+
+    function renderGarbageMap(data) {
+      const points = garbageMapPoints(data);
+      if (!points.length) {
+        return `<div class="flow-note">這批資料只有時間與地址，暫時沒有座標可以直接畫在地圖上；可先用下方「開地圖」搜尋位置。</div>`;
+      }
+      const mapId = `garbage-map-${Date.now()}-${Math.round(Math.random() * 10000)}`;
+      garbageMapPayloads[mapId] = points;
+      return `
+        <div class="map-panel">
+          <div class="garbage-map" id="${mapId}" aria-label="垃圾車時間地點地圖"></div>
+          <div class="map-caption">地圖會標示可取得座標的清運點與即時垃圾車位置；點標記可看時間、路線與導航。</div>
+        </div>
+      `;
+    }
+
+    function initializeGarbageMaps() {
+      if (!window.L) return;
+      document.querySelectorAll(".garbage-map").forEach((element) => {
+        if (garbageMapInstances[element.id]) return;
+        const points = garbageMapPayloads[element.id] || [];
+        if (!points.length) return;
+        const map = L.map(element, { scrollWheelZoom: false });
+        garbageMapInstances[element.id] = map;
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: "&copy; OpenStreetMap"
+        }).addTo(map);
+        const bounds = [];
+        points.forEach((point) => {
+          const marker = L.marker([point.lat, point.lng]).addTo(map);
+          const link = point.url ? `<br><a href="${html(point.url)}" target="_blank" rel="noreferrer">開啟導航</a>` : "";
+          marker.bindPopup(`<strong>${html(point.kind)}｜${html(point.title)}</strong><br>${html(point.detail)}${link}`);
+          bounds.push([point.lat, point.lng]);
+        });
+        if (bounds.length === 1) {
+          map.setView(bounds[0], 16);
+        } else {
+          map.fitBounds(bounds, { padding: [24, 24], maxZoom: 16 });
+        }
+        window.setTimeout(() => map.invalidateSize(), 80);
+      });
+    }
+
     function renderGarbage(data) {
       const items = data.items || [];
       const cards = items.map((item) => {
@@ -1368,6 +1497,7 @@
         .map((item, index) => ({ href: item.maps_url, label: `開地圖 ${index + 1}` }));
       return `
         <h4>${html(data.city || "")}${html(data.district || "")} 垃圾車時間地點</h4>
+        ${renderGarbageMap(data)}
         <div class="result-grid">${cards || card("先輸入縣市、鄉鎮區或路名", "可查全台垃圾車清運時間表；例如：台南 仁德區 德善路、彰化市 山中街、台中 西區。")}</div>
         <div class="flow-note">即時車輛：${html(liveText)}。${sourceLabel(data.source_names || { schedule: data.source_name || data.source, live: data.live?.source_name })}。</div>
         ${mapLinks.length ? linkActions(mapLinks) : ""}
@@ -1438,6 +1568,12 @@
         const loc = parkingLocation ? `&lat=${encodeURIComponent(parkingLocation.lat)}&lon=${encodeURIComponent(parkingLocation.lon)}` : "";
         const data = await getJson(`/api/site_parking?city=${encodeURIComponent(city)}${loc}`);
         return renderParking(data);
+      }
+      if (key === "garbage") {
+        const city = document.querySelector("#garbage-city").value;
+        const query = document.querySelector("#garbage-query").value.trim();
+        const data = await getJson(`/api/site_garbage?city=${encodeURIComponent(city)}&query=${encodeURIComponent(query)}`);
+        return renderGarbage(data);
       }
       return samples[key]();
     }
