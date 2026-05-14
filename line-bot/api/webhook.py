@@ -1489,10 +1489,14 @@ def _site_weekday_text(days: list[int]) -> str:
     return "、".join(labels.get(day, "") for day in days if day in labels)
 
 
-def _site_next_service_time(day_times: dict[int, tuple[str, str]], today: int) -> tuple[int | None, str, str]:
+def _site_next_service_time(day_times: dict[int, tuple[str, str]], today: int, now_minutes: int | None = None) -> tuple[int | None, str, str]:
     for offset in range(0, 7):
         day = ((today + offset - 1) % 7) + 1
         start, end = day_times.get(day, ("", ""))
+        if offset == 0 and now_minutes is not None and start:
+            minutes = _site_minutes(start)
+            if minutes is not None and minutes < now_minutes:
+                continue
         if start:
             return day, start, end or start
     return None, "", ""
@@ -1720,7 +1724,7 @@ def _site_hwms_route_stops(route: dict, keyword: str, today: int, now_minutes: i
         if keyword and keyword not in location and keyword not in route.get("route", "") and keyword not in route.get("code", ""):
             continue
         garbage_days = _site_days_from_text(cells[3])
-        service_day, display_time, _ = _site_next_service_time({day: (cells[2], cells[2]) for day in garbage_days}, today)
+        service_day, display_time, _ = _site_next_service_time({day: (cells[2], cells[2]) for day in garbage_days}, today, now_minutes)
         minutes = _site_minutes(display_time)
         is_today = service_day == today
         items.append({
@@ -1790,7 +1794,6 @@ def _site_hwms_schedule(city: str, district: str, keyword: str, query: str, limi
         0 if item.get("today") and not item.get("passed") else 1 if item.get("today") else 2,
         item.get("minutes") if item.get("minutes") is not None else 9999,
     ))
-    _site_enrich_garbage_coords(items, city, limit=limit)
     return {
         "ok": bool(items),
         "city": country.replace("臺", "台").replace("市", "").replace("縣", "") if country else city,
@@ -1819,7 +1822,7 @@ def _site_normalize_taichung_schedule(row: dict, today: int, now_minutes: int) -
             day_times[day] = (g_start, g_end or g_start)
         if r_start:
             recycle_days.append(day)
-    service_day, today_time, today_end = _site_next_service_time(day_times, today)
+    service_day, today_time, today_end = _site_next_service_time(day_times, today, now_minutes)
     minutes = _site_minutes(today_time)
     is_today = service_day == today
     return {
@@ -1851,7 +1854,7 @@ def _site_normalize_ntpc_schedule(row: dict, today: int, now_minutes: int) -> di
     recycle_days = [day for day, key in names.items() if _site_fix_text(row.get(f"recycling{key}", "")) == "Y"]
     food_days = [day for day, key in names.items() if _site_fix_text(row.get(f"foodscraps{key}", "")) == "Y"]
     schedule_time = _site_fix_text(row.get("time", ""))
-    service_day, display_time, _ = _site_next_service_time({day: (schedule_time, schedule_time) for day in garbage_days}, today)
+    service_day, display_time, _ = _site_next_service_time({day: (schedule_time, schedule_time) for day in garbage_days}, today, now_minutes)
     minutes = _site_minutes(display_time)
     is_today = service_day == today
     location = _site_fix_text(row.get("name", ""))
@@ -1956,7 +1959,6 @@ def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
                         break
         if diversified:
             items = diversified
-    _site_enrich_garbage_coords(items, canonical_city, limit=limit)
     return {
         "ok": True,
         "city": canonical_city,
