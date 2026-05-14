@@ -1915,6 +1915,19 @@ def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
             "source": "road_live_traffic",
         })
     matches.sort(key=lambda item: (-(item.get("level") or 0), item.get("speed") or 999, item.get("title", "")))
+    if not matches and route_pattern:
+        return {
+            "ok": False,
+            "city": city,
+            "mode": "road",
+            "query": q,
+            "title": f"{q} 即時路況",
+            "updated_at": updated_at,
+            "items": [],
+            "source": "road_live_traffic",
+            "source_names": {"transport": "TDX、高速公路局與公路局發布路段即時路況資料"},
+            "notice": f"目前沒有「{q}」的即時路況資料；可改查國道1號、台61、台9，或輸入較大範圍例如「台」。",
+        }
     if not matches and q != "國道1號":
         fallback = _site_road_live(city, "國道1號", limit=limit)
         fallback["notice"] = f"沒有找到「{q}」的國道或省道即時路況，先顯示國道1號較需要注意的路段。"
