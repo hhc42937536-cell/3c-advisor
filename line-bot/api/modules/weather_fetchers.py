@@ -79,9 +79,7 @@ def fetch_aqi(city: str, *, moe_key: str, aqi_station: dict) -> dict:
     station = aqi_station.get(city, city)
     url = (
         "https://data.moenv.gov.tw/api/v2/AQX_P_432"
-        f"?api_key={moe_key}&limit=3&sort=publishtime+desc"
-        f"&filters=sitename,EQ,{urllib.parse.quote(station)}"
-        "&format=JSON&fields=sitename,aqi,status,pm2.5,pollutant"
+        f"?api_key={moe_key}&limit=1000&sort=ImportDate+desc&format=json"
     )
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "LineBot/1.0"})
@@ -90,7 +88,7 @@ def fetch_aqi(city: str, *, moe_key: str, aqi_station: dict) -> dict:
         recs = data.get("records", [])
         if not recs:
             return {"ok": False}
-        rec = recs[0]
+        rec = next((row for row in recs if (row.get("sitename") or row.get("SiteName") or "") == station), recs[0])
         aqi = int(rec.get("aqi") or rec.get("AQI") or 0)
         status = rec.get("status") or rec.get("Status") or ""
         pm25 = rec.get("pm2.5") or rec.get("PM2.5") or ""
