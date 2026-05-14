@@ -717,7 +717,7 @@
       <div class="links">
         <a href="#features">四大功能</a>
         <a href="#workspace">使用看看</a>
-        <a href="#roadmap">工具盤點</a>
+        <a href="#life-tools">生活工具</a>
         <a href="#line">LINE</a>
       </div>
     </nav>
@@ -963,21 +963,22 @@
       </div>
     </section>
 
-    <section class="band" id="roadmap">
+    <section class="band" id="life-tools">
       <div class="wrap">
         <div class="roadmap-card">
           <div class="roadmap-copy">
-            <span class="badge"><i></i>衍生工具</span>
-            <h2>四大主功能之外，再慢慢決定工具去留。</h2>
-            <p>生活優轉主線先固定為：早安今日好料、今天吃什麼、每週週末活動自動更新、即時找車位。下面這些先當衍生工具整理。</p>
+            <span class="badge"><i></i>生活工具</span>
+            <h2>常用小工具，直接查。</h2>
+            <p>這些不是內部盤點，而是使用者會真的需要的日常功能：垃圾車時間地點、健康提醒、今日當地優惠。點一下就會查資料。</p>
           </div>
           <div>
-            <h3 class="split-title">留在生活優轉</h3>
+            <h3 class="split-title">快速入口</h3>
             <div class="roadmap">
-              <div class="roadmap-item"><b>垃圾車時間地點</b><span>全台清運時間、清運點、地圖入口，符合「今天生活要處理」。</span><em class="level">衍生</em></div>
-              <div class="roadmap-item"><b>健康提醒</b><span>喝水、睡眠、壓力、BMI，作為早安今日好料旁邊的日常照護。</span><em class="level">衍生</em></div>
-              <div class="roadmap-item"><b>今日當地優惠</b><span>餐飲、活動、商圈優惠，接在今天吃什麼與週末活動後面。</span><em class="level">衍生</em></div>
+              <button class="roadmap-item" type="button" data-utility="garbage"><b>垃圾車時間地點</b><span>查清運點、時間、回收日；有座標時直接顯示地圖。</span><em class="level">查詢</em></button>
+              <button class="roadmap-item" type="button" data-utility="health"><b>健康提醒</b><span>喝水、睡眠、壓力、BMI 與日常照護提醒。</span><em class="level">查詢</em></button>
+              <button class="roadmap-item" type="button" data-utility="deals"><b>今日當地優惠</b><span>咖啡飲料、品牌優惠、在地活動與社群話題。</span><em class="level">查詢</em></button>
             </div>
+            <div class="result" id="utility-result">選一個生活工具，這裡會直接顯示查詢結果。</div>
           </div>
         </div>
       </div>
@@ -1082,6 +1083,14 @@
 
     function setResult(key, markup) {
       const target = document.querySelector(`#${key}-result`);
+      if (!target) return;
+      target.classList.add("ready");
+      target.innerHTML = markup;
+      window.setTimeout(initializeGarbageMaps, 0);
+    }
+
+    function setUtilityResult(markup) {
+      const target = document.querySelector("#utility-result");
       if (!target) return;
       target.classList.add("ready");
       target.innerHTML = markup;
@@ -1201,6 +1210,12 @@
     }
 
     document.addEventListener("click", (event) => {
+      const utilityButton = event.target.closest("[data-utility]");
+      if (utilityButton) {
+        runUtility(utilityButton.dataset.utility);
+        return;
+      }
+
       const openButton = event.target.closest("[data-open]");
       if (openButton) {
         if (openButton.dataset.open === "tools" && openButton.textContent.includes("停車")) {
@@ -1586,6 +1601,30 @@
       } catch (error) {
         console.error(error);
         setResult(key, `${samples[key]()}<div class="flow-note">目前連線不穩，先提供可參考的建議。</div>`);
+      }
+    }
+
+    async function runUtility(key) {
+      setUtilityResult(`<h4>正在讀取資料...</h4><div class="flow-note">正在整理生活工具資料。</div>`);
+      try {
+        if (key === "garbage") {
+          const data = await getJson(`/api/site_garbage?city=${encodeURIComponent("新北")}&query=${encodeURIComponent("板橋區 文化路")}`);
+          setUtilityResult(renderGarbage(data));
+          return;
+        }
+        if (key === "health") {
+          const data = await getJson(`/api/site_health?mode=${encodeURIComponent("日常照護")}&text=${encodeURIComponent("上班族久坐、喝水、睡眠、壓力")}`);
+          setUtilityResult(renderHealth(data));
+          return;
+        }
+        if (key === "deals") {
+          const city = document.querySelector("#morning-city")?.value || "台北";
+          const data = await getJson(`/api/site_deals?city=${encodeURIComponent(city)}&context=${encodeURIComponent("上班日早上")}`);
+          setUtilityResult(renderDeals(data));
+        }
+      } catch (error) {
+        console.error(error);
+        setUtilityResult(`<h4>目前連線不穩</h4><div class="flow-note">這個工具會查即時資料，請稍後再試。</div>`);
       }
     }
 
