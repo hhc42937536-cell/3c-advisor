@@ -1630,7 +1630,7 @@ def _site_google_key_available() -> bool:
 
 
 def _site_garbage_geocode_limit(limit: int) -> int:
-    return limit if _site_google_key_available() else min(limit, 8)
+    return min(limit, 8)
 
 
 def _site_enrich_garbage_coords(items: list, city: str, limit: int = 24) -> None:

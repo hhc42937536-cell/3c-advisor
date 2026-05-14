@@ -1406,7 +1406,7 @@
     }
 
     function garbageMapPoints(data) {
-      const schedulePoints = (data.items || []).slice(0, 24)
+      const schedulePoints = (data.items || []).slice(0, 8)
         .map((item) => {
           const lat = numericCoord(item.lat);
           const lng = numericCoord(item.lng);
@@ -1434,7 +1434,7 @@
       return `
         <div class="map-panel">
           <div class="garbage-map" id="${mapId}" aria-label="垃圾車時間地點地圖"></div>
-          <div class="map-caption">地圖先標示表定清運點，避免即時車輛距離太遠造成地圖縮放卡住；即時車輛位置會放在下方文字摘要。</div>
+          <div class="map-caption">地圖先標示前 8 個清運點，清單保留完整時間地點；這樣第一次查詢不會卡太久。</div>
         </div>
       `;
     }
@@ -1445,11 +1445,13 @@
         if (garbageMapInstances[element.id]) return;
         const points = garbageMapPayloads[element.id] || [];
         if (!points.length) return;
-        const map = L.map(element, { scrollWheelZoom: false });
+        const map = L.map(element, { scrollWheelZoom: false, zoomControl: true });
         garbageMapInstances[element.id] = map;
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
           maxZoom: 19,
-          attribution: "&copy; OpenStreetMap"
+          updateWhenIdle: true,
+          keepBuffer: 3,
+          attribution: "&copy; OpenStreetMap &copy; CARTO"
         }).addTo(map);
         const bounds = [];
         points.forEach((point) => {
@@ -1575,7 +1577,7 @@
 
     async function runUtility(key) {
       const runId = ++utilityRunId;
-      setUtilityResult(`<h4>正在讀取資料...</h4><div class="flow-note">正在整理生活工具資料。</div>`);
+      setUtilityResult(`<h4>正在查詢...</h4><div class="flow-note">正在抓清運時間並產生地圖，第一次查詢可能需要幾秒鐘。</div>`);
       try {
         const city = document.querySelector("#utility-city")?.value || "新北";
         const place = document.querySelector("#utility-place")?.value.trim() || "";
