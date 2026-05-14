@@ -80,6 +80,14 @@
       "dest": "api/webhook.py"
     },
     {
+      "src": "/api/site_invoice",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/api/site_facilities",
+      "dest": "api/webhook.py"
+    },
+    {
       "src": "/api/warm_cache",
       "dest": "api/webhook.py"
     },

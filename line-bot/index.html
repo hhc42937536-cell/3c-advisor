@@ -682,6 +682,8 @@
         <a href="#life-tools">生活工具</a>
         <a href="#life-tools" data-nav-utility="garbage">垃圾車</a>
         <a href="#life-tools" data-nav-utility="deals">今日優惠</a>
+        <a href="#life-tools" data-nav-utility="invoice">發票對獎</a>
+        <a href="#life-tools" data-nav-utility="facilities">附近設施</a>
         <a href="#line">LINE</a>
       </div>
     </nav>
@@ -953,18 +955,24 @@
                     <div class="result-grid">
                       <div class="result-card"><strong>垃圾車時間地點</strong><span>查清運點、時間與回收日。</span></div>
                       <div class="result-card"><strong>今日當地優惠</strong><span>咖啡飲料、品牌優惠、在地活動與社群話題。</span></div>
+                      <div class="result-card"><strong>統一發票對獎</strong><span>輸入 8 碼號碼，快速比對最新公告。</span></div>
+                      <div class="result-card"><strong>附近生活設施</strong><span>藥局、超商、醫院、郵局、ATM、洗衣店。</span></div>
                     </div>
-                    <div class="flow-note">下方「生活工具」區可以查垃圾車時間地點與今日當地優惠。</div>
+                    <div class="flow-note">下方「生活工具」區可以查垃圾車、今日優惠、發票對獎與附近生活設施。</div>
                   </div>
                   <div class="quick-actions">
                     <button type="button" data-nav-utility="garbage">查垃圾車</button>
                     <button type="button" data-nav-utility="deals">查今日優惠</button>
+                    <button type="button" data-nav-utility="invoice">發票對獎</button>
+                    <button type="button" data-nav-utility="facilities">查附近設施</button>
                   </div>
                 </div>
               </div>
               <div class="data-list">
                 <button class="data-item" type="button" data-nav-utility="garbage"><strong>垃圾車</strong><span>時間 / 地點</span></button>
                 <button class="data-item" type="button" data-nav-utility="deals"><strong>今日優惠</strong><span>咖啡 / 品牌</span></button>
+                <button class="data-item" type="button" data-nav-utility="invoice"><strong>發票對獎</strong><span>最新獎號</span></button>
+                <button class="data-item" type="button" data-nav-utility="facilities"><strong>附近設施</strong><span>藥局 / 超商</span></button>
               </div>
             </div>
           </div>
@@ -978,7 +986,7 @@
           <div class="roadmap-copy">
             <span class="badge"><i></i>生活工具</span>
             <h2>常用小工具，直接查。</h2>
-            <p>這裡放獨立生活工具：垃圾車時間地點與今日當地優惠。找車位已經升級成上方主功能，這裡不重複。</p>
+            <p>這裡放獨立生活工具：垃圾車時間地點、今日當地優惠、發票對獎與附近生活設施。找車位已經升級成上方主功能，這裡不重複。</p>
           </div>
           <div>
             <h3 class="split-title">快速入口</h3>
@@ -989,10 +997,18 @@
               <label class="field" for="utility-place">鄉鎮區 / 路名 / 地標（可留空）
                 <input id="utility-place" value="" placeholder="例：板橋區 文化路" aria-label="生活工具查詢地點">
               </label>
+              <label class="field" for="utility-number">發票號碼（對獎時填）
+                <input id="utility-number" value="" maxlength="8" inputmode="numeric" placeholder="例：12345678" aria-label="統一發票號碼">
+              </label>
+              <label class="field" for="facility-kind">附近設施類型
+                <select id="facility-kind"><option value="pharmacy">藥局</option><option value="convenience">超商</option><option value="hospital">醫院 / 診所</option><option value="post">郵局</option><option value="atm">ATM</option><option value="laundry">洗衣店</option></select>
+              </label>
             </div>
             <div class="roadmap">
               <button class="roadmap-item" type="button" data-utility="garbage"><b>垃圾車時間地點</b><span>查清運點、時間與回收日；優先顯示還來得及使用的時段。</span><em class="level">查詢</em></button>
               <button class="roadmap-item" type="button" data-utility="deals"><b>今日當地優惠</b><span>咖啡飲料、品牌優惠、在地活動與社群話題。</span><em class="level">查詢</em></button>
+              <button class="roadmap-item" type="button" data-utility="invoice"><b>統一發票對獎</b><span>輸入 8 碼號碼，快速比對財政部最新已公告獎號。</span><em class="level">查詢</em></button>
+              <button class="roadmap-item" type="button" data-utility="facilities"><b>附近生活設施</b><span>查藥局、超商、醫院、郵局、ATM 與洗衣店。</span><em class="level">查詢</em></button>
             </div>
             <div class="result" id="utility-result">選一個生活工具，這裡會直接顯示查詢結果。</div>
           </div>
@@ -1317,6 +1333,9 @@
       crawler_cache_or_bib_gourmand: "生活優轉整理的美食名單、米其林必比登與 Google 地圖資訊",
       google_places_live: "Google 地圖附近餐廳",
       google_places_text_search: "Google 地圖搜尋資訊",
+      google_maps_search: "Google 地圖搜尋",
+      invoice: "財政部稅務入口網統一發票中獎號碼",
+      facilities: "Google 地圖商家與地點資訊",
       city_specialties: "生活優轉各縣市特色美食資料",
       surprise: "生活優轉每日小驚喜",
       moenv_aqi_live: "環境部空氣品質監測網",
@@ -1558,6 +1577,38 @@
       `;
     }
 
+    function renderInvoice(data) {
+      const numbers = data.numbers || {};
+      const first = (numbers.first || []).join("、");
+      const result = data.result || "輸入 8 碼發票號碼後，可以快速比對。";
+      const cards = [
+        card(data.matched ? "可能中獎" : "對獎結果", result),
+        card("最新公告期別", `${data.term || "最新期別"}｜領獎期間：${data.redeem_period || "請以財政部公告為準"}`),
+        card("特別獎 / 特獎", `特別獎 ${numbers.special || "-"}｜特獎 ${numbers.grand || "-"}`),
+        card("頭獎號碼", first || "請以財政部公告為準")
+      ].join("");
+      const link = data.source_url ? linkActions([{ href: data.source_url, label: "開財政部公告" }]) : "";
+      return `
+        <h4>統一發票對獎</h4>
+        <div class="result-grid">${cards}</div>
+        <div class="flow-note">${sourceLabel(data.source_names)}。目前比對最新已公告期別；3-4 月期需等 2026/05/25 開獎後才會有正式獎號。</div>
+        ${link}
+      `;
+    }
+
+    function renderFacilities(data) {
+      const cards = (data.items || []).map((item) => {
+        const address = item.address ? `${item.address}｜` : "";
+        const link = item.url ? `<a href="${html(item.url)}" target="_blank" rel="noreferrer">開地圖</a>` : "";
+        return `<div class="result-card"><strong>${html(item.name)}</strong><span>${html(address + (item.body || ""))}</span>${link}</div>`;
+      }).join("");
+      return `
+        <h4>${html(data.city || "")}${html(data.place || "")} 附近生活設施</h4>
+        <div class="result-grid">${cards || card("目前查不到清單", "可換一個地標、路名或設施類型再查。")}</div>
+        <div class="flow-note">${sourceLabel(data.source_names)}。可先開地圖確認營業時間與路線。</div>
+      `;
+    }
+
     async function fetchSiteMarkup(key) {
       if (key === "morning") {
         const city = document.querySelector("#morning-city").value;
@@ -1632,10 +1683,12 @@
 
     async function runUtility(key) {
       const runId = ++utilityRunId;
-      setUtilityResult(`<h4>正在查詢...</h4><div class="flow-note">正在抓清運時間地點；如果資料源太慢，會自動停止等待。</div>`);
+      setUtilityResult(`<h4>正在查詢...</h4><div class="flow-note">正在查即時或公開資料；如果資料源太慢，會自動停止等待。</div>`);
       try {
         const city = document.querySelector("#utility-city")?.value || "新北";
         const place = document.querySelector("#utility-place")?.value.trim() || "";
+        const number = document.querySelector("#utility-number")?.value.trim() || "";
+        const kind = document.querySelector("#facility-kind")?.value || "pharmacy";
         if (key === "garbage") {
           const data = await getJson(`/api/site_garbage?city=${encodeURIComponent(city)}&query=${encodeURIComponent(place)}&t=${Date.now()}`, 10000);
           if (runId !== utilityRunId) return;
@@ -1646,6 +1699,18 @@
           const data = await getJson(`/api/site_deals?city=${encodeURIComponent(city)}&context=${encodeURIComponent("上班日早上")}`);
           if (runId !== utilityRunId) return;
           setUtilityResult(renderDeals(data));
+          return;
+        }
+        if (key === "invoice") {
+          const data = await getJson(`/api/site_invoice?number=${encodeURIComponent(number)}`);
+          if (runId !== utilityRunId) return;
+          setUtilityResult(renderInvoice(data));
+          return;
+        }
+        if (key === "facilities") {
+          const data = await getJson(`/api/site_facilities?city=${encodeURIComponent(city)}&place=${encodeURIComponent(place)}&kind=${encodeURIComponent(kind)}`);
+          if (runId !== utilityRunId) return;
+          setUtilityResult(renderFacilities(data));
         }
       } catch (error) {
         if (runId !== utilityRunId) return;

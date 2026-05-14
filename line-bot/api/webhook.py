@@ -2804,6 +2804,117 @@ def _site_local_deals(city: str, context: str = "") -> dict:
     }
 
 
+_SITE_INVOICE_LATEST = {
+    "term": "115年01-02月",
+    "period": "2026-01 至 2026-02",
+    "announce_date": "2026-03-25",
+    "redeem_period": "115年04月06日起至115年07月06日止",
+    "special": "87510041",
+    "grand": "32220522",
+    "first": ["21677046", "44662410", "31262513"],
+    "source_url": "https://invoice.etax.nat.gov.tw/",
+}
+
+
+def _site_invoice_match(number: str) -> dict:
+    digits = re.sub(r"\D", "", number or "")[-8:]
+    payload = {
+        "ok": True,
+        "term": _SITE_INVOICE_LATEST["term"],
+        "period": _SITE_INVOICE_LATEST["period"],
+        "announce_date": _SITE_INVOICE_LATEST["announce_date"],
+        "redeem_period": _SITE_INVOICE_LATEST["redeem_period"],
+        "numbers": {
+            "special": _SITE_INVOICE_LATEST["special"],
+            "grand": _SITE_INVOICE_LATEST["grand"],
+            "first": _SITE_INVOICE_LATEST["first"],
+        },
+        "input": digits,
+        "result": "",
+        "matched": False,
+        "source_url": _SITE_INVOICE_LATEST["source_url"],
+        "source_names": {"invoice": "財政部稅務入口網統一發票中獎號碼"},
+    }
+    if not digits:
+        payload["result"] = "輸入 8 碼發票號碼後，可以先快速比對最新已公告的獎號。"
+        return payload
+    if len(digits) < 8:
+        payload["result"] = "請輸入完整 8 碼發票號碼。"
+        return payload
+    if digits == _SITE_INVOICE_LATEST["special"]:
+        payload.update({"matched": True, "result": "對中特別獎 1,000 萬元。"})
+        return payload
+    if digits == _SITE_INVOICE_LATEST["grand"]:
+        payload.update({"matched": True, "result": "對中特獎 200 萬元。"})
+        return payload
+    prize_map = [(8, "頭獎 20 萬元"), (7, "二獎 4 萬元"), (6, "三獎 1 萬元"), (5, "四獎 4,000 元"), (4, "五獎 1,000 元"), (3, "六獎 200 元")]
+    for length, label in prize_map:
+        if any(digits[-length:] == first[-length:] for first in _SITE_INVOICE_LATEST["first"]):
+            payload.update({"matched": True, "result": f"尾數 {length} 碼符合，可能中{label}。請以財政部公告與實體發票規定為準。"})
+            return payload
+    payload["result"] = "這張發票沒有對中最新已公告的主要獎號。"
+    return payload
+
+
+_SITE_FACILITY_KEYWORDS = {
+    "pharmacy": "藥局",
+    "convenience": "便利商店 超商",
+    "hospital": "診所 醫院",
+    "post": "郵局",
+    "atm": "ATM",
+    "laundry": "自助洗衣 洗衣店",
+}
+
+
+def _site_facilities(city: str, place: str = "", kind: str = "pharmacy", limit: int = 8) -> dict:
+    city = city or "台北"
+    keyword = _SITE_FACILITY_KEYWORDS.get(kind, _SITE_FACILITY_KEYWORDS["pharmacy"])
+    area = " ".join([city, place or ""]).strip()
+    query = f"{area} {keyword}".strip()
+    try:
+        places = _text_search_places(query, max_results=limit)
+    except Exception:
+        places = []
+    items = []
+    for p in places[:limit]:
+        name = _site_text(p.get("name"), "")
+        if not name:
+            continue
+        rating = p.get("rating") or ""
+        reviews = p.get("user_ratings_total") or ""
+        open_now = p.get("open_now")
+        state = "營業中" if open_now is True else ("目前未營業" if open_now is False else "營業狀態請開地圖確認")
+        bits = [state]
+        if rating:
+            bits.append(f"Google 評分 {rating}" + (f"（{reviews} 則）" if reviews else ""))
+        items.append({
+            "name": name,
+            "address": _site_text(p.get("addr"), ""),
+            "lat": _site_float(p.get("lat")),
+            "lng": _site_float(p.get("lng")),
+            "body": "｜".join(bits),
+            "url": f"https://maps.google.com/?q=place_id:{p.get('place_id')}" if p.get("place_id") else f"https://www.google.com/maps/search/{urllib.parse.quote(query + ' ' + name)}/",
+            "source": "google_places_text_search",
+        })
+    if not items:
+        items.append({
+            "name": f"{area} {keyword}",
+            "address": "",
+            "body": "目前 Google Places 沒回傳清單，可先開地圖搜尋。",
+            "url": f"https://www.google.com/maps/search/{urllib.parse.quote(query)}/",
+            "source": "google_maps_search",
+        })
+    return {
+        "ok": True,
+        "city": city,
+        "place": place,
+        "kind": kind,
+        "keyword": keyword,
+        "items": items,
+        "source_names": {"facilities": "Google 地圖商家與地點資訊"},
+    }
+
+
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         """健康檢查 + 快取預熱"""
@@ -2954,6 +3065,18 @@ class handler(BaseHTTPRequestHandler):
             city = _site_param(qs, "city", "台北")
             context = _site_param(qs, "context", "")
             _site_json(self, _site_local_deals(city, context))
+
+        elif parsed.path == "/api/site_invoice":
+            qs = parse_qs(parsed.query or "")
+            number = _site_param(qs, "number", "")
+            _site_json(self, _site_invoice_match(number))
+
+        elif parsed.path == "/api/site_facilities":
+            qs = parse_qs(parsed.query or "")
+            city = _site_param(qs, "city", "台北")
+            place = _site_param(qs, "place", "")
+            kind = _site_param(qs, "kind", "pharmacy")
+            _site_json(self, _site_facilities(city, place, kind, limit=8))
 
         elif parsed.path in ("/api/warm_cache", "/api/webhook"):
             import threading as _th
