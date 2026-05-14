@@ -970,18 +970,24 @@
                     <label class="field" for="parking-city">城市
                       <select id="parking-city"><option>台北</option><option>新北</option><option>基隆</option><option>桃園</option><option>新竹</option><option>新竹縣</option><option>苗栗</option><option>台中</option><option>彰化</option><option>南投</option><option>雲林</option><option>嘉義</option><option>嘉義縣</option><option>台南</option><option>高雄</option><option>屏東</option><option>宜蘭</option><option>花蓮</option><option>台東</option><option>澎湖</option><option>金門</option><option>連江</option></select>
                     </label>
-                    <label class="field" for="parking-destination">目的地 / 地標
-                      <textarea id="parking-destination" aria-label="停車目的地">台南美術館</textarea>
+                    <label class="field" for="parking-scenario">停車需求
+                      <select id="parking-scenario"><option>離目的地近</option><option>便宜優先</option><option>路邊停車格優先</option><option>室內停車場優先</option><option>可停久一點</option><option>長輩小孩少走路</option></select>
+                    </label>
+                    <label class="field" for="parking-destination">目的地類型
+                      <select id="parking-destination"><option>目前位置附近</option><option>車站周邊</option><option>百貨商圈</option><option>醫院診所</option><option>夜市周邊</option><option>景點展館</option><option>學校周邊</option><option>辦公商圈</option></select>
+                    </label>
+                    <label class="field" for="parking-landmark">常用地點
+                      <select id="parking-landmark"><option value="">不指定</option><option>台南美術館</option><option>板橋車站</option><option>勤美誠品</option><option>台北車站</option><option>左營高鐵站</option><option>高雄巨蛋</option><option>桃園機場</option><option>新竹巨城</option></select>
                     </label>
                     <label class="field" for="parking-note">補充需求
-                      <input id="parking-note" value="每小時 40 以內，步行 10 分鐘內" aria-label="停車補充需求">
+                      <input id="parking-note" value="" placeholder="例：步行 10 分鐘內、要室內、要便宜" aria-label="停車補充需求">
                     </label>
                   </div>
                   <div class="quick-actions">
                     <button class="btn primary" data-demo="parking">查附近車位</button>
                     <button type="button" id="use-parking-location">使用目前位置</button>
                   </div>
-                  <div class="result" id="parking-result">輸入目的地或使用目前位置，會查附近停車場與即時車位。</div>
+                  <div class="result" id="parking-result">選城市、需求和目的地類型，就能查附近停車場與即時車位；特殊地址再補充輸入。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -1273,11 +1279,13 @@
       },
       parking: () => {
         const city = document.querySelector("#parking-city").value;
-        const destination = document.querySelector("#parking-destination").value.trim() || city;
+        const scenario = document.querySelector("#parking-scenario")?.value || "離目的地近";
+        const destination = document.querySelector("#parking-landmark")?.value || document.querySelector("#parking-destination").value || city;
         const note = document.querySelector("#parking-note").value.trim() || "未設定";
         const cards = [
           ["查詢地點", `${city} ${destination}`],
-          ["停車需求", note],
+          ["停車需求", scenario],
+          ["補充需求", note],
           ["資料內容", "停車場、路邊格、剩餘車位與費率。"],
           ["使用建議", "先看剩餘車位和費率，再決定要停近一點或走幾分鐘省停車費。"]
         ].map(([title, body]) => card(title, body)).join("");
@@ -1397,7 +1405,12 @@
       }
       if (key === "parking") {
         setSelectValue("#parking-city", presetButton.dataset.city);
-        if (presetButton.dataset.place) document.querySelector("#parking-destination").value = presetButton.dataset.place;
+        if (presetButton.dataset.place) {
+          setSelectValue("#parking-landmark", presetButton.dataset.place);
+          if (document.querySelector("#parking-landmark").value !== presetButton.dataset.place) {
+            document.querySelector("#parking-note").value = presetButton.dataset.place;
+          }
+        }
       }
       scrollToWorkspace();
       runDemo(key);
@@ -1753,8 +1766,13 @@
         return renderActivity(data);
       }
       if (key === "parking") {
-        const detail = document.querySelector("#parking-destination").value.trim();
-        const city = cityFromText(detail, document.querySelector("#parking-city").value || "台北");
+        const citySelect = document.querySelector("#parking-city").value || "台北";
+        const scenario = document.querySelector("#parking-scenario")?.value || "";
+        const type = document.querySelector("#parking-destination")?.value || "";
+        const landmark = document.querySelector("#parking-landmark")?.value || "";
+        const note = document.querySelector("#parking-note")?.value.trim() || "";
+        const detail = [landmark || `${citySelect} ${type}`, scenario, note].filter(Boolean).join(" ");
+        const city = cityFromText(detail, citySelect);
         const loc = parkingLocation ? `&lat=${encodeURIComponent(parkingLocation.lat)}&lon=${encodeURIComponent(parkingLocation.lon)}` : "";
         const data = await getJson(`/api/site_transport?city=${encodeURIComponent(city)}&mode=parking&destination=${encodeURIComponent(detail)}${loc}`);
         return renderTransport(data);
@@ -1891,7 +1909,8 @@
           lat: position.coords.latitude.toFixed(6),
           lon: position.coords.longitude.toFixed(6),
         };
-        document.querySelector("#parking-destination").value = "目前位置附近";
+        setSelectValue("#parking-destination", "目前位置附近");
+        setSelectValue("#parking-landmark", "");
         runDemo("parking");
       }, () => {
         setResult("parking", `<h4>定位未開啟</h4><div class="flow-note">請允許定位，或手動輸入目的地/城市查詢。</div>`);
