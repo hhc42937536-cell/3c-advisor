@@ -338,7 +338,12 @@ def _haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> int:
 
 def _tdx_get(path: str, token: str, timeout: int = 20) -> list:
     """呼叫 TDX API，回傳 list（支援 City 路徑的巢狀 JSON）"""
-    url = "https://tdx.transportdata.tw/api/basic/v1/" + path
+    return _tdx_get_versioned(path, token, timeout=timeout, version="v1")
+
+
+def _tdx_get_versioned(path: str, token: str, timeout: int = 20, version: str = "v1") -> list:
+    """呼叫指定版本 TDX API，回傳 list（Rail 常用 v2/v3，停車目前用 v1）。"""
+    url = f"https://tdx.transportdata.tw/api/basic/{version}/" + path
     req = urllib.request.Request(url, headers={
         "Authorization": f"Bearer {token}",
         "Accept": "application/json",
@@ -365,6 +370,14 @@ def _tdx_get(path: str, token: str, timeout: int = 20) -> list:
     except Exception as e:
         print(f"[TDX] GET {path[:80]} 失敗: {e}")
         return []
+
+
+def _tdx_get_any(path: str, token: str, timeout: int = 20, versions: tuple[str, ...] = ("v2", "v3", "v1")) -> list:
+    for version in versions:
+        rows = _tdx_get_versioned(path, token, timeout=timeout, version=version)
+        if rows:
+            return rows
+    return []
 
 
 # 台灣各縣市座標框（lat_min, lat_max, lon_min, lon_max, tdx_city）
@@ -1374,15 +1387,16 @@ def _site_rail_station_name(station: dict) -> str:
 
 
 def _site_rail_stations(operator: str, token: str) -> list:
-    cache_key = f"site:rail_stations:{operator}"
+    cache_key = f"site:rail_stations:v2v3:{operator}"
     cached = _redis_get(cache_key)
     if cached:
         return json.loads(cached) if isinstance(cached, str) else cached
-    rows = _tdx_get(f"Rail/{operator}/Station?$format=JSON", token, timeout=8)
-    try:
-        _redis_set(cache_key, rows, ttl=86400 * 7)
-    except Exception:
-        pass
+    rows = _tdx_get_any(f"Rail/{operator}/Station?$format=JSON", token, timeout=8, versions=("v2", "v3"))
+    if rows:
+        try:
+            _redis_set(cache_key, rows, ttl=86400 * 7)
+        except Exception:
+            pass
     return rows
 
 
@@ -1419,8 +1433,15 @@ def _site_rail_schedule(origin: str, destination: str, operator_hint: str = "", 
             continue
         origin_id = str(origin_station.get("StationID") or "")
         dest_id = str(dest_station.get("StationID") or "")
-        path = f"Rail/{operator}/DailyTimetable/OD/{origin_id}/to/{dest_id}/{today}?$format=JSON"
-        rows = _tdx_get(path, token, timeout=10)
+        timetable_paths = [
+            f"Rail/{operator}/DailyTimetable/OD/{origin_id}/to/{dest_id}/{today}?$format=JSON",
+            f"Rail/{operator}/DailyTrainTimetable/OD/{origin_id}/to/{dest_id}/{today}?$format=JSON",
+        ]
+        rows = []
+        for path in timetable_paths:
+            rows = _tdx_get_any(path, token, timeout=10, versions=("v2", "v3"))
+            if rows:
+                break
         items = []
         for row in rows:
             train = row.get("DailyTrainInfo") or row.get("TrainInfo") or {}
