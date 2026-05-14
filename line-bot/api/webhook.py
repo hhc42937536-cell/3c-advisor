@@ -1535,10 +1535,6 @@ def _site_garbage_query_parts(city: str, query: str) -> tuple[str, str]:
             continue
         district = match
         break
-    if city in ("新北", "新北市") and not district:
-        district = "板橋區"
-    if city in ("台中", "臺中") and not district:
-        district = "西區"
     keywords = text
     remove_words = set(city_names)
     remove_words.update({name.replace("市", "").replace("縣", "") for name in city_names})
@@ -1746,8 +1742,11 @@ def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
             canonical_city = "新北"
             source = "ntpc_garbage_schedule"
             source_name = "新北市垃圾車表定清運路線"
-            params = urllib.parse.urlencode({"page": 0, "size": 500, "city": district})
-            rows = _site_get_json(f"https://data.ntpc.gov.tw/api/datasets/edc3ad26-8ae7-4916-a00b-bc6048d19bf8/json?{params}")
+            rows = []
+            districts = [district] if district else ["板橋區", "新莊區", "中和區", "三重區", "新店區", "汐止區", "永和區", "淡水區"]
+            for area in districts:
+                params = urllib.parse.urlencode({"page": 0, "size": 160, "city": area})
+                rows.extend(_site_get_json(f"https://data.ntpc.gov.tw/api/datasets/edc3ad26-8ae7-4916-a00b-bc6048d19bf8/json?{params}"))
             items = [_site_normalize_ntpc_schedule(row, today, now_minutes) for row in rows]
         elif city in ("台中", "臺中"):
             canonical_city = "台中"
@@ -1795,6 +1794,19 @@ def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
         0 if item.get("today") and not item.get("passed") else 1 if item.get("today") else 2,
         item.get("minutes") if item.get("minutes") is not None else 9999,
     ))
+    if not district and not keyword:
+        grouped = {}
+        for item in items:
+            grouped.setdefault(item.get("district") or "其他", []).append(item)
+        diversified = []
+        while len(diversified) < limit and any(grouped.values()):
+            for group in list(grouped.values()):
+                if group:
+                    diversified.append(group.pop(0))
+                    if len(diversified) >= limit:
+                        break
+        if diversified:
+            items = diversified
     return {
         "ok": True,
         "city": canonical_city,
@@ -2227,7 +2239,7 @@ class handler(BaseHTTPRequestHandler):
             qs = parse_qs(parsed.query or "")
             city = _site_param(qs, "city", "台中")
             query = _site_param(qs, "q", "")
-            _site_json(self, _site_garbage_schedule(city, query, limit=8))
+            _site_json(self, _site_garbage_schedule(city, query, limit=24))
 
         elif parsed.path == "/api/site_health":
             qs = parse_qs(parsed.query or "")
