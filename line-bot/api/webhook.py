@@ -1426,6 +1426,56 @@ def _site_national_waste(limit: int = 3) -> list:
 
 
 def _site_garbage_trucks(city: str, limit: int = 6, query: str = "", district: str = "") -> dict:
+    if city in ("高雄", "高雄市"):
+        source_name = "高雄市政府環境保護局垃圾車與資源回收車 GPS 即時資料"
+        url = "https://openapi.kcg.gov.tw/Api/Service/Get/aaf4ce4b-4ca8-43de-bfaf-6dc97e89cac0"
+        try:
+            cache_key = "site:kaohsiung_garbage_gps"
+            try:
+                payload = _site_get_json(url, timeout=3)
+                _redis_set(cache_key, payload, ttl=90)
+            except Exception:
+                payload = _redis_get(cache_key)
+                if not payload:
+                    raise
+            rows = payload.get("data", []) if isinstance(payload, dict) else payload
+            strict_terms, broad_terms = _site_garbage_keyword_variants(query)
+            district_term = _site_garbage_match_text(district)
+
+            def score(row: dict) -> int:
+                text = _site_garbage_match_text(f"{row.get('location', '')} {row.get('linid', '')} {row.get('car', '')}")
+                value = 0
+                if district_term and district_term in text:
+                    value += 20
+                if any(term and term in text for term in strict_terms):
+                    value += 40
+                if any(term and term in text for term in broad_terms):
+                    value += 10
+                return value
+
+            ranked = sorted(rows, key=lambda row: -score(row))
+            if query or district:
+                matched = [row for row in ranked if score(row) > 0]
+                if matched:
+                    ranked = matched
+            items = []
+            for row in ranked[:limit]:
+                lat = row.get("y", "")
+                lng = row.get("x", "")
+                location = _site_fix_text(row.get("location", ""))
+                items.append({
+                    "car": _site_fix_text(row.get("car", "")),
+                    "time": _site_fix_text(row.get("time", "")).replace("T", " "),
+                    "location": location,
+                    "district": district,
+                    "lat": lat,
+                    "lng": lng,
+                    "route": _site_fix_text(row.get("linid", "")),
+                    "maps_url": _site_maps_url(f"{lat},{lng}" if lat and lng else f"高雄市{location}"),
+                })
+            return {"ok": bool(items), "city": "高雄", "source": "kaohsiung_garbage_gps", "source_name": source_name, "items": items}
+        except Exception as exc:
+            return {"ok": False, "city": city, "source": "kaohsiung_garbage_gps", "source_name": source_name, "error": str(exc), "items": []}
     if city in ("台南", "臺南", "台南市", "臺南市"):
         source_name = "臺南市政府環境保護局垃圾車 GPS 即時資料"
         url = "https://soa.tainan.gov.tw/Api/Service/Get/2c8a70d5-06f2-4353-9e92-c40d33bcd969"

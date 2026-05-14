@@ -1,0 +1,40 @@
+{
+  "coverage_note": "表定清運點以環境部環境管理署全國垃圾車清運路線查詢網作為全台 fallback；地方政府 GPS/API 逐縣市優先接入。",
+  "schedule_fallback": {
+    "source": "環境部環境管理署全國垃圾車清運路線查詢網",
+    "counties": ["基隆市", "臺北市", "新北市", "桃園市", "新竹市", "新竹縣", "苗栗縣", "臺中市", "彰化縣", "南投縣", "雲林縣", "嘉義市", "嘉義縣", "臺南市", "高雄市", "屏東縣", "宜蘭縣", "花蓮縣", "臺東縣", "澎湖縣", "金門縣", "連江縣"]
+  },
+  "live_gps": [
+    {
+      "city": "臺南市",
+      "status": "connected",
+      "source": "臺南市政府環境保護局垃圾車 GPS 即時資料",
+      "dataset_url": "https://data.tainan.gov.tw/DataSet/Detail/de3c0118-9334-476a-bf3e-b64b107765d8",
+      "api_url": "https://soa.tainan.gov.tw/Api/Service/Get/2c8a70d5-06f2-4353-9e92-c40d33bcd969",
+      "fields": ["linid", "car", "time", "location", "x", "y"]
+    },
+    {
+      "city": "高雄市",
+      "status": "connected",
+      "source": "高雄市政府環境保護局垃圾車與資源回收車 GPS 即時資料",
+      "dataset_url": "https://data.gov.tw/en/datasets/138256",
+      "api_url": "https://openapi.kcg.gov.tw/Api/Service/Get/aaf4ce4b-4ca8-43de-bfaf-6dc97e89cac0",
+      "fields": ["linid", "car", "time", "location", "x", "y"]
+    },
+    {
+      "city": "新北市",
+      "status": "connected",
+      "source": "新北市政府環保局垃圾清運車輛所在位置",
+      "dataset_url": "https://data.gov.tw/dataset/122972",
+      "fields": ["lineId", "car", "time", "location", "longitude", "latitude", "cityId", "cityName"]
+    },
+    {
+      "city": "臺中市",
+      "status": "connected",
+      "source": "臺中市政府環保局垃圾及資源回收車動態資訊",
+      "dataset_url": "https://data.gov.tw/dataset/83558",
+      "fields": ["lineid", "car", "time", "location", "X", "Y", "SpeedValue", "OverSpeed"]
+    }
+  ],
+  "next_live_gps_audit": ["臺北市", "桃園市", "新竹市", "新竹縣", "苗栗縣", "彰化縣", "南投縣", "雲林縣", "嘉義市", "嘉義縣", "屏東縣", "宜蘭縣", "花蓮縣", "臺東縣", "澎湖縣", "金門縣", "連江縣"]
+}
