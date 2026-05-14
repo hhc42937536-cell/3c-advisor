@@ -2018,6 +2018,7 @@ def _site_hwms_schedule(city: str, district: str, keyword: str, query: str, limi
         0 if item.get("today") and not item.get("passed") else 1 if item.get("today") else 2,
         item.get("minutes") if item.get("minutes") is not None else 9999,
     ))
+    live_payload = _site_garbage_trucks(city, limit=3, query=query, district=district)
     return {
         "ok": bool(items),
         "city": country.replace("臺", "台") if country else city,
