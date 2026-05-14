@@ -668,6 +668,7 @@
         <a href="#workspace">主功能</a>
         <a href="#workspace">使用看看</a>
         <a href="#workspace" data-jump="traffic">出門交通</a>
+        <a href="#workspace" data-nav-parking>找車位</a>
         <a href="#life-tools">生活工具</a>
         <a href="#life-tools" data-nav-utility="garbage">垃圾車</a>
         <a href="#life-tools" data-nav-utility="deals">今日優惠</a>
@@ -1150,6 +1151,16 @@
     }
 
     document.addEventListener("click", (event) => {
+      const navParking = event.target.closest("[data-nav-parking]");
+      if (navParking) {
+        event.preventDefault();
+        setSelectValue("#transport-mode", "parking");
+        activateTab("traffic");
+        scrollToWorkspace();
+        runDemo("traffic");
+        return;
+      }
+
       const navUtility = event.target.closest("[data-nav-utility]");
       if (navUtility) {
         event.preventDefault();
