@@ -492,6 +492,14 @@
       line-height: 1.55;
       font-weight: 800;
     }
+    .result-card a {
+      display: inline-block;
+      margin-top: 8px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 900;
+      text-decoration: none;
+    }
     .quick-actions {
       display: flex;
       flex-wrap: wrap;
@@ -1352,14 +1360,21 @@
 
     function renderActivity(data) {
       const items = data.items || [];
-      const cards = items.slice(0, 4).map((item) => {
+      const meta = data.meta || {};
+      const cards = items.map((item) => {
         const date = item.date ? `${item.date}｜` : "";
-        return card(item.name, `${date}${item.desc || "週末活動資訊"}｜${readableSource(item.source)}`);
+        const category = item.category ? `${item.category}｜` : "";
+        const body = `${category}${date}${item.desc || "週末活動資訊"}｜${readableSource(item.source)}`;
+        const link = item.url ? `<a href="${html(item.url)}" target="_blank" rel="noreferrer">看活動頁</a>` : "";
+        return `<div class="result-card"><strong>${html(item.name)}</strong><span>${html(body)}</span>${link}</div>`;
       }).join("");
+      const sourceCount = meta.source_count ? `，來源 ${meta.source_count} 個` : "";
+      const sourceList = (meta.source_list || []).length ? `：${html((meta.source_list || []).join("、"))}` : "";
+      const countText = meta.total_count ? `已顯示 ${items.length} / ${meta.total_count} 筆${sourceCount}${sourceList}` : `已顯示 ${items.length} 筆`;
       return `
         <h4>${html(data.city)} ${html(data.time || "")}${html(data.type || "活動")}週末活動自動更新</h4>
         <div class="result-grid">${cards || card("目前沒有活動", "目前沒有找到符合條件的活動，可以換城市或類型再試。")}</div>
-        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。已整理 Accupass、文化部藝文活動與在地週末活動。</div>
+        <div class="flow-note">${sourceLabel(data.source_names || data.sources)}。${countText}</div>
         ${actions([{ key: "food", label: "附近吃什麼" }, { key: "traffic", label: "出門交通" }])}
       `;
     }

@@ -1240,7 +1240,7 @@ def _site_special_food(city: str, mode: str = "popular", limit: int = 6) -> list
     return items
 
 
-def _site_activities(city: str, category: str = "", limit: int = 6) -> list:
+def _site_activities(city: str, category: str = "", limit: int = 24) -> tuple[list, dict]:
     category_map = {
         "展覽": "市集展覽",
         "市集": "市集展覽",
@@ -1250,15 +1250,36 @@ def _site_activities(city: str, category: str = "", limit: int = 6) -> list:
     }
     wanted = category_map.get(category, category or "市集展覽")
     events = []
+    category_counts = {}
+    source_names = set()
     try:
-        from modules.food_utils import _get_accupass_cache
-        city_events = _get_accupass_cache().get(city, {})
+        from modules.activity_utils import _get_accupass_cache, _is_event_past, _parse_event_date
+        cache = _get_accupass_cache()
+        city_key = city.replace("臺", "台").replace("市", "").replace("縣", "")
+        city_events = cache.get(city, {}) or cache.get(city_key, {}) or cache.get(city_key.replace("台", "臺"), {})
         if isinstance(city_events, dict):
-            events = list(city_events.get(wanted, []))
-            if not events:
-                for group in city_events.values():
-                    if isinstance(group, list):
-                        events.extend(group)
+            ordered_categories = [wanted] + [key for key in city_events.keys() if key != wanted]
+            seen = set()
+            for cat in ordered_categories:
+                group = city_events.get(cat, [])
+                if not isinstance(group, list):
+                    continue
+                category_counts[cat] = len(group)
+                for ev in group:
+                    name = str(ev.get("name") or "").strip()
+                    if not name or _is_event_past(str(ev.get("date") or ev.get("desc") or "")):
+                        continue
+                    url = str(ev.get("url") or "").strip()
+                    dedup_key = (name, url)
+                    if dedup_key in seen:
+                        continue
+                    seen.add(dedup_key)
+                    item = dict(ev)
+                    item["_category"] = cat
+                    item["_date_obj"] = _parse_event_date(str(ev.get("date") or ev.get("desc") or ""))
+                    events.append(item)
+                    if ev.get("source"):
+                        source_names.add(str(ev.get("source")))
     except Exception:
         events = []
     if not events:
@@ -1269,6 +1290,8 @@ def _site_activities(city: str, category: str = "", limit: int = 6) -> list:
                 events = [x for x in _ACTIVITY_DB.get("市集展覽", []) if x.get("area") == city]
         except Exception:
             events = []
+    far_future = datetime.date(2099, 12, 31)
+    events.sort(key=lambda ev: (0 if ev.get("_category") == wanted else 1, ev.get("_date_obj") or far_future))
     items = []
     for ev in events[:limit]:
         name = str(ev.get("name") or "").strip()
@@ -1280,9 +1303,17 @@ def _site_activities(city: str, category: str = "", limit: int = 6) -> list:
             "date": ev.get("date", ""),
             "area": ev.get("area", city),
             "url": ev.get("url", ""),
+            "category": ev.get("_category", wanted),
             "source": ev.get("source") or ("crawler_cache" if ev.get("url") else "activity_fallback"),
         })
-    return items
+    meta = {
+        "total_count": len(events),
+        "shown_count": len(items),
+        "category_counts": category_counts,
+        "source_count": len(source_names),
+        "source_list": sorted(source_names)[:10],
+    }
+    return items, meta
 
 
 _SITE_TDX_CITY = {
@@ -2643,7 +2674,8 @@ def _site_today_surprise(city: str, limit: int = 6) -> dict:
         add_item(f"{yesterday.month}/{yesterday.day} 社群話題", "Threads 公開頁暫時沒有抓到穩定熱門文，先用今日好康或新歌當同事破冰話題。", "topic")
 
     if len(items) < limit:
-        for event in _site_activities(city, "", limit=2):
+        activity_items, _ = _site_activities(city, "", limit=2)
+        for event in activity_items:
             add_item(f"{city}活動｜{event.get('name', '在地活動')}", f"{event.get('date', '')}｜{event.get('desc', '')}", "activity", event.get("url", ""))
 
     return {
@@ -2680,7 +2712,8 @@ def _site_local_deals(city: str, context: str = "") -> dict:
         cards.append({"title": f"{national[0]} {national[1]}", "body": national[2], "kind": "national"})
     except Exception:
         pass
-    for event in _site_activities(city, "", limit=2):
+    activity_items, _ = _site_activities(city, "", limit=2)
+    for event in activity_items:
         cards.append({"title": event.get("name", "在地活動"), "body": f"{event.get('area', city)}｜{event.get('date', '')}｜{event.get('desc', '')[:54]}", "kind": "activity", "url": event.get("url", "")})
     for food in _site_restaurants(city, "想吃特色", "不限制", "2 人", limit=2):
         cards.append({"title": food.get("name", "在地美食"), "body": f"{food.get('area', city)}｜{food.get('desc', '')[:64]}", "kind": "food", "url": food.get("url", "")})
@@ -2708,13 +2741,15 @@ class handler(BaseHTTPRequestHandler):
             city = _site_param(qs, "city", "台北")
             payload = _site_weather_payload(city)
             surprise = _site_today_surprise(city, limit=6)
+            activity_items, activity_meta = _site_activities(city, "", limit=3)
             payload.setdefault("source_names", {})["surprise"] = surprise["source_names"]["surprise"]
             payload.update({
                 "ok": True,
                 "plan": _site_param(qs, "plan", "通勤上班"),
                 "time": _site_param(qs, "time", "早上 7-9 點"),
                 "focus": _site_param(qs, "focus", "全部整理"),
-                "activities": _site_activities(city, "", limit=3),
+                "activities": activity_items,
+                "activity_meta": activity_meta,
                 "surprise": surprise,
             })
             _site_json(self, payload)
@@ -2773,13 +2808,15 @@ class handler(BaseHTTPRequestHandler):
             qs = parse_qs(parsed.query or "")
             city = _site_param(qs, "city", "台北")
             category = _site_param(qs, "type", "展覽")
+            activity_items, activity_meta = _site_activities(city, category, limit=24)
             payload = {
                 "ok": True,
                 "city": city,
                 "time": _site_param(qs, "time", "今天"),
                 "type": category,
                 "pace": _site_param(qs, "pace", ""),
-                "items": _site_activities(city, category, limit=8),
+                "items": activity_items,
+                "meta": activity_meta,
                 "sources": {"activity": "accupass_crawler_cache_or_activity_fallback"},
                 "source_names": {"activity": "Accupass、文化部藝文活動資料、活動網站與部落格"},
             }
