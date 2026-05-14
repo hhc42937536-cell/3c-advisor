@@ -2260,7 +2260,7 @@ class handler(BaseHTTPRequestHandler):
         elif parsed.path == "/api/site_garbage":
             qs = parse_qs(parsed.query or "")
             city = _site_param(qs, "city", "台中")
-            query = _site_param(qs, "q", "")
+            query = _site_param(qs, "query", "") or _site_param(qs, "q", "")
             _site_json(self, _site_garbage_schedule(city, query, limit=24))
 
         elif parsed.path == "/api/site_health":
