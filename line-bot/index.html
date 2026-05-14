@@ -928,7 +928,7 @@
           <div class="roadmap-copy">
             <span class="badge"><i></i>生活工具</span>
             <h2>常用小工具，直接查。</h2>
-            <p>這些不是內部盤點，而是使用者會真的需要的日常功能：垃圾車時間地點、健康提醒、今日當地優惠。點一下就會查資料。</p>
+            <p>這裡先放真正會常查的日常功能：垃圾車時間地點與今日當地優惠。四大主功能已經在上方，這裡不再重複。</p>
           </div>
           <div>
             <h3 class="split-title">快速入口</h3>
@@ -1080,7 +1080,7 @@
           ? card("穿搭提醒", profile.outfit)
           : card("油價 / 匯率", `${oilText}；${rateText}`);
         const nextStep = plan === "在家工作"
-          ? "下一步可以先處理洗曬與健康提醒，晚點再看吃飯或活動。"
+          ? "下一步可以先看洗曬與今日小驚喜，晚點再決定吃飯或活動。"
           : plan === "週末出遊"
             ? "下一步可以接著決定吃什麼，再把活動與停車一起安排。"
             : "下一步可以接著決定今天吃什麼，再看週末活動。";
@@ -1148,7 +1148,7 @@
         return `
           <h4>${html(city)} 即時找車位</h4>
           <div class="result-grid">${cards}</div>
-          <div class="flow-note">找車位會獨立發展，不再和垃圾車、健康提醒、今日優惠混在同一個表單。</div>
+          <div class="flow-note">找車位會獨立發展，不再和垃圾車、今日優惠混在同一個表單。</div>
         `;
       },
       garbage: () => {
@@ -1297,7 +1297,7 @@
         ? card("天氣穿搭", data.outfit || "依天氣調整穿搭與雨具")
         : card("油價 / 匯率", `${oilText}；${rateText}`);
       const nextStep = plan === "在家工作"
-        ? "下一步可以先處理洗曬與健康提醒，晚點再看吃飯或活動。"
+        ? "下一步可以先看洗曬與今日小驚喜，晚點再決定吃飯或活動。"
         : plan === "週末出遊"
           ? "下一步可以接著決定吃什麼，再把活動與停車一起安排。"
           : "下一步可以接著決定吃什麼或看週末活動。";
@@ -1475,17 +1475,6 @@
         <div class="result-grid">${cards || card("先選縣市，必要時再輸入區域或路名", "不輸入地點會先列出這個縣市可取得的多個清運點；輸入路名後會縮小範圍。")}</div>
         <div class="flow-note">即時車輛：${html(liveText)}。${sourceLabel(data.source_names || { schedule: data.source_name || data.source, live: data.live?.source_name })}。</div>
         ${mapLinks.length ? linkActions(mapLinks) : ""}
-      `;
-    }
-
-    function renderHealth(data) {
-      const cards = (data.items || [])
-        .map((item) => card(item.title, item.body))
-        .join("");
-      return `
-        <h4>健康提醒</h4>
-        <div class="result-grid">${cards || card("今日健康提醒", "先補水、走 10 分鐘、晚上固定時間睡。")}</div>
-        <div class="flow-note">${sourceLabel(data.source_names)}。僅供日常提醒，不取代醫療建議。</div>
       `;
     }
 
