@@ -1679,6 +1679,40 @@ def _site_freeway_live() -> tuple[list, str]:
     now = time.time()
     if _FREEWAY_TRAFFIC_CACHE["items"] and now - _FREEWAY_TRAFFIC_CACHE["loaded_at"] < 60:
         return _FREEWAY_TRAFFIC_CACHE["items"], _FREEWAY_TRAFFIC_CACHE["updated_at"]
+    token = _get_tdx_token()
+    if token:
+        try:
+            data = _tdx_get_any(
+                "Road/Traffic/Live/Freeway?$format=JSON",
+                token,
+                timeout=8,
+                versions=("v2", "v3"),
+            )
+            rows = []
+            updated_at = ""
+            for row in data:
+                sid = _site_text(row.get("SectionID") or row.get("LinkID") or row.get("RoadSectionID"), "")
+                if not sid:
+                    continue
+                updated_at = updated_at or _site_text(row.get("DataCollectTime") or row.get("UpdateTime"), "")
+                rows.append({
+                    "section_id": sid,
+                    "section_name": _site_text(row.get("SectionName"), ""),
+                    "road_name": _site_text(row.get("RoadName"), ""),
+                    "road_direction": _site_text(row.get("RoadDirection"), ""),
+                    "section_start": _site_text(row.get("RoadSectionStart") or row.get("SectionStart"), ""),
+                    "section_end": _site_text(row.get("RoadSectionEnd") or row.get("SectionEnd"), ""),
+                    "travel_time": _site_first_number(row.get("TravelTime"), 0),
+                    "speed": _site_first_number(row.get("TravelSpeed"), 0),
+                    "level": _site_first_number(row.get("CongestionLevel"), 0),
+                    "level_id": _site_text(row.get("CongestionLevelID"), ""),
+                    "collect_time": _site_text(row.get("DataCollectTime"), ""),
+                })
+            if rows:
+                _FREEWAY_TRAFFIC_CACHE.update({"loaded_at": now, "items": rows, "updated_at": updated_at})
+                return rows, updated_at
+        except Exception as exc:
+            print(f"[road] tdx live failed: {exc}")
     try:
         req = urllib.request.Request(
             "https://tisvcloud.freeway.gov.tw/history/motc20/LiveTraffic.xml",
@@ -1721,6 +1755,7 @@ def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
     for row in rows:
         section = sections.get(row.get("section_id"), {})
         haystack = _site_road_query(" ".join([
+            row.get("section_name", ""), row.get("road_name", ""), row.get("section_start", ""), row.get("section_end", ""),
             section.get("name", ""), section.get("road", ""), section.get("start", ""), section.get("end", ""),
         ]))
         if q and q not in haystack:
@@ -1728,8 +1763,9 @@ def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
         speed = int(row.get("speed") or 0)
         level = int(row.get("level") or 0)
         travel_minutes = round((row.get("travel_time") or 0) / 60, 1)
-        direction = {"N": "北上", "S": "南下", "E": "東向", "W": "西向"}.get(section.get("direction"), section.get("direction", ""))
-        title = section.get("name") or f"{section.get('road', '高速公路')} {section.get('start', '')}到{section.get('end', '')}".strip()
+        direction_code = row.get("road_direction") or section.get("direction")
+        direction = {"N": "北上", "S": "南下", "E": "東向", "W": "西向"}.get(direction_code, direction_code or "")
+        title = row.get("section_name") or section.get("name") or f"{row.get('road_name') or section.get('road', '高速公路')} {row.get('section_start') or section.get('start', '')}到{row.get('section_end') or section.get('end', '')}".strip()
         body_bits = [direction, f"平均 {speed} km/h" if speed else "速率暫無", level_label.get(level, f"壅塞等級 {level}")]
         if travel_minutes:
             body_bits.append(f"約 {travel_minutes} 分鐘")
