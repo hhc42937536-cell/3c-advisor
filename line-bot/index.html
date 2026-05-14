@@ -928,7 +928,7 @@
                       <input id="commute-destination" value="左營" aria-label="交通目的地">
                     </label>
                     <label class="field" for="transport-route">路線 / 道路
-                      <input id="transport-route" value="高鐵" placeholder="例：高鐵、307、國道一號" aria-label="交通路線或道路">
+                      <input id="transport-route" value="高鐵" placeholder="例：高鐵、307、國道1號" aria-label="交通路線或道路">
                     </label>
                   </div>
                   <button class="btn primary" data-demo="traffic">查今天怎麼去</button>
@@ -938,7 +938,7 @@
               <div class="data-list">
                 <button class="data-item" type="button" data-preset="traffic" data-mode="rail"><strong>台鐵 / 高鐵</strong><span>時刻 / 轉乘</span></button>
                 <button class="data-item" type="button" data-preset="traffic" data-mode="bus" data-route="307" data-origin="台北車站"><strong>公車動態</strong><span>到站 / 附近站牌</span></button>
-                <button class="data-item" type="button" data-preset="traffic" data-mode="road"><strong>即時路況</strong><span>事故 / 壅塞</span></button>
+                <button class="data-item" type="button" data-preset="traffic" data-mode="road" data-route="國道1號"><strong>即時路況</strong><span>速度 / 壅塞</span></button>
                 <button class="data-item" type="button" data-preset="traffic" data-mode="bike"><strong>YouBike</strong><span>可借 / 可還</span></button>
               </div>
             </div>
@@ -1351,6 +1351,7 @@
       tdx_unavailable: "TDX 運輸資料流通服務平臺暫時無法取得",
       tdx_bus_live: "TDX 運輸資料流通服務平臺：公車預估到站資料",
       tdx_youbike_live: "TDX 運輸資料流通服務平臺：公共自行車站點與即時可借可還",
+      freeway_live_traffic: "高速公路局路段即時路況動態資訊",
       nearby_parking_live: "TDX、地方政府停車資料與路邊停車即時資料",
       parking_lot_live: "TDX 與地方政府停車場資料",
       ntpc_street_live: "新北市路邊停車格即時資料",

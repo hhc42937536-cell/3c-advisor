@@ -1610,6 +1610,154 @@ _BUS_STATUS_TEXT = {
 }
 
 
+_FREEWAY_SECTIONS_CACHE = {"loaded_at": 0.0, "items": {}}
+_FREEWAY_TRAFFIC_CACHE = {"loaded_at": 0.0, "items": [], "updated_at": ""}
+
+
+def _site_xml_text(node, name: str, default: str = "") -> str:
+    if node is None:
+        return default
+    found = node.find(f".//{{*}}{name}")
+    return _site_text(found.text if found is not None else default, default)
+
+
+def _site_road_query(value: str) -> str:
+    text = _site_fix_text(value or "")
+    replacements = {
+        "國道一號": "國道1號", "國道二號": "國道2號", "國道三號": "國道3號",
+        "國道四號": "國道4號", "國道五號": "國道5號", "國道六號": "國道6號",
+        "國道八號": "國道8號", "國道十號": "國道10號", "國1": "國道1號",
+        "國2": "國道2號", "國3": "國道3號", "國4": "國道4號", "國5": "國道5號",
+        "國6": "國道6號", "國8": "國道8號", "國10": "國道10號",
+    }
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    return text
+
+
+def _site_freeway_sections() -> dict:
+    now = time.time()
+    if _FREEWAY_SECTIONS_CACHE["items"] and now - _FREEWAY_SECTIONS_CACHE["loaded_at"] < 86400:
+        return _FREEWAY_SECTIONS_CACHE["items"]
+    try:
+        req = urllib.request.Request(
+            "https://tisvcloud.freeway.gov.tw/history/motc20/Section.xml",
+            headers={"User-Agent": "LifeUturn/1.0"},
+        )
+        with urllib.request.urlopen(req, timeout=10, context=_ssl._create_unverified_context()) as response:
+            raw = response.read()
+        import xml.etree.ElementTree as ET
+        root = ET.fromstring(raw.decode("utf-8", errors="replace"))
+        sections = {}
+        for node in root.findall(".//{*}Section"):
+            sid = _site_xml_text(node, "SectionID")
+            if not sid:
+                continue
+            road = _site_xml_text(node, "RoadName")
+            start = _site_xml_text(node, "Start")
+            end = _site_xml_text(node, "End")
+            name = _site_xml_text(node, "SectionName") or f"{road} {start}到{end}".strip()
+            sections[sid] = {
+                "section_id": sid,
+                "name": name,
+                "road": road,
+                "direction": _site_xml_text(node, "RoadDirection"),
+                "start": start,
+                "end": end,
+                "length": _site_xml_text(node, "SectionLength"),
+                "speed_limit": _site_xml_text(node, "SpeedLimit"),
+            }
+        if sections:
+            _FREEWAY_SECTIONS_CACHE.update({"loaded_at": now, "items": sections})
+        return sections
+    except Exception as exc:
+        print(f"[road] section xml failed: {exc}")
+        return _FREEWAY_SECTIONS_CACHE["items"] or {}
+
+
+def _site_freeway_live() -> tuple[list, str]:
+    now = time.time()
+    if _FREEWAY_TRAFFIC_CACHE["items"] and now - _FREEWAY_TRAFFIC_CACHE["loaded_at"] < 60:
+        return _FREEWAY_TRAFFIC_CACHE["items"], _FREEWAY_TRAFFIC_CACHE["updated_at"]
+    try:
+        req = urllib.request.Request(
+            "https://tisvcloud.freeway.gov.tw/history/motc20/LiveTraffic.xml",
+            headers={"User-Agent": "LifeUturn/1.0"},
+        )
+        with urllib.request.urlopen(req, timeout=10, context=_ssl._create_unverified_context()) as response:
+            raw = response.read()
+        import xml.etree.ElementTree as ET
+        root = ET.fromstring(raw.decode("utf-8", errors="replace"))
+        updated_at = _site_xml_text(root, "UpdateTime")
+        rows = []
+        for node in root.findall(".//{*}LiveTraffic"):
+            sid = _site_xml_text(node, "SectionID")
+            if not sid:
+                continue
+            rows.append({
+                "section_id": sid,
+                "travel_time": _site_first_number(_site_xml_text(node, "TravelTime"), 0),
+                "speed": _site_first_number(_site_xml_text(node, "TravelSpeed"), 0),
+                "level": _site_first_number(_site_xml_text(node, "CongestionLevel"), 0),
+                "level_id": _site_xml_text(node, "CongestionLevelID"),
+                "collect_time": _site_xml_text(node, "DataCollectTime"),
+            })
+        if rows:
+            _FREEWAY_TRAFFIC_CACHE.update({"loaded_at": now, "items": rows, "updated_at": updated_at})
+        return rows, updated_at
+    except Exception as exc:
+        print(f"[road] live xml failed: {exc}")
+        return _FREEWAY_TRAFFIC_CACHE["items"] or [], _FREEWAY_TRAFFIC_CACHE["updated_at"] or ""
+
+
+def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
+    q = _site_road_query(query or "")
+    if q in ("", "即時路況", "路況"):
+        q = "國道1號"
+    sections = _site_freeway_sections()
+    rows, updated_at = _site_freeway_live()
+    level_label = {0: "無資料", 1: "順暢", 2: "車多", 3: "壅塞", 4: "嚴重壅塞"}
+    matches = []
+    for row in rows:
+        section = sections.get(row.get("section_id"), {})
+        haystack = _site_road_query(" ".join([
+            section.get("name", ""), section.get("road", ""), section.get("start", ""), section.get("end", ""),
+        ]))
+        if q and q not in haystack:
+            continue
+        speed = int(row.get("speed") or 0)
+        level = int(row.get("level") or 0)
+        travel_minutes = round((row.get("travel_time") or 0) / 60, 1)
+        direction = {"N": "北上", "S": "南下", "E": "東向", "W": "西向"}.get(section.get("direction"), section.get("direction", ""))
+        title = section.get("name") or f"{section.get('road', '高速公路')} {section.get('start', '')}到{section.get('end', '')}".strip()
+        body_bits = [direction, f"平均 {speed} km/h" if speed else "速率暫無", level_label.get(level, f"壅塞等級 {level}")]
+        if travel_minutes:
+            body_bits.append(f"約 {travel_minutes} 分鐘")
+        matches.append({
+            "title": title,
+            "body": "｜".join([bit for bit in body_bits if bit]),
+            "speed": speed,
+            "level": level,
+            "source": "freeway_live_traffic",
+        })
+    matches.sort(key=lambda item: (-(item.get("level") or 0), item.get("speed") or 999, item.get("title", "")))
+    if not matches and q != "國道1號":
+        fallback = _site_road_live(city, "國道1號", limit=limit)
+        fallback["notice"] = f"沒有找到「{q}」的高速公路即時路況，先顯示國道1號較需要注意的路段。"
+        return fallback
+    return {
+        "ok": bool(matches),
+        "city": city,
+        "mode": "road",
+        "query": q,
+        "title": f"{q} 即時路況",
+        "updated_at": updated_at,
+        "items": matches[:limit],
+        "source": "freeway_live_traffic",
+        "source_names": {"transport": "高速公路局路段即時路況動態資訊"},
+    }
+
+
 def _site_route_text(value) -> str:
     if isinstance(value, dict):
         return _site_text(value.get("Zh_tw") or value.get("ZhTw") or value.get("En"), "")
@@ -1715,6 +1863,9 @@ def _site_transport(city: str, mode: str = "parking", origin: str = "", destinat
     if mode == "bus":
         stop_keyword = origin or destination
         return _site_bus_eta(city, route or destination or origin, stop_keyword, limit=10)
+
+    if mode == "road":
+        return _site_road_live(city, route or destination or origin, limit=10)
 
     source_names = {
         "rail": "TDX 運輸資料流通服務平臺：台鐵與高鐵時刻資料",
