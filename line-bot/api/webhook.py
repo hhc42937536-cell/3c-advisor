@@ -2083,25 +2083,25 @@ def _site_bus_eta(city: str, route: str = "", stop_keyword: str = "", limit: int
 def _site_transport(city: str, mode: str = "parking", origin: str = "", destination: str = "", route: str = "", lat: float | None = None, lon: float | None = None) -> dict:
     if mode == "parking":
         if lat is not None and lon is not None:
-            data = _site_nearby_parking(lat, lon, city, limit=8)
+            data = _site_nearby_parking(lat, lon, city, limit=12)
         else:
-            data = _site_parking(city, limit=8)
+            data = _site_parking(city, limit=12)
         data["mode"] = "parking"
         data.setdefault("source_names", {"parking": data.get("source_name") or "TDX 與地方政府停車資料"})
         return data
 
     if mode == "rail":
-        return _site_rail_schedule(origin, destination, route, limit=6)
+        return _site_rail_schedule(origin, destination, route, limit=12)
 
     if mode == "bike":
-        return _site_youbike(city, destination or origin or route, limit=8)
+        return _site_youbike(city, destination or origin or route, limit=12)
 
     if mode == "bus":
         stop_keyword = origin or destination
-        return _site_bus_eta(city, route or destination or origin, stop_keyword, limit=10)
+        return _site_bus_eta(city, route or destination or origin, stop_keyword, limit=12)
 
     if mode == "road":
-        return _site_road_live(city, route or destination or origin, limit=10)
+        return _site_road_live(city, route or destination or origin, limit=12)
 
     source_names = {
         "rail": "TDX 運輸資料流通服務平臺：台鐵與高鐵時刻資料",
@@ -3205,7 +3205,7 @@ def _site_surprise_cache() -> dict:
     return _SURPRISE_CACHE
 
 
-def _site_today_surprise(city: str, limit: int = 6) -> dict:
+def _site_today_surprise(city: str, limit: int = 10) -> dict:
     cache = _site_surprise_cache()
     today = (datetime.datetime.utcnow() + datetime.timedelta(hours=8)).date()
     yesterday = today - datetime.timedelta(days=1)
@@ -3219,7 +3219,7 @@ def _site_today_surprise(city: str, limit: int = 6) -> dict:
         seen.add(key)
         items.append({"title": title[:48], "body": body[:110], "kind": kind, "url": url})
 
-    for deal in cache.get("deals", [])[:2]:
+    for deal in cache.get("deals", [])[:4]:
         tag = deal.get("tag") or "網友好康"
         add_item(f"今日好康｜{tag}", deal.get("title", ""), "deal", deal.get("url", ""))
 
@@ -3230,7 +3230,7 @@ def _site_today_surprise(city: str, limit: int = 6) -> dict:
     if today <= datetime.date(2026, 5, 24):
         add_item("咖啡飲料｜路易莎", "5/6-5/24 指定飲品買一送一，早上買咖啡前可先看門市活動。", "brand", "https://www.callingtaiwan.com.tw/%E6%89%8B%E6%90%96%E8%8C%B6%E9%80%A3%E9%8E%96%E5%92%96%E5%95%A1%E8%B6%85%E5%95%86%E5%92%96%E5%95%A1%E5%84%AA%E6%83%A0/")
 
-    for topic in cache.get("topics", [])[:2]:
+    for topic in cache.get("topics", [])[:4]:
         tag = topic.get("tag") or "Threads"
         add_item(f"{yesterday.month}/{yesterday.day} 社群話題｜{tag}", topic.get("title", ""), "topic", topic.get("url", ""))
 
@@ -3243,7 +3243,7 @@ def _site_today_surprise(city: str, limit: int = 6) -> dict:
         add_item(f"{yesterday.month}/{yesterday.day} 社群話題", "Threads 公開頁暫時沒有抓到穩定熱門文，先用今日好康或新歌當同事破冰話題。", "topic")
 
     if len(items) < limit:
-        activity_items, _ = _site_activities(city, "", limit=2)
+        activity_items, _ = _site_activities(city, "", limit=4)
         for event in activity_items:
             add_item(f"{city}活動｜{event.get('name', '在地活動')}", f"{event.get('date', '')}｜{event.get('desc', '')}", "activity", event.get("url", ""))
 
@@ -3262,15 +3262,15 @@ def _site_today_surprise(city: str, limit: int = 6) -> dict:
 def _site_local_deals(city: str, context: str = "") -> dict:
     city = city or "台北"
     cards = []
-    surprise = _site_today_surprise(city, limit=6)
+    surprise = _site_today_surprise(city, limit=12)
     for item in surprise.get("items", []):
         cards.append(item)
-    if len(cards) >= 6:
+    if len(cards) >= 12:
         return {
             "ok": True,
             "city": city,
             "context": context,
-            "items": cards[:6],
+            "items": cards[:12],
             "source_names": surprise.get("source_names", {"surprise": "生活優轉每日小驚喜整理"}),
         }
     try:
@@ -3281,10 +3281,10 @@ def _site_local_deals(city: str, context: str = "") -> dict:
         cards.append({"title": f"{national[0]} {national[1]}", "body": national[2], "kind": "national"})
     except Exception:
         pass
-    activity_items, _ = _site_activities(city, "", limit=2)
+    activity_items, _ = _site_activities(city, "", limit=4)
     for event in activity_items:
         cards.append({"title": event.get("name", "在地活動"), "body": f"{event.get('area', city)}｜{event.get('date', '')}｜{event.get('desc', '')[:54]}", "kind": "activity", "url": event.get("url", "")})
-    for food in _site_restaurants(city, "想吃特色", "不限制", "2 人", limit=2):
+    for food in _site_restaurants(city, "想吃特色", "不限制", "2 人", limit=4):
         cards.append({"title": food.get("name", "在地美食"), "body": f"{food.get('area', city)}｜{food.get('desc', '')[:64]}", "kind": "food", "url": food.get("url", "")})
     if not cards:
         cards = [
@@ -3294,7 +3294,7 @@ def _site_local_deals(city: str, context: str = "") -> dict:
         "ok": True,
         "city": city,
         "context": context,
-        "items": cards[:6],
+        "items": cards[:12],
         "source_names": {"surprise": "生活優轉每日小驚喜、活動、美食與好康整理"},
     }
 
@@ -3455,12 +3455,12 @@ class handler(BaseHTTPRequestHandler):
             if lat is not None and lon is not None:
                 city = _city_from_coords(lat, lon) or city
             if mode in ("popular", "latest", "souvenir"):
-                items = _site_special_food(city, mode, limit=8)
+                items = _site_special_food(city, mode, limit=16)
                 source_names = {
                     "food": "生活優轉城市特色資料、Google 地圖資訊與美食爬蟲整理"
                 }
             else:
-                items = _site_restaurants(city, mood, budget, people, limit=12, lat=lat, lon=lon, meal=meal)
+                items = _site_restaurants(city, mood, budget, people, limit=18, lat=lat, lon=lon, meal=meal)
                 if lat is not None and lon is not None:
                     source_names = {
                         "food": "Google 地圖附近餐廳、生活優轉整理的美食名單與米其林必比登"
@@ -3488,7 +3488,7 @@ class handler(BaseHTTPRequestHandler):
             qs = parse_qs(parsed.query or "")
             city = _site_param(qs, "city", "台北")
             category = _site_param(qs, "type", "展覽")
-            activity_items, activity_meta = _site_activities(city, category, limit=24)
+            activity_items, activity_meta = _site_activities(city, category, limit=36)
             payload = {
                 "ok": True,
                 "city": city,
@@ -3513,9 +3513,9 @@ class handler(BaseHTTPRequestHandler):
             except ValueError:
                 lat_f = lon_f = None
             if lat_f is not None and lon_f is not None:
-                _site_json(self, _site_nearby_parking(lat_f, lon_f, city, limit=8))
+                _site_json(self, _site_nearby_parking(lat_f, lon_f, city, limit=12))
             else:
-                _site_json(self, _site_parking(city, limit=8))
+                _site_json(self, _site_parking(city, limit=12))
 
         elif parsed.path == "/api/site_transport":
             qs = parse_qs(parsed.query or "")
@@ -3571,7 +3571,7 @@ class handler(BaseHTTPRequestHandler):
             city = _site_param(qs, "city", "台北")
             place = _site_param(qs, "place", "")
             kind = _site_param(qs, "kind", "pharmacy")
-            _site_json(self, _site_facilities(city, place, kind, limit=8))
+            _site_json(self, _site_facilities(city, place, kind, limit=12))
 
         elif parsed.path in ("/api/warm_cache", "/api/webhook"):
             import threading as _th

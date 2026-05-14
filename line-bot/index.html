@@ -1525,12 +1525,12 @@
 
     function renderFood(data) {
       const items = data.items || [];
-      const cards = items.slice(0, 10).map((item) => {
+      const cards = items.slice(0, 16).map((item) => {
         const place = item.area || item.address || data.city;
         const dist = item.distance_m ? `｜距離 ${item.distance_m}m` : "";
         return card(item.name, `${place}${dist}｜${item.desc || item.type || "美食資訊"}｜${readableSource(item.source)}`);
       }).join("");
-      const mapLinks = items.slice(0, 6)
+      const mapLinks = items.slice(0, 10)
         .filter((item) => item.url)
         .map((item, index) => ({ href: item.url, label: `開地圖 ${index + 1}` }));
       const modeLabel = {
@@ -1606,7 +1606,7 @@
 
     function renderParking(data) {
       const items = data.items || [];
-      const cards = items.slice(0, 4).map((item) => {
+      const cards = items.slice(0, 10).map((item) => {
         const kind = item.type === "street" ? "路邊停車" : "停車場";
         const spaces = item.available !== "" ? `剩餘 ${item.available} / ${item.total || "—"}` : `總車位 ${item.total || "—"}`;
         const dist = item.distance_m ? `｜距離 ${item.distance_m}m` : "";
@@ -1616,7 +1616,7 @@
       const summary = data.street_count || data.lot_count
         ? `附近找到 ${data.street_count || 0} 條路邊路段、${data.lot_count || 0} 個停車場。`
         : "可查詢停車場與剩餘車位。";
-      const mapLinks = items.slice(0, 3)
+      const mapLinks = items.slice(0, 6)
         .filter((item) => item.maps_url)
         .map((item, index) => ({ href: item.maps_url, label: `導航 ${index + 1}` }));
       return `
