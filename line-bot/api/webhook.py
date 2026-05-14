@@ -1526,6 +1526,66 @@ def _site_maps_url(keyword: str) -> str:
     return f"https://www.google.com/maps/search/{urllib.parse.quote(str(keyword or '').strip())}/"
 
 
+def _site_geocode_address(address: str) -> tuple[float | None, float | None]:
+    query = " ".join(str(address or "").split())
+    if not query or not GOOGLE_PLACES_API_KEY:
+        return None, None
+    cache_key = f"site:geocode:{query}"
+    try:
+        cached = _redis_get(cache_key)
+        if cached:
+            data = json.loads(cached) if isinstance(cached, str) else cached
+            lat = _site_float(data.get("lat"))
+            lng = _site_float(data.get("lng"))
+            if lat is not None and lng is not None:
+                return lat, lng
+    except Exception:
+        pass
+    try:
+        params = urllib.parse.urlencode({
+            "address": f"{query} 台灣",
+            "language": "zh-TW",
+            "region": "tw",
+            "key": GOOGLE_PLACES_API_KEY,
+        })
+        data = _site_get_json(f"https://maps.googleapis.com/maps/api/geocode/json?{params}", timeout=5)
+        results = data.get("results") or []
+        if not results:
+            return None, None
+        location = results[0].get("geometry", {}).get("location", {})
+        lat = _site_float(location.get("lat"))
+        lng = _site_float(location.get("lng"))
+        if lat is None or lng is None:
+            return None, None
+        try:
+            _redis_set(cache_key, json.dumps({"lat": lat, "lng": lng}, ensure_ascii=False), ttl=86400 * 30)
+        except Exception:
+            pass
+        return lat, lng
+    except Exception as exc:
+        print(f"[geocode] garbage address failed: {query[:80]} {exc}")
+        return None, None
+
+
+def _site_enrich_garbage_coords(items: list, city: str, limit: int = 24) -> None:
+    city_full = _site_city_full_name(city).replace("臺", "台")
+    for item in items[:limit]:
+        if item.get("lat") and item.get("lng"):
+            continue
+        address = "".join([
+            city_full,
+            str(item.get("district") or ""),
+            str(item.get("village") or ""),
+            str(item.get("location") or item.get("name") or ""),
+        ])
+        lat, lng = _site_geocode_address(address)
+        if lat is None or lng is None:
+            continue
+        item["lat"] = lat
+        item["lng"] = lng
+        item["geocode_source"] = "google_geocoding"
+
+
 def _site_garbage_query_parts(city: str, query: str) -> tuple[str, str]:
     text = f"{city} {query}".strip()
     district = ""
@@ -1664,6 +1724,7 @@ def _site_hwms_schedule(city: str, district: str, keyword: str, query: str, limi
         0 if item.get("today") and not item.get("passed") else 1 if item.get("today") else 2,
         item.get("minutes") if item.get("minutes") is not None else 9999,
     ))
+    _site_enrich_garbage_coords(items, city, limit=limit)
     return {
         "ok": bool(items),
         "city": country.replace("臺", "台").replace("市", "").replace("縣", "") if country else city,
@@ -1829,6 +1890,7 @@ def _site_garbage_schedule(city: str, query: str = "", limit: int = 8) -> dict:
                         break
         if diversified:
             items = diversified
+    _site_enrich_garbage_coords(items, canonical_city, limit=limit)
     return {
         "ok": True,
         "city": canonical_city,
