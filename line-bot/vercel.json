@@ -2,7 +2,7 @@
   "version": 2,
   "regions": ["hkg1"],
   "github": {
-    "enabled": false
+    "enabled": true
   },
   "builds": [
     {

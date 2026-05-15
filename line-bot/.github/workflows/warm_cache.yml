@@ -1,0 +1,17 @@
+name: Warm live API cache
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  warm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Warm production cache
+        run: |
+          curl -sf "https://line-bot-kappa.vercel.app/api/warm_cache" \
+            --max-time 30 \
+            -o /tmp/warm_result.json
+          cat /tmp/warm_result.json
