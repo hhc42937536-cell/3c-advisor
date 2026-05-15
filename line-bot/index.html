@@ -831,10 +831,10 @@
             <h2>出門前先看這張。</h2>
             <p>把天氣、穿搭、油價、匯率和今日小驚喜收在同一張卡片，不用開很多頁。</p>
             <div class="morning-list">
-              <button class="morning-item" type="button" data-preset="morning" data-focus="穿搭與雨具"><strong>天氣穿搭</strong><span>薄外套、可帶傘</span></button>
-              <button class="morning-item" type="button" data-preset="morning" data-focus="油價與匯率"><strong>油價提醒</strong><span>通勤前先看</span></button>
-              <button class="morning-item" type="button" data-preset="morning" data-focus="油價與匯率"><strong>匯率摘要</strong><span>旅遊 / 換匯參考</span></button>
-              <button class="morning-item" type="button" data-preset="morning" data-focus="今日小驚喜"><strong>今日小驚喜</strong><span>優惠、話題、活動</span></button>
+              <button class="morning-item" type="button" data-preset="morning"><strong>天氣穿搭</strong><span id="hero-weather">讀取今日天氣...</span></button>
+              <button class="morning-item" type="button" data-preset="morning"><strong>油價提醒</strong><span id="hero-oil">讀取油價...</span></button>
+              <button class="morning-item" type="button" data-preset="morning"><strong>匯率摘要</strong><span id="hero-rate">讀取匯率...</span></button>
+              <button class="morning-item" type="button" data-preset="morning"><strong>今日小驚喜</strong><span id="hero-surprise">讀取優惠與話題...</span></button>
             </div>
           </div>
           <div class="note">想快速做決定，就從左邊六個入口開始。</div>
@@ -1554,6 +1554,27 @@
       `;
     }
 
+    function updateHeroMorning(data) {
+      const weather = data.weather || {};
+      const oil = data.oil || {};
+      const rates = data.rates || {};
+      const surprise = (data.surprise?.items || [])[0];
+      const setText = (selector, value) => {
+        const target = document.querySelector(selector);
+        if (target) target.textContent = value;
+      };
+      const weatherText = weather.ok
+        ? `${data.city || "今日"} ${weather.wx} ${weather.min_t}-${weather.max_t}°，降雨 ${weather.pop}%`
+        : "天氣暫時取不到";
+      const oilText = oil["95"] ? `95 ${oil["95"]}，92 ${oil["92"] || "—"}` : "油價暫時取不到";
+      const rateText = rates.USD ? `USD ${rates.USD.spot_sell}，JPY ${rates.JPY?.spot_sell || "—"}` : "匯率暫時取不到";
+      const surpriseText = surprise ? String(surprise.title || "").replace(/^.+?｜/, "") : "目前沒有可靠小驚喜";
+      setText("#hero-weather", weatherText);
+      setText("#hero-oil", oilText);
+      setText("#hero-rate", rateText);
+      setText("#hero-surprise", surpriseText);
+    }
+
     function renderFood(data) {
       const items = data.items || [];
       const cards = items.slice(0, 16).map((item) => {
@@ -1757,6 +1778,7 @@
         const plan = document.querySelector("#morning-plan").value;
         const time = document.querySelector("#morning-time").value;
         const data = await getJson(`/api/site_morning?city=${encodeURIComponent(city)}&plan=${encodeURIComponent(plan)}&time=${encodeURIComponent(time)}&focus=${encodeURIComponent("全部整理")}`);
+        updateHeroMorning(data);
         return renderMorning(data);
       }
       if (key === "food") {
