@@ -1020,7 +1020,7 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
         for place in live_places:
             p_lat = _site_float(place.get("lat"))
             p_lng = _site_float(place.get("lng"))
-            dist = _haversine(lat, lon, p_lat, p_lng) if p_lat is not None and p_lng is not None else None
+            dist = _haversine(lat, lon, p_lat, p_lng) if lat is not None and lon is not None and p_lat is not None and p_lng is not None else None
             rating = place.get("rating") or 0
             reviews = place.get("user_ratings_total") or 0
             desc_bits = []
