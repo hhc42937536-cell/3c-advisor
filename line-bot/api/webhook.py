@@ -891,6 +891,14 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
             live_places = _site_nearby_places(lat, lon, radius=2600, keyword=_site_food_keyword(mood, meal))
         except Exception:
             live_places = []
+    elif city:
+        try:
+            from utils.google_places import text_search as _site_text_search
+            period = _site_meal_period(meal)
+            query = f"{city} {period} {_site_food_keyword(mood, meal).replace('附近', '').strip()}"
+            live_places = _site_text_search(query, max_results=8)
+        except Exception:
+            live_places = []
     try:
         from modules.food_runtime import _RESTAURANT_CACHE
         pool = list(_RESTAURANT_CACHE.get(city, []))
@@ -1024,15 +1032,15 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
                 desc_bits.append("目前營業中")
             live_items.append({
                 "name": place.get("name", ""),
-                "type": "附近餐廳",
+                "type": "附近餐廳" if lat is not None and lon is not None else "城市即時搜尋",
                 "desc": "，".join(desc_bits) or "Google 地圖附近餐廳",
-                "area": "目前位置附近",
+                "area": "目前位置附近" if lat is not None and lon is not None else city,
                 "address": place.get("addr", ""),
                 "lat": p_lat,
                 "lng": p_lng,
                 "_distance_m": dist,
                 "url": f"https://maps.google.com/?q=place_id:{place.get('place_id')}" if place.get("place_id") else _site_maps_url(place.get("name", ""), city),
-                "source": "google_places_live",
+                "source": "google_places_live" if lat is not None and lon is not None else "google_places_text_search",
             })
         today_key = (datetime.datetime.utcnow() + datetime.timedelta(hours=8)).strftime("%Y%m%d")
         def live_sort_key(row):
@@ -1041,7 +1049,8 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
             seed = f"{today_key}:{_site_meal_period(meal)}:{row.get('name','')}"
             variety = int(hashlib.md5(seed.encode("utf-8")).hexdigest()[:6], 16)
             return (distance_bucket, variety)
-        live_items.sort(key=live_sort_key)
+        if lat is not None and lon is not None:
+            live_items.sort(key=live_sort_key)
         pool = live_items[:12] + pool
     items = []
     seen_names = set()
@@ -1050,7 +1059,7 @@ def _site_restaurants(city: str, mood: str = "", budget: str = "", people: str =
         if not name or name in seen_names:
             continue
         text_for_filter = f"{name} {r.get('type','')} {r.get('desc','')}"
-        if r.get("source") != "google_places_live" and any(k in text_for_filter for k in ["伴手禮", "蜜餞", "茶行", "禮盒", "名產"]):
+        if r.get("source") not in ("google_places_live", "google_places_text_search") and any(k in text_for_filter for k in ["伴手禮", "蜜餞", "茶行", "禮盒", "名產"]):
             continue
         seen_names.add(name)
         area = r.get("town") or r.get("area") or city
@@ -3536,6 +3545,10 @@ class handler(BaseHTTPRequestHandler):
                 if lat is not None and lon is not None:
                     source_names = {
                         "food": "Google 地圖附近餐廳、生活優轉整理的美食名單與米其林必比登"
+                    }
+                else:
+                    source_names = {
+                        "food": "Google 地圖城市搜尋、生活優轉整理的美食名單與米其林必比登"
                     }
             payload = {
                 "ok": True,

@@ -864,7 +864,7 @@
                     <button type="button" id="use-food-location">使用目前位置</button>
                     <button type="button" id="use-food-destination">查目的地美食</button>
                   </div>
-                  <div class="result" id="food-result">選條件後會整理更多附近餐廳，可依早餐、午餐、晚餐或消夜切換。</div>
+                  <div class="result" id="food-result">切到這一頁會直接查餐廳清單；可依早餐、午餐、晚餐或消夜切換。</div>
                 </div>
               </div>
               <div class="data-list">
@@ -977,9 +977,9 @@
               </div>
               <div class="data-list">
                 <button class="data-item" type="button" data-preset="traffic" data-mode="rail"><strong>台鐵 / 高鐵</strong><span>時刻 / 轉乘</span></button>
-                <button class="data-item" type="button" data-preset="traffic" data-mode="bus" data-route="307" data-origin=""><strong>公車動態</strong><span>路線即時 / 到站</span></button>
+                <button class="data-item" type="button" data-preset="traffic" data-mode="bus" data-route="307" data-origin="" data-destination=""><strong>公車動態</strong><span>路線即時 / 到站</span></button>
                 <button class="data-item" type="button" data-preset="traffic" data-mode="road" data-route="國道1號"><strong>即時路況</strong><span>速度 / 壅塞</span></button>
-                <button class="data-item" type="button" data-preset="traffic" data-mode="bike"><strong>YouBike</strong><span>可借 / 可還</span></button>
+                <button class="data-item" type="button" data-preset="traffic" data-mode="bike" data-destination="台北車站"><strong>YouBike</strong><span>可借 / 可還</span></button>
               </div>
             </div>
           </div>
@@ -1069,7 +1069,10 @@
       tabs.forEach((item) => item.setAttribute("aria-selected", String(item.dataset.tab === key)));
       panels.forEach((panel) => panel.classList.toggle("active", panel.id === `panel-${key}`));
     }
-    tabs.forEach((tab) => tab.addEventListener("click", () => activateTab(tab.dataset.tab)));
+    tabs.forEach((tab) => tab.addEventListener("click", () => {
+      activateTab(tab.dataset.tab);
+      runDemo(tab.dataset.tab);
+    }));
     function scrollToWorkspace() {
       document.querySelector("#workspace").scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -1351,8 +1354,8 @@
       if (key === "traffic") {
         setSelectValue("#transport-mode", presetButton.dataset.mode);
         if (presetButton.dataset.route) document.querySelector("#transport-route").value = presetButton.dataset.route;
-        if (presetButton.dataset.origin) document.querySelector("#transport-origin").value = presetButton.dataset.origin;
-        if (presetButton.dataset.destination) document.querySelector("#commute-destination").value = presetButton.dataset.destination;
+        if ("origin" in presetButton.dataset) document.querySelector("#transport-origin").value = presetButton.dataset.origin;
+        if ("destination" in presetButton.dataset) document.querySelector("#commute-destination").value = presetButton.dataset.destination;
       }
       if (key === "parking") {
         setSelectValue("#parking-city", presetButton.dataset.city);
