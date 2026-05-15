@@ -2007,7 +2007,7 @@ def _site_road_live(city: str = "", query: str = "", limit: int = 10) -> dict:
         fallback["notice"] = f"沒有找到「{q}」的國道或省道即時路況，先顯示國道1號較需要注意的路段。"
         return fallback
     if not matches:
-        matches = [{"title": "目前路況資料源忙碌", "body": "即時路況暫時沒有回傳可顯示路段；請稍後再查，或改查台鐵、高鐵、公車與 YouBike。", "source": "road_live_traffic"}]
+        matches = [{"title": "目前沒有可顯示路況", "body": "這個路線暫時沒有回傳可顯示路段；可稍後再查，或改查台鐵、高鐵、公車與 YouBike。", "source": "road_live_traffic"}]
     return {
         "ok": bool(matches),
         "city": city,
@@ -2130,50 +2130,14 @@ def _site_transport(city: str, mode: str = "parking", origin: str = "", destinat
     if mode == "road":
         return _site_road_live(city, route or destination or origin, limit=12)
 
-    source_names = {
-        "rail": "TDX 運輸資料流通服務平臺：台鐵與高鐵時刻資料",
-        "bus": "TDX 運輸資料流通服務平臺：公車路線、站牌與預估到站資料",
-        "road": "TDX 運輸資料流通服務平臺：即時路況、事件與道路旅行時間資料",
-        "bike": "TDX 運輸資料流通服務平臺：公共自行車站點與即時可借可還",
-    }
-    labels = {
-        "rail": "台鐵 / 高鐵時刻",
-        "bus": "公車動態",
-        "road": "即時路況",
-        "bike": "YouBike 即時站點",
-    }
-    hints = {
-        "rail": [
-            ("起訖站", f"{origin or '請輸入出發站'} → {destination or '請輸入目的站'}"),
-            ("查詢內容", "下一版會接台鐵/高鐵班次、行車時間與轉乘提醒。"),
-            ("資料需求", "需要標準站名或站碼，例如：台北、板橋、台中、左營。"),
-        ],
-        "bus": [
-            ("路線或站牌", route or origin or "請輸入公車路線、站牌或地標"),
-            ("查詢內容", "下一版會接公車預估到站、行駛方向與附近站牌。"),
-            ("資料需求", "需要城市與路線名稱；定位後可做附近站牌。"),
-        ],
-        "road": [
-            ("查詢範圍", destination or origin or city),
-            ("查詢內容", "下一版會接壅塞、事故、施工與替代道路提醒。"),
-            ("使用情境", "可放進早安卡、活動出發前與停車查詢前。"),
-        ],
-        "bike": [
-            ("站點或地標", destination or origin or route or city),
-            ("查詢內容", "YouBike 站點、可借車數與可還空位。"),
-            ("使用情境", "捷運、公車最後一哩路或短程移動。"),
-        ],
-    }
-    selected = mode if mode in labels else "rail"
     return {
-        "ok": True,
+        "ok": False,
         "city": city,
-        "mode": selected,
-        "title": labels[selected],
-        "items": [{"title": title, "body": body} for title, body in hints[selected]],
-        "source": f"tdx_{selected}_planned",
-        "source_names": {"transport": source_names[selected]},
-        "status": "planned",
+        "mode": mode,
+        "title": "請選擇交通項目",
+        "items": [{"title": "可查詢項目", "body": "台鐵 / 高鐵時刻、公車動態、YouBike 即時站點與即時路況。"}],
+        "source": "transport_query_required",
+        "source_names": {"transport": "交通查詢"},
     }
 
 
