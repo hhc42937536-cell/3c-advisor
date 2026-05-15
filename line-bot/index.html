@@ -330,6 +330,7 @@
     .soft-card.three { width: 150px; height: 82px; left: 42px; bottom: 42px; background: #ffe1dc; }
 
     section.band { padding: 74px 0; border-top: 1px solid rgba(38, 49, 43, .1); }
+    section.hero-workspace { padding-top: 34px; border-top: 0; }
     .section-head {
       display: flex;
       align-items: end;
@@ -784,69 +785,11 @@
   </header>
 
   <main id="top">
-    <section class="hero">
-      <div class="wrap hero-grid">
-        <div>
-          <span class="badge"><i></i>從早晨開始安排今天</span>
-          <h1>從早安開始，<span>安排今天</span></h1>
-          <p class="lead">早上先看天氣、穿搭、油價與今日提醒；接著挑餐廳、活動和停車點，日常常用資訊一次整理好。</p>
-          <div class="task-grid" aria-label="主要任務入口">
-            <button class="task-card" data-jump="morning">
-              <span class="task-icon">早</span>
-              <span><h2>早安今日好料</h2><p>天氣穿搭、油價、匯率、洗曬與今日小驚喜。</p></span>
-            </button>
-            <button class="task-card" data-jump="food">
-              <span class="task-icon">食</span>
-              <span><h2>今天吃什麼</h2><p>用城市、定位、聚餐情境整理推薦方向。</p></span>
-            </button>
-            <button class="task-card" data-jump="activity">
-              <span class="task-icon">週</span>
-              <span><h2>週末活動</h2><p>展覽、市集、親子、戶外活動整理成清單。</p></span>
-            </button>
-            <button class="task-card" data-jump="parking">
-              <span class="task-icon">停</span>
-              <span><h2>找車位</h2><p>查停車場、路邊格、剩餘車位與費率。</p></span>
-            </button>
-            <button class="task-card" data-jump="traffic">
-              <span class="task-icon">行</span>
-              <span><h2>今天怎麼去</h2><p>台鐵高鐵、公車動態與即時路況。</p></span>
-            </button>
-            <button class="task-card" data-jump="tools">
-              <span class="task-icon">工</span>
-              <span><h2>常用快查</h2><p>垃圾車、今日優惠、發票與附近設施。</p></span>
-            </button>
-          </div>
-          <div class="chips">
-            <span class="chip">早安今日好料</span>
-            <span class="chip">吃飯決策</span>
-            <span class="chip">週末活動</span>
-            <span class="chip">找車位</span>
-            <span class="chip">今天怎麼去</span>
-            <span class="chip">常用快查</span>
-          </div>
-        </div>
-        <div class="visual">
-          <div class="morning-card">
-            <span class="badge"><i></i>早安今日好料</span>
-            <h2>出門前先看這張。</h2>
-            <p>把天氣、穿搭、油價、匯率和今日小驚喜收在同一張卡片，不用開很多頁。</p>
-            <div class="morning-list">
-              <button class="morning-item" type="button" data-preset="morning"><strong>天氣穿搭</strong><span id="hero-weather">讀取今日天氣...</span></button>
-              <button class="morning-item" type="button" data-preset="morning"><strong>油價提醒</strong><span id="hero-oil">讀取油價...</span></button>
-              <button class="morning-item" type="button" data-preset="morning"><strong>匯率摘要</strong><span id="hero-rate">讀取匯率...</span></button>
-              <button class="morning-item" type="button" data-preset="morning"><strong>今日小驚喜</strong><span id="hero-surprise">讀取優惠與話題...</span></button>
-            </div>
-          </div>
-          <div class="note">想快速做決定，就從左邊六個入口開始。</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="band" id="workspace">
+    <section class="band hero-workspace" id="workspace">
       <div class="wrap">
         <div class="section-head">
           <h2>先選你現在要做的事。</h2>
-          <p>每個區塊都可以直接查，不用先理解功能分類；選城市、地點或情境後，就會產生結果。</p>
+          <p>進站就能查：選城市、地點或情境後，結果直接出現在下方。</p>
         </div>
         <div class="workspace">
           <div class="tabs" role="tablist" aria-label="網站功能">
@@ -1554,27 +1497,6 @@
       `;
     }
 
-    function updateHeroMorning(data) {
-      const weather = data.weather || {};
-      const oil = data.oil || {};
-      const rates = data.rates || {};
-      const surprise = (data.surprise?.items || [])[0];
-      const setText = (selector, value) => {
-        const target = document.querySelector(selector);
-        if (target) target.textContent = value;
-      };
-      const weatherText = weather.ok
-        ? `${data.city || "今日"} ${weather.wx} ${weather.min_t}-${weather.max_t}°，降雨 ${weather.pop}%`
-        : "天氣暫時取不到";
-      const oilText = oil["95"] ? `95 ${oil["95"]}，92 ${oil["92"] || "—"}` : "油價暫時取不到";
-      const rateText = rates.USD ? `USD ${rates.USD.spot_sell}，JPY ${rates.JPY?.spot_sell || "—"}` : "匯率暫時取不到";
-      const surpriseText = surprise ? String(surprise.title || "").replace(/^.+?｜/, "") : "目前沒有可靠小驚喜";
-      setText("#hero-weather", weatherText);
-      setText("#hero-oil", oilText);
-      setText("#hero-rate", rateText);
-      setText("#hero-surprise", surpriseText);
-    }
-
     function renderFood(data) {
       const items = data.items || [];
       const cards = items.slice(0, 16).map((item) => {
@@ -1778,7 +1700,6 @@
         const plan = document.querySelector("#morning-plan").value;
         const time = document.querySelector("#morning-time").value;
         const data = await getJson(`/api/site_morning?city=${encodeURIComponent(city)}&plan=${encodeURIComponent(plan)}&time=${encodeURIComponent(time)}&focus=${encodeURIComponent("全部整理")}`);
-        updateHeroMorning(data);
         return renderMorning(data);
       }
       if (key === "food") {
