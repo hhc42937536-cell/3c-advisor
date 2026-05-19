@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-18 23:09",
+  "updated_at": "2026-05-19 23:09",
   "songs": [
     {
       "name": "Heavy Serenade",
@@ -12,14 +12,14 @@
       "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
     },
     {
-      "name": "WDA (Whole Different Animal) [feat. G-DRAGON]",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/wda-whole-different-animal-feat-g-dragon/1893599771?i=1893599772"
-    },
-    {
       "name": "REDRED",
       "artist": "CORTIS",
       "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
+    },
+    {
+      "name": "WDA (Whole Different Animal) [feat. G-DRAGON]",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/wda-whole-different-animal-feat-g-dragon/1893599771?i=1893599772"
     },
     {
       "name": "It's Me",
@@ -32,24 +32,29 @@
       "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
     },
     {
-      "name": "幸福在歌唱 (電影《陽光女子合唱團》幸福版主題曲)",
-      "artist": "A-Lin",
-      "url": "https://music.apple.com/tw/album/%E5%B9%B8%E7%A6%8F%E5%9C%A8%E6%AD%8C%E5%94%B1-%E9%9B%BB%E5%BD%B1-%E9%99%BD%E5%85%89%E5%A5%B3%E5%AD%90%E5%90%88%E5%94%B1%E5%9C%98-%E5%B9%B8%E7%A6%8F%E7%89%88%E4%B8%BB%E9%A1%8C%E6%9B%B2/1861431707?i=1861431711"
-    },
-    {
       "name": "TNT",
       "artist": "CORTIS",
       "url": "https://music.apple.com/tw/album/tnt/1887671065?i=1887671066"
     },
     {
-      "name": "RUDE!",
-      "artist": "Hearts2Hearts",
-      "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
+      "name": "幸福在歌唱 (電影《陽光女子合唱團》幸福版主題曲)",
+      "artist": "A-Lin",
+      "url": "https://music.apple.com/tw/album/%E5%B9%B8%E7%A6%8F%E5%9C%A8%E6%AD%8C%E5%94%B1-%E9%9B%BB%E5%BD%B1-%E9%99%BD%E5%85%89%E5%A5%B3%E5%AD%90%E5%90%88%E5%94%B1%E5%9C%98-%E5%B9%B8%E7%A6%8F%E7%89%88%E4%B8%BB%E9%A1%8C%E6%9B%B2/1861431707?i=1861431711"
+    },
+    {
+      "name": "Motto",
+      "artist": "ITZY",
+      "url": "https://music.apple.com/tw/album/motto/1893520810?i=1893520812"
     },
     {
       "name": "Hit the Wall",
       "artist": "Gracie Abrams",
       "url": "https://music.apple.com/tw/album/hit-the-wall/6766750836?i=6766750846"
+    },
+    {
+      "name": "RUDE!",
+      "artist": "Hearts2Hearts",
+      "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
     },
     {
       "name": "陪你到這",
@@ -65,37 +70,42 @@
       "name": "CELEBRATION",
       "artist": "LE SSERAFIM",
       "url": "https://music.apple.com/tw/album/celebration/1894107702?i=1894107708"
-    },
-    {
-      "name": "Crescendo",
-      "artist": "NMIXX",
-      "url": "https://music.apple.com/tw/album/crescendo/1892154305?i=1892154306"
     }
   ],
   "deals": [
     {
       "title": "(南西)32大品牌全新開幕｜新光三越| 新光百貨首頁| 最新優惠| SKM ...",
-      "url": "https://www.skm.com.tw/page/202605130010",
+      "url": "https://www.skm.com.tw/page/101/202605130010",
       "tag": "優惠"
     },
     {
       "title": "3COINS終於來台灣了！進駐西門商圈「店址、開幕日」官方全揭露",
-      "url": "https://www.nownews.com/amp/news/6836800?srsltid=AfmBOorJFXYhEMcCfEFuRmPVwK6uQTAJRjFipdSqQzG58NiThrvlFXDQ",
+      "url": "https://www.nownews.com/amp/news/6836800?srsltid=AfmBOooIqrqWW1ZMGA07CC14T0eJTIjuT0IqAGNJ8cvwlRHBCUehcDel",
       "tag": "優惠"
     },
     {
-      "title": "新商場狂開幕、百貨總營收衝4555億台灣零售戰場進入「分眾消費 ...",
-      "url": "https://tw.news.yahoo.com/%E6%96%B0%E5%95%86%E5%A0%B4%E7%8B%82%E9%96%8B%E5%B9%95-%E7%99%BE%E8%B2%A8%E7%B8%BD%E7%87%9F%E6%94%B6%E8%A1%9D4555%E5%84%84-%E5%8F%B0%E7%81%A3%E9%9B%B6%E5%94%AE%E6%88%B0%E5%A0%B4%E9%80%B2%E5%85%A5-%E5%88%86%E7%9C%BE%E6%B6%88%E8%B2%BB-%E6%99%82%E4%BB%A3-062259479.html",
+      "title": "7-11 5/22-26 歡慶600店開幕‼️   美式平均一杯只要$33 - Threads",
+      "url": "https://www.threads.com/@sevenrain_life/post/DYgNDb5CYzS",
       "tag": "優惠"
     },
     {
-      "title": "新訊– Hanlin - 翰林茶館",
-      "url": "http://www.hanlin-tea.com.tw/news/",
+      "title": "最新活動- 大苑子｜台灣鮮果第一品牌",
+      "url": "https://www.dayungs.com/category/%E6%9C%80%E6%96%B0%E6%B4%BB%E5%8B%95/",
       "tag": "優惠"
     },
     {
-      "title": "日本人氣商店3COINS即將來台！首間店面開幕時間、地點一次看",
-      "url": "https://www.cardu.com.tw/epoint/detail.php?62965",
+      "title": "開幕一個月業績突破10億台中漢神洲際購物廣場21日起推會員回饋",
+      "url": "https://money.udn.com/money/story/122328/9500460",
+      "tag": "優惠"
+    },
+    {
+      "title": "免費喝手搖飲、摩斯紅茶！週末咖啡飲品優惠一次看 - Yahoo新聞",
+      "url": "https://tw.news.yahoo.com/%E5%85%8D%E8%B2%BB%E5%96%9D%E6%89%8B%E6%90%96%E9%A3%B2-%E6%91%A9%E6%96%AF%E7%B4%85%E8%8C%B6-%E9%80%B1%E6%9C%AB%E5%92%96%E5%95%A1%E9%A3%B2%E5%93%81%E5%84%AA%E6%83%A0-%E6%AC%A1%E7%9C%8B-210000723.html",
+      "tag": "優惠"
+    },
+    {
+      "title": "南紡年中慶開打滿仟送佰加碼回饋| 中華日報 - LINE TODAY",
+      "url": "https://today.line.me/tw/v3/article/l2KPv0L",
       "tag": "優惠"
     }
   ]
