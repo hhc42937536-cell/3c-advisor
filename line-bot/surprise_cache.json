@@ -1,15 +1,20 @@
 {
-  "updated_at": "2026-05-29 23:18",
+  "updated_at": "2026-05-30 23:04",
   "songs": [
     {
-      "name": "BOOMPALA",
-      "artist": "LE SSERAFIM",
-      "url": "https://music.apple.com/tw/album/boompala/1894802719?i=1894802726"
+      "name": "LEMONADE",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
     },
     {
       "name": "WDA (Whole Different Animal) [feat. G-DRAGON]",
       "artist": "aespa",
       "url": "https://music.apple.com/tw/album/wda-whole-different-animal-feat-g-dragon/1893599771?i=1893599772"
+    },
+    {
+      "name": "BOOMPALA",
+      "artist": "LE SSERAFIM",
+      "url": "https://music.apple.com/tw/album/boompala/1894802719?i=1894802726"
     },
     {
       "name": "玻璃",
@@ -20,11 +25,6 @@
       "name": "Heavy Serenade",
       "artist": "NMIXX",
       "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
-    },
-    {
-      "name": "LEMONADE",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
     },
     {
       "name": "CHOOM",
@@ -47,14 +47,14 @@
       "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
     },
     {
-      "name": "SHAKIN'",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/shakin/1893599771?i=1893599774"
-    },
-    {
       "name": "Camouflage",
       "artist": "aespa",
       "url": "https://music.apple.com/tw/album/camouflage/1893599771?i=1893599776"
+    },
+    {
+      "name": "SHAKIN'",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/shakin/1893599771?i=1893599774"
     },
     {
       "name": "Can't Help Myself",
@@ -62,45 +62,65 @@
       "url": "https://music.apple.com/tw/album/cant-help-myself/1893599771?i=1893599775"
     },
     {
+      "name": "’Til We Die",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/til-we-die/1893599771?i=1893599781"
+    },
+    {
       "name": "Motto",
       "artist": "ITZY",
       "url": "https://music.apple.com/tw/album/motto/1893520810?i=1893520812"
     },
     {
-      "name": "the cure",
-      "artist": "Olivia Rodrigo",
-      "url": "https://music.apple.com/tw/album/the-cure/1889992111?i=1889992123"
-    },
-    {
-      "name": "RUDE!",
-      "artist": "Hearts2Hearts",
-      "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
+      "name": "Switchblade (feat. Ty Dolla $ign)",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/switchblade-feat-ty-dolla-%24ign/1893599771?i=1893599778"
     }
   ],
   "deals": [
     {
-      "title": "本週限時搶購中   這折扣真的不是在開玩笑欸   小編自己看到都忍不住 ...",
-      "url": "https://www.threads.com/@marathonsworld05/post/DY4WZ20FAR5",
+      "title": "夏季省錢大作戰！10元芒果、和牛買一送一、6元冰棒限時開搶 - 食尚玩家",
+      "url": "https://supertaste.tvbs.com.tw/pack/359905",
       "tag": "優惠"
     },
     {
-      "title": "俗甲扣八特賣會第二場明天即將開始 - Threads",
-      "url": "https://www.threads.com/@iduncarfaq/post/DY12QVbmq1d/video-%E4%BF%97%E7%94%B2%E6%89%A3%E5%85%AB%E7%89%B9%E8%B3%A3%E6%9C%83%E7%AC%AC%E4%BA%8C%E5%A0%B4%E6%98%8E%E5%A4%A9%E5%8D%B3%E5%B0%87%E9%96%8B%E5%A7%8B%E4%B8%8A%E4%B8%80%E5%A0%B4%E6%9C%89%E7%9A%84%E5%84%AA%E6%83%A0%E7%94%A2%E5%93%81%E5%B7%B2%E8%A3%9C%E8%B2%A8%E5%8F%88%E5%A2%9E%E5%8A%A0%E4%BA%86%E5%BE%88%E5%A4%9A%E6%96%B0%E5%93%81%E9%A0%85%E4%B8%80%E5%AE%9A%E8%A6%81%E6%8F%AA%E5%85%84%E5%BC%9F%E5%A7%90%E5%A6%B9%E7%88%B8%E7%88%B8%E5%AA%BD%E5%AA%BD%E8%80%81%E5%85%AC%E8%80%81%E5%A9%86%E7%94%B7%E5%A5%B3%E6%9C%8B%E5%8F%8B%E4%B8%80%E8%B5%B7%E4%BE%86%E9%80%9B%E9%80%9B%E7%89%B9%E8%B3%A3%E6%9C%83%E8%B3%87%E8%A8%8A528-6021100-9/",
+      "title": "超商「2件0元」！週末咖啡飲料優惠1招爽拿免費鮮乳 - Yahoo新聞",
+      "url": "https://tw.news.yahoo.com/%E8%B6%85%E5%95%86-2%E4%BB%B60%E5%85%83-%E9%80%B1%E6%9C%AB%E5%92%96%E5%95%A1%E9%A3%B2%E6%96%99%E5%84%AA%E6%83%A0-1%E6%8B%9B%E7%88%BD%E6%8B%BF%E5%85%8D%E8%B2%BB%E9%AE%AE%E4%B9%B3-090100542.html",
       "tag": "優惠"
     },
     {
-      "title": "俗甲扣八特賣會第二場明天即將開始上一場有的優惠產品「已 ... - TikTok",
-      "url": "https://www.tiktok.com/@iduncar995/video/7644541637431053588",
+      "title": "UNIQLO 感謝祭   夏日優惠開跑啦  🛍️ - Threads",
+      "url": "https://www.threads.com/@lala.playeat/post/DY89tvVEf8w",
+      "tag": "優惠"
+    },
+    {
+      "title": "端午採買就等這一波！ 屏東酒廠端午特賣會開跑各種特惠一次滿足！",
+      "url": "https://fion.news/?pn=vw&id=y8g2s9ymzpi6",
+      "tag": "優惠"
+    },
+    {
+      "title": "遠東百貨60周年慶祭高雄大遠百超強回饋活動 - 蕃新聞",
+      "url": "https://n.yam.com/Article/20260528934515",
+      "tag": "優惠"
+    },
+    {
+      "title": "美妝即期品出清會 - OUTLET台中- 日曜天地名牌折扣中心",
+      "url": "https://www.s-outlet.com.tw/dm.php?i=291",
+      "tag": "優惠"
+    },
+    {
+      "title": "好優惠  彩堂超好用欸！！ - Threads",
+      "url": "https://www.threads.com/@cjcjpppp/post/DY9j8e6CRB2/%E5%A5%BD%E5%84%AA%E6%83%A0%E5%BD%A9%E5%A0%82%E8%B6%85%E5%A5%BD%E7%94%A8%E6%AC%B8/",
       "tag": "優惠"
     },
     {
       "title": "WEGO台灣首店明開幕優惠推薦！獨家痛包、百元衣服、流行配件一覽",
-      "url": "https://www.nownews.com/news/6840875?srsltid=AfmBOop4M298ieH8qaI73WyoiugdkoIlZG2CTOLfkfelyznPr3LnduSd",
+      "url": "https://www.nownews.com/news/6840875?srsltid=AfmBOor08DRu_NUNdKEzllg_pB-9umuEQCPHbrmZdUXBFRJKHOEFAInG",
       "tag": "優惠"
     },
     {
-      "title": "除了喝茶之外，逛街卉也很厲害   Outlets 開幕那一年 - Threads",
-      "url": "https://www.threads.com/@jaihui_wei/post/DYqfIUpFKgA/%E9%99%A4%E4%BA%86%E5%96%9D%E8%8C%B6%E4%B9%8B%E5%A4%96%E9%80%9B%E8%A1%97%E5%8D%89%E4%B9%9F%E5%BE%88%E5%8E%B2%E5%AE%B3outlets-%E9%96%8B%E5%B9%95%E9%82%A3%E4%B8%80%E5%B9%B4%E6%88%91%E5%B9%BE%E4%B9%8E%E5%A4%A9%E5%A4%A9%E5%8E%BB%E5%A0%B1%E5%88%B0%E5%88%B0%E7%8F%BE%E5%9C%A8%E9%82%84%E6%98%AF%E5%A4%A7%E6%A6%82%E4%B8%80%E9%80%B1%E6%9C%83%E9%80%9B%E5%80%8B%E5%85%A9%E4%B8%89%E6%AC%A1%E5%93%AA%E4%B8%80%E5%AE%B6%E6%8A%98%E6%89%A3%E6%9C%80%E6%BC%82%E4%BA%AE%E5%93%AA%E5%80%8B%E5%84%AA%E6%83%A0%E6%98%AF%E4%B8%8D%E6%98%AF%E6%9C%80%E4%BD%8E%E5%83%B9%E6%88%91%E5%A4%A7%E6%A6%82%E9%83%BD%E6%91%B8%E5%BE%97%E4%B8%80%E6%B8%85%E4%BA%8C%E6%A5%9A%E4%BB%A5%E5%89%8D%E5%AE%B6",
+      "title": "感謝感謝  歡迎來逛逛～新開幕有折扣唷   全館輸入折扣碼【YASAC ...",
+      "url": "https://www.threads.com/@__yasac/post/DY3R0LHGZfT/%E6%84%9F%E8%AC%9D%E6%84%9F%E8%AC%9D%E6%AD%A1%E8%BF%8E%E4%BE%86%E9%80%9B%E9%80%9B%E6%96%B0%E9%96%8B%E5%B9%95%E6%9C%89%E6%8A%98%E6%89%A3%E5%94%B7%E5%85%A8%E9%A4%A8%E8%BC%B8%E5%85%A5%E6%8A%98%E6%89%A3%E7%A2%BCyasac%E7%8F%BE%E6%8A%98-99-%E5%85%83-httpsportalyccyasac/",
       "tag": "優惠"
     },
     {
@@ -109,24 +129,24 @@
       "tag": "優惠"
     },
     {
-      "title": "印尼「凱娜克咖啡」插旗信義區! 3大系列台灣限定開幕買1送1 - MSN",
-      "url": "https://www.msn.com/zh-tw/news/other/%E5%8D%B0%E5%B0%BC-%E5%87%B1%E5%A8%9C%E5%85%8B%E5%92%96%E5%95%A1-%E6%8F%92%E6%97%97%E4%BF%A1%E7%BE%A9%E5%8D%80-3%E5%A4%A7%E7%B3%BB%E5%88%97%E5%8F%B0%E7%81%A3%E9%99%90%E5%AE%9A-%E9%96%8B%E5%B9%95%E8%B2%B71%E9%80%811/ar-AA20kgzw?apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1",
+      "title": "開幕特價完後就沒人了",
+      "url": "https://www.threads.com/@jyunpengchen/post/DY-HLHRElCr/%E9%96%8B%E5%B9%95%E7%89%B9%E5%83%B9%E5%AE%8C%E5%BE%8C%E5%B0%B1%E6%B2%92%E4%BA%BA%E4%BA%86/",
       "tag": "優惠"
     },
     {
-      "title": "手搖優惠懶人包！CoCo買一送一、先喝道插旗北車這家更猛「整單1 ...",
-      "url": "https://tw.news.yahoo.com/%E6%89%8B%E6%90%96%E5%84%AA%E6%83%A0%E6%87%B6%E4%BA%BA%E5%8C%85-coco%E8%B2%B7-%E9%80%81-%E5%85%88%E5%96%9D%E9%81%93%E6%8F%92%E6%97%97%E5%8C%97%E8%BB%8A-%E9%80%99%E5%AE%B6%E6%9B%B4%E7%8C%9B-085100941.html",
+      "title": "服飾折扣碼與最新優惠促銷 - Dealy TW",
+      "url": "https://dealy.tw/category/clothing",
       "tag": "優惠"
     },
     {
-      "title": "好市多直接結帳虧大了！「內行曝隱藏省錢優惠」多數人不知道 - 風傳媒",
-      "url": "https://www.storm.mg/lifestyle/11134650",
+      "title": "統一康是美星巴克歡慶全台雙600店全台4大品牌同慶| 勁報",
+      "url": "https://today.line.me/tw/v3/article/KwN6mlk",
       "tag": "優惠"
     },
     {
-      "title": "感謝感謝  歡迎來逛逛～新開幕有折扣唷   全館輸入折扣碼【YASAC ...",
-      "url": "https://www.threads.com/@__yasac/post/DY3R0LHGZfT/%E6%84%9F%E8%AC%9D%E6%84%9F%E8%AC%9D%E6%AD%A1%E8%BF%8E%E4%BE%86%E9%80%9B%E9%80%9B%E6%96%B0%E9%96%8B%E5%B9%95%E6%9C%89%E6%8A%98%E6%89%A3%E5%94%B7%E5%85%A8%E9%A4%A8%E8%BC%B8%E5%85%A5%E6%8A%98%E6%89%A3%E7%A2%BCyasac%E7%8F%BE%E6%8A%98-99-%E5%85%83-httpsportalyccyasac/",
-      "tag": "優惠"
+      "title": "Re: [情報] 台東國旅補助 住五晚折抵2500",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1780023471.A.8CF.html",
+      "tag": "情報"
     },
     {
       "title": "全家APP優惠趣領券300-40",
@@ -161,11 +181,6 @@
     {
       "title": "嘉義東石烤蚵200元吃到飽",
       "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1780092722.A.E10.html",
-      "tag": "情報"
-    },
-    {
-      "title": "2026年全台捐血贈品",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
       "tag": "情報"
     }
   ]
