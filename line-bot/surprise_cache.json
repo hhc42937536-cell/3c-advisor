@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-31 23:06",
+  "updated_at": "2026-06-01 23:38",
   "songs": [
     {
       "name": "LEMONADE",
@@ -12,14 +12,9 @@
       "url": "https://music.apple.com/tw/album/wda-whole-different-animal-feat-g-dragon/1893599771?i=1893599772"
     },
     {
-      "name": "BOOMPALA",
-      "artist": "LE SSERAFIM",
-      "url": "https://music.apple.com/tw/album/boompala/1894802719?i=1894802726"
-    },
-    {
       "name": "hate that i made you love me",
       "artist": "Ariana Grande",
-      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420874?i=6763656725"
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
       "name": "玻璃",
@@ -30,6 +25,11 @@
       "name": "Heavy Serenade",
       "artist": "NMIXX",
       "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
+    },
+    {
+      "name": "BOOMPALA",
+      "artist": "LE SSERAFIM",
+      "url": "https://music.apple.com/tw/album/boompala/1894802719?i=1894802726"
     },
     {
       "name": "CHOOM",
@@ -62,11 +62,6 @@
       "url": "https://music.apple.com/tw/album/shakin/1893599771?i=1893599774"
     },
     {
-      "name": "Can't Help Myself",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/cant-help-myself/1893599771?i=1893599775"
-    },
-    {
       "name": "Motto",
       "artist": "ITZY",
       "url": "https://music.apple.com/tw/album/motto/1893520810?i=1893520812"
@@ -75,17 +70,32 @@
       "name": "’Til We Die",
       "artist": "aespa",
       "url": "https://music.apple.com/tw/album/til-we-die/1893599771?i=1893599781"
+    },
+    {
+      "name": "Can't Help Myself",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/cant-help-myself/1893599771?i=1893599775"
     }
   ],
   "deals": [
     {
-      "title": "WEGO台灣首店明開幕優惠推薦！獨家痛包、百元衣服、流行配件一覽",
-      "url": "https://www.nownews.com/news/6840875?srsltid=AfmBOoqRFaFuLgCCX0-8UtL6jM1nyInOPOU-C-9BsCNGgyZhz_7ypX-S",
+      "title": "日本潮牌WEGO開幕了   首次下載APP+新會員最高拿$150   - Threads",
+      "url": "https://www.threads.com/@do_.you.know/post/DZAZvAvgXHm/%E6%97%A5%E6%9C%AC%E6%BD%AE%E7%89%8Cwego%E9%96%8B%E5%B9%95%E4%BA%86%E9%A6%96%E6%AC%A1%E4%B8%8B%E8%BC%89app%E6%96%B0%E6%9C%83%E5%93%A1-%E6%9C%80%E9%AB%98%E6%8B%BF150/",
       "tag": "優惠"
     },
     {
-      "title": "日本潮牌WEGO開幕了   首次下載APP+新會員最高拿$150   - Threads",
-      "url": "https://www.threads.com/@do_.you.know/post/DZAZvAvgXHm/%E6%97%A5%E6%9C%AC%E6%BD%AE%E7%89%8Cwego%E9%96%8B%E5%B9%95%E4%BA%86%E9%A6%96%E6%AC%A1%E4%B8%8B%E8%BC%89app%E6%96%B0%E6%9C%83%E5%93%A1-%E6%9C%80%E9%AB%98%E6%8B%BF150/",
+      "title": "WEGO台灣首店明開幕優惠推薦！獨家痛包、百元衣服、流行配件一覽",
+      "url": "https://www.nownews.com/news/6840875?srsltid=AfmBOooMliOPYWbhAYK1W8ZNqJVmbEZaqtMApXlEtorNzqo2J5K_GxBl",
+      "tag": "優惠"
+    },
+    {
+      "title": "日本潮流品牌WEGO台灣二店6/26板橋開幕｜原宿街頭、Y2K古著",
+      "url": "https://www.funliday.com/posts/wego-taiwan/",
+      "tag": "優惠"
+    },
+    {
+      "title": "服飾折扣碼與最新優惠促銷 - Dealy TW",
+      "url": "https://dealy.tw/category/clothing",
       "tag": "優惠"
     },
     {
@@ -94,8 +104,8 @@
       "tag": "優惠"
     },
     {
-      "title": "服飾折扣碼與最新優惠促銷 - Dealy TW",
-      "url": "https://dealy.tw/category/clothing",
+      "title": "通通都有折扣！職排台鋼天鷹奪冠集團品牌+四球隊推「限時同慶優惠」",
+      "url": "https://tw.sports.yahoo.com/news/%E9%80%9A%E9%80%9A%E9%83%BD%E6%9C%89%E6%8A%98%E6%89%A3-%E8%81%B7%E6%8E%92%E5%8F%B0%E9%8B%BC%E5%A4%A9%E9%B7%B9%E5%A5%AA%E5%86%A0-%E9%9B%86%E5%9C%98%E5%93%81%E7%89%8C-%E5%9B%9B%E7%90%83%E9%9A%8A%E6%8E%A8-%E9%99%90%E6%99%82%E5%90%8C%E6%85%B6%E5%84%AA%E6%83%A0-034757410.html",
       "tag": "優惠"
     }
   ]
