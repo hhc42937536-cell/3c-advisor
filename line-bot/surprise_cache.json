@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-04 23:13",
+  "updated_at": "2026-06-05 23:14",
   "songs": [
     {
       "name": "LEMONADE",
@@ -17,6 +17,11 @@
       "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
     },
     {
+      "name": "BOOMPALA",
+      "artist": "LE SSERAFIM",
+      "url": "https://music.apple.com/tw/album/boompala/1894802719?i=1894802726"
+    },
+    {
       "name": "Heavy Serenade",
       "artist": "NMIXX",
       "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
@@ -27,19 +32,14 @@
       "url": "https://music.apple.com/tw/album/wda-whole-different-animal-feat-g-dragon/1893599771?i=1893599772"
     },
     {
-      "name": "BOOMPALA",
-      "artist": "LE SSERAFIM",
-      "url": "https://music.apple.com/tw/album/boompala/1894802719?i=1894802726"
+      "name": "SWIM",
+      "artist": "防彈少年團",
+      "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
     },
     {
       "name": "CHOOM",
       "artist": "BABYMONSTER",
       "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
-    },
-    {
-      "name": "SWIM",
-      "artist": "防彈少年團",
-      "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
     },
     {
       "name": "REDRED",
@@ -52,14 +52,9 @@
       "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
     },
     {
-      "name": "Motto",
-      "artist": "ITZY",
-      "url": "https://music.apple.com/tw/album/motto/1893520810?i=1893520812"
-    },
-    {
-      "name": "Camouflage",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/camouflage/1893599771?i=1893599776"
+      "name": "DDI RO RI",
+      "artist": "MEOVV",
+      "url": "https://music.apple.com/tw/album/ddi-ro-ri/6767304771?i=6767304773"
     },
     {
       "name": "RUDE!",
@@ -67,50 +62,55 @@
       "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
     },
     {
-      "name": "那天下雨了",
-      "artist": "周杰倫",
-      "url": "https://music.apple.com/tw/album/%E9%82%A3%E5%A4%A9%E4%B8%8B%E9%9B%A8%E4%BA%86/1887246588?i=1887246591"
+      "name": "Motto",
+      "artist": "ITZY",
+      "url": "https://music.apple.com/tw/album/motto/1893520810?i=1893520812"
     },
     {
-      "name": "2.0",
-      "artist": "防彈少年團",
-      "url": "https://music.apple.com/tw/album/2-0/1868862375?i=1868862380"
+      "name": "Suddenly",
+      "artist": "I.O.I",
+      "url": "https://music.apple.com/tw/album/suddenly/6769328211?i=6769328214"
+    },
+    {
+      "name": "Camouflage",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/camouflage/1893599771?i=1893599776"
     }
   ],
   "deals": [
     {
-      "title": "Top City 台中大遠百-線上DM - 遠東百貨",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=53",
+      "title": "[Costco 好市多必買] 2026最新熱門清單推薦6月特價商品(含黑鑽卡",
+      "url": "https://travelerliv.com/post-229138058/",
       "tag": "優惠"
     },
     {
-      "title": "萬件大牌美妝保養品 - OUTLET台中- 日曜天地名牌折扣中心",
-      "url": "https://www.s-outlet.com.tw/dm.php?i=292",
+      "title": "OLIVE YOUNG Global 折扣碼與優惠：1% / 50% 優惠- 6月2026",
+      "url": "https://www.everysaving.tw/store/oliveyoung.com",
       "tag": "優惠"
     },
     {
-      "title": "活動訊息| 活動情報 - Q square京站時尚廣場",
-      "url": "https://www.qsquare.com.tw/event-list.php",
+      "title": "唔好話小編唔提你！ 即日起至6月30，感恩回饋·9週年慶全店單品無 ...",
+      "url": "https://www.threads.com/@dr.koala_hk/post/DZKDZVpGiKs/%E5%94%94%E5%A5%BD%E8%A9%B1%E5%B0%8F%E7%B7%A8%E5%94%94%E6%8F%90%E4%BD%A0%E5%8D%B3%E6%97%A5%E8%B5%B7%E8%87%B36%E6%9C%8830%E6%84%9F%E6%81%A9%E5%9B%9E%E9%A5%8B9%E9%80%B1%E5%B9%B4%E6%85%B6-%E5%85%A8%E5%BA%97%E5%96%AE%E5%93%81%E7%84%A1%E9%96%80%E6%AA%BB88%E6%8A%98%E7%84%A1%E7%9D%87%E9%8C%AF%E4%BF%82%E7%9B%B4%E6%8E%A588%E6%8A%98%E4%BB%B2%E8%A6%81%E9%99%90%E6%99%82%E5%8A%A0%E7%A2%BC900%E8%9A%8A%E4%BB%BB%E9%81%B83%E4%BB%B6%E5%B0%88%E5%8D%80-%E9%99%90%E5%94%AE100%E4%BB%B6%E7%89%B9%E8%B3%A3%E6%90%B6%E6%9C%89%E5%95%B2%E5%8F%AA%E5%81%9A%E4%B8%80%E6%98%9F%E6%9C%9F%E8%B3%A3%E5%AE%8C%E5%8D%B3",
       "tag": "優惠"
     },
     {
-      "title": "活動訊息| 廣三SOGO百貨",
-      "url": "https://www.kssogo.com.tw/news.php?cID=5",
+      "title": "盧亞夏季特賣最低下殺2折！CHLOE、GUCCI香氛彩妝通通有",
+      "url": "https://fashion.ettoday.net/news/3177139",
       "tag": "優惠"
     },
     {
-      "title": "高雄大遠百-線上DM - 遠東百貨",
-      "url": "https://www.feds.com.tw/-/51/Edm/List",
+      "title": "全聯買一送一2026/6最新DM》週三週六買一送一、6折優惠總整理",
+      "url": "https://news.tvbs.com.tw/life/2819201",
       "tag": "優惠"
     },
     {
-      "title": "活動訊息 - 福華大飯店",
-      "url": "https://www.howard-hotels.com.tw/zh_TW/OutletPage/2/Activity",
+      "title": "中華航空: 機票與航班優惠",
+      "url": "https://flights.china-airlines.com/zh-tw/flights",
       "tag": "優惠"
     },
     {
-      "title": "WEGO台灣首店明開幕優惠推薦！獨家痛包、百元衣服、流行配件一覽",
-      "url": "https://www.nownews.com/news/6840875?srsltid=AfmBOor-367WRSheRqcyCDcvjmvA-svOIWD5xTctLOSfPwxE6wO7my0T",
+      "title": "‎好享购物- You Might Also Like - App Store",
+      "url": "https://apps.apple.com/bh/app/501019607?l=ar&see-all=customers-also-bought-apps&platform=iphone",
       "tag": "優惠"
     },
     {
@@ -119,23 +119,28 @@
       "tag": "優惠"
     },
     {
+      "title": "畢竟台灣飲料市場競爭這裡多數是大陸品牌但口味不一定合台灣人UG ...",
+      "url": "https://www.threads.com/@fionalife_0501/post/DY_5O2rGzed/%E7%95%A2%E7%AB%9F%E5%8F%B0%E7%81%A3%E9%A3%B2%E6%96%99%E5%B8%82%E5%A0%B4%E7%AB%B6%E7%88%AD%E9%80%99%E8%A3%A1%E5%A4%9A%E6%95%B8%E6%98%AF%E5%A4%A7%E9%99%B8%E5%93%81%E7%89%8C%E4%BD%86%E5%8F%A3%E5%91%B3%E4%B8%8D%E4%B8%80%E5%AE%9A%E5%90%88%E5%8F%B0%E7%81%A3%E4%BA%BAug%E9%96%8B%E4%BE%86%E6%88%91%E9%82%84%E8%A0%BB%E9%96%8B%E5%BF%83%E7%9A%84%E8%80%8C%E4%B8%94%E6%98%AF%E9%96%8B%E5%9C%A8mall%E8%A3%A1%E5%A4%8F%E5%A4%A9%E6%9C%89%E5%86%B7%E6%B0%A3%E5%90%B9/",
+      "tag": "優惠"
+    },
+    {
       "title": "新光三越南西店改裝近80品牌新登場消費滿300免費換Häagen-Dazs",
       "url": "https://fashion.ettoday.net/news/3177686",
       "tag": "優惠"
     },
     {
-      "title": "通通都有折扣！職排台鋼天鷹奪冠集團品牌+四球隊推「限時同慶優惠」",
-      "url": "https://tw.sports.yahoo.com/news/%E9%80%9A%E9%80%9A%E9%83%BD%E6%9C%89%E6%8A%98%E6%89%A3-%E8%81%B7%E6%8E%92%E5%8F%B0%E9%8B%BC%E5%A4%A9%E9%B7%B9%E5%A5%AA%E5%86%A0-%E9%9B%86%E5%9C%98%E5%93%81%E7%89%8C-%E5%9B%9B%E7%90%83%E9%9A%8A%E6%8E%A8-%E9%99%90%E6%99%82%E5%90%8C%E6%85%B6%E5%84%AA%E6%83%A0-034757410.html",
+      "title": "今日精選Top 30優惠券 - Dealy TW",
+      "url": "https://dealy.tw/top-promos",
       "tag": "優惠"
     },
     {
-      "title": "最新消息 - 迷誠品",
-      "url": "https://meet.eslite.com/tw/tc/news",
+      "title": "開幕特價完後就沒人了",
+      "url": "https://www.threads.com/@jyunpengchen/post/DY-HLHRElCr/%E9%96%8B%E5%B9%95%E7%89%B9%E5%83%B9%E5%AE%8C%E5%BE%8C%E5%B0%B1%E6%B2%92%E4%BA%BA%E4%BA%86/",
       "tag": "優惠"
     },
     {
       "title": "南珉貞約吃！台灣吉豚屋旗艦店進軍行天宮商圈限時優惠再抽台鈴機車",
-      "url": "https://www.msn.com/zh-tw/news/living/%E5%8D%97%E7%8F%89%E8%B2%9E%E7%B4%84%E5%90%83-%E5%8F%B0%E7%81%A3%E5%90%89%E8%B1%9A%E5%B1%8B%E6%97%97%E8%89%A6%E5%BA%97%E9%80%B2%E8%BB%8D%E8%A1%8C%E5%A4%A9%E5%AE%AE%E5%95%86%E5%9C%88-%E9%99%90%E6%99%82%E5%84%AA%E6%83%A0%E5%86%8D%E6%8A%BD%E5%8F%B0%E9%88%B4%E6%A9%9F%E8%BB%8A/ar-AA24O7JO",
+      "url": "https://www.msn.com/zh-tw/news/living/%E5%8D%97%E7%8F%89%E8%B2%9E%E7%B4%84%E5%90%83-%E5%8F%B0%E7%81%A3%E5%90%89%E8%B1%9A%E5%B1%8B%E6%97%97%E8%89%A6%E5%BA%97%E9%80%B2%E8%BB%8D%E8%A1%8C%E5%A4%A9%E5%AE%AE%E5%95%86%E5%9C%88-%E9%99%90%E6%99%82%E5%84%AA%E6%83%A0%E5%86%8D%E6%8A%BD%E5%8F%B0%E9%88%B4%E6%A9%9F%E8%BB%8A/ar-AA24O7JO?apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1",
       "tag": "優惠"
     }
   ]
