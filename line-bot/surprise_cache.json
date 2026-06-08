@@ -1,10 +1,15 @@
 {
-  "updated_at": "2026-06-07 23:10",
+  "updated_at": "2026-06-08 23:15",
   "songs": [
     {
       "name": "LEMONADE",
       "artist": "aespa",
       "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
+    },
+    {
+      "name": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
       "name": "玻璃",
@@ -15,11 +20,6 @@
       "name": "I Knew It, I Knew You",
       "artist": "Taylor Swift",
       "url": "https://music.apple.com/tw/album/i-knew-it-i-knew-you/6775527442?i=6775527443"
-    },
-    {
-      "name": "hate that i made you love me",
-      "artist": "Ariana Grande",
-      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
       "name": "BOOMPALA",
@@ -42,14 +42,14 @@
       "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
     },
     {
-      "name": "It's Me",
-      "artist": "ILLIT",
-      "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
-    },
-    {
       "name": "SWIM",
       "artist": "防彈少年團",
       "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
+    },
+    {
+      "name": "It's Me",
+      "artist": "ILLIT",
+      "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
     },
     {
       "name": "REDRED",
@@ -67,70 +67,80 @@
       "url": "https://music.apple.com/tw/album/4-flowers/6775333578?i=6775333580"
     },
     {
+      "name": "Suddenly",
+      "artist": "I.O.I",
+      "url": "https://music.apple.com/tw/album/suddenly/6769328211?i=6769328214"
+    },
+    {
       "name": "RUDE!",
       "artist": "Hearts2Hearts",
       "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
-    },
-    {
-      "name": "很久很久",
-      "artist": "韋禮安",
-      "url": "https://music.apple.com/tw/album/%E5%BE%88%E4%B9%85%E5%BE%88%E4%B9%85/6772907782?i=6772907791"
     }
   ],
   "deals": [
     {
-      "title": "新竹大遠百-線上DM - 遠東百貨",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=42",
+      "title": "2026韓國OLIVE YOUNG折扣時間！8大優惠日期請筆記，最高三折起",
+      "url": "https://www.funliday.com/posts/2026-oliveyoung-sale/",
       "tag": "優惠"
     },
     {
-      "title": "百貨周年慶活動| EventGo - 台灣活動探索平台",
-      "url": "https://eventgo.tw/explore/2094",
+      "title": "全聯買一送一2026/6最新DM》週三週六買一送一、6折優惠總整理",
+      "url": "https://news.tvbs.com.tw/life/2819201",
       "tag": "優惠"
     },
     {
-      "title": "萬件大牌美妝保養品 - OUTLET台中- 日曜天地名牌折扣中心",
-      "url": "https://www.s-outlet.com.tw/dm.php?i=292",
+      "title": "【札幌藥妝直送商城｜618特賣加碼】",
+      "url": "https://global-satudora.com/blogs/promotion/%F0%9F%92%96-%E6%9C%AD%E5%B9%8C%E8%97%A5%E5%A6%9D%E7%9B%B4%E9%80%81%E5%95%86%E5%9F%8E-618%E7%89%B9%E8%B3%A3%E5%8A%A0%E7%A2%BC-%F0%9F%94%A5?srsltid=AfmBOoqmcpEtPrn0H5pSBideBqdOAsQj2uw3gM0QC7Y0HsOtCnjAvfhU",
       "tag": "優惠"
     },
     {
-      "title": "活動訊息| 活動情報 - Q square京站時尚廣場",
-      "url": "https://www.qsquare.com.tw/event-list.php",
+      "title": "【2026 Trip.com優惠碼】6月最新折扣碼、獨家折扣/信用卡優惠/機票/住宿 ...",
+      "url": "https://vivianexplore.tw/trip-com-promo-code/",
       "tag": "優惠"
     },
     {
-      "title": "活動訊息| 廣三SOGO百貨",
-      "url": "https://www.kssogo.com.tw/news.php?cID=5",
+      "title": "初夏呵護加碼週   | Aether 依鈦抗菌專家｜抗菌99%安心久久",
+      "url": "https://www.aether.com.tw/%E5%88%9D%E5%A4%8F%E5%91%B5%E8%AD%B7%E5%8A%A0%E7%A2%BC%E9%80%B1?srsltid=AfmBOorFxBmYE407lxzlbhcT-0jfwxGpjnGv5S0_Eo5wQrgll6cNp5pX",
       "tag": "優惠"
     },
     {
-      "title": "高雄大遠百-線上DM - 遠東百貨",
-      "url": "https://www.feds.com.tw/-/51/Edm/List",
+      "title": "盧亞夏季特賣最低下殺2折！CHLOE、GUCCI香氛彩妝通通有",
+      "url": "https://fashion.ettoday.net/news/3177139",
       "tag": "優惠"
     },
     {
-      "title": "日本潮流品牌WEGO台灣二店6/26板橋開幕｜原宿街頭、Y2K古著",
-      "url": "https://www.funliday.com/posts/wego-taiwan/",
+      "title": "6/16限時12小時的特賣喔！ - Threads",
+      "url": "https://www.threads.com/@imut_zzz/post/DZQB0T9iUJ3/616%E9%99%90%E6%99%8212%E5%B0%8F%E6%99%82%E7%9A%84%E7%89%B9%E8%B3%A3%E5%96%94/",
       "tag": "優惠"
     },
     {
-      "title": "通通都有折扣！職排台鋼天鷹奪冠集團品牌+四球隊推「限時同慶優惠」",
-      "url": "https://today.line.me/tw/v3/article/XYKM1rl",
+      "title": "全台-優惠卷-優惠折扣-優惠活動-優惠券集中",
+      "url": "https://cp.ocam.live/",
       "tag": "優惠"
     },
     {
-      "title": "【2026 Trip.com優惠碼】6月最新官方Trip.com 折扣碼，機票、飯店",
-      "url": "https://tw.trip.com/blog/tw-promo-code/",
+      "title": "新光三越南西店改裝近80品牌新登場消費滿300免費換Häagen-Dazs",
+      "url": "https://fashion.ettoday.net/news/3177686",
       "tag": "優惠"
     },
     {
-      "title": "王品19個品牌「主餐買1送1」限時14天開吃8月將有重大合作上線",
-      "url": "https://tw.news.yahoo.com/%E7%8E%8B%E5%93%8119%E5%80%8B%E5%93%81%E7%89%8C-%E4%B8%BB%E9%A4%90%E8%B2%B71%E9%80%811-%E9%99%90%E6%99%8214%E5%A4%A9%E9%96%8B%E5%90%83-8%E6%9C%88%E5%B0%87%E6%9C%89%E9%87%8D%E5%A4%A7%E5%90%88%E4%BD%9C%E4%B8%8A%E7%B7%9A-055300287.html",
+      "title": "今日精選Top 30優惠券 - Dealy TW",
+      "url": "https://dealy.tw/top-promos",
       "tag": "優惠"
     },
     {
-      "title": "【2026新飯店】全台Top30新開幕飯店，台北/台中/高雄/墾丁",
-      "url": "https://vivianexplore.tw/taiwan-new-hotels/",
+      "title": "抹茶控留意~ Nana's Green Tea 即將進駐Vancouver Downtown",
+      "url": "https://www.threads.com/@snapeat.ca/post/DZOF7DSjTup/%E6%8A%B9%E8%8C%B6%E6%8E%A7%E7%95%99%E6%84%8F-nanas-green-tea-%E5%8D%B3%E5%B0%87%E9%80%B2%E9%A7%90-vancouver-downtown%E5%93%81%E7%89%8C2001-%E5%B9%B4%E6%96%BC%E6%9D%B1%E4%BA%AC%E5%89%B5%E7%AB%8B%E5%85%A8%E7%90%83%E5%B7%B2%E6%9C%89%E8%B6%85%E9%81%8E-90-%E9%96%93%E5%88%86%E5%BA%97%E4%B8%BB%E6%89%93%E6%97%A5%E5%BC%8F%E6%8A%B9%E8%8C%B6%E7%94%9C%E5%93%81%E5%90%8C/",
+      "tag": "優惠"
+    },
+    {
+      "title": "【奧蘭多迪士尼優惠】奧蘭多迪士尼適用優惠/門票比價/快速通關 ...",
+      "url": "https://www.callingtaiwan.com.tw/disneyland-florida-orlando-coupons-promo-codes/",
+      "tag": "優惠"
+    },
+    {
+      "title": "家樂福確定走入歷史！這天起全面改名「最後強檔優惠限時12天」",
+      "url": "https://www.storm.mg/lifestyle/11138920",
       "tag": "優惠"
     }
   ]
