@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-08 23:15",
+  "updated_at": "2026-06-09 23:23",
   "songs": [
     {
       "name": "LEMONADE",
@@ -32,6 +32,11 @@
       "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
     },
     {
+      "name": "SWIM",
+      "artist": "防彈少年團",
+      "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
+    },
+    {
       "name": "WDA (Whole Different Animal) [feat. G-DRAGON]",
       "artist": "aespa",
       "url": "https://music.apple.com/tw/album/wda-whole-different-animal-feat-g-dragon/1893599771?i=1893599772"
@@ -40,11 +45,6 @@
       "name": "CHOOM",
       "artist": "BABYMONSTER",
       "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
-    },
-    {
-      "name": "SWIM",
-      "artist": "防彈少年團",
-      "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
     },
     {
       "name": "It's Me",
@@ -62,6 +62,11 @@
       "url": "https://music.apple.com/tw/album/ddi-ro-ri/6767304771?i=6767304773"
     },
     {
+      "name": "VIRAL",
+      "artist": "BOYNEXTDOOR",
+      "url": "https://music.apple.com/tw/album/viral/1896255247?i=6766256692"
+    },
+    {
       "name": "4 Flowers",
       "artist": "MAMAMOO",
       "url": "https://music.apple.com/tw/album/4-flowers/6775333578?i=6775333580"
@@ -70,42 +75,22 @@
       "name": "Suddenly",
       "artist": "I.O.I",
       "url": "https://music.apple.com/tw/album/suddenly/6769328211?i=6769328214"
-    },
-    {
-      "name": "RUDE!",
-      "artist": "Hearts2Hearts",
-      "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
     }
   ],
   "deals": [
     {
-      "title": "2026韓國OLIVE YOUNG折扣時間！8大優惠日期請筆記，最高三折起",
-      "url": "https://www.funliday.com/posts/2026-oliveyoung-sale/",
-      "tag": "優惠"
-    },
-    {
-      "title": "全聯買一送一2026/6最新DM》週三週六買一送一、6折優惠總整理",
-      "url": "https://news.tvbs.com.tw/life/2819201",
-      "tag": "優惠"
-    },
-    {
-      "title": "【札幌藥妝直送商城｜618特賣加碼】",
-      "url": "https://global-satudora.com/blogs/promotion/%F0%9F%92%96-%E6%9C%AD%E5%B9%8C%E8%97%A5%E5%A6%9D%E7%9B%B4%E9%80%81%E5%95%86%E5%9F%8E-618%E7%89%B9%E8%B3%A3%E5%8A%A0%E7%A2%BC-%F0%9F%94%A5?srsltid=AfmBOoqmcpEtPrn0H5pSBideBqdOAsQj2uw3gM0QC7Y0HsOtCnjAvfhU",
-      "tag": "優惠"
-    },
-    {
-      "title": "【2026 Trip.com優惠碼】6月最新折扣碼、獨家折扣/信用卡優惠/機票/住宿 ...",
-      "url": "https://vivianexplore.tw/trip-com-promo-code/",
-      "tag": "優惠"
-    },
-    {
-      "title": "初夏呵護加碼週   | Aether 依鈦抗菌專家｜抗菌99%安心久久",
-      "url": "https://www.aether.com.tw/%E5%88%9D%E5%A4%8F%E5%91%B5%E8%AD%B7%E5%8A%A0%E7%A2%BC%E9%80%B1?srsltid=AfmBOorFxBmYE407lxzlbhcT-0jfwxGpjnGv5S0_Eo5wQrgll6cNp5pX",
-      "tag": "優惠"
-    },
-    {
       "title": "盧亞夏季特賣最低下殺2折！CHLOE、GUCCI香氛彩妝通通有",
       "url": "https://fashion.ettoday.net/news/3177139",
+      "tag": "優惠"
+    },
+    {
+      "title": "全球機票優惠懶人包．機票折扣碼－雄獅旅遊",
+      "url": "https://event.liontravel.com/zh-tw/campaign/hotsale/earlybird",
+      "tag": "優惠"
+    },
+    {
+      "title": "【2026札幌藥妝折扣碼】618限時優惠最高51折！日本藥妝直送台灣免運攻略",
+      "url": "https://vocus.cc/article/6a283c66fd89780001b150df",
       "tag": "優惠"
     },
     {
@@ -114,8 +99,43 @@
       "tag": "優惠"
     },
     {
-      "title": "全台-優惠卷-優惠折扣-優惠活動-優惠券集中",
-      "url": "https://cp.ocam.live/",
+      "title": "【札幌藥妝直送商城｜618特賣加碼】",
+      "url": "https://global-satudora.com/blogs/promotion/%F0%9F%92%96-%E6%9C%AD%E5%B9%8C%E8%97%A5%E5%A6%9D%E7%9B%B4%E9%80%81%E5%95%86%E5%9F%8E-618%E7%89%B9%E8%B3%A3%E5%8A%A0%E7%A2%BC-%F0%9F%94%A5?srsltid=AfmBOorYmS22GosC_oO5yHUqnKaH0tkLd0TLNank-tN9XMXsmDVlCupj",
+      "tag": "優惠"
+    },
+    {
+      "title": "Top City 台中大遠百-線上DM - 遠東百貨",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=53",
+      "tag": "優惠"
+    },
+    {
+      "title": "周年慶特賣: r/deadbydaylight - Reddit",
+      "url": "https://www.reddit.com/r/deadbydaylight/comments/1txesi7/anniversary_sale/?tl=zh-hant",
+      "tag": "優惠"
+    },
+    {
+      "title": "強烈推薦！台灣人都來看！！！！ - Threads",
+      "url": "https://www.threads.com/@cutestuffz66/post/DZPqiaek08D/%E7%99%BC%E4%BD%88%E8%80%85cutestuffz66/",
+      "tag": "優惠"
+    },
+    {
+      "title": "活動訊息| 活動情報 - Q square京站時尚廣場",
+      "url": "https://www.qsquare.com.tw/event-list.php",
+      "tag": "優惠"
+    },
+    {
+      "title": "唔好話小編唔提你！ 即日起至6月30，感恩回饋·9週年慶全店單品無 ...",
+      "url": "https://www.threads.com/@dr.koala_hk/post/DZKDZVpGiKs/%E5%94%94%E5%A5%BD%E8%A9%B1%E5%B0%8F%E7%B7%A8%E5%94%94%E6%8F%90%E4%BD%A0%E5%8D%B3%E6%97%A5%E8%B5%B7%E8%87%B36%E6%9C%8830%E6%84%9F%E6%81%A9%E5%9B%9E%E9%A5%8B9%E9%80%B1%E5%B9%B4%E6%85%B6-%E5%85%A8%E5%BA%97%E5%96%AE%E5%93%81%E7%84%A1%E9%96%80%E6%AA%BB88%E6%8A%98%E7%84%A1%E7%9D%87%E9%8C%AF%E4%BF%82%E7%9B%B4%E6%8E%A588%E6%8A%98%E4%BB%B2%E8%A6%81%E9%99%90%E6%99%82%E5%8A%A0%E7%A2%BC900%E8%9A%8A%E4%BB%BB%E9%81%B83%E4%BB%B6%E5%B0%88%E5%8D%80-%E9%99%90%E5%94%AE100%E4%BB%B6%E7%89%B9%E8%B3%A3%E6%90%B6%E6%9C%89%E5%95%B2%E5%8F%AA%E5%81%9A%E4%B8%80%E6%98%9F%E6%9C%9F%E8%B3%A3%E5%AE%8C%E5%8D%B3",
+      "tag": "優惠"
+    },
+    {
+      "title": "活動訊息 - 福華大飯店",
+      "url": "https://www.howard-hotels.com.tw/zh_TW/OutletPage/2/Activity",
+      "tag": "優惠"
+    },
+    {
+      "title": "活動訊息| 廣三SOGO百貨",
+      "url": "https://www.kssogo.com.tw/news.php?cID=5",
       "tag": "優惠"
     },
     {
@@ -134,14 +154,49 @@
       "tag": "優惠"
     },
     {
-      "title": "【奧蘭多迪士尼優惠】奧蘭多迪士尼適用優惠/門票比價/快速通關 ...",
-      "url": "https://www.callingtaiwan.com.tw/disneyland-florida-orlando-coupons-promo-codes/",
+      "title": "2025初夏購物節全攻略：名人穿搭推薦、居家必備家電 - 新光三越",
+      "url": "https://www.skm.com.tw/skmmedia/lifestyleandfood/living/supershopping",
+      "tag": "優惠"
+    },
+    {
+      "title": "【奧蘭多環球影城優惠】史詩宇宙Epic Universe ... - Calling訂房達人",
+      "url": "https://www.callingtaiwan.com.tw/universal-studios-orlando-coupons-promo-codes/",
       "tag": "優惠"
     },
     {
       "title": "家樂福確定走入歷史！這天起全面改名「最後強檔優惠限時12天」",
       "url": "https://www.storm.mg/lifestyle/11138920",
       "tag": "優惠"
+    },
+    {
+      "title": "yahoo購物金100",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1781026080.A.783.html",
+      "tag": "情報"
+    },
+    {
+      "title": "麥當勞APP優惠 8折",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1781037136.A.5E1.html",
+      "tag": "情報"
+    },
+    {
+      "title": "pchome贈100P幣",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1781041896.A.B9F.html",
+      "tag": "情報"
+    },
+    {
+      "title": "2026年全台捐血贈品",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
+      "tag": "情報"
+    },
+    {
+      "title": "未滿1元集點抽獎資訊集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775756243.A.056.html",
+      "tag": "集中"
+    },
+    {
+      "title": "贈送集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775845713.A.018.html",
+      "tag": "集中"
     }
   ]
 }
