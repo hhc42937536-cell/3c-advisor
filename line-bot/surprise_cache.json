@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-20 23:14",
+  "updated_at": "2026-06-21 23:20",
   "songs": [
     {
       "name": "LEMONADE",
@@ -37,11 +37,6 @@
       "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
     },
     {
-      "name": "SWIM",
-      "artist": "防彈少年團",
-      "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
-    },
-    {
       "name": "REDRED",
       "artist": "CORTIS",
       "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
@@ -52,14 +47,14 @@
       "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
     },
     {
+      "name": "SWIM",
+      "artist": "防彈少年團",
+      "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
+    },
+    {
       "name": "CHOOM",
       "artist": "BABYMONSTER",
       "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
-    },
-    {
-      "name": "一個人",
-      "artist": "A-Lin",
-      "url": "https://music.apple.com/tw/album/%E4%B8%80%E5%80%8B%E4%BA%BA/6775423599?i=6775423606"
     },
     {
       "name": "BOOMPALA",
@@ -67,25 +62,35 @@
       "url": "https://music.apple.com/tw/album/boompala/1894802719?i=1894802726"
     },
     {
+      "name": "一個人",
+      "artist": "A-Lin",
+      "url": "https://music.apple.com/tw/album/%E4%B8%80%E5%80%8B%E4%BA%BA/6775423599?i=6775423606"
+    },
+    {
       "name": "SUGAR HONEY ICE TEA",
       "artist": "BABYMONSTER",
       "url": "https://music.apple.com/tw/album/sugar-honey-ice-tea/6774417988?i=6774417990"
     },
     {
-      "name": "WDA (Whole Different Animal) [feat. G-DRAGON]",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/wda-whole-different-animal-feat-g-dragon/1893599771?i=1893599772"
+      "name": "drop dead",
+      "artist": "Olivia Rodrigo",
+      "url": "https://music.apple.com/tw/album/drop-dead/1889992111?i=1889992113"
     }
   ],
   "deals": [
     {
-      "title": "全台唯一！限時線上特賣會來囉實在是非常不想收（超累的   直接開放 ...",
-      "url": "https://www.threads.com/@yukai.1112/post/DZkNDQgIKrH/%E5%85%A8%E5%8F%B0%E5%94%AF%E4%B8%80%E9%99%90%E6%99%82%E7%B7%9A%E4%B8%8A%E7%89%B9%E8%B3%A3%E6%9C%83%E4%BE%86%E5%9B%89-%E5%AF%A6%E5%9C%A8%E6%98%AF%E9%9D%9E%E5%B8%B8%E4%B8%8D%E6%83%B3%E6%94%B6%E8%B6%85%E7%B4%AF%E7%9A%84%E7%9B%B4%E6%8E%A5%E9%96%8B%E6%94%BE%E5%B9%BE%E5%A4%A9%E5%A4%A7%E5%AE%B6%E4%B8%8D%E7%94%A8%E4%BA%BA%E6%93%A0%E4%BA%BA%E5%9C%A8%E5%AE%B6%E5%B0%B1%E8%83%BD%E8%BC%95%E9%AC%86%E8%B2%B7-%E7%95%99%E8%A8%80%E6%88%91%E8%A6%81%E7%89%B9%E8%B3%A3%E9%A6%AC%E4%B8%8A%E5%82%B3%E7%B5%A6%E4%BD%A0%E8%B3%87%E8%A8%8A%E6%B2%92%E6%94%B6%E5%88%B0%E5%8F%AF%E4%BB%A5%E4%B8%BB%E5%8B%95%E8%B7%9F%E6%88%91%E8%AA%AA%E5%96%94-%E9%99%90%E5%AE%9A%E5%84%AA%E6%83%A0%E5%A4%9A%E6%AC%BE%E5%95%86%E5%93%81%E4%B8%8B/",
+      "title": "Costco 好市多線上購物| 限時優惠",
+      "url": "https://www.costco.com.tw/c/hot-buys?srsltid=AfmBOorUe_B8yTKzb8UONn1pbT9FxkeNNOgWqfv6qN_XhZmHTbM8jOTT",
       "tag": "優惠"
     },
     {
-      "title": "Costco 好市多線上購物| 限時優惠",
-      "url": "https://www.costco.com.tw/c/hot-buys?srsltid=AfmBOoo76bCDpC-fl8d37JOcekyEw4e3EtLidAQpFdfS4Dx2soXsnKY9",
+      "title": "Internxt 推出夏季特賣優惠（Summer Sale），終身方案最高折扣87%",
+      "url": "https://www.threads.com/@free.com.tw/post/DZ1XBsjDGOz/internxt-%E6%8E%A8%E5%87%BA%E5%A4%8F%E5%AD%A3%E7%89%B9%E8%B3%A3%E5%84%AA%E6%83%A0summer-sale%E7%B5%82%E8%BA%AB%E6%96%B9%E6%A1%88%E6%9C%80%E9%AB%98%E6%8A%98%E6%89%A3-87%E6%98%AF%E5%BE%88%E9%81%A9%E5%90%88%E5%85%A5%E6%89%8B%E7%9A%84%E5%A5%BD%E6%99%82%E6%A9%9F%E9%80%A3%E7%B5%90%E5%9C%A8%E6%96%87%E7%AB%A0%E8%A3%A1%E6%9C%89%E8%88%88%E8%B6%A3%E5%8F%AF%E4%BB%A5%E5%8F%83%E8%80%83%E4%B8%80%E4%B8%8B",
+      "tag": "優惠"
+    },
+    {
+      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 03.09(一)~03.15(日)",
+      "url": "https://www.daybuy.tw/costco/240069/",
       "tag": "優惠"
     },
     {
@@ -99,53 +104,28 @@
       "tag": "優惠"
     },
     {
-      "title": "TATUNG大同家電3C品牌特賣會",
-      "url": "https://tatung3c.azurewebsites.net/fulisale/",
+      "title": "2026韓國OLIVE YOUNG折扣時間！8大優惠日期請筆記，最高三折起",
+      "url": "https://www.funliday.com/posts/2026-oliveyoung-sale/",
       "tag": "優惠"
     },
     {
-      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 03.09(一)~03.15(日)",
-      "url": "https://www.daybuy.tw/costco/240069/",
+      "title": "好消息😍🤎唔使飛去日本都買到日本平價高質女裝品牌 ...",
+      "url": "https://www.threads.com/@by.themood/post/DZuoI_OElIp/video-%E5%A5%BD%E6%B6%88%E6%81%AF%E5%94%94%E4%BD%BF%E9%A3%9B%E5%8E%BB%E6%97%A5%E6%9C%AC%E9%83%BD%E8%B2%B7%E5%88%B0%E6%97%A5%E6%9C%AC%E5%B9%B3%E5%83%B9%E9%AB%98%E8%B3%AA%E5%A5%B3%E8%A3%9D%E5%93%81%E7%89%8Ccomcocca-hk79%E5%B0%B1%E5%B7%B2%E7%B6%93%E6%9C%89%E4%BB%B6%E9%AB%98%E8%B3%AA%E8%88%92%E6%9C%8D%E7%99%BE%E6%90%ADtee-%E4%BE%86%E8%87%AA%E6%97%A5%E6%9C%AC-%E8%B6%85%E9%81%8E%E7%99%BE%E9%96%93%E5%88%86%E5%BA%97%E7%9A%84%E4%BA%BA%E6%B0%A3%E7%94%9F%E6%B4%BB%E6%9C%8D%E9%A3%BE%E5%93%81%E7%89%8Ccomcoca%E7%B5%82%E6%96%BC%E9%80%B2/",
       "tag": "優惠"
     },
     {
-      "title": "Mega City 板橋大遠百-線上DM - 遠東百貨",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=54",
+      "title": "未來奶茶1元開幕優惠（6/28限時）",
+      "url": "https://www.tiktok.com/@yuno_0519/video/7652201288150846741",
       "tag": "優惠"
     },
     {
-      "title": "線上DM - 南紡購物中心-",
-      "url": "https://www.tsrd.com.tw/online-dm/online-dm-page",
-      "tag": "優惠"
-    },
-    {
-      "title": "活動訊息| 活動情報 - Q square京站時尚廣場",
-      "url": "https://www.qsquare.com.tw/event-list.php",
-      "tag": "優惠"
-    },
-    {
-      "title": "《傳奇》系列即將在STEAM®平台展開特賣！ - MyCard娛樂中心",
-      "url": "https://app.mycard520.com.tw/news-%E3%80%8A%E5%82%B3%E5%A5%87%E3%80%8B%E7%B3%BB%E5%88%97%E5%8D%B3%E5%B0%87%E5%9C%A8steam%E5%B9%B3%E5%8F%B0%E5%B1%95%E9%96%8B%E7%89%B9%E8%B3%A3%EF%BC%81/",
-      "tag": "優惠"
-    },
-    {
-      "title": "重溫傳奇時光！《傳奇》系列即將在STEAM平台展開特賣！ - QooApp",
-      "url": "https://news.qoo-app.com/post/438881/tales-of-franchise-sale-2026-steam",
-      "tag": "優惠"
-    },
-    {
-      "title": "第二杯半價、買一送一開跑一週！崇德店正式開幕 - Threads",
-      "url": "https://www.threads.com/@the_te_day/post/DZj4sCMD8WL/video-%E7%AC%AC%E4%BA%8C%E6%9D%AF%E5%8D%8A%E5%83%B9%E8%B2%B7%E4%B8%80%E9%80%81%E4%B8%80%E9%96%8B%E8%B7%91%E4%B8%80%E9%80%B1%E5%B4%87%E5%BE%B7%E5%BA%97%E6%AD%A3%E5%BC%8F%E9%96%8B%E5%B9%95-%E5%8C%97%E5%B1%AF%E7%9A%84%E6%9C%8B%E5%8F%8B%E4%B9%85%E7%AD%89%E4%BA%86%E9%82%A3%E5%B9%B4%E9%82%A3%E6%9D%AF%E6%AD%A3%E5%BC%8F%E4%BE%86%E5%88%B0%E5%B4%87%E5%BE%B7%E8%B7%AF%E5%95%A6%E7%82%BA%E4%BA%86%E6%85%B6%E7%A5%9D%E5%B4%87%E5%BE%B7%E5%BA%97%E9%96%8B%E5%B9%95%E6%88%91%E5%80%91%E6%BA%96%E5%82%99%E4%BA%86%E5%85%A9%E6%B3%A2%E9%99%90%E6%99%82%E5%84%AA%E6%83%A0%E5%9B%9E%E9%A5%8B%E5%A4%A7%E5%AE%B6615618-%E8%A9%A6%E7%87%9F%E9%81%8B%E5%85%A8%E9%A3%B2%E5%93%81%E7%AC%AC%E4%BA%8C/",
-      "tag": "優惠"
-    },
-    {
-      "title": "歡慶微風廣場新開幕-有情門設計家具",
-      "url": "https://www.twucm.com/news/new_open/detail",
-      "tag": "優惠"
-    },
-    {
-      "title": "家樂福要走入歷史了！這天起正式更名「最後買一送一限時14天」",
+      "title": "家樂福要走入歷史了！這天起正式更名「最後買一送一限時14 ...",
       "url": "https://www.storm.mg/lifestyle/11142020",
+      "tag": "優惠"
+    },
+    {
+      "title": "2026年中限定折扣整理！20+間時尚、美妝、寢具電商優惠 ...",
+      "url": "https://www.vogue.com.tw/article/shopping-618-sale",
       "tag": "優惠"
     },
     {
@@ -154,49 +134,39 @@
       "tag": "優惠"
     },
     {
-      "title": "開幕活動行銷別只打折：AI 先補5 個到店訊號 - 理查不想再輸入了",
-      "url": "https://richardmarketings.com/grand-opening-marketing-ai-taiwan-smes/",
-      "tag": "優惠"
-    },
-    {
-      "title": "四組90天期限LINE免費貼圖（瘋先生網站）",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1781866480.A.9A5.html",
+      "title": "酷澎 威剛65w 2c1a 299",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782037090.A.2A1.html",
       "tag": "情報"
     },
     {
-      "title": "新北市民免費辦TFAI國影中心會員",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1781875057.A.5BE.html",
+      "title": "林鳳營鮮奶936ml全聯分批取4瓶228元",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782049197.A.2E4.html",
       "tag": "情報"
     },
     {
-      "title": "彰化埤頭牛奶坊 雪糕無料放題",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1781877340.A.B5E.html",
+      "title": "全家優惠趣 多樣商品搶券",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782066644.A.D0E.html",
       "tag": "情報"
     },
     {
-      "title": "蝦哥三點 中華電信一點",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1781885951.A.864.html",
+      "title": "蝦皮直營轉盤（九成保底1蝦幣）",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782075776.A.2AD.html",
       "tag": "情報"
     },
     {
-      "title": "IKEA近千項絕版品出清全面3折",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1781910412.A.E6B.html",
+      "title": "2026年全台捐血贈品",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
       "tag": "情報"
     },
     {
-      "title": "合法且免費看直播電視頻道新選擇",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1781910780.A.775.html",
-      "tag": "情報"
+      "title": "未滿1元集點抽獎資訊集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775756243.A.056.html",
+      "tag": "集中"
     },
     {
-      "title": "蝦皮直營雅漾活泉水",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1781914938.A.84F.html",
-      "tag": "情報"
-    },
-    {
-      "title": "全國電子 飛利浦HX9911 $3490",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1781920573.A.17C.html",
-      "tag": "情報"
+      "title": "贈送集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775845713.A.018.html",
+      "tag": "集中"
     }
   ]
 }
