@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-23 23:11",
+  "updated_at": "2026-06-24 23:10",
   "songs": [
     {
       "name": "LEMONADE",
@@ -52,14 +52,14 @@
       "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
     },
     {
-      "name": "BOOMPALA",
-      "artist": "LE SSERAFIM",
-      "url": "https://music.apple.com/tw/album/boompala/1894802719?i=1894802726"
-    },
-    {
       "name": "drop dead",
       "artist": "Olivia Rodrigo",
       "url": "https://music.apple.com/tw/album/drop-dead/1889992111?i=1889992113"
+    },
+    {
+      "name": "BOOMPALA",
+      "artist": "LE SSERAFIM",
+      "url": "https://music.apple.com/tw/album/boompala/1894802719?i=1894802726"
     },
     {
       "name": "一個人",
@@ -67,70 +67,20 @@
       "url": "https://music.apple.com/tw/album/%E4%B8%80%E5%80%8B%E4%BA%BA/6775423599?i=6775423606"
     },
     {
-      "name": "SUGAR HONEY ICE TEA",
-      "artist": "BABYMONSTER",
-      "url": "https://music.apple.com/tw/album/sugar-honey-ice-tea/6774417988?i=6774417990"
-    },
-    {
       "name": "WDA (Whole Different Animal) [feat. G-DRAGON]",
       "artist": "aespa",
       "url": "https://music.apple.com/tw/album/wda-whole-different-animal-feat-g-dragon/1893599771?i=1893599772"
+    },
+    {
+      "name": "Lemon Tang",
+      "artist": "Hearts2Hearts",
+      "url": "https://music.apple.com/tw/album/lemon-tang/6779521284?i=6779521286"
     }
   ],
   "deals": [
     {
-      "title": "好康情報誌(@info.talk_tw) - Threads",
-      "url": "https://www.threads.com/@info.talk_tw",
-      "tag": "優惠"
-    },
-    {
-      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 03.09(一)~03.15(日)",
-      "url": "https://www.daybuy.tw/costco/240069/",
-      "tag": "優惠"
-    },
-    {
-      "title": "一起聰明買! 最新2026年6月全球各大電商折扣資訊、折扣碼整理-美妝 ...",
-      "url": "https://lucybabe15.pixnet.net/blog/posts/11404346800",
-      "tag": "優惠"
-    },
-    {
-      "title": "TATUNG大同家電3C品牌特賣會",
-      "url": "https://tatung3c.azurewebsites.net/fulisale/",
-      "tag": "優惠"
-    },
-    {
-      "title": "2026韓國OLIVE YOUNG折扣時間！8大優惠日期請筆記，最高三折起",
-      "url": "https://www.funliday.com/posts/2026-oliveyoung-sale/",
-      "tag": "優惠"
-    },
-    {
-      "title": "高雄大遠百-線上DM - 遠東百貨",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=51",
-      "tag": "優惠"
-    },
-    {
-      "title": "活動訊息| 活動情報 - Q square京站時尚廣場",
-      "url": "https://www.qsquare.com.tw/event-list.php",
-      "tag": "優惠"
-    },
-    {
-      "title": "是真的！平常會員身分只有少少95折的#現代中文譯本聖經，週年慶 ...",
-      "url": "https://www.threads.com/@pctpress_books/post/DZ77inDAQvQ/%E6%98%AF%E7%9C%9F%E7%9A%84%E5%B9%B3%E5%B8%B8%E6%9C%83%E5%93%A1%E8%BA%AB%E5%88%86%E5%8F%AA%E6%9C%89%E5%B0%91%E5%B0%9195%E6%8A%98%E7%9A%84-%E7%8F%BE%E4%BB%A3%E4%B8%AD%E6%96%87%E8%AD%AF%E6%9C%AC-%E8%81%96%E7%B6%93%E9%80%B1%E5%B9%B4%E6%85%B6%E5%B1%85%E7%84%B6%E6%9C%8975%E6%8A%98%E5%84%AA%E6%83%A0%E5%85%AC%E5%A0%B1%E7%A4%BE%E8%BF%91%E5%B9%B4%E4%BE%86%E6%8E%A8%E5%8B%95%E6%89%8B%E6%8A%84%E9%81%8B%E5%8B%95%E4%BB%8A%E5%B9%B4%E6%89%8B%E6%8A%84%E4%B8%BB%E9%A1%8C%E8%81%96%E7%B6%93%E5%85%AB%E7%A6%8F%E5%9B%A0%E6%AD%A4%E7%89%B9%E5%88%A5%E6%8F%90%E4%BE%9B%E8%81%96%E7%B6%93%E5%84%AA%E6%83%A0%E7%B5%A6%E5%A4%A7%E5%AE%B6%E8%80%8C%E4%B8%94%E6%98%AF%E7%B5%95%E4%BD%B3%E5%84%AA%E6%83%A0/",
-      "tag": "優惠"
-    },
-    {
-      "title": "線上DM - 南紡購物中心-",
-      "url": "https://www.tsrd.com.tw/online-dm/online-dm-page",
-      "tag": "優惠"
-    },
-    {
-      "title": "首創周年慶！台灣第一家日系百貨其實是「永琦百貨」 - 報時光",
-      "url": "https://time.udn.com/udntime/story/122833/9553185",
-      "tag": "優惠"
-    },
-    {
-      "title": "中華航空: 機票與航班優惠",
-      "url": "https://flights.china-airlines.com/zh-tw/flights",
+      "title": "所有商店| Dealy.TW 優惠折扣平台",
+      "url": "https://dealy.tw/shop",
       "tag": "優惠"
     },
     {
@@ -139,32 +89,17 @@
       "tag": "優惠"
     },
     {
-      "title": "未來奶茶1元開幕優惠（6/28限時） - TikTok",
-      "url": "https://www.tiktok.com/@yuno_0519/video/7652201288150846741",
-      "tag": "優惠"
-    },
-    {
       "title": "最新活動- 大苑子｜台灣鮮果第一品牌",
       "url": "https://www.dayungs.com/category/%E6%9C%80%E6%96%B0%E6%B4%BB%E5%8B%95/",
       "tag": "優惠"
     },
     {
-      "title": "2026 年中慶優惠｜全球14 家電商「夏日折扣」總整理，從Mr Porter",
-      "url": "https://www.gq.com.tw/article/618-mid-year-sale",
+      "title": "家樂福要走入歷史了！這天起正式更名「最後買一送一限時14 ...",
+      "url": "https://www.storm.mg/lifestyle/11142020",
       "tag": "優惠"
     },
     {
-      "title": "618購物節開跑！台中福華大飯店祭47折超殺優惠 - 經濟日報",
-      "url": "https://money.udn.com/money/story/10871/9575130",
-      "tag": "優惠"
-    },
-    {
-      "title": "【2026輕井澤王子購物廣場】必買品牌、Outlet折價券領取＋東京 ...",
-      "url": "https://marktrip.tw/karuizawa-outlet-guide/",
-      "tag": "優惠"
-    },
-    {
-      "title": "6/24.25 openpoint 12 op兌換",
+      "title": "6/24.25 openpoint 12 op兌換(已換完)",
       "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782231302.A.3BC.html",
       "tag": "情報"
     },
@@ -189,19 +124,19 @@
       "tag": "情報"
     },
     {
-      "title": "2026年全台捐血贈品",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
+      "title": "iHerb79折",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782263970.A.EE6.html",
       "tag": "情報"
     },
     {
-      "title": "未滿1元集點抽獎資訊集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775756243.A.056.html",
-      "tag": "集中"
+      "title": "萊爾富限時殺5日 6/24~6/28",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782265928.A.AF3.html",
+      "tag": "情報"
     },
     {
-      "title": "贈送集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775845713.A.018.html",
-      "tag": "集中"
+      "title": "7-11超值五六日 6/26~6/28",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782267229.A.95B.html",
+      "tag": "情報"
     }
   ]
 }
