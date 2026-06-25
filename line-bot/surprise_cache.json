@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-24 23:10",
+  "updated_at": "2026-06-25 23:22",
   "songs": [
     {
       "name": "LEMONADE",
@@ -37,14 +37,19 @@
       "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
     },
     {
+      "name": "Heavy Serenade",
+      "artist": "NMIXX",
+      "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
+    },
+    {
       "name": "SWIM",
       "artist": "防彈少年團",
       "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
     },
     {
-      "name": "Heavy Serenade",
-      "artist": "NMIXX",
-      "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
+      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
+      "artist": "宇宙人",
+      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     },
     {
       "name": "CHOOM",
@@ -52,9 +57,9 @@
       "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
     },
     {
-      "name": "drop dead",
-      "artist": "Olivia Rodrigo",
-      "url": "https://music.apple.com/tw/album/drop-dead/1889992111?i=1889992113"
+      "name": "一個人",
+      "artist": "A-Lin",
+      "url": "https://music.apple.com/tw/album/%E4%B8%80%E5%80%8B%E4%BA%BA/6775423599?i=6775423606"
     },
     {
       "name": "BOOMPALA",
@@ -62,14 +67,9 @@
       "url": "https://music.apple.com/tw/album/boompala/1894802719?i=1894802726"
     },
     {
-      "name": "一個人",
-      "artist": "A-Lin",
-      "url": "https://music.apple.com/tw/album/%E4%B8%80%E5%80%8B%E4%BA%BA/6775423599?i=6775423606"
-    },
-    {
-      "name": "WDA (Whole Different Animal) [feat. G-DRAGON]",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/wda-whole-different-animal-feat-g-dragon/1893599771?i=1893599772"
+      "name": "drop dead",
+      "artist": "Olivia Rodrigo",
+      "url": "https://music.apple.com/tw/album/drop-dead/1889992111?i=1889992113"
     },
     {
       "name": "Lemon Tang",
@@ -79,63 +79,73 @@
   ],
   "deals": [
     {
-      "title": "所有商店| Dealy.TW 優惠折扣平台",
-      "url": "https://dealy.tw/shop",
+      "title": "Mega City 板橋大遠百-線上DM - 遠東百貨",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=54",
       "tag": "優惠"
     },
     {
-      "title": "開幕優惠",
-      "url": "https://www.threads.com/@niniandblue.blog/post/DZ6uAoVEfTe/%E9%96%8B%E5%B9%95%E5%84%AA%E6%83%A0/",
+      "title": "活動訊息| 活動情報 - Q square京站時尚廣場",
+      "url": "https://www.qsquare.com.tw/event-list.php",
       "tag": "優惠"
     },
     {
-      "title": "最新活動- 大苑子｜台灣鮮果第一品牌",
-      "url": "https://www.dayungs.com/category/%E6%9C%80%E6%96%B0%E6%B4%BB%E5%8B%95/",
+      "title": "補充",
+      "url": "https://www.threads.com/@yuda50342/post/DZ_PFj_jz4B/%E8%A3%9C%E5%85%85",
       "tag": "優惠"
     },
     {
-      "title": "家樂福要走入歷史了！這天起正式更名「最後買一送一限時14 ...",
-      "url": "https://www.storm.mg/lifestyle/11142020",
+      "title": "活動訊息| 廣三SOGO百貨",
+      "url": "https://www.kssogo.com.tw/news.php?cID=5",
       "tag": "優惠"
     },
     {
-      "title": "6/24.25 openpoint 12 op兌換(已換完)",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782231302.A.3BC.html",
+      "title": "分店資訊｜台北站前店 - 新光三越",
+      "url": "https://www.skm.com.tw/branch/2/1111",
+      "tag": "優惠"
+    },
+    {
+      "title": "近期會有折扣嗎？或者有什麼方法可以在不付這麼驚人價格的情況下 ...",
+      "url": "https://www.reddit.com/r/crusaderkings3/comments/1ucfc2f/is_there_a_coming_discounts_soon_or_anyway_to/?tl=zh-hant",
+      "tag": "優惠"
+    },
+    {
+      "title": "Re: [情報]圓山飯店松鶴廳午晚餐,下午茶餐券75折起",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782365168.A.C80.html",
       "tag": "情報"
     },
     {
-      "title": "12op兌換統一營養強化高鈣牛奶統一麵包",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782231417.A.E43.html",
+      "title": "LINE禮物優惠彙總",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782365697.A.523.html",
       "tag": "情報"
     },
     {
-      "title": "蝦皮VIP 年繳訂閱 送500蝦幣",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782235629.A.715.html",
+      "title": "蝦皮亞瑟士跑鞋券後$1,199",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782366557.A.6E9.html",
       "tag": "情報"
     },
     {
-      "title": "蝦皮vip年訂閱送500蝦幣",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782235756.A.3DA.html",
+      "title": "icash Pay x 金色三麥，不限金額回饋5%",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782367402.A.186.html",
       "tag": "情報"
     },
     {
-      "title": "玉山e點1點 蝦皮VIP3個月會員訂閱試用",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782253414.A.998.html",
+      "title": "Fw: [情報] 美亞Drop + Grell OAE1 跳水價$47.59",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782372482.A.397.html",
       "tag": "情報"
     },
     {
-      "title": "iHerb79折",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782263970.A.EE6.html",
+      "title": "motorola Edge 50 Pro 5G $4796",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782381036.A.896.html",
       "tag": "情報"
     },
     {
-      "title": "萊爾富限時殺5日 6/24~6/28",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782265928.A.AF3.html",
+      "title": "蝦皮直營超市加碼券300-100",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782384226.A.5A5.html",
       "tag": "情報"
     },
     {
-      "title": "7-11超值五六日 6/26~6/28",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782267229.A.95B.html",
+      "title": "NB 574 / 530 / 740 運動鞋任選1999",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1782384933.A.330.html",
       "tag": "情報"
     }
   ]
