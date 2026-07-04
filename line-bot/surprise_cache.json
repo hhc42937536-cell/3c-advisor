@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-03 23:10",
+  "updated_at": "2026-07-04 23:02",
   "songs": [
     {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
@@ -22,16 +22,6 @@
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
-      "name": "一個人",
-      "artist": "A-Lin",
-      "url": "https://music.apple.com/tw/album/%E4%B8%80%E5%80%8B%E4%BA%BA/6775423599?i=6775423606"
-    },
-    {
-      "name": "ICONIC BY MISTAKE",
-      "artist": "LE SSERAFIM, ILLIT…",
-      "url": "https://music.apple.com/tw/album/iconic-by-mistake/6776077182?i=6776077187"
-    },
-    {
       "name": "It's Me",
       "artist": "ILLIT",
       "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
@@ -40,6 +30,16 @@
       "name": "SWIM",
       "artist": "防彈少年團",
       "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
+    },
+    {
+      "name": "一個人",
+      "artist": "A-Lin",
+      "url": "https://music.apple.com/tw/album/%E4%B8%80%E5%80%8B%E4%BA%BA/6775423599?i=6775423606"
+    },
+    {
+      "name": "ICONIC BY MISTAKE",
+      "artist": "LE SSERAFIM, ILLIT…",
+      "url": "https://music.apple.com/tw/album/iconic-by-mistake/6776077182?i=6776077187"
     },
     {
       "name": "REDRED",
@@ -57,6 +57,11 @@
       "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
     },
     {
+      "name": "RUDE!",
+      "artist": "Hearts2Hearts",
+      "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
+    },
+    {
       "name": "stupid song",
       "artist": "Olivia Rodrigo",
       "url": "https://music.apple.com/tw/album/stupid-song/1889992111?i=1889992115"
@@ -67,40 +72,25 @@
       "url": "https://music.apple.com/tw/album/lemon-tang/6779521284?i=6779521286"
     },
     {
-      "name": "RUDE!",
-      "artist": "Hearts2Hearts",
-      "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
-    },
-    {
-      "name": "I Knew It, I Knew You (From \"Toy Story 5\")",
-      "artist": "Taylor Swift",
-      "url": "https://music.apple.com/tw/album/i-knew-it-i-knew-you-from-toy-story-5/6775527442?i=6775527443"
+      "name": "那天下雨了",
+      "artist": "周杰倫",
+      "url": "https://music.apple.com/tw/album/%E9%82%A3%E5%A4%A9%E4%B8%8B%E9%9B%A8%E4%BA%86/1887246588?i=1887246591"
     }
   ],
   "deals": [
-    {
-      "title": "Costco 好市多線上購物| 限時優惠",
-      "url": "https://www.costco.com.tw/c/hot-buys?srsltid=AfmBOoqtoc0b-ZDQ-hvNIntz3l0banU4qnZPAJvqIpisyHfvqGpKa3-_",
-      "tag": "優惠"
-    },
     {
       "title": "限時搶購！2026最新快閃優惠一覽",
       "url": "https://dealy.tw/special-offers/flash-deals",
       "tag": "優惠"
     },
     {
-      "title": "全台特賣會 - 好康情報誌",
-      "url": "https://info.talk.tw/category/sale/",
+      "title": "Costco 好市多線上購物| 限時優惠",
+      "url": "https://www.costco.com.tw/c/hot-buys?srsltid=AfmBOorrQUCFvFCtNfbmmyLAFXNvMLkLNnP7O6ilWsYgzY9F1oJ5GFva",
       "tag": "優惠"
     },
     {
       "title": "SaleEvents 特賣會資訊: 最新最齊全的優惠活動(2026)",
       "url": "https://tw.discount.wave-base.com/",
-      "tag": "優惠"
-    },
-    {
-      "title": "商店優惠碼| Dealy.TW 優惠折扣平台",
-      "url": "https://dealy.tw/shop",
       "tag": "優惠"
     },
     {
@@ -110,27 +100,22 @@
     },
     {
       "title": "希奧朵拉首間街邊店來了   7/3 FRI. 台北大巨蛋門市即將開幕！",
-      "url": "https://www.threads.com/@theodorastw/post/DaR8Xv_gQAt/%E5%85%A8%E5%8F%B0%E9%A6%96%E9%96%93%E8%A1%97%E9%82%8A%E5%BA%97%E4%BE%86%E4%BA%86%F0%9D%9F%B3%F0%9D%9F%AF-%F0%9D%97%99%F0%9D%97%A5%F0%9D%97%9C-%E5%8F%B0%E5%8C%97%E5%A4%A7%E5%B7%A8%E8%9B%8B%E9%96%80%E5%B8%82%E5%8D%B3%E5%B0%87%E9%96%8B%E5%B9%95%E8%A9%B3%E7%B4%B0%E9%96%8B%E5%B9%95%E5%84%AA%E6%83%A0%E8%B7%9F%E9%99%90%E5%AE%9A%E5%84%AA%E6%83%A0%E5%8D%B7%E6%94%BE%E7%95%99%E8%A8%80%E5%8D%80",
+      "url": "https://www.threads.com/@theodorastw/post/DaR8Xv_gQAt/%E5%85%A8%E5%8F%B0%E9%A6%96%E9%96%93%E8%A1%97%E9%82%8A%E5%BA%97%E4%BE%86%E4%BA%86%F0%9D%9F%B3%F0%9D%9F%AF-%F0%9D%97%99%F0%9D%97%A5%F0%9D%97%9C-%E5%8F%B0%E5%8C%97%E5%A4%A7%E5%B7%A8%E8%9B%8B%E9%96%80%E5%B8%82%E5%8D%B3%E5%B0%87%E9%96%8B%E5%B9%95%E8%A9%B3%E7%B4%B0%E9%96%8B%E5%B9%95%E5%84%AA%E6%83%A0%E8%B7%9F%E9%99%90%E5%AE%9A%E5%84%AA%E6%83%A0%E5%8D%B7%E6%94%BE%E7%95%99%E8%A8%80%E5%8D%80/",
       "tag": "優惠"
     },
     {
       "title": "好市多新高雄店7/3開幕！一堆商品特價、折萬元新會員送1000元",
-      "url": "https://www.nownews.com/news/6852718?srsltid=AfmBOoq1hpRR_4Jb3zrWl8YWoWzTb9X1siPIGrXvzJ_jAzPZlP-5KCZ_",
+      "url": "https://www.nownews.com/news/6852718?srsltid=AfmBOooFjCC2ADNndJXe13NTV34gBXpN6leJrZRtznqz04c7VLkmKtmW",
       "tag": "優惠"
     },
     {
-      "title": "全台最大好市多今開幕！辦卡送千元超狂優惠曝光在地粉專急示警「1 ...",
-      "url": "https://today.line.me/tw/v3/article/9mvwNOK",
+      "title": "全台最大「海景好市多」7/3新高雄店強勢開幕！ 4大新門市亮點 - 旅遊",
+      "url": "https://travel.udn.com/travel/story/7160/9604033",
       "tag": "優惠"
     },
     {
       "title": "豐原2400坪全新百貨明7／3開幕4大亮點、好康優惠懶人包一次看",
       "url": "https://truemii.chinatimes.com/content/20260702003864-265001",
-      "tag": "優惠"
-    },
-    {
-      "title": "全台最大好市多高雄店7/3開幕！占地1.4萬坪，1000元商品券、會員 ...",
-      "url": "https://www.gvm.com.tw/article/130258?srsltid=AfmBOopXZn2CcrhDbo0PvB3fpOxpXu1U-KLuZ1Wnubwa2YIiHOWRd4LZ",
       "tag": "優惠"
     }
   ]
