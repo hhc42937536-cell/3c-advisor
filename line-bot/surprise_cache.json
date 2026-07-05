@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-04 23:02",
+  "updated_at": "2026-07-05 23:05",
   "songs": [
     {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
@@ -27,14 +27,14 @@
       "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
     },
     {
-      "name": "SWIM",
-      "artist": "防彈少年團",
-      "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
-    },
-    {
       "name": "一個人",
       "artist": "A-Lin",
       "url": "https://music.apple.com/tw/album/%E4%B8%80%E5%80%8B%E4%BA%BA/6775423599?i=6775423606"
+    },
+    {
+      "name": "SWIM",
+      "artist": "防彈少年團",
+      "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
     },
     {
       "name": "ICONIC BY MISTAKE",
@@ -42,14 +42,19 @@
       "url": "https://music.apple.com/tw/album/iconic-by-mistake/6776077182?i=6776077187"
     },
     {
-      "name": "REDRED",
-      "artist": "CORTIS",
-      "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
-    },
-    {
       "name": "CHOOM",
       "artist": "BABYMONSTER",
       "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
+    },
+    {
+      "name": "I Knew It, I Knew You (From \"Toy Story 5\")",
+      "artist": "Taylor Swift",
+      "url": "https://music.apple.com/tw/album/i-knew-it-i-knew-you-from-toy-story-5/6775527442?i=6775527443"
+    },
+    {
+      "name": "REDRED",
+      "artist": "CORTIS",
+      "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
     },
     {
       "name": "Heavy Serenade",
@@ -57,24 +62,19 @@
       "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
     },
     {
+      "name": "BAD",
+      "artist": "ATEEZ",
+      "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
+    },
+    {
       "name": "RUDE!",
       "artist": "Hearts2Hearts",
       "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
     },
     {
-      "name": "stupid song",
-      "artist": "Olivia Rodrigo",
-      "url": "https://music.apple.com/tw/album/stupid-song/1889992111?i=1889992115"
-    },
-    {
       "name": "Lemon Tang",
       "artist": "Hearts2Hearts",
       "url": "https://music.apple.com/tw/album/lemon-tang/6779521284?i=6779521286"
-    },
-    {
-      "name": "那天下雨了",
-      "artist": "周杰倫",
-      "url": "https://music.apple.com/tw/album/%E9%82%A3%E5%A4%A9%E4%B8%8B%E9%9B%A8%E4%BA%86/1887246588?i=1887246591"
     }
   ],
   "deals": [
@@ -84,18 +84,33 @@
       "tag": "優惠"
     },
     {
-      "title": "Costco 好市多線上購物| 限時優惠",
-      "url": "https://www.costco.com.tw/c/hot-buys?srsltid=AfmBOorrQUCFvFCtNfbmmyLAFXNvMLkLNnP7O6ilWsYgzY9F1oJ5GFva",
+      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 03.09(一)~03.15(日)",
+      "url": "https://www.daybuy.tw/costco/240069/",
       "tag": "優惠"
     },
     {
-      "title": "SaleEvents 特賣會資訊: 最新最齊全的優惠活動(2026)",
-      "url": "https://tw.discount.wave-base.com/",
+      "title": "Macy's 折扣碼與優惠：$20 & 30% 優惠- 7月2026",
+      "url": "https://www.everysaving.tw/store/macys.com",
       "tag": "優惠"
     },
     {
-      "title": "「全台最大好市多」今開幕！ 開幕優惠、交通資訊一次看 - Yahoo新聞",
-      "url": "https://tw.news.yahoo.com/%E5%85%A8%E5%8F%B0%E6%9C%80%E5%A4%A7%E5%A5%BD%E5%B8%82%E5%A4%9A-%E4%BB%8A%E9%96%8B%E5%B9%95-%E9%96%8B%E5%B9%95%E5%84%AA%E6%83%A0-%E4%BA%A4%E9%80%9A%E8%B3%87%E8%A8%8A-%E6%AC%A1%E7%9C%8B-022000265.html",
+      "title": "蝦皮購物/蝦皮商城/蝦皮直送2026最新優惠券/折扣碼/免運優惠碼總整理",
+      "url": "https://www.callingtaiwan.com.tw/%E8%9D%A6%E7%9A%AE%E6%8A%98%E6%89%A3%E7%A2%BC-shopee/",
+      "tag": "優惠"
+    },
+    {
+      "title": "[Costco 好市多必買] 2026最新熱門清單推薦7月至8月特價商品(含黑 ...",
+      "url": "https://travelerliv.com/post-229138058/",
+      "tag": "優惠"
+    },
+    {
+      "title": "全聯買一送一2026/7最新DM》週三週六買一送一、6折優惠懶人包",
+      "url": "https://news.tvbs.com.tw/life/2819201",
+      "tag": "優惠"
+    },
+    {
+      "title": "2025 好市多黑色購物週Black Friday",
+      "url": "https://www.costco.com.tw/blackfriday?srsltid=AfmBOoqZjqi7PQFQtjDDt7n8PobKKMwzVDqQzbzOORt8lKI5TUjrn_eg",
       "tag": "優惠"
     },
     {
@@ -104,8 +119,18 @@
       "tag": "優惠"
     },
     {
+      "title": "萬家福、樂家康首波優惠來了！600商品買1送1 30秒免費搬",
+      "url": "https://tw.news.yahoo.com/%E8%90%AC%E5%AE%B6%E7%A6%8F-%E6%A8%82%E5%AE%B6%E5%BA%B7%E9%A6%96%E6%B3%A2%E5%84%AA%E6%83%A0%E4%BE%86%E4%BA%86-600%E5%95%86%E5%93%81%E8%B2%B71%E9%80%811-30%E7%A7%92%E5%85%8D%E8%B2%BB%E6%90%AC-033800596.html",
+      "tag": "優惠"
+    },
+    {
       "title": "好市多新高雄店7/3開幕！一堆商品特價、折萬元新會員送1000元",
-      "url": "https://www.nownews.com/news/6852718?srsltid=AfmBOooFjCC2ADNndJXe13NTV34gBXpN6leJrZRtznqz04c7VLkmKtmW",
+      "url": "https://www.nownews.com/news/6852718?srsltid=AfmBOor4lX0RXuCRZTx_PEYhs43mjkDiEjtCNIag-iy_VDaDJOwaxp56",
+      "tag": "優惠"
+    },
+    {
+      "title": "全台最大好市多今開幕！辦卡送千元超狂優惠曝光在地粉專急示警「1 ...",
+      "url": "https://today.line.me/tw/v3/article/9mvwNOK",
       "tag": "優惠"
     },
     {
@@ -114,8 +139,8 @@
       "tag": "優惠"
     },
     {
-      "title": "豐原2400坪全新百貨明7／3開幕4大亮點、好康優惠懶人包一次看",
-      "url": "https://truemii.chinatimes.com/content/20260702003864-265001",
+      "title": "勤美誠品綠園道B2 全新開幕｜23品牌進駐與開幕優惠一覽 - TikTok",
+      "url": "https://www.tiktok.com/@love.on.foodplay/video/7658238348426808597",
       "tag": "優惠"
     }
   ]
