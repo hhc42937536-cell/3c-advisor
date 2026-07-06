@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updated_at": "2026-07-05T04:06:11",
+    "updated_at": "2026-07-06T04:12:45",
     "counts": {
       "laptop": 20,
       "phone": 20,
@@ -36,20 +36,6 @@
       "cons": "規格詳見商品頁",
       "tag": "💰 超值入門",
       "url": "https://24h.pchome.com.tw/prod/DHAEHH-A900JTNID"
-    },
-    {
-      "brand": "ASUS",
-      "name": "ASUS 華碩 Vivobook Go 15 15.6吋文書筆電黑色(Celeron N4500/8GB/12",
-      "price": "NT$9,999",
-      "cpu": "Intel Celeron N4500",
-      "ram": "8GB",
-      "ssd": "128GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "台灣品牌，全台維修據點多，價格親民，入門好選擇",
-      "cons": "規格詳見商品頁",
-      "tag": "💰 超值入門",
-      "url": "https://24h.pchome.com.tw/prod/DHAFPX-A900JXC67"
     },
     {
       "brand": "ASUS",
@@ -151,6 +137,20 @@
     },
     {
       "brand": "HP",
+      "name": "HP 惠普 255R G10 15.6吋 R3 商務筆電",
+      "price": "NT$16,900",
+      "cpu": "Ryzen 3 7335U",
+      "ram": "—",
+      "ssd": "—",
+      "battery": "—",
+      "weight": "—",
+      "pros": "",
+      "cons": "規格詳見商品頁",
+      "tag": "💰 高CP值",
+      "url": "https://24h.pchome.com.tw/prod/DHABEB-A900JV0CY"
+    },
+    {
+      "brand": "HP",
       "name": "HP 惠普 超品系列 15.6吋 輕薄文書筆電白色(R5-7520U/16GB/512GB/WIN11/15-",
       "price": "NT$16,999",
       "cpu": "詳見商品頁",
@@ -162,20 +162,6 @@
       "cons": "規格詳見商品頁",
       "tag": "💰 高CP值",
       "url": "https://24h.pchome.com.tw/prod/DHAGFP-1900K0RVY"
-    },
-    {
-      "brand": "ASUS",
-      "name": "ASUS 華碩 Vivobook 14 14吋效能筆電藍色(Intel Core 5 120U/8GB/512",
-      "price": "NT$17,999",
-      "cpu": "詳見商品頁",
-      "ram": "8GB",
-      "ssd": "512GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "台灣品牌，全台維修據點多",
-      "cons": "規格詳見商品頁",
-      "tag": "💰 高CP值",
-      "url": "https://24h.pchome.com.tw/prod/DHAFS4-A900JXJZS"
     },
     {
       "brand": "Lenovo",
@@ -207,6 +193,20 @@
     },
     {
       "brand": "Acer",
+      "name": "ACER 宏碁 Aspire Lite 16吋 AI效能筆電(Ultra5 115U/16G/512G/W11",
+      "price": "NT$19,900",
+      "cpu": "詳見商品頁",
+      "ram": "16GB",
+      "ssd": "512GB",
+      "battery": "—",
+      "weight": "—",
+      "pros": "",
+      "cons": "規格詳見商品頁",
+      "tag": "👍 主流推薦",
+      "url": "https://24h.pchome.com.tw/prod/DHAEIL-A900JOV8W"
+    },
+    {
+      "brand": "Acer",
       "name": "ACER 宏碁 Aspire Lite 16吋效能筆電(R5-7640HS/16G/512G/W11/AL16",
       "price": "NT$20,900",
       "cpu": "詳見商品頁",
@@ -218,20 +218,6 @@
       "cons": "規格詳見商品頁",
       "tag": "👍 主流推薦",
       "url": "https://24h.pchome.com.tw/prod/DHAEE0-A900JOVEK"
-    },
-    {
-      "brand": "Acer",
-      "name": "ACER 宏碁 AspireLite AL16-62P-R1N9 銀(R5-7640HS/16G/512G S",
-      "price": "NT$20,900",
-      "cpu": "詳見商品頁",
-      "ram": "16GB",
-      "ssd": "512GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "",
-      "cons": "規格詳見商品頁",
-      "tag": "👍 主流推薦",
-      "url": "https://24h.pchome.com.tw/prod/DHABG5-A900JNSUC"
     },
     {
       "brand": "HP",
@@ -277,7 +263,7 @@
     },
     {
       "brand": "Acer",
-      "name": "ACER 宏碁 Aspire Lite 16吋AI效能筆電 銀(Ultra5 125H/8+8G/512G/W",
+      "name": "ACER 宏碁 Aspire AL15-61P-R5J1 銀(R7-8840HS/8G+8G/512G SSD",
       "price": "NT$22,900",
       "cpu": "詳見商品頁",
       "ram": "—",
@@ -287,38 +273,24 @@
       "pros": "",
       "cons": "規格詳見商品頁",
       "tag": "👍 主流推薦",
-      "url": "https://24h.pchome.com.tw/prod/DHAEJ0-A900JANL5"
+      "url": "https://24h.pchome.com.tw/prod/DHABGA-A900JKUJN"
+    },
+    {
+      "brand": "Acer",
+      "name": "ACER 宏碁 Aspire Lite 16吋AI效能筆電(Ultra5-125H/16G/512G/W11/",
+      "price": "NT$22,900",
+      "cpu": "詳見商品頁",
+      "ram": "16GB",
+      "ssd": "512GB",
+      "battery": "—",
+      "weight": "—",
+      "pros": "",
+      "cons": "規格詳見商品頁",
+      "tag": "👍 主流推薦",
+      "url": "https://24h.pchome.com.tw/prod/DHAEJA-A900JVGQJ"
     }
   ],
   "phone": [
-    {
-      "brand": "OPPO",
-      "name": "OPPO Reno8 Z 5G(8GB/128GB)",
-      "price": "NT$3,280",
-      "cpu": "詳見商品頁",
-      "ram": "—",
-      "ssd": "128GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "快充速度快，外型設計感佳，價格親民，入門好選擇",
-      "cons": "規格詳見商品頁",
-      "tag": "💰 超值入門",
-      "url": "https://24h.pchome.com.tw/prod/DYAX0B-A900HJ6O4"
-    },
-    {
-      "brand": "Xiaomi",
-      "name": "Redmi 紅米 Note11 Pro 5G (6GB/128GB)",
-      "price": "NT$3,490",
-      "cpu": "詳見商品頁",
-      "ram": "—",
-      "ssd": "128GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "規格堆料足，CP值極高，價格親民，入門好選擇",
-      "cons": "台灣保固需確認",
-      "tag": "💰 超值入門",
-      "url": "https://24h.pchome.com.tw/prod/DYAX1W-A900IFTYK"
-    },
     {
       "brand": "Samsung",
       "name": "Samsung 三星 Galaxy A07 5G (4G/128G)",
@@ -350,7 +322,7 @@
     {
       "brand": "Xiaomi",
       "name": "Redmi 紅米 REDMI Note 15 8G/256G 6.77吋智慧型手機",
-      "price": "NT$5,690",
+      "price": "NT$5,999",
       "cpu": "詳見商品頁",
       "ram": "—",
       "ssd": "256GB",
@@ -418,20 +390,6 @@
       "url": "https://24h.pchome.com.tw/prod/DYCO0E-A900J1IRU"
     },
     {
-      "brand": "Samsung",
-      "name": "Samsung 三星 Galaxy Tab A11+ WiFi SM-X230 11吋平板電腦 (6G/128",
-      "price": "NT$8,490",
-      "cpu": "詳見商品頁",
-      "ram": "6GB",
-      "ssd": "128GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "螢幕色彩絕美（AMOLED），AI 功能豐富，價格親民，入門好選擇",
-      "cons": "規格詳見商品頁",
-      "tag": "💰 超值入門",
-      "url": "https://24h.pchome.com.tw/prod/DYALRH-A900JFXBM"
-    },
-    {
       "brand": "OPPO",
       "name": "OPPO Find N2 Flip (8G/256G)",
       "price": "NT$9,690",
@@ -472,20 +430,6 @@
       "cons": "台灣保固需確認",
       "tag": "💰 超值入門",
       "url": "https://24h.pchome.com.tw/prod/DYAWCI-A900JKXB6"
-    },
-    {
-      "brand": "Xiaomi",
-      "name": "Xiaomi 小米 REDMI Note 15 Pro+ 5G 12G/256G 6.83吋智慧型手機",
-      "price": "NT$11,488",
-      "cpu": "詳見商品頁",
-      "ram": "—",
-      "ssd": "256GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "規格堆料足，CP值極高，價格親民，入門好選擇",
-      "cons": "台灣保固需確認",
-      "tag": "💰 高CP值",
-      "url": "https://24h.pchome.com.tw/prod/DYAWCI-1900JYB3E"
     },
     {
       "brand": "OPPO",
@@ -530,6 +474,20 @@
       "url": "https://24h.pchome.com.tw/prod/DYALS6-A900K27V4"
     },
     {
+      "brand": "Xiaomi",
+      "name": "Xiaomi 小米 REDMI Note 15 Pro+ 5G 12G/256G 6.83吋智慧型手機",
+      "price": "NT$12,088",
+      "cpu": "詳見商品頁",
+      "ram": "—",
+      "ssd": "256GB",
+      "battery": "—",
+      "weight": "—",
+      "pros": "規格堆料足，CP值極高，價格親民，入門好選擇",
+      "cons": "台灣保固需確認",
+      "tag": "💰 高CP值",
+      "url": "https://24h.pchome.com.tw/prod/DYAWCI-1900JYB3E"
+    },
+    {
       "brand": "OPPO",
       "name": "OPPO Reno13 Pro 5G (12G/512G)",
       "price": "NT$12,390",
@@ -558,6 +516,20 @@
       "url": "https://24h.pchome.com.tw/prod/DYAV4T-A900JQHJ4"
     },
     {
+      "brand": "Samsung",
+      "name": "Samsung 三星 Galaxy A37 5G (8G/256G)",
+      "price": "NT$12,990",
+      "cpu": "詳見商品頁",
+      "ram": "8GB",
+      "ssd": "256GB",
+      "battery": "—",
+      "weight": "—",
+      "pros": "螢幕色彩絕美（AMOLED），AI 功能豐富，價格親民，入門好選擇",
+      "cons": "規格詳見商品頁",
+      "tag": "💰 高CP值",
+      "url": "https://24h.pchome.com.tw/prod/DYALS1-A900JUGXV"
+    },
+    {
       "brand": "Xiaomi",
       "name": "Xiaomi 小米 13T Pro 5G (12G/512G) 6.67吋 智慧型手機-黑色",
       "price": "NT$13,680",
@@ -570,23 +542,37 @@
       "cons": "台灣保固需確認",
       "tag": "💰 高CP值",
       "url": "https://24h.pchome.com.tw/prod/DYBB22-A900GR9UZ"
+    },
+    {
+      "brand": "Google",
+      "name": "Google Pixel 谷歌 9a (8G+256G) 6.3吋 5G 智慧型手機",
+      "price": "NT$13,790",
+      "cpu": "詳見商品頁",
+      "ram": "—",
+      "ssd": "—",
+      "battery": "—",
+      "weight": "—",
+      "pros": "拍照業界頂尖，純淨 Android，7年更新保證，價格親民，入門好選擇",
+      "cons": "台灣無實體門市",
+      "tag": "🤖 AI 智慧",
+      "url": "https://24h.pchome.com.tw/prod/DYAT37-A900K1AS5"
+    },
+    {
+      "brand": "Google",
+      "name": "Google Pixel 谷歌 9a 5G (8G/256G)",
+      "price": "NT$13,990",
+      "cpu": "詳見商品頁",
+      "ram": "8GB",
+      "ssd": "256GB",
+      "battery": "—",
+      "weight": "—",
+      "pros": "拍照業界頂尖，純淨 Android，7年更新保證，價格親民，入門好選擇",
+      "cons": "台灣無實體門市",
+      "tag": "🤖 AI 智慧",
+      "url": "https://24h.pchome.com.tw/prod/DYAT37-A900K2UPN"
     }
   ],
   "tablet": [
-    {
-      "brand": "Xiaomi",
-      "name": "Xiaomi 小米 Redmi Pad SE 8.7 4G 天空藍 6GB/128GB",
-      "price": "NT$3,199",
-      "cpu": "詳見商品頁",
-      "ram": "—",
-      "ssd": "2TB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "規格堆料足，CP值極高，價格親民，入門好選擇",
-      "cons": "台灣保固需確認",
-      "tag": "💰 超值入門",
-      "url": "https://24h.pchome.com.tw/prod/DYAMG1-A900HQMV1"
-    },
     {
       "brand": "Xiaomi",
       "name": "Redmi 紅米 Pad 2 9.7 4G/64G",
@@ -613,21 +599,35 @@
       "pros": "性價比高，品質穩定，價格親民，入門好選擇",
       "cons": "規格詳見商品頁",
       "tag": "💰 超值入門",
-      "url": "https://24h.pchome.com.tw/prod/DYAMGU-A900IW3NE"
+      "url": "https://24h.pchome.com.tw/prod/DYAMGU-A900IW3M9"
+    },
+    {
+      "brand": "Xiaomi",
+      "name": "Xiaomi 小米 Redmi Pad SE 8.7 4G 石墨灰 6GB/128GB",
+      "price": "NT$4,699",
+      "cpu": "詳見商品頁",
+      "ram": "—",
+      "ssd": "2TB",
+      "battery": "—",
+      "weight": "—",
+      "pros": "規格堆料足，CP值極高，價格親民，入門好選擇",
+      "cons": "台灣保固需確認",
+      "tag": "💰 超值入門",
+      "url": "https://24h.pchome.com.tw/prod/DYAMG1-A900HQMTO"
     },
     {
       "brand": "Lenovo",
-      "name": "LENOVO 聯想 Tab TB311FU 10吋平板電腦 WiFi版 (4G/64G) 月光灰",
-      "price": "NT$4,790",
+      "name": "LENOVO 聯想 Tab TB311FU 10吋平板電腦 WiFi版 (4G/128G) 月光灰",
+      "price": "NT$4,990",
       "cpu": "詳見商品頁",
-      "ram": "64GB",
-      "ssd": "64GB",
+      "ram": "4GB",
+      "ssd": "128GB",
       "battery": "—",
       "weight": "—",
       "pros": "性價比高，品質穩定，價格親民，入門好選擇",
       "cons": "規格詳見商品頁",
       "tag": "💰 超值入門",
-      "url": "https://24h.pchome.com.tw/prod/DYAMGT-A900K3K00"
+      "url": "https://24h.pchome.com.tw/prod/DYAMGF-A900IPBVB"
     },
     {
       "brand": "其他",
@@ -658,6 +658,20 @@
       "url": "https://24h.pchome.com.tw/prod/DYAMGW-A900J2YME"
     },
     {
+      "brand": "其他",
+      "name": "Logitech 羅技 Combo Touch 鍵盤保護套 - iPad Pro (M4/M5)11吋專用",
+      "price": "NT$5,990",
+      "cpu": "詳見商品頁",
+      "ram": "—",
+      "ssd": "—",
+      "battery": "—",
+      "weight": "—",
+      "pros": "價格親民，入門好選擇",
+      "cons": "規格詳見商品頁",
+      "tag": "💰 超值入門",
+      "url": "https://24h.pchome.com.tw/prod/DSAR0V-A900HJGD5"
+    },
+    {
       "brand": "Xiaomi",
       "name": "Redmi 紅米 Pad 2 8G/256G",
       "price": "NT$6,999",
@@ -683,11 +697,11 @@
       "pros": "性價比高，品質穩定，價格親民，入門好選擇",
       "cons": "規格詳見商品頁",
       "tag": "💰 超值入門",
-      "url": "https://24h.pchome.com.tw/prod/DYAMG7-A900J9QZD"
+      "url": "https://24h.pchome.com.tw/prod/DYAMGZ-A900J9R2I"
     },
     {
       "brand": "Xiaomi",
-      "name": "Xiaomi 小米 【小米】紅米 Redmi Pad SE 薰衣紫 8GB/256GB",
+      "name": "Xiaomi 小米 【小米】紅米 Redmi Pad SE 薄荷綠 8GB/256GB",
       "price": "NT$7,999",
       "cpu": "詳見商品頁",
       "ram": "—",
@@ -697,7 +711,7 @@
       "pros": "規格堆料足，CP值極高，價格親民，入門好選擇",
       "cons": "台灣保固需確認",
       "tag": "💰 超值入門",
-      "url": "https://24h.pchome.com.tw/prod/DYAN6C-A900GLWKO"
+      "url": "https://24h.pchome.com.tw/prod/DYAN6C-A900GLWKE"
     },
     {
       "brand": "Xiaomi",
@@ -726,20 +740,6 @@
       "cons": "台灣保固需確認",
       "tag": "💰 超值入門",
       "url": "https://24h.pchome.com.tw/prod/DHAY15-A900J83SQ"
-    },
-    {
-      "brand": "Xiaomi",
-      "name": "Xiaomi 小米 Pad 6 6G/128G 質感金",
-      "price": "NT$8,999",
-      "cpu": "詳見商品頁",
-      "ram": "—",
-      "ssd": "128GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "規格堆料足，CP值極高，價格親民，入門好選擇",
-      "cons": "台灣保固需確認",
-      "tag": "💰 超值入門",
-      "url": "https://24h.pchome.com.tw/prod/DYAMG1-A900IGMX0"
     },
     {
       "brand": "Xiaomi",
@@ -772,7 +772,7 @@
     {
       "brand": "Lenovo",
       "name": "LENOVO 聯想 Idea Tab Plus TB361FU 12吋平板電腦 (8G/256G)",
-      "price": "NT$10,690",
+      "price": "NT$10,990",
       "cpu": "MediaTek Dimensity 6400",
       "ram": "8GB",
       "ssd": "256GB",
@@ -782,20 +782,6 @@
       "cons": "規格詳見商品頁",
       "tag": "💰 高CP值",
       "url": "https://24h.pchome.com.tw/prod/DYAMGY-A900J9R23"
-    },
-    {
-      "brand": "Samsung",
-      "name": "Samsung 三星 Galaxy Tab S10 Lite WiFi SM-X400 10.9吋平板電腦 (",
-      "price": "NT$10,900",
-      "cpu": "詳見商品頁",
-      "ram": "8GB",
-      "ssd": "256GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "螢幕色彩絕美（AMOLED），價格親民，入門好選擇",
-      "cons": "規格詳見商品頁",
-      "tag": "💰 高CP值",
-      "url": "https://24h.pchome.com.tw/prod/DYCO1E-A900K4DGQ"
     },
     {
       "brand": "Xiaomi",
@@ -826,18 +812,18 @@
       "url": "https://24h.pchome.com.tw/prod/DYAMG1-A900JPRWJ"
     },
     {
-      "brand": "Xiaomi",
-      "name": "Xiaomi 小米 Pad Mini 8G/256G",
-      "price": "NT$12,999",
+      "brand": "Samsung",
+      "name": "Samsung 三星 Galaxy Tab S10 Lite WiFi SM-X400 10.9吋平板電腦 (",
+      "price": "NT$12,490",
       "cpu": "詳見商品頁",
-      "ram": "—",
-      "ssd": "256GB",
+      "ram": "6GB",
+      "ssd": "128GB",
       "battery": "—",
       "weight": "—",
-      "pros": "規格堆料足，CP值極高，價格親民，入門好選擇",
-      "cons": "台灣保固需確認",
+      "pros": "螢幕色彩絕美（AMOLED），價格親民，入門好選擇",
+      "cons": "規格詳見商品頁",
       "tag": "💰 高CP值",
-      "url": "https://24h.pchome.com.tw/prod/DYAMG0-A900J73MW"
+      "url": "https://24h.pchome.com.tw/prod/DYALPV-A900J5OP9"
     },
     {
       "brand": "Xiaomi",
@@ -852,6 +838,20 @@
       "cons": "台灣保固需確認",
       "tag": "💰 高CP值",
       "url": "https://24h.pchome.com.tw/prod/DYAMG1-A900IEQ2J"
+    },
+    {
+      "brand": "Xiaomi",
+      "name": "Xiaomi 小米 Pad Mini 8G/256G",
+      "price": "NT$12,999",
+      "cpu": "詳見商品頁",
+      "ram": "—",
+      "ssd": "256GB",
+      "battery": "—",
+      "weight": "—",
+      "pros": "規格堆料足，CP值極高，價格親民，入門好選擇",
+      "cons": "台灣保固需確認",
+      "tag": "💰 高CP值",
+      "url": "https://24h.pchome.com.tw/prod/DYAMG0-A900J73MW"
     }
   ],
   "desktop": [
@@ -868,6 +868,48 @@
       "cons": "規格詳見商品頁",
       "tag": "💰 超值入門",
       "url": "https://24h.pchome.com.tw/prod/DSAANA-1900HZG5L"
+    },
+    {
+      "brand": "ASUS",
+      "name": "ASUS 華碩 (DIY)BHCP6353A RNUC13ANHI30000 迷你電腦(i3-1315U/4G",
+      "price": "NT$10,390",
+      "cpu": "詳見商品頁",
+      "ram": "4GB",
+      "ssd": "128GB",
+      "battery": "—",
+      "weight": "—",
+      "pros": "台灣品牌，全台維修據點多，價格親民，入門好選擇",
+      "cons": "規格詳見商品頁",
+      "tag": "💰 高CP值",
+      "url": "https://24h.pchome.com.tw/prod/DSAUEW-A900JSE08"
+    },
+    {
+      "brand": "ASUS",
+      "name": "ASUS 華碩 NUC C3-100U 六核/DDR5/SSD/龍蝦機/華碩平台/準系統{空戰記}AI文書商務",
+      "price": "NT$10,699",
+      "cpu": "詳見商品頁",
+      "ram": "—",
+      "ssd": "—",
+      "battery": "—",
+      "weight": "—",
+      "pros": "台灣品牌，全台維修據點多，價格親民，入門好選擇",
+      "cons": "規格詳見商品頁",
+      "tag": "💰 高CP值",
+      "url": "https://24h.pchome.com.tw/prod/DSAUEW-A900JOSZD"
+    },
+    {
+      "brand": "其他",
+      "name": "MOREFINE 摩方 M6S 迷你電腦(N150/12G/256G SSD/W11) 送 擺頭製冷風扇",
+      "price": "NT$13,290",
+      "cpu": "Intel N150",
+      "ram": "12GB",
+      "ssd": "256GB",
+      "battery": "—",
+      "weight": "—",
+      "pros": "價格親民，入門好選擇",
+      "cons": "規格詳見商品頁",
+      "tag": "💰 高CP值",
+      "url": "https://24h.pchome.com.tw/prod/DSAALZ-A900JMLPG"
     },
     {
       "brand": "MSI",
@@ -896,6 +938,34 @@
       "cons": "規格詳見商品頁",
       "tag": "💰 高CP值",
       "url": "https://24h.pchome.com.tw/prod/DSAAOR-A900IYI5N"
+    },
+    {
+      "brand": "其他",
+      "name": "iStyle M1 AMD迷你電腦 (R7-7730U/8G/512G SSD/W11P)",
+      "price": "NT$15,900",
+      "cpu": "詳見商品頁",
+      "ram": "8GB",
+      "ssd": "512GB",
+      "battery": "—",
+      "weight": "—",
+      "pros": "",
+      "cons": "規格詳見商品頁",
+      "tag": "💰 高CP值",
+      "url": "https://24h.pchome.com.tw/prod/DSAUFR-A900JUFHF"
+    },
+    {
+      "brand": "ASUS",
+      "name": "ASUS 華碩 V500 SFF系列 - i3處理器 / 8G記憶體 / 512G SSD / 無作業系統電腦",
+      "price": "NT$15,990",
+      "cpu": "詳見商品頁",
+      "ram": "8GB",
+      "ssd": "512GB",
+      "battery": "—",
+      "weight": "—",
+      "pros": "台灣品牌，全台維修據點多",
+      "cons": "規格詳見商品頁",
+      "tag": "💰 高CP值",
+      "url": "https://24h.pchome.com.tw/prod/DSAA31-A900K2SUT"
     },
     {
       "brand": "Acer",
@@ -927,34 +997,6 @@
     },
     {
       "brand": "ASUS",
-      "name": "ASUS 華碩 (DIY)BHCP6352B RNUC13ANHI30000 迷你電腦(i3-1315U/16",
-      "price": "NT$17,090",
-      "cpu": "詳見商品頁",
-      "ram": "16GB",
-      "ssd": "500GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "台灣品牌，全台維修據點多",
-      "cons": "規格詳見商品頁",
-      "tag": "💰 高CP值",
-      "url": "https://24h.pchome.com.tw/prod/DSAUEW-A900JSDZC"
-    },
-    {
-      "brand": "其他",
-      "name": "GIGABYTE 技嘉 系列【物優價宜】i5-12400六核 商務電腦(16G/1T SSD)",
-      "price": "NT$18,799",
-      "cpu": "詳見商品頁",
-      "ram": "—",
-      "ssd": "—",
-      "battery": "—",
-      "weight": "—",
-      "pros": "",
-      "cons": "規格詳見商品頁",
-      "tag": "👍 主流推薦",
-      "url": "https://24h.pchome.com.tw/prod/DSAUX3-A900JQI3Q"
-    },
-    {
-      "brand": "ASUS",
       "name": "ASUS 華碩 系列【狂暴之心】i5-14400十核 商務電腦(16G/1T SSD)",
       "price": "NT$20,699",
       "cpu": "詳見商品頁",
@@ -980,20 +1022,6 @@
       "cons": "規格詳見商品頁",
       "tag": "👍 主流推薦",
       "url": "https://24h.pchome.com.tw/prod/DSAMCA-A900JOGMH"
-    },
-    {
-      "brand": "ASUS",
-      "name": "ASUS 華碩 S500TER系列 - i3處理器 / 8G記憶體 / 512G SSD / W11家用版電腦",
-      "price": "NT$22,990",
-      "cpu": "詳見商品頁",
-      "ram": "8GB",
-      "ssd": "512GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "台灣品牌，全台維修據點多",
-      "cons": "規格詳見商品頁",
-      "tag": "👍 主流推薦",
-      "url": "https://24h.pchome.com.tw/prod/DSAA31-A900JTIUG"
     },
     {
       "brand": "其他",
@@ -1036,20 +1064,6 @@
       "cons": "規格詳見商品頁",
       "tag": "👍 主流推薦",
       "url": "https://24h.pchome.com.tw/prod/DSAA99-1900K5JEG"
-    },
-    {
-      "brand": "ASUS",
-      "name": "ASUS 華碩 NUC PN43系列 - Intel N100 處理器 / 16G記憶體 / 512G SSD",
-      "price": "NT$25,900",
-      "cpu": "Intel N100",
-      "ram": "16GB",
-      "ssd": "512GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "台灣品牌，全台維修據點多",
-      "cons": "規格詳見商品頁",
-      "tag": "👍 主流推薦",
-      "url": "https://24h.pchome.com.tw/prod/DSAMCA-A900JODRJ"
     },
     {
       "brand": "Dell",
@@ -1110,7 +1124,7 @@
     {
       "brand": "ASUS",
       "name": "ASUS 華碩 V500MV系列 - i5處理器 / 16G記憶體 / 1TSSD / Win11家用版電腦 ",
-      "price": "NT$28,990",
+      "price": "NT$29,490",
       "cpu": "詳見商品頁",
       "ram": "16GB",
       "ssd": "—",
@@ -1119,21 +1133,7 @@
       "pros": "台灣品牌，全台維修據點多",
       "cons": "規格詳見商品頁",
       "tag": "👍 主流推薦",
-      "url": "https://24h.pchome.com.tw/prod/DSAAGF-1900JBMPQ"
-    },
-    {
-      "brand": "Lenovo",
-      "name": "LENOVO 聯想 ThinkCentre Neo 50t Gen5系列-i5處理器/16G記憶體/512G ",
-      "price": "NT$30,900",
-      "cpu": "詳見商品頁",
-      "ram": "16GB",
-      "ssd": "512GB",
-      "battery": "—",
-      "weight": "—",
-      "pros": "性價比高，品質穩定",
-      "cons": "規格詳見商品頁",
-      "tag": "⭐ 品質優選",
-      "url": "https://24h.pchome.com.tw/prod/DSAM1I-1900JU4T8"
+      "url": "https://24h.pchome.com.tw/prod/DSAAJD-1900JBMOE"
     }
   ]
 }
