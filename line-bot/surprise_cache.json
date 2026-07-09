@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-08 23:13",
+  "updated_at": "2026-07-09 23:17",
   "songs": [
     {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
@@ -17,14 +17,14 @@
       "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
     },
     {
-      "name": "hate that i made you love me",
-      "artist": "Ariana Grande",
-      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
-    },
-    {
       "name": "BAD",
       "artist": "ATEEZ",
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
+    },
+    {
+      "name": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
       "name": "Gimme Dat Love",
@@ -47,11 +47,6 @@
       "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
     },
     {
-      "name": "CHOOM",
-      "artist": "BABYMONSTER",
-      "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
-    },
-    {
       "name": "Heavy Serenade",
       "artist": "NMIXX",
       "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
@@ -60,6 +55,11 @@
       "name": "REDRED",
       "artist": "CORTIS",
       "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
+    },
+    {
+      "name": "CHOOM",
+      "artist": "BABYMONSTER",
+      "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
     },
     {
       "name": "一個人",
@@ -72,20 +72,20 @@
       "url": "https://music.apple.com/tw/album/stupid-song/1889992111?i=1889992115"
     },
     {
-      "name": "Lemon Tang",
-      "artist": "Hearts2Hearts",
-      "url": "https://music.apple.com/tw/album/lemon-tang/6779521284?i=6779521286"
+      "name": "I Knew It, I Knew You (From \"Toy Story 5\")",
+      "artist": "Taylor Swift",
+      "url": "https://music.apple.com/tw/album/i-knew-it-i-knew-you-from-toy-story-5/6775527442?i=6775527443"
     }
   ],
   "deals": [
     {
-      "title": "限時搶購！2026最新快閃優惠一覽",
-      "url": "https://dealy.tw/special-offers/flash-deals",
+      "title": "Costco 好市多線上購物| 限時優惠",
+      "url": "https://www.costco.com.tw/c/hot-buys?srsltid=AfmBOoobr-rt8hTv2yvfGWhfqbCHLBTtnozn9FmxJooYCd5xl7kdpEMy",
       "tag": "優惠"
     },
     {
-      "title": "全台特賣會 - 好康情報誌",
-      "url": "https://info.talk.tw/category/sale/",
+      "title": "限時搶購！2026最新快閃優惠一覽",
+      "url": "https://dealy.tw/special-offers/flash-deals",
       "tag": "優惠"
     },
     {
@@ -99,13 +99,8 @@
       "tag": "優惠"
     },
     {
-      "title": "好市多新高雄店7/3開幕！一堆商品特價、折萬元新會員送1000元",
-      "url": "https://www.nownews.com/news/6852718?srsltid=AfmBOoo4_YqHooUor__J3mL23Bg6icn8Uh_IeVMFStgg1qAgBvos3daN",
-      "tag": "優惠"
-    },
-    {
-      "title": "歡慶全新12號店開幕   為期四天將推出眾多優惠   優惠商品如附圖",
-      "url": "https://www.threads.com/@lopiatw.hstxg_official/post/DacBPJrE_KC/%E6%AD%A1%E6%85%B6%E5%85%A8%E6%96%B012%E8%99%9F%E5%BA%97%E9%96%8B%E5%B9%95%E7%82%BA%E6%9C%9F%E5%9B%9B%E5%A4%A9%E5%B0%87%E6%8E%A8%E5%87%BA%E7%9C%BE%E5%A4%9A%E5%84%AA%E6%83%A0%E5%84%AA%E6%83%A0%E5%95%86%E5%93%81%E5%A6%82%E9%99%84%E5%9C%96%E6%B4%BB%E5%8B%95%E6%97%A5%E6%9C%9F2026070920260712%E5%84%AA%E6%83%A0%E5%95%86%E5%93%81%E6%95%B8%E9%87%8F%E6%9C%89%E9%99%90%E5%94%AE%E5%AE%8C%E7%82%BA%E6%AD%A2%E8%A6%81%E8%B2%B7%E8%A6%81%E5%BF%AB%E5%94%B7%E7%8F%BE%E5%A0%B4%E9%82%84%E6%9C%89%E7%9C%BE%E5%A4%9A%E5%84%AA%E6%83%A0%E7%AD%89%E8%91%97%E6%82%A8%E4%BE%86%E9%81%B8%E8%B3%BC%E4%BB%A5/",
+      "title": "同慶夢時代店一周年&美麗華開幕   小北門共襄盛舉  7/9(四) - Threads",
+      "url": "https://www.threads.com/@lopiatw.tnnskmlng_official/post/DahP9EXEUTt/%E5%90%8C%E6%85%B6%E5%A4%A2%E6%99%82%E4%BB%A3%E5%BA%97%E4%B8%80%E5%91%A8%E5%B9%B4%E7%BE%8E%E9%BA%97%E8%8F%AF%E9%96%8B%E5%B9%95%E5%B0%8F%E5%8C%97%E9%96%80%E5%85%B1%E8%A5%84%E7%9B%9B%E8%88%8979%E5%9B%9B712%E6%97%A5%E6%9C%89%E5%A4%9A%E9%A0%85%E5%84%AA%E6%83%A0%E6%8F%90%E4%BE%9B%E7%B5%A6%E5%A4%A7%E5%AE%B6-%E8%AA%BF%E5%91%B3%E8%B1%AC%E7%87%92%E8%82%89%E4%B8%8D%E5%88%86%E9%83%A8%E4%BD%8D-%E7%89%B9%E5%83%B940%E6%AF%8F100g%E6%B0%A3%E5%86%B7%E9%9B%9E%E6%9F%B3%E6%A2%9D%E5%8E%9F%E5%91%B3-%E7%89%B9%E5%83%B918%E6%AF%8F100g%E6%B0%A3%E5%86%B7%E9%9B%9E%E6%9F%B3%E6%A2%9D",
       "tag": "優惠"
     },
     {
@@ -114,18 +109,13 @@
       "tag": "優惠"
     },
     {
-      "title": "全台最大「海景好市多」7/3新高雄店強勢開幕！ 4大新門市亮點 - 旅遊",
-      "url": "https://travel.udn.com/travel/story/7160/9604033",
-      "tag": "優惠"
-    },
-    {
-      "title": "勤美誠品綠園道B2 全新開幕｜23品牌進駐與開幕優惠一覽 - TikTok",
-      "url": "https://www.tiktok.com/@love.on.foodplay/video/7658238348426808597",
-      "tag": "優惠"
-    },
-    {
       "title": "超殺優惠！新莊好市多開幕了優惠、紀念品大放送",
       "url": "https://www.setn.com/news/214081",
+      "tag": "優惠"
+    },
+    {
+      "title": "【7月手搖飲優惠】星巴克買一送一！12 家飲料優惠懶人包免費喝 - 上報",
+      "url": "https://www.upmedia.mg/tw/lifestyle/food/263043",
       "tag": "優惠"
     }
   ]
