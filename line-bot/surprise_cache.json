@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-10 23:02",
+  "updated_at": "2026-07-11 22:55",
   "songs": [
     {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
@@ -12,24 +12,24 @@
       "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
     },
     {
-      "name": "玻璃",
-      "artist": "Gareth.T",
-      "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
-    },
-    {
       "name": "Gimme Dat Love",
       "artist": "i-dle",
       "url": "https://music.apple.com/tw/album/gimme-dat-love/6779753532?i=6779753536"
     },
     {
-      "name": "BAD",
-      "artist": "ATEEZ",
-      "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
+      "name": "玻璃",
+      "artist": "Gareth.T",
+      "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
     },
     {
       "name": "hate that i made you love me",
       "artist": "Ariana Grande",
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
+    },
+    {
+      "name": "BAD",
+      "artist": "ATEEZ",
+      "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
     },
     {
       "name": "It's Me",
@@ -72,35 +72,45 @@
       "url": "https://music.apple.com/tw/album/stupid-song/1889992111?i=1889992115"
     },
     {
-      "name": "Lemon Tang",
-      "artist": "Hearts2Hearts",
-      "url": "https://music.apple.com/tw/album/lemon-tang/6779521284?i=6779521286"
+      "name": "I Knew It, I Knew You (From \"Toy Story 5\")",
+      "artist": "Taylor Swift",
+      "url": "https://music.apple.com/tw/album/i-knew-it-i-knew-you-from-toy-story-5/6775527442?i=6775527443"
     }
   ],
   "deals": [
     {
-      "title": "限時搶購！2026最新快閃優惠一覽",
-      "url": "https://dealy.tw/special-offers/flash-deals",
-      "tag": "優惠"
-    },
-    {
-      "title": "SaleEvents 特賣會資訊: 最新最齊全的優惠活動(2026)",
-      "url": "https://tw.discount.wave-base.com/",
-      "tag": "優惠"
-    },
-    {
-      "title": "Costco 好市多線上購物| 精選優惠",
-      "url": "https://www.costco.com.tw/Deals/c/Coupon?srsltid=AfmBOooSHCzdizkdmO0OG-ObyJ-n74zreuKzxRAvzUWCf26WWMy_mgJU",
-      "tag": "優惠"
-    },
-    {
-      "title": "歡慶全新12號店開幕   為期四天將推出眾多優惠   優惠商品如附圖",
-      "url": "https://www.threads.com/@lopiatw.hstxg_official/post/DacBPJrE_KC/%E6%AD%A1%E6%85%B6%E5%85%A8%E6%96%B012%E8%99%9F%E5%BA%97%E9%96%8B%E5%B9%95%E7%82%BA%E6%9C%9F%E5%9B%9B%E5%A4%A9%E5%B0%87%E6%8E%A8%E5%87%BA%E7%9C%BE%E5%A4%9A%E5%84%AA%E6%83%A0%E5%84%AA%E6%83%A0%E5%95%86%E5%93%81%E5%A6%82%E9%99%84%E5%9C%96%E6%B4%BB%E5%8B%95%E6%97%A5%E6%9C%9F2026070920260712%E5%84%AA%E6%83%A0%E5%95%86%E5%93%81%E6%95%B8%E9%87%8F%E6%9C%89%E9%99%90%E5%94%AE%E5%AE%8C%E7%82%BA%E6%AD%A2%E8%A6%81%E8%B2%B7%E8%A6%81%E5%BF%AB%E5%94%B7%E7%8F%BE%E5%A0%B4%E9%82%84%E6%9C%89%E7%9C%BE%E5%A4%9A%E5%84%AA%E6%83%A0%E7%AD%89%E8%91%97%E6%82%A8%E4%BE%86%E9%81%B8%E8%B3%BC%E4%BB%A5/",
+      "title": "會員護照二 - Costco",
+      "url": "https://www.costco.com.tw/savings?srsltid=AfmBOor61S2IAwNJQeBbFTe9_BNIMB7LKWI7Kf23v-n0DOXAtCe5dAAi",
       "tag": "優惠"
     },
     {
       "title": "優惠 - 7-ELEVEN",
       "url": "https://www.7-11.com.tw/special/newsList.aspx",
+      "tag": "優惠"
+    },
+    {
+      "title": "按右上角三個點點用網際網路開啟就能直接進入App，選「快閃特賣 ...",
+      "url": "https://www.threads.com/@yuki.lin.18/post/DalB8Xpk_fJ/%E6%8C%89%E5%8F%B3%E4%B8%8A%E8%A7%92%E4%B8%89%E5%80%8B%E9%BB%9E%E9%BB%9E%E7%94%A8%E7%B6%B2%E9%9A%9B%E7%B6%B2%E8%B7%AF%E9%96%8B%E5%95%9F%E5%B0%B1%E8%83%BD%E7%9B%B4%E6%8E%A5%E9%80%B2%E5%85%A5app%E9%81%B8%E5%BF%AB%E9%96%83%E7%89%B9%E8%B3%A3%E6%96%B9%E6%A1%88%E5%8F%AA%E6%9C%89%E9%9B%BB%E5%AD%90%E7%A5%A8%E5%96%94httpswwwtripcomtl9wzkgz11t2trip%E5%B0%88%E5%B1%AC%E6%8A%98%E6%89%A3%E7%A2%BCtripyuk",
+      "tag": "優惠"
+    },
+    {
+      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 03.09(一)~03.15(日)",
+      "url": "https://www.daybuy.tw/costco/240069/",
+      "tag": "優惠"
+    },
+    {
+      "title": "限時搶購！2026最新快閃優惠一覽 - Dealy TW",
+      "url": "https://dealy.tw/special-offers/flash-deals",
+      "tag": "優惠"
+    },
+    {
+      "title": "一起聰明買! 最新2026年7月全球各大電商折扣資訊、折扣碼整理-美妝 ...",
+      "url": "https://lucybabe15.pixnet.net/blog/posts/11404346800",
+      "tag": "優惠"
+    },
+    {
+      "title": "歡慶全新12號店開幕   為期四天將推出眾多優惠   優惠商品如附圖",
+      "url": "https://www.threads.com/@lopiatw.hstxg_official/post/DacBPJrE_KC/%E6%AD%A1%E6%85%B6%E5%85%A8%E6%96%B012%E8%99%9F%E5%BA%97%E9%96%8B%E5%B9%95%E7%82%BA%E6%9C%9F%E5%9B%9B%E5%A4%A9%E5%B0%87%E6%8E%A8%E5%87%BA%E7%9C%BE%E5%A4%9A%E5%84%AA%E6%83%A0%E5%84%AA%E6%83%A0%E5%95%86%E5%93%81%E5%A6%82%E9%99%84%E5%9C%96%E6%B4%BB%E5%8B%95%E6%97%A5%E6%9C%9F2026070920260712%E5%84%AA%E6%83%A0%E5%95%86%E5%93%81%E6%95%B8%E9%87%8F%E6%9C%89%E9%99%90%E5%94%AE%E5%AE%8C%E7%82%BA%E6%AD%A2%E8%A6%81%E8%B2%B7%E8%A6%81%E5%BF%AB%E5%94%B7%E7%8F%BE%E5%A0%B4%E9%82%84%E6%9C%89%E7%9C%BE%E5%A4%9A%E5%84%AA%E6%83%A0%E7%AD%89%E8%91%97%E6%82%A8%E4%BE%86%E9%81%B8%E8%B3%BC%E4%BB%A5/",
       "tag": "優惠"
     },
     {
