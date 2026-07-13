@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-12 22:55",
+  "updated_at": "2026-07-13 22:59",
   "songs": [
     {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
@@ -12,11 +12,6 @@
       "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
     },
     {
-      "name": "Gimme Dat Love",
-      "artist": "i-dle",
-      "url": "https://music.apple.com/tw/album/gimme-dat-love/6779753532?i=6779753536"
-    },
-    {
       "name": "BAD",
       "artist": "ATEEZ",
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
@@ -27,19 +22,24 @@
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
+      "name": "Gimme Dat Love",
+      "artist": "i-dle",
+      "url": "https://music.apple.com/tw/album/gimme-dat-love/6779753532?i=6779753536"
+    },
+    {
       "name": "玻璃",
       "artist": "Gareth.T",
       "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
     },
     {
-      "name": "It's Me",
-      "artist": "ILLIT",
-      "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
-    },
-    {
       "name": "Heavy Serenade",
       "artist": "NMIXX",
       "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
+    },
+    {
+      "name": "It's Me",
+      "artist": "ILLIT",
+      "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
     },
     {
       "name": "REDRED",
@@ -52,19 +52,19 @@
       "url": "https://music.apple.com/tw/album/iconic-by-mistake/6776077182?i=6776077187"
     },
     {
-      "name": "CHOOM",
-      "artist": "BABYMONSTER",
-      "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
-    },
-    {
       "name": "SWIM",
       "artist": "防彈少年團",
       "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
     },
     {
-      "name": "一個人",
-      "artist": "A-Lin",
-      "url": "https://music.apple.com/tw/album/%E4%B8%80%E5%80%8B%E4%BA%BA/6775423599?i=6775423606"
+      "name": "CHOOM",
+      "artist": "BABYMONSTER",
+      "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
+    },
+    {
+      "name": "Lemon Tang",
+      "artist": "Hearts2Hearts",
+      "url": "https://music.apple.com/tw/album/lemon-tang/6779521284?i=6779521286"
     },
     {
       "name": "stupid song",
@@ -72,45 +72,15 @@
       "url": "https://music.apple.com/tw/album/stupid-song/1889992111?i=1889992115"
     },
     {
-      "name": "Lemon Tang",
-      "artist": "Hearts2Hearts",
-      "url": "https://music.apple.com/tw/album/lemon-tang/6779521284?i=6779521286"
+      "name": "一個人",
+      "artist": "A-Lin",
+      "url": "https://music.apple.com/tw/album/%E4%B8%80%E5%80%8B%E4%BA%BA/6775423599?i=6775423606"
     }
   ],
   "deals": [
     {
-      "title": "會員護照二 - Costco",
-      "url": "https://www.costco.com.tw/savings?srsltid=AfmBOorQMmGeneKMtwhD3w37HHeyUWvlzE1Xsz3OJ_6cbYRL_gBOFwVd",
-      "tag": "優惠"
-    },
-    {
-      "title": "蝦皮購物/蝦皮商城/蝦皮直送2026最新優惠券/折扣碼/免運優惠碼總整理",
-      "url": "https://www.callingtaiwan.com.tw/%E8%9D%A6%E7%9A%AE%E6%8A%98%E6%89%A3%E7%A2%BC-shopee/",
-      "tag": "優惠"
-    },
-    {
-      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 03.09(一)~03.15(日)",
-      "url": "https://www.daybuy.tw/costco/240069/",
-      "tag": "優惠"
-    },
-    {
-      "title": "限時搶購！2026最新快閃優惠一覽 - Dealy TW",
-      "url": "https://dealy.tw/special-offers/flash-deals",
-      "tag": "優惠"
-    },
-    {
-      "title": "SaleEvents 特賣會資訊- 在Windows 上免費下載並安裝| Microsoft Store",
-      "url": "https://www.microsoft.com/zh-tw/p/saleevents-%E7%89%B9%E8%B3%A3%E6%9C%83%E8%B3%87%E8%A8%8A/9nmrbjhlqsnj",
-      "tag": "優惠"
-    },
-    {
-      "title": "蝦皮限時特賣功能| 蝦皮購物賣家幫助中心",
-      "url": "https://seller.shopee.tw/edu/article/167",
-      "tag": "優惠"
-    },
-    {
-      "title": "歡慶全新12號店開幕   為期四天將推出眾多優惠   優惠商品如附圖",
-      "url": "https://www.threads.com/@lopiatw.hstxg_official/post/DacBPJrE_KC/%E6%AD%A1%E6%85%B6%E5%85%A8%E6%96%B012%E8%99%9F%E5%BA%97%E9%96%8B%E5%B9%95%E7%82%BA%E6%9C%9F%E5%9B%9B%E5%A4%A9%E5%B0%87%E6%8E%A8%E5%87%BA%E7%9C%BE%E5%A4%9A%E5%84%AA%E6%83%A0%E5%84%AA%E6%83%A0%E5%95%86%E5%93%81%E5%A6%82%E9%99%84%E5%9C%96%E6%B4%BB%E5%8B%95%E6%97%A5%E6%9C%9F2026070920260712%E5%84%AA%E6%83%A0%E5%95%86%E5%93%81%E6%95%B8%E9%87%8F%E6%9C%89%E9%99%90%E5%94%AE%E5%AE%8C%E7%82%BA%E6%AD%A2%E8%A6%81%E8%B2%B7%E8%A6%81%E5%BF%AB%E5%94%B7%E7%8F%BE%E5%A0%B4%E9%82%84%E6%9C%89%E7%9C%BE%E5%A4%9A%E5%84%AA%E6%83%A0%E7%AD%89%E8%91%97%E6%82%A8%E4%BE%86%E9%81%B8%E8%B3%BC%E4%BB%A5/",
+      "title": "同慶夢時代店一周年&美麗華開幕🎉 🔥小北門共襄盛舉🔥7/9(四)",
+      "url": "https://www.threads.com/@lopiatw.tnnskmlng_official/post/DahP9EXEUTt/%E5%90%8C%E6%85%B6%E5%A4%A2%E6%99%82%E4%BB%A3%E5%BA%97%E4%B8%80%E5%91%A8%E5%B9%B4%E7%BE%8E%E9%BA%97%E8%8F%AF%E9%96%8B%E5%B9%95%E5%B0%8F%E5%8C%97%E9%96%80%E5%85%B1%E8%A5%84%E7%9B%9B%E8%88%8979%E5%9B%9B712%E6%97%A5%E6%9C%89%E5%A4%9A%E9%A0%85%E5%84%AA%E6%83%A0%E6%8F%90%E4%BE%9B%E7%B5%A6%E5%A4%A7%E5%AE%B6-%E8%AA%BF%E5%91%B3%E8%B1%AC%E7%87%92%E8%82%89%E4%B8%8D%E5%88%86%E9%83%A8%E4%BD%8D-%E7%89%B9%E5%83%B940%E6%AF%8F100g%E6%B0%A3%E5%86%B7%E9%9B%9E%E6%9F%B3%E6%A2%9D%E5%8E%9F%E5%91%B3-%E7%89%B9%E5%83%B918%E6%AF%8F100g%E6%B0%A3%E5%86%B7%E9%9B%9E%E6%9F%B3%E6%A2%9D/",
       "tag": "優惠"
     },
     {
@@ -119,13 +89,18 @@
       "tag": "優惠"
     },
     {
-      "title": "【7月手搖飲優惠】星巴克買一送一！12 家飲料優惠懶人包免費喝 - 上報",
-      "url": "https://www.upmedia.mg/tw/lifestyle/food/263043",
+      "title": "開幕特價品搶翻好市多新高雄店空間升級網讚停車動線更順暢",
+      "url": "https://www.storm.mg/article/11148806",
       "tag": "優惠"
     },
     {
-      "title": "大直美麗華LOPIA開幕人山人海網驚：結帳要等2小時 - Yahoo新聞",
-      "url": "https://tw.news.yahoo.com/%E5%A4%A7%E7%9B%B4%E7%BE%8E%E9%BA%97%E8%8F%AFlopia%E9%96%8B%E5%B9%95%E4%BA%BA%E5%B1%B1%E4%BA%BA%E6%B5%B7-%E7%B6%B2%E9%A9%9A-%E7%B5%90%E5%B8%B3%E8%A6%81%E7%AD%892%E5%B0%8F%E6%99%82-075848555.html",
+      "title": "每年等這檔！好市多「這款咖啡」特價她狂掃500包釣出一票同好",
+      "url": "https://www.ftnn.com.tw/news/559552",
+      "tag": "優惠"
+    },
+    {
+      "title": "【7月手搖飲優惠】星巴克買一送一！14 家飲料優惠懶人包 ...",
+      "url": "https://www.upmedia.mg/tw/lifestyle/food/263043",
       "tag": "優惠"
     }
   ]
