@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-17 22:53",
+  "updated_at": "2026-07-18 22:55",
   "songs": [
     {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
@@ -37,14 +37,14 @@
       "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
     },
     {
-      "name": "Gimme Dat Love",
-      "artist": "i-dle",
-      "url": "https://music.apple.com/tw/album/gimme-dat-love/6779753532?i=6779753536"
-    },
-    {
       "name": "REDRED",
       "artist": "CORTIS",
       "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
+    },
+    {
+      "name": "Gimme Dat Love",
+      "artist": "i-dle",
+      "url": "https://music.apple.com/tw/album/gimme-dat-love/6779753532?i=6779753536"
     },
     {
       "name": "SWIM",
@@ -72,35 +72,50 @@
       "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
     },
     {
-      "name": "Look at My Life",
-      "artist": "Gracie Abrams",
-      "url": "https://music.apple.com/tw/album/look-at-my-life/6766750836?i=6766751158"
+      "name": "stupid song",
+      "artist": "Olivia Rodrigo",
+      "url": "https://music.apple.com/tw/album/stupid-song/1889992111?i=1889992115"
     }
   ],
   "deals": [
     {
       "title": "會員護照二",
-      "url": "https://www.costco.com.tw/savings?srsltid=AfmBOorWbIQ5ub5p7GcaATSDvQa2jUZRw8zJMnmr8jo59sKe74b9iID8",
+      "url": "https://www.costco.com.tw/savings?srsltid=AfmBOooN9ZGm7ch6dSQLOEFunS6R1dtXDoecio2SR0v4Ud1mlMGvehzv",
       "tag": "優惠"
     },
     {
-      "title": "好康情報誌(@info.talk_tw)",
-      "url": "https://www.threads.com/@info.talk_tw",
+      "title": "按右上角三個點點用網際網路開啟就能直接進入App，選「快 ...",
+      "url": "https://www.threads.com/@yuki.lin.18/post/Da2_MlVE4up/%E6%8C%89%E5%8F%B3%E4%B8%8A%E8%A7%92%E4%B8%89%E5%80%8B%E9%BB%9E%E9%BB%9E%E7%94%A8%E7%B6%B2%E9%9A%9B%E7%B6%B2%E8%B7%AF%E9%96%8B%E5%95%9F%E5%B0%B1%E8%83%BD%E7%9B%B4%E6%8E%A5%E9%80%B2%E5%85%A5app%E9%81%B8%E5%BF%AB%E9%96%83%E7%89%B9%E8%B3%A3%E6%96%B9%E6%A1%88%E5%8F%AA%E6%9C%89%E9%9B%BB%E5%AD%90%E7%A5%A8%E5%96%94httpswwwtripcomtl9wzkgz11t2trip%E5%B0%88%E5%B1%AC%E6%8A%98%E6%89%A3%E7%A2%BCtripyuk",
       "tag": "優惠"
     },
     {
-      "title": "BEAMS 折扣碼與優惠：10% / 7% 優惠- 7月2026",
-      "url": "https://www.everysaving.tw/store/beams.tw",
+      "title": "Shipgo報報【最新消息】– 國際代運資訊隨時掌握！",
+      "url": "https://shipgo17.com/website/news",
       "tag": "優惠"
     },
     {
-      "title": "2026【本週買一送一懶人包】7月餐廳/飲料優惠一次看！(每日 ...",
-      "url": "https://info.talk.tw/buy-one-get-one/",
+      "title": "Mega City 板橋大遠百-線上DM",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=54",
       "tag": "優惠"
     },
     {
-      "title": "最新優惠- 大苑子｜台灣鮮果第一品牌",
-      "url": "https://www.dayungs.com/category/special_offer/",
+      "title": "高雄大遠百-線上DM",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=51",
+      "tag": "優惠"
+    },
+    {
+      "title": "16週年慶-超值優惠組",
+      "url": "https://www.tklab.com.tw/categories/functional-food/sale/tk-10-great-deal-set",
+      "tag": "優惠"
+    },
+    {
+      "title": "這個到什麼時候呀～",
+      "url": "https://www.threads.com/@_hsin._.1205_/post/Dasp4oBmTLT/%E9%80%99%E5%80%8B%E5%88%B0%E4%BB%80%E9%BA%BC%E6%99%82%E5%80%99%E5%91%80",
+      "tag": "優惠"
+    },
+    {
+      "title": "2026長榮航空機票優惠涼夏漫遊精選航線86折起",
+      "url": "https://flights.evaair.com/zh-tw/online-travel-fair",
       "tag": "優惠"
     },
     {
@@ -114,18 +129,18 @@
       "tag": "優惠"
     },
     {
+      "title": "最新優惠- 大苑子｜台灣鮮果第一品牌",
+      "url": "https://www.dayungs.com/category/special_offer/",
+      "tag": "優惠"
+    },
+    {
+      "title": "台中最大全聯在東區！全台首間複合式商場，4000坪 ...",
+      "url": "https://candylife.tw/pxmartnewopen/",
+      "tag": "優惠"
+    },
+    {
       "title": "頂呱呱-台灣第一家連鎖炸雞品牌",
       "url": "https://www.tkkinc.com.tw/event.html",
-      "tag": "優惠"
-    },
-    {
-      "title": "4大超商「咖啡買1送1、買7送7」！ 冰沙、蕎麥茶只要10元",
-      "url": "https://tw.news.yahoo.com/4%E5%A4%A7%E8%B6%85%E5%95%86-%E5%92%96%E5%95%A1%E8%B2%B71%E9%80%811-%E8%B2%B77%E9%80%817-%E5%86%B0%E6%B2%99-%E8%95%8E%E9%BA%A5%E8%8C%B6%E5%8F%AA%E8%A6%8110%E5%85%83-001500284.html",
-      "tag": "優惠"
-    },
-    {
-      "title": "開幕特價品搶翻好市多新高雄店空間升級網讚停車動線更順暢",
-      "url": "https://www.storm.mg/article/11148806",
       "tag": "優惠"
     }
   ]
