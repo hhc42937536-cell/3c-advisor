@@ -1,25 +1,121 @@
 {
-  "updated_at": "2026-07-20 23:04",
-  "songs": [],
+  "updated_at": "2026-07-21 23:01",
+  "songs": [
+    {
+      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
+      "artist": "宇宙人",
+      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
+    },
+    {
+      "name": "BAD",
+      "artist": "ATEEZ",
+      "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
+    },
+    {
+      "name": "LEMONADE",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
+    },
+    {
+      "name": "Dai Dai",
+      "artist": "Shakira & Burna Boy",
+      "url": "https://music.apple.com/tw/album/dai-dai/6768469975?i=6768469976"
+    },
+    {
+      "name": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
+    },
+    {
+      "name": "玻璃",
+      "artist": "Gareth.T",
+      "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
+    },
+    {
+      "name": "It's Me",
+      "artist": "ILLIT",
+      "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
+    },
+    {
+      "name": "SWIM",
+      "artist": "防彈少年團",
+      "url": "https://music.apple.com/tw/album/swim/1868862375?i=1868862384"
+    },
+    {
+      "name": "Heavy Serenade",
+      "artist": "NMIXX",
+      "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
+    },
+    {
+      "name": "REDRED",
+      "artist": "CORTIS",
+      "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
+    },
+    {
+      "name": "CHOOM",
+      "artist": "BABYMONSTER",
+      "url": "https://music.apple.com/tw/album/choom/1895588322?i=6763988598"
+    },
+    {
+      "name": "Gimme Dat Love",
+      "artist": "i-dle",
+      "url": "https://music.apple.com/tw/album/gimme-dat-love/6779753532?i=6779753536"
+    },
+    {
+      "name": "stupid song",
+      "artist": "Olivia Rodrigo",
+      "url": "https://music.apple.com/tw/album/stupid-song/1889992111?i=1889992115"
+    },
+    {
+      "name": "ICONIC BY MISTAKE",
+      "artist": "LE SSERAFIM, ILLIT…",
+      "url": "https://music.apple.com/tw/album/iconic-by-mistake/6776077182?i=6776077187"
+    },
+    {
+      "name": "RUDE!",
+      "artist": "Hearts2Hearts",
+      "url": "https://music.apple.com/tw/album/rude/1875146814?i=1875146815"
+    }
+  ],
   "deals": [
     {
-      "title": "【易遊網折扣碼】ezTravel 2026最新訂房優惠/機票及自由行 ...",
-      "url": "https://www.callingtaiwan.com.tw/%E6%98%93%E9%81%8A%E7%B6%B2%E6%8A%98%E6%89%A3%E7%A2%BC-%E8%A8%82%E6%88%BF%E5%8F%8A%E6%A9%9F%E7%A5%A8%E5%84%AA%E6%83%A0/",
+      "title": "Macy's 折扣碼與優惠：$20 & 30% 優惠- 7月2026",
+      "url": "https://www.everysaving.tw/store/macys.com",
       "tag": "優惠"
     },
     {
-      "title": "Shipgo報報【最新消息】– 國際代運資訊隨時掌握！",
-      "url": "https://shipgo17.com/website/news",
+      "title": "按右上角三個點點用網際網路開啟就能直接進入App，選「快 ...",
+      "url": "https://www.threads.com/@yuki.lin.18/post/Da-fmakE3e-/%E6%8C%89%E5%8F%B3%E4%B8%8A%E8%A7%92%E4%B8%89%E5%80%8B%E9%BB%9E%E9%BB%9E%E7%94%A8%E7%B6%B2%E9%9A%9B%E7%B6%B2%E8%B7%AF%E9%96%8B%E5%95%9F%E5%B0%B1%E8%83%BD%E7%9B%B4%E6%8E%A5%E9%80%B2%E5%85%A5app%E9%81%B8%E5%BF%AB%E9%96%83%E7%89%B9%E8%B3%A3%E6%96%B9%E6%A1%88httpswwwtripcomtv30yl7inkt2trip%E5%B0%88%E5%B1%AC%E6%8A%98%E6%89%A3%E7%A2%BCtripyuki%E9%96%80%E7%A5%A8%E6%88%96%E9%AB%94%E9%A9%97",
       "tag": "優惠"
     },
     {
-      "title": "中華航空: 機票與航班優惠",
-      "url": "https://flights.china-airlines.com/zh-tw/flights",
+      "title": "札幌藥妝Sapporo Drug Store優惠碼2026 | 7月最新¥3900 ...",
+      "url": "https://dealy.tw/shop/global-satudora.com",
       "tag": "優惠"
     },
     {
-      "title": "高雄大遠百-線上DM",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId",
+      "title": "JULY 特賣活動開跑！最高20% 折扣＋會員再享10% 折扣！",
+      "url": "https://www.appi.co.jp/zh-hant/offer/ihg-july-sale2026/",
+      "tag": "優惠"
+    },
+    {
+      "title": "一起聰明買! 最新2026年7月全球各大電商折扣資訊",
+      "url": "https://lucybabe15.pixnet.net/blog/posts/11404346800",
+      "tag": "優惠"
+    },
+    {
+      "title": "記得追蹤我們！ 👍🏻這週竟然有超多家裡必買回購 ...",
+      "url": "https://www.threads.com/@cocowine0205/video/DbA8uXvCcft/video-%E5%A5%BD%E5%B8%82%E5%A4%9A%E6%9C%AC%E9%80%B1%E7%89%B9%E5%83%B9%E5%95%86%E5%93%81720726%E6%9C%80%E5%8D%B3%E6%99%82%E7%9A%84%E6%9C%AC%E9%80%B1%E7%89%B9%E5%83%B9%E4%BE%86%E5%9B%89%E8%A8%98%E5%BE%97%E8%BF%BD%E8%B9%A4%E6%88%91%E5%80%91%E9%80%99%E9%80%B1%E7%AB%9F%E7%84%B6%E6%9C%89%E8%B6%85%E5%A4%9A%E5%AE%B6%E8%A3%A1%E5%BF%85%E8%B2%B7%E5%9B%9E%E8%B3%BC%E7%9A%84%E5%93%81%E7%9B%B8%E5%9C%A8%E7%89%B9%E5%83%B9%E8%B6%95%E5%BF%AB%E5%88%86%E4%BA%AB%E7%B5%A6%E8%A6%AA%E6%9C%8B%E5%A5%BD%E5%8F%8B%E6%8A%8A%E6%8F%A1%E6%8A%98%E6%89%A3%E4%B9%9F%E5%8F%AF%E4%BB%A5tag%E6%B7%B1%E6%84%9B%E7%9A%84%E4%BB%96%E4%B8%80%E8%B5%B7%E6%8E%A1%E8%B3%BC%E5%8E%BB%E5%A5%BD%E5%B8%82/",
+      "tag": "優惠"
+    },
+    {
+      "title": "🚨🔥 小李子百貨最新優惠來啦！🔥🚨 各位朋友～～快把這篇分享 ...",
+      "url": "https://www.tiktok.com/@texture1030/video/7663804764248919316",
+      "tag": "優惠"
+    },
+    {
+      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 03.09(一)",
+      "url": "https://www.daybuy.tw/costco/240069/",
       "tag": "優惠"
     },
     {
@@ -28,23 +124,23 @@
       "tag": "優惠"
     },
     {
+      "title": "酷澎666-200預計只到今天光泉100%成份無調整保久乳 ...",
+      "url": "https://www.threads.com/@twobabies1124/post/DazLbKcD_o6/media",
+      "tag": "優惠"
+    },
+    {
       "title": "活動訊息| 廣三SOGO百貨",
       "url": "https://www.kssogo.com.tw/news.php",
       "tag": "優惠"
     },
     {
-      "title": "瘋掉耶一堆玩具🫨🫨🫨 平時就超殺優惠價了居然活動期間再5 ...",
-      "url": "https://www.threads.com/@hans_lhs/post/DaxZC9akmou/%E7%98%8B%E6%8E%89%E8%80%B6-%E4%B8%80%E5%A0%86%E7%8E%A9%E5%85%B7%E5%B9%B3%E6%99%82%E5%B0%B1%E8%B6%85%E6%AE%BA%E5%84%AA%E6%83%A0%E5%83%B9%E4%BA%86%E5%B1%85%E7%84%B6%E6%B4%BB%E5%8B%95%E6%9C%9F%E9%96%93%E5%86%8D5%E6%8A%98%E6%88%91%E8%87%AA%E5%B7%B1%E7%9A%84-%E8%B2%B7%E8%B5%B7%E4%BE%86%E5%8F%AA%E8%A6%81%E5%8E%9F%E5%83%B9%E7%9A%8424%E6%8A%98%E8%80%B6/",
+      "title": "台南大遠百成功店-線上DM",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=48",
       "tag": "優惠"
     },
     {
-      "title": "你在做娃娃機的話，我們有很多商品可以給你批發或者拿 ...",
-      "url": "https://www.threads.com/@185.yoyo0625/post/Da4Z6cJEzxV",
-      "tag": "優惠"
-    },
-    {
-      "title": "最新優惠- 大苑子｜台灣鮮果第一品牌",
-      "url": "https://www.dayungs.com/category/special_offer/",
+      "title": "活動訊息| 活動情報| 品牌活動",
+      "url": "https://www.qsquare.com.tw/event-list.php?lv01_type=A03",
       "tag": "優惠"
     },
     {
@@ -63,18 +159,13 @@
       "tag": "優惠"
     },
     {
-      "title": "頂呱呱-台灣第一家連鎖炸雞品牌",
-      "url": "https://www.tkkinc.com.tw/event.html",
-      "tag": "優惠"
-    },
-    {
-      "title": "20家手搖、餐飲「世足冠軍賽優惠」一次看洋蔥圈1元、預測送 ...",
+      "title": "20家手搖、餐飲「世足冠軍賽優惠」一次看洋蔥圈1元",
       "url": "https://tw.news.yahoo.com/20%E5%AE%B6%E6%89%8B%E6%90%96-%E9%A4%90%E9%A3%B2-%E4%B8%96%E8%B6%B3%E5%86%A0%E8%BB%8D%E8%B3%BD%E5%84%AA%E6%83%A0-%E6%AC%A1%E7%9C%8B-%E6%B4%8B%E8%94%A5%E5%9C%881%E5%85%83-042400924.html",
       "tag": "優惠"
     },
     {
       "title": "4000坪「全聯百貨進德店」7/18開幕優惠一覽",
-      "url": "https://www.gvm.com.tw/article/131613?srsltid=AfmBOoqHY3ueT_gNytCLGrbhpC6_zlx9x46Q6XRbmEZ_0ChcfgUFr6T8",
+      "url": "https://www.gvm.com.tw/article/131613?srsltid=AfmBOorZEpCJKrcn_OWhWGOh6j2RMfuMVeT9VkebXcHp36JJVqnIi7Dm",
       "tag": "優惠"
     }
   ]
