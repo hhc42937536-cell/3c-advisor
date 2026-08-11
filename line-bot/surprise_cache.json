@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-10 22:42",
+  "updated_at": "2026-08-11 22:49",
   "songs": [
     {
       "name": "甲乙丙丁 (你我怎麼兩清)",
@@ -12,6 +12,11 @@
       "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
     },
     {
+      "name": "LEMONADE",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
+    },
+    {
       "name": "BAD",
       "artist": "ATEEZ",
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
@@ -20,11 +25,6 @@
       "name": "hate that i made you love me",
       "artist": "Ariana Grande",
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
-    },
-    {
-      "name": "LEMONADE",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
     },
     {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
@@ -52,6 +52,16 @@
       "url": "https://music.apple.com/tw/album/this-that/6781751949?i=6781751957"
     },
     {
+      "name": "Serenade (KARINA & WINTER)",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/serenade-karina-winter/6797481676?i=6797481677"
+    },
+    {
+      "name": "KISS N TELL",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/kiss-n-tell/6790246891?i=6790246893"
+    },
+    {
       "name": "玻璃",
       "artist": "Gareth.T",
       "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
@@ -62,40 +72,35 @@
       "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
     },
     {
-      "name": "KISS N TELL",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/kiss-n-tell/6790246891?i=6790246893"
-    },
-    {
       "name": "MOTION (feat. Juicy J)",
       "artist": "CORTIS",
       "url": "https://music.apple.com/tw/album/motion-feat-juicy-j/6793946474?i=6793946478"
-    },
-    {
-      "name": "REDRED",
-      "artist": "CORTIS",
-      "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
     }
   ],
   "deals": [
     {
-      "title": "按右上角三個點點用網際網路開啟就能直接進入App，選「快 ...",
-      "url": "https://www.threads.com/@yuki.lin.18/post/DbtJfgkk7F5/%E6%8C%89%E5%8F%B3%E4%B8%8A%E8%A7%92%E4%B8%89%E5%80%8B%E9%BB%9E%E9%BB%9E%E7%94%A8%E7%B6%B2%E9%9A%9B%E7%B6%B2%E8%B7%AF%E9%96%8B%E5%95%9F%E5%B0%B1%E8%83%BD%E7%9B%B4%E6%8E%A5%E9%80%B2%E5%85%A5app%E9%81%B8%E5%BF%AB%E9%96%83%E7%89%B9%E8%B3%A3%E6%96%B9%E6%A1%88%E5%8F%AA%E6%9C%89%E9%9B%BB%E5%AD%90%E7%A5%A8%E5%96%94httpswwwtripcomtl9wzkgz11t2trip%E5%B0%88%E5%B1%AC%E6%8A%98%E6%89%A3%E7%A2%BCtripyuk/",
+      "title": "#明天限定特賣會",
+      "url": "https://www.threads.com/@tangtang793/post/DbvPH8cmbyw/%E6%98%8E%E5%A4%A9%E9%99%90%E5%AE%9A%E7%89%B9%E8%B3%A3%E6%9C%83",
       "tag": "優惠"
     },
     {
-      "title": "8月»蝦皮購物/蝦皮商城/蝦皮直送2026最新優惠券/折扣碼/免 ...",
-      "url": "https://www.callingtaiwan.com.tw/%E8%9D%A6%E7%9A%AE%E6%8A%98%E6%89%A3%E7%A2%BC-shopee/",
+      "title": "2026 台灣開學季優惠｜Back To School 折扣代碼、必買清單",
+      "url": "https://dealy.tw/special-offers/back-to-school-offers",
       "tag": "優惠"
     },
     {
-      "title": "限時搶購！2026最新快閃優惠一覽",
-      "url": "https://dealy.tw/special-offers/flash-deals",
+      "title": "忠孝SOGO 2026夏季特賣會Summer Sale活動攻略",
+      "url": "https://www.gracegift.com.tw/blogs/news/summersale_2026?srsltid=AfmBOoozmJbpSQepcEtsoGJQTk0so-FjYHXpTMn95SN1SmiMM_RnnEQ-",
       "tag": "優惠"
     },
     {
       "title": "MITSUI OUTLET PARK北陸小矢部",
       "url": "https://mitsui-shopping-park.com/tw/mop/oyabe/shopnews/3599560.html",
+      "tag": "優惠"
+    },
+    {
+      "title": "易米- 超级赚钱的APP - 你可能还喜欢 - App Store",
+      "url": "https://apps.apple.com/sg/app/1298518330?l=zh-Hans-CN&see-all=customers-also-bought-apps&platform=watch",
       "tag": "優惠"
     },
     {
@@ -109,13 +114,8 @@
       "tag": "優惠"
     },
     {
-      "title": "冠冕特賣？ : r/elderscrollsonline",
-      "url": "https://www.reddit.com/r/elderscrollsonline/comments/1vh5bzs/crown_sale/?tl=zh-hant",
-      "tag": "優惠"
-    },
-    {
-      "title": "活動訊息| 廣三SOGO百貨",
-      "url": "https://www.kssogo.com.tw/news.php",
+      "title": "線上DM",
+      "url": "https://www.tsrd.com.tw/online-dm/online-dm-page",
       "tag": "優惠"
     },
     {
@@ -124,74 +124,69 @@
       "tag": "優惠"
     },
     {
-      "title": "延續開幕慶熱潮iFG遠雄台中店暑假檔期/5盛大登場 - 台灣民眾電子報",
-      "url": "https://www.allnews.tw/news/92936",
+      "title": "冠冕特賣？ : r/elderscrollsonline",
+      "url": "https://www.reddit.com/r/elderscrollsonline/comments/1vh5bzs/crown_sale/?tl=zh-hant",
       "tag": "優惠"
     },
     {
-      "title": "西松屋台北首間門市正式開幕！人氣商品必買推薦、夏季優惠8 折起",
+      "title": "台中勤美新店開幕優惠！CHARLES & KEITH送200元券、 ...",
+      "url": "https://today.line.me/tw/v3/article/LXyRryr",
+      "tag": "優惠"
+    },
+    {
+      "title": "西松屋台北首間門市正式開幕！人氣商品必買推薦",
       "url": "https://www.upmedia.mg/tw/lifestyle/deals/265479",
       "tag": "優惠"
     },
     {
-      "title": "公告 - 無印良品",
+      "title": "台灣設計x 台灣製造x 文博會期間優惠",
+      "url": "https://www.threads.com/@wuoshop/post/Db2oc_aAQ5L/%E5%8F%B0%E7%81%A3%E8%A8%AD%E8%A8%88-x-%E5%8F%B0%E7%81%A3%E8%A3%BD%E9%80%A0-x-%E6%96%87%E5%8D%9A%E6%9C%83%E6%9C%9F%E9%96%93%E5%84%AA%E6%83%A0%E6%8A%98%E6%89%A3%E7%A2%BC-20206cet%E4%BD%BF%E7%94%A8%E6%9C%9F%E9%96%93-202686%E5%9B%9B2026813%E5%9B%9B%E4%BD%BF%E7%94%A8%E8%A6%8F%E5%89%87%E5%96%AE%E7%AD%86%E6%B6%88%E8%B2%BB%E6%BB%BF-nt1000%E5%8D%B3%E5%8F%AF%E4%BA%AB%E6%95%B4%E7%AD%86%E8%A8%82%E5%96%AE-9-%E6%8A%98/",
+      "tag": "優惠"
+    },
+    {
+      "title": "公告",
       "url": "https://www.muji.tw/muji-journal/news/",
       "tag": "優惠"
     },
     {
-      "title": "台灣新百貨公司要來了！ 「6.2萬坪超大購物中心、270家品牌」 有捷 ...",
-      "url": "https://www.threads.com/@stormmedia_tw/post/DbqFsSSEsMV/%E5%8F%B0%E7%81%A3%E6%96%B0%E7%99%BE%E8%B2%A8%E5%85%AC%E5%8F%B8%E8%A6%81%E4%BE%86%E4%BA%8662%E8%90%AC%E5%9D%AA%E8%B6%85%E5%A4%A7%E8%B3%BC%E7%89%A9%E4%B8%AD%E5%BF%83270%E5%AE%B6%E5%93%81%E7%89%8C%E6%9C%89%E6%8D%B7%E9%81%8B%E5%BE%88%E6%96%B9%E4%BE%BF%E9%96%8B%E5%B9%95%E5%9C%B0%E9%BB%9E%E6%99%82%E9%96%93%E6%9B%9Dhttpswwwstormmglifestyle11153461utm_sourc/",
+      "title": "台北中山、台中勤美新店開幕優惠！CHARLES & KEITH送 ...",
+      "url": "https://tw.news.yahoo.com/%E5%8F%B0%E5%8C%97%E4%B8%AD%E5%B1%B1-%E5%8F%B0%E4%B8%AD%E5%8B%A4%E7%BE%8E%E6%96%B0%E5%BA%97%E9%96%8B%E5%B9%95%E5%84%AA%E6%83%A0-charles-keith%E9%80%81200%E5%85%83%E5%88%B8-peach-011857606.html",
       "tag": "優惠"
     },
     {
-      "title": "百貨優惠齊發小米之家義享店開幕加1元多1件| NOWNEWS今日新聞",
-      "url": "https://today.line.me/tw/v3/article/oqRz87q",
+      "title": "拿出身分證！生日「對中1數字」免費喝手搖飲、CoCo/大苑子 ...",
+      "url": "https://www.storm.mg/lifestyle/11154601",
       "tag": "優惠"
     },
     {
-      "title": "宜蘭首間小北百貨8／8開幕！ 佔地超過200坪、6折商品限時搶",
-      "url": "https://www.setn.com/news/1883842",
-      "tag": "優惠"
-    },
-    {
-      "title": "明（10）日起 汽油不調整柴油不調整",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786248882.A.5AA.html",
-      "tag": "新聞"
-    },
-    {
-      "title": "iPASS MONEY神腦1999回饋300",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786249526.A.151.html",
+      "title": "萊爾富限時殺5日 8/12~8/16",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786456390.A.035.html",
       "tag": "情報"
     },
     {
-      "title": "星巴克 星送禮 父親節折扣",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786273783.A.8DF.html",
+      "title": "聖淘沙funpass護照買一送一",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786458559.A.487.html",
       "tag": "情報"
     },
     {
-      "title": "United Athle 5001 素T 89$",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786291206.A.E9D.html",
+      "title": "大成無骨雞腿3KG 899",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786479425.A.D78.html",
       "tag": "情報"
     },
     {
-      "title": "LINE蝦皮+3",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786327410.A.7CE.html",
+      "title": "2026年全台捐血贈品",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
       "tag": "情報"
     },
     {
-      "title": "家樂福領券1元加購1公斤紅蘿蔔",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786339587.A.1A6.html",
-      "tag": "情報"
+      "title": "未滿1元集點抽獎資訊集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775756243.A.056.html",
+      "tag": "集中"
     },
     {
-      "title": "三商巧福原汁牛肉麵139",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786344092.A.C32.html",
-      "tag": "情報"
-    },
-    {
-      "title": "Re: [情報] ExpressVPN TopCashback 120%返現",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786344970.A.A5C.html",
-      "tag": "情報"
+      "title": "贈送集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775845713.A.018.html",
+      "tag": "集中"
     }
   ]
 }
