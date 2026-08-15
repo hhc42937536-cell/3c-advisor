@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-14 22:28",
+  "updated_at": "2026-08-15 22:27",
   "songs": [
     {
       "name": "甲乙丙丁 (你我怎麼兩清)",
@@ -32,14 +32,14 @@
       "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     },
     {
-      "name": "Serenade (KARINA & WINTER)",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/serenade-karina-winter/6797481676?i=6797481677"
-    },
-    {
       "name": "All For You (《蜘蛛人:重生日》電影片尾曲)",
       "artist": "周興哲",
       "url": "https://music.apple.com/tw/album/all-for-you-%E8%9C%98%E8%9B%9B%E4%BA%BA-%E9%87%8D%E7%94%9F%E6%97%A5-%E9%9B%BB%E5%BD%B1%E7%89%87%E5%B0%BE%E6%9B%B2/6788676703?i=6788676704"
+    },
+    {
+      "name": "Serenade (KARINA & WINTER)",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/serenade-karina-winter/6797481676?i=6797481677"
     },
     {
       "name": "petal",
@@ -52,9 +52,9 @@
       "url": "https://music.apple.com/tw/album/pop-off-pop-off/6796609538?i=6796609794"
     },
     {
-      "name": "oh well",
-      "artist": "Ariana Grande",
-      "url": "https://music.apple.com/tw/album/oh-well/1895420989?i=6763657122"
+      "name": "It's Me",
+      "artist": "ILLIT",
+      "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
     },
     {
       "name": "玻璃",
@@ -62,19 +62,19 @@
       "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
     },
     {
-      "name": "It's Me",
-      "artist": "ILLIT",
-      "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
-    },
-    {
-      "name": "This & That",
-      "artist": "Stray Kids",
-      "url": "https://music.apple.com/tw/album/this-that/6781751949?i=6781751957"
+      "name": "oh well",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/oh-well/1895420989?i=6763657122"
     },
     {
       "name": "REDRED",
       "artist": "CORTIS",
       "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
+    },
+    {
+      "name": "This & That",
+      "artist": "Stray Kids",
+      "url": "https://music.apple.com/tw/album/this-that/6781751949?i=6781751957"
     }
   ],
   "deals": [
@@ -84,28 +84,23 @@
       "tag": "優惠"
     },
     {
-      "title": "2026 台灣開學季優惠｜Back To School 折扣代碼、必買清單",
-      "url": "https://dealy.tw/special-offers/back-to-school-offers",
-      "tag": "優惠"
-    },
-    {
       "title": "2026長榮航空秋季機票促銷．秋日好楓光精選航線83折起",
       "url": "https://flights.evaair.com/zh-tw/online-travel-fair",
       "tag": "優惠"
     },
     {
-      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 03.09(一)",
-      "url": "https://www.daybuy.tw/costco/240069/",
+      "title": "2026 台灣開學季優惠｜Back To School 折扣代碼、必買清單",
+      "url": "https://dealy.tw/special-offers/back-to-school-offers",
       "tag": "優惠"
     },
     {
-      "title": "2026【本週買一送一懶人包】8月餐廳/飲料優惠一次看！(每日 ...",
-      "url": "https://info.talk.tw/buy-one-get-one/",
+      "title": "【Agoda折扣碼】2026/8 每日更新！信用卡優惠 - 揪好玩",
+      "url": "https://jioujiou.tw/agoda-discount/",
       "tag": "優惠"
     },
     {
-      "title": "忠孝SOGO 2026夏季特賣會Summer Sale活動攻略",
-      "url": "https://www.gracegift.com.tw/blogs/news/summersale_2026?srsltid=AfmBOooBhu_g8_9BNqcCypCQq1I6GFpKYKaLl0GBEpUtQ2tjox9oZxYg",
+      "title": "2026最新寶寶粥優惠｜試吃申請、滿額免運、限時特賣",
+      "url": "https://www.fishvilla.net/on_sale_%E5%AF%B6%E5%AF%B6%E7%B2%A5%E5%84%AA%E6%83%A0/?srsltid=AfmBOoryKiOGBa-BCao8xo9J3_26GtstpCyly2NLydWLuituaes9I9VM",
       "tag": "優惠"
     },
     {
@@ -124,23 +119,23 @@
       "tag": "優惠"
     },
     {
-      "title": "活動訊息| 廣三SOGO百貨",
-      "url": "https://www.kssogo.com.tw/news.php",
+      "title": "2025跨年慶｜2026必收神級單品",
+      "url": "https://www.skm.com.tw/page/MxBEABAAxA",
       "tag": "優惠"
     },
     {
-      "title": "天仁茗茶：會員APP限定限時即搶買1送1優惠券（15/8）",
-      "url": "https://www.jetsoclub.com/2026/08/app-11158.html",
-      "tag": "優惠"
-    },
-    {
-      "title": "遠百桃園-線上DM",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=40",
+      "title": "AEON：周三新鮮日/ 大特賣（12/8）",
+      "url": "https://www.jetsoclub.com/2026/08/aeon-128.html",
       "tag": "優惠"
     },
     {
       "title": "台中勤美新店開幕優惠！CHARLES & KEITH送200元券、 ...",
       "url": "https://today.line.me/tw/v3/article/LXyRryr",
+      "tag": "優惠"
+    },
+    {
+      "title": "台灣設計x 台灣製造x 文博會期間優惠",
+      "url": "https://www.threads.com/@wuoshop/post/Db2oc_aAQ5L/%E5%8F%B0%E7%81%A3%E8%A8%AD%E8%A8%88-x-%E5%8F%B0%E7%81%A3%E8%A3%BD%E9%80%A0-x-%E6%96%87%E5%8D%9A%E6%9C%83%E6%9C%9F%E9%96%93%E5%84%AA%E6%83%A0%E6%8A%98%E6%89%A3%E7%A2%BC-20206cet%E4%BD%BF%E7%94%A8%E6%9C%9F%E9%96%93-202686%E5%9B%9B2026813%E5%9B%9B%E4%BD%BF%E7%94%A8%E8%A6%8F%E5%89%87%E5%96%AE%E7%AD%86%E6%B6%88%E8%B2%BB%E6%BB%BF-nt1000%E5%8D%B3%E5%8F%AF%E4%BA%AB%E6%95%B4%E7%AD%86%E8%A8%82%E5%96%AE-9-%E6%8A%98/",
       "tag": "優惠"
     },
     {
@@ -150,57 +145,47 @@
     },
     {
       "title": "台北中山、台中勤美新店開幕優惠！CHARLES & KEITH送 ...",
-      "url": "https://tw.news.yahoo.com/%E5%8F%B0%E5%8C%97%E4%B8%AD%E5%B1%B1-%E5%8F%B0%E4%B8%AD%E5%8B%A4%E7%BE%8E%E6%96%B0%E5%BA%97%E9%96%8B%E5%B9%95%E5%84%AA%E6%83%A0-charles-keith%E9%80%81200%E5%85%83%E5%88%B8-peach-011857606.html",
+      "url": "https://tw.news.yahoo.com/%E5%8F%B0%E5%8C%97%E4%B8%AD%E5%B1%B1%E3%80%81%E5%8F%B0%E4%B8%AD%E5%8B%A4%E7%BE%8E%E6%96%B0%E5%BA%97%E9%96%8B%E5%B9%95%E5%84%AA%E6%83%A0%EF%BC%81charles--keith%E9%80%81200%E5%85%83%E5%88%B8%E3%80%81peach-john%E6%BB%BF%E9%A1%8D%E9%80%81%E8%81%AF%E5%90%8D%E6%9D%AF-011857606.html",
       "tag": "優惠"
     },
     {
-      "title": "🎉 OCEAN BOMB 官方網站大升級！ 想不到今天喝什麼？ ...",
-      "url": "https://www.threads.com/@yhb_oceanbomb/post/Db5Fe74lKQz/video-ocean-bomb-%E5%AE%98%E6%96%B9%E7%B6%B2%E7%AB%99%E5%A4%A7%E5%8D%87%E7%B4%9A%E6%83%B3%E4%B8%8D%E5%88%B0%E4%BB%8A%E5%A4%A9%E5%96%9D%E4%BB%80%E9%BA%BC%E9%82%A3%E5%B0%B1%E4%BE%86-ocean-bomb-%E5%AE%98%E7%B6%B2%E9%80%9B%E9%80%9B%E5%90%A7%E9%96%8B%E5%B9%95%E9%99%90%E5%AE%9A%E5%84%AA%E6%83%A0%E4%B8%80%E6%AC%A1%E9%96%8B%E8%B7%91-%E5%85%A8%E9%9D%A2%E5%95%86%E5%93%81-75-%E6%8A%98%E8%B5%B7%E5%90%84%E7%A8%AE%E4%BA%BA%E6%B0%A3%E9%A3%B2%E5%93%81%E7%B6%93%E5%85%B8%E5%8F%A3%E5%91%B3%E9%80%9A%E9%80%9A%E9%83%BD",
-      "tag": "優惠"
-    },
-    {
-      "title": "HONOR 第6 間體驗店開幕一連七日有1 折起優惠產品",
-      "url": "https://www.eprice.com.hk/mobile/talk/6021/227809/1",
-      "tag": "優惠"
-    },
-    {
-      "title": "杜蕾斯.超潤滑$165.12入",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786552564.A.D92.html",
+      "title": "Re: [情報] 三商炸雞 北車/義大 限定 三炸雞+飲料 99元",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786711430.A.94D.html",
       "tag": "情報"
     },
     {
-      "title": "line point3+4 adidas Taiwan 三國群英傳:策定九州",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786587624.A.D76.html",
+      "title": "SONY PS5 Slim 主機 95折",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786712940.A.52D.html",
       "tag": "情報"
     },
     {
-      "title": "象印一體式中栓800ml保溫瓶$899",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786617611.A.A67.html",
+      "title": "三商炸雞買6送6 $333（~8/26）",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786718112.A.9D8.html",
       "tag": "情報"
     },
     {
-      "title": "WF-1000XM6 6590",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786637214.A.E96.html",
+      "title": "LINE+3 +3",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786728661.A.6C6.html",
       "tag": "情報"
     },
     {
-      "title": "-4杜老爺買2送2",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786674107.A.B68.html",
+      "title": "VANS+LINE購物15%回饋",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786780632.A.426.html",
       "tag": "情報"
     },
     {
-      "title": "LINE點數+2",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786676264.A.0A9.html",
+      "title": "adidas跑鞋/籃球鞋 折後$900",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786786481.A.A33.html",
       "tag": "情報"
     },
     {
-      "title": "PC 8/14限定 Le Labo淡香精100ml $8599",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786690353.A.E5B.html",
+      "title": "Line貼圖限時50代幣",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786788787.A.330.html",
       "tag": "情報"
     },
     {
-      "title": "三商炸雞 北車/義大 限定 三炸雞+飲料 99元",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786692138.A.74E.html",
+      "title": "LINE禮物優惠彙總",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1786793428.A.8D7.html",
       "tag": "情報"
     }
   ]
