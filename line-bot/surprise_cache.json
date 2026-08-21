@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-20 22:32",
+  "updated_at": "2026-08-21 22:29",
   "songs": [
     {
       "name": "甲乙丙丁Strangers",
@@ -12,14 +12,14 @@
       "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
     },
     {
+      "name": "BiiiG",
+      "artist": "BIGBANG",
+      "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
+    },
+    {
       "name": "BAD",
       "artist": "ATEEZ",
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
-    },
-    {
-      "name": "hate that i made you love me",
-      "artist": "Ariana Grande",
-      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
       "name": "LEMONADE",
@@ -27,14 +27,9 @@
       "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
     },
     {
-      "name": "BiiiG",
-      "artist": "BIGBANG",
-      "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
-    },
-    {
-      "name": "All For You (《蜘蛛人:重生日》電影片尾曲)",
-      "artist": "周興哲",
-      "url": "https://music.apple.com/tw/album/all-for-you-%E8%9C%98%E8%9B%9B%E4%BA%BA-%E9%87%8D%E7%94%9F%E6%97%A5-%E9%9B%BB%E5%BD%B1%E7%89%87%E5%B0%BE%E6%9B%B2/6788676703?i=6788676704"
+      "name": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
@@ -42,14 +37,24 @@
       "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     },
     {
-      "name": "petal",
-      "artist": "Ariana Grande",
-      "url": "https://music.apple.com/tw/album/petal/1895420989?i=6763656878"
+      "name": "All For You (《蜘蛛人:重生日》電影片尾曲)",
+      "artist": "周興哲",
+      "url": "https://music.apple.com/tw/album/all-for-you-%E8%9C%98%E8%9B%9B%E4%BA%BA-%E9%87%8D%E7%94%9F%E6%97%A5-%E9%9B%BB%E5%BD%B1%E7%89%87%E5%B0%BE%E6%9B%B2/6788676703?i=6788676704"
     },
     {
       "name": "Pop Off Pop Off",
       "artist": "KiiiKiii",
       "url": "https://music.apple.com/tw/album/pop-off-pop-off/6796609538?i=6796609794"
+    },
+    {
+      "name": "petal",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/petal/1895420989?i=6763656878"
+    },
+    {
+      "name": "It's Me",
+      "artist": "ILLIT",
+      "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
     },
     {
       "name": "Serenade (KARINA & WINTER)",
@@ -60,11 +65,6 @@
       "name": "玻璃",
       "artist": "Gareth.T",
       "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
-    },
-    {
-      "name": "It's Me",
-      "artist": "ILLIT",
-      "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
     },
     {
       "name": "REDRED",
@@ -89,8 +89,8 @@
       "tag": "優惠"
     },
     {
-      "title": "全聯買一送一2026/8最新DM》週三週六買一送一、6折優惠懶 ...",
-      "url": "https://news.tvbs.com.tw/life/2819201",
+      "title": "2026【8月outlet特賣會推薦】鞋子、運動鞋、服飾、行李箱、包包",
+      "url": "https://info.talk.tw/taiwan-sale/",
       "tag": "優惠"
     },
     {
@@ -99,8 +99,13 @@
       "tag": "優惠"
     },
     {
-      "title": "Mega City 板橋大遠百-線上DM",
-      "url": "https://www.feds.com.tw/tw/54/Edm/List",
+      "title": "限時優惠！InvestingPro現享55%折扣，錯過不再有",
+      "url": "https://hk.finance.yahoo.com/news/%E9%99%90%E6%99%82%E5%84%AA%E6%83%A0-investingpro%E7%8F%BE%E4%BA%AB55-%E6%8A%98%E6%89%A3-%E9%8C%AF%E9%81%8E%E4%B8%8D%E5%86%8D%E6%9C%89-082857798.html",
+      "tag": "優惠"
+    },
+    {
+      "title": "Top City 台中大遠百-線上DM",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=53",
       "tag": "優惠"
     },
     {
@@ -119,13 +124,18 @@
       "tag": "優惠"
     },
     {
+      "title": "促銷、優惠與折扣",
+      "url": "https://mo.iherb.com/lp/fetch-user-info",
+      "tag": "優惠"
+    },
+    {
       "title": "【iHerb 30週年慶】限時全站77 折優惠碼！再享5% 回饋＋ ...",
       "url": "https://jetsobear.com/iherb-anniversary-sale-discount-2026-p326368/",
       "tag": "優惠"
     },
     {
-      "title": "遠百嘉義-線上DM",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=37",
+      "title": "SOGO大巨蛋8/22試營運！進駐500品牌、開幕優惠",
+      "url": "https://www.nownews.com/news/6867982?srsltid",
       "tag": "優惠"
     },
     {
@@ -134,8 +144,8 @@
       "tag": "優惠"
     },
     {
-      "title": "NEW 最新開幕資訊-茶湯會TP-TEA │ 外帶茶飲第一品牌",
-      "url": "https://tw.tp-tea.com/news/ins.php?index_id=557",
+      "title": "全台最大美食街開逛囉！大巨蛋Garden City美食優惠懶人包生 ...",
+      "url": "https://travel.udn.com/travel/story/7160/9705351?from",
       "tag": "優惠"
     },
     {
@@ -144,13 +154,18 @@
       "tag": "優惠"
     },
     {
-      "title": "最新活動- 大苑子｜台灣鮮果第一品牌",
-      "url": "https://www.dayungs.com/category/%E6%9C%80%E6%96%B0%E6%B4%BB%E5%8B%95/",
+      "title": "SOGO大巨蛋美食餐廳開幕優惠一次看！日本板前天婦羅半價",
+      "url": "https://www.upmedia.mg/tw/lifestyle/food/266791",
       "tag": "優惠"
     },
     {
       "title": "韓系選物控必逛！瑪黑家居中山店全新開幕，9大韓國人氣 ...",
       "url": "https://www.elle.com/tw/life/hot-news/g73473427/marais-store-2026/",
+      "tag": "優惠"
+    },
+    {
+      "title": "最新活動- 大苑子｜台灣鮮果第一品牌",
+      "url": "https://www.dayungs.com/category/%E6%9C%80%E6%96%B0%E6%B4%BB%E5%8B%95/",
       "tag": "優惠"
     },
     {
@@ -174,19 +189,19 @@
       "tag": "情報"
     },
     {
-      "title": "2026年全台捐血贈品",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
+      "title": "蝦皮newbalance三件5折",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787282025.A.0A7.html",
       "tag": "情報"
     },
     {
-      "title": "未滿1元集點抽獎資訊集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775756243.A.056.html",
-      "tag": "集中"
+      "title": "邀全台來花蓮救觀光！國旅住宿補助縣府再",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787283054.A.978.html",
+      "tag": "新聞"
     },
     {
-      "title": "贈送集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775845713.A.018.html",
-      "tag": "集中"
+      "title": "Re: [情報] 蝦皮直營克補B群+鋅 90顆350",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787288542.A.A1A.html",
+      "tag": "情報"
     }
   ]
 }
