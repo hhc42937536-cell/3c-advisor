@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-22 22:26",
+  "updated_at": "2026-08-23 22:27",
   "songs": [
     {
       "name": "甲乙丙丁Strangers",
@@ -12,14 +12,14 @@
       "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
     },
     {
-      "name": "BiiiG",
-      "artist": "BIGBANG",
-      "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
-    },
-    {
       "name": "BAD",
       "artist": "ATEEZ",
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
+    },
+    {
+      "name": "BiiiG",
+      "artist": "BIGBANG",
+      "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
     },
     {
       "name": "LEMONADE",
@@ -57,9 +57,9 @@
       "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
     },
     {
-      "name": "Serenade (KARINA & WINTER)",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/serenade-karina-winter/6797481676?i=6797481677"
+      "name": "REDRED",
+      "artist": "CORTIS",
+      "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
     },
     {
       "name": "petal",
@@ -67,30 +67,30 @@
       "url": "https://music.apple.com/tw/album/petal/1895420989?i=6763656878"
     },
     {
-      "name": "REDRED",
-      "artist": "CORTIS",
-      "url": "https://music.apple.com/tw/album/redred/1887671065?i=1887671067"
+      "name": "Serenade (KARINA & WINTER)",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/serenade-karina-winter/6797481676?i=6797481677"
     },
     {
-      "name": "Heavy Serenade",
-      "artist": "NMIXX",
-      "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
+      "name": "一樣會愛上你",
+      "artist": "理想混蛋 & 高爾宣",
+      "url": "https://music.apple.com/tw/album/%E4%B8%80%E6%A8%A3%E6%9C%83%E6%84%9B%E4%B8%8A%E4%BD%A0/6800323520?i=6800323526"
     }
   ],
   "deals": [
+    {
+      "title": "8月»蝦皮購物/蝦皮商城/蝦皮直送2026最新優惠券/折扣碼/免 ...",
+      "url": "https://www.callingtaiwan.com.tw/%E8%9D%A6%E7%9A%AE%E6%8A%98%E6%89%A3%E7%A2%BC-shopee/",
+      "tag": "優惠"
+    },
     {
       "title": "全球住宿最低4折＋6組限時優惠碼＋深夜訂房最高7折省錢攻略",
       "url": "https://tournews.tw/agoda-august-mega-sale-2026/",
       "tag": "優惠"
     },
     {
-      "title": "按右上角三個點點用網際網路開啟就能直接進入App，選「快 ...",
-      "url": "https://www.threads.com/@yuki.lin.18/post/DcGvNVTE6Kd",
-      "tag": "優惠"
-    },
-    {
-      "title": "2026【8月outlet特賣會推薦】鞋子、運動鞋、服飾、行李箱、包包",
-      "url": "https://info.talk.tw/taiwan-sale/",
+      "title": "好康情報誌(@info.talk_tw)",
+      "url": "https://www.threads.com/@info.talk_tw",
       "tag": "優惠"
     },
     {
@@ -99,23 +99,33 @@
       "tag": "優惠"
     },
     {
+      "title": "2026【8月outlet特賣會推薦】鞋子、運動鞋、服飾、行李箱、包包",
+      "url": "https://info.talk.tw/taiwan-sale/",
+      "tag": "優惠"
+    },
+    {
       "title": "2026最新寶寶粥優惠｜試吃申請、滿額免運、限時特賣",
-      "url": "https://www.fishvilla.net/on_sale_%E5%AF%B6%E5%AF%B6%E7%B2%A5%E5%84%AA%E6%83%A0/?srsltid",
+      "url": "https://www.fishvilla.net/on_sale_%E5%AF%B6%E5%AF%B6%E7%B2%A5%E5%84%AA%E6%83%A0/?srsltid=AfmBOoohe8bC_bOiZCAyiO4AwhoPNRiawc1QwcNYmpdm6kQWaCOLLWie",
       "tag": "優惠"
     },
     {
-      "title": "Mega City 板橋大遠百-線上DM",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=54",
+      "title": "Top City 台中大遠百-線上DM",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=53",
       "tag": "優惠"
     },
     {
-      "title": "8/22（六） 特賣今天中午慶祝老爸的生日（我順便 ...",
-      "url": "https://www.threads.com/@1999_center/post/DcV1PmIo5Pu/822%E5%85%AD%E7%89%B9%E8%B3%A3%E4%BB%8A%E5%A4%A9%E4%B8%AD%E5%8D%88%E6%85%B6%E7%A5%9D%E8%80%81%E7%88%B8%E7%9A%84%E7%94%9F%E6%97%A5-%E6%88%91%E9%A0%86%E4%BE%BF%E6%9C%AC%E4%BE%86%E8%A6%81%E5%8E%BB%E5%90%83%E4%B8%B0%E7%A6%BE%E4%BD%86%E8%80%81%E5%AA%BD%E8%A6%BA%E5%BE%97%E4%B8%8D%E7%94%A8%E8%A8%82%E4%BD%8D-%E6%89%80%E4%BB%A5%E5%B0%B1%E6%B2%92%E4%BD%8D%E5%AD%90%E5%89%9B%E5%A5%BD%E9%A0%86%E4%BA%86%E8%80%81%E7%88%B8%E7%9A%84%E6%84%8F%E6%80%9D-%E5%88%87%E4%BA%86%E9%B5%9D%E8%82%89%E4%B9%9F%E6%8C%BA%E5%A5%BD%E7%9A%84-%E7%B6%93%E6%BF%9F%E5%AF%A6%E6%83%A0%E4%B8%8B%E5%8D%88%E5%8E%BB%E6%99%AF%E7%BE%8E%E9%80%9B%E7%89%B9%E8%B3%A3%E6%9C%83%E7%9C%9F%E7%9A%84%E6%98%AF%E8%A0%BB/",
+      "title": "Post by Bunny找好物｜商品分享｜便宜- @love_mo_0",
+      "url": "https://www.threads.com/@love_mo_0/post/DcYzWsCgfRn/%E7%99%BC%E4%BD%88%E8%80%85bunny%E6%89%BE%E5%A5%BD%E7%89%A9-%E5%95%86%E5%93%81%E5%88%86%E4%BA%AB%E4%BE%BF%E5%AE%9C%E4%BD%BF%E7%94%A8%E6%8E%A8%E8%96%A6love_mo_0/",
       "tag": "優惠"
     },
     {
       "title": "【2026 官網會員週年慶】限時48hr. 8/26－8/27｜一年一度",
-      "url": "https://plusminuszero.com.tw/news-d.php?Key=31&srsltid=AfmBOoqBymeFgE5sRhgRNQU65B2o2fihudCVPE5cOOnSAQ-9a_2AUr-m",
+      "url": "https://plusminuszero.com.tw/news-d.php?Key=31&srsltid=AfmBOoreGgtErIbJbQWsYoDNRDKaI5D22JeJnI_zIF1vgw1kByc0jQke",
+      "tag": "優惠"
+    },
+    {
+      "title": "2025跨年慶｜2026必收神級單品",
+      "url": "https://www.skm.com.tw/page/MxBEABAAxA",
       "tag": "優惠"
     },
     {
@@ -124,23 +134,8 @@
       "tag": "優惠"
     },
     {
-      "title": "2026日本購物攻略：年度特賣月曆、超值好康與必逛好店懶人包",
-      "url": "https://livejapan.com/zh-tw/article-a0000672/",
-      "tag": "優惠"
-    },
-    {
-      "title": "全台最大美食街開逛囉！大巨蛋Garden City美食優惠懶人包生 ...",
-      "url": "https://travel.udn.com/travel/story/7160/9705351",
-      "tag": "優惠"
-    },
-    {
       "title": "SOGO大巨蛋8/22試營運！進駐500品牌、開幕優惠",
-      "url": "https://www.nownews.com/news/6867982?srsltid",
-      "tag": "優惠"
-    },
-    {
-      "title": "北部最大百貨公司今天8/22開幕！捷運出站就到「 ...",
-      "url": "https://www.storm.mg/lifestyle/11158083",
+      "url": "https://www.nownews.com/news/6867982?srsltid=AfmBOoqT0Bg7ie-RfV4ZS-PK92eW92-7B35THf_EJP9U61_IaSQ_YNWw",
       "tag": "優惠"
     },
     {
@@ -149,8 +144,13 @@
       "tag": "優惠"
     },
     {
-      "title": "SOGO大巨蛋美食餐廳開幕優惠一次看！日本板前天婦羅半價",
-      "url": "https://www.upmedia.mg/tw/lifestyle/food/266791",
+      "title": "北部最大百貨公司今天8/22開幕！捷運出站就到「 ...",
+      "url": "https://www.storm.mg/lifestyle/11158083",
+      "tag": "優惠"
+    },
+    {
+      "title": "全台最大美食街開逛囉！大巨蛋Garden City美食優惠懶 ... - 旅遊",
+      "url": "https://travel.udn.com/travel/story/7160/9705351",
       "tag": "優惠"
     },
     {
@@ -159,13 +159,18 @@
       "tag": "優惠"
     },
     {
-      "title": "大巨蛋新店搶吃！全台最大茶餐廳登場每天前50名免費送燉湯",
-      "url": "https://www.ctee.com.tw/news/20260818701810-431401",
+      "title": "SOGO大巨蛋美食餐廳開幕優惠一次看！日本板前天婦羅半價",
+      "url": "https://www.upmedia.mg/tw/lifestyle/food/266791",
       "tag": "優惠"
     },
     {
       "title": "LocknLock樂扣樂扣「全台首家百貨通路」遠東Garden City ...",
-      "url": "https://www.gtv.com.tw/events.php?seqId",
+      "url": "https://www.gtv.com.tw/events.php?seqId=0B99B190-AD68-3E88-153F-74545E16DA45",
+      "tag": "優惠"
+    },
+    {
+      "title": "大巨蛋新店搶吃！全台最大茶餐廳登場每天前50名免費送燉湯",
+      "url": "https://www.ctee.com.tw/news/20260818701810-431401",
       "tag": "優惠"
     },
     {
@@ -196,11 +201,6 @@
     {
       "title": "Re: [情報] 蝦皮直營克補B群+鋅 90顆350",
       "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787288542.A.A1A.html",
-      "tag": "情報"
-    },
-    {
-      "title": "寶雅醫美節優惠",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787291130.A.3E2.html",
       "tag": "情報"
     }
   ]
