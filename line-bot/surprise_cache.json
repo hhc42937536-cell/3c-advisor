@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-24 22:31",
+  "updated_at": "2026-08-25 22:32",
   "songs": [
     {
       "name": "甲乙丙丁Strangers",
@@ -12,24 +12,24 @@
       "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
     },
     {
-      "name": "Less than a Lover",
-      "artist": "JENNIE",
-      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
-    },
-    {
       "name": "BAD",
       "artist": "ATEEZ",
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
     },
     {
-      "name": "LEMONADE",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
+      "name": "Less than a Lover",
+      "artist": "JENNIE",
+      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
     },
     {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
       "artist": "宇宙人",
       "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
+    },
+    {
+      "name": "LEMONADE",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
     },
     {
       "name": "hate that i made you love me",
@@ -62,19 +62,19 @@
       "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
     },
     {
+      "name": "Heavy Serenade",
+      "artist": "NMIXX",
+      "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
+    },
+    {
       "name": "一樣會愛上你",
       "artist": "理想混蛋 & 高爾宣",
       "url": "https://music.apple.com/tw/album/%E4%B8%80%E6%A8%A3%E6%9C%83%E6%84%9B%E4%B8%8A%E4%BD%A0/6800323520?i=6800323526"
     },
     {
-      "name": "Serenade (KARINA & WINTER)",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/serenade-karina-winter/6797481676?i=6797481677"
-    },
-    {
-      "name": "Heavy Serenade",
-      "artist": "NMIXX",
-      "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
+      "name": "petal",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/petal/1895420989?i=6763656878"
     }
   ],
   "deals": [
@@ -89,13 +89,8 @@
       "tag": "優惠"
     },
     {
-      "title": "2026韓國OLIVE YOUNG折扣時間！8大優惠日期請筆記",
-      "url": "https://www.funliday.com/posts/2026-oliveyoung-sale/",
-      "tag": "優惠"
-    },
-    {
-      "title": "2026最新寶寶粥優惠｜試吃申請、滿額免運、限時特賣",
-      "url": "https://www.fishvilla.net/on_sale_%E5%AF%B6%E5%AF%B6%E7%B2%A5%E5%84%AA%E6%83%A0/?srsltid",
+      "title": "最新消息 - 統一時代百貨台北店丨DREAM PLAZA",
+      "url": "https://www.uni-ustyle.com.tw/zh-tw/news",
       "tag": "優惠"
     },
     {
@@ -105,17 +100,22 @@
     },
     {
       "title": "猫乐饭- Sækja og setja upp í Windows",
-      "url": "https://apps.microsoft.com/detail/xp9m2pqbcfwb0s?hl",
+      "url": "https://apps.microsoft.com/detail/xp9m2pqbcfwb0s?hl=is-IS&gl=CN",
       "tag": "優惠"
     },
     {
-      "title": "Mega City 板橋大遠百-線上DM",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=54",
+      "title": "HBX 折扣碼與優惠：10% / 12% 優惠- 8月2026",
+      "url": "https://www.everysaving.tw/store/hbx.com",
       "tag": "優惠"
     },
     {
-      "title": "錢包：不要我：可是週年慶欸",
-      "url": "https://www.threads.com/@wz_l_1998/post/DcYabkVCQci/%E9%8C%A2%E5%8C%85%E4%B8%8D%E8%A6%81%E6%88%91%E5%8F%AF%E6%98%AF%E9%80%B1%E5%B9%B4%E6%85%B6%E6%AC%B8/",
+      "title": "遠百竹北-線上DM",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=72",
+      "tag": "優惠"
+    },
+    {
+      "title": "對！9月快到了，先等週年慶活動看看下一波蝦皮 ...",
+      "url": "https://www.threads.com/@zamajaia/post/DcdiPJkIIJg/%E5%B0%8D9%E6%9C%88%E5%BF%AB%E5%88%B0%E4%BA%86%E5%85%88%E7%AD%89%E9%80%B1%E5%B9%B4%E6%85%B6%E6%B4%BB%E5%8B%95%E7%9C%8B%E7%9C%8B%E4%B8%8B%E4%B8%80%E6%B3%A2%E8%9D%A6%E7%9A%AE%E6%B4%BB%E5%8B%95%E5%B0%B1%E6%87%89%E8%A9%B2%E7%9C%8B99/",
       "tag": "優惠"
     },
     {
@@ -125,7 +125,7 @@
     },
     {
       "title": "【2026 官網會員週年慶】限時48hr. 8/26－8/27｜一年一度",
-      "url": "https://plusminuszero.com.tw/news-d.php?Key=31&srsltid=AfmBOooAlv5KJ7Tzng1SP-S4Vmvyh5oAcLJFDcbGWdBeTbkpZPdUhIxs",
+      "url": "https://plusminuszero.com.tw/news-d.php?Key=31&srsltid=AfmBOopl7N9aW7y7fmYa6GW6CTKdt3816elISSK3UGnT3GCWQMAy6Hwa",
       "tag": "優惠"
     },
     {
@@ -135,12 +135,12 @@
     },
     {
       "title": "SOGO大巨蛋8/22試營運！進駐500品牌、開幕優惠",
-      "url": "https://www.nownews.com/news/6867982?srsltid=AfmBOoq5BRhqtRN6yqlXkBnHcuIeI6ekelRcf1_ePeHRh8Recn3Tf-3K",
+      "url": "https://www.nownews.com/news/6867982?srsltid=AfmBOopGg6l4ObvizsQTcpvXatKu0qzyG0-1dGtGsagUe3uypNtX3mQd",
       "tag": "優惠"
     },
     {
-      "title": "我最喜歡逛新開幕的百貨公司了！ 為什麼？因為優惠折扣 ...",
-      "url": "https://www.threads.com/@tenshain0517/post/DcYtExvASjf/%E6%88%91%E6%9C%80%E5%96%9C%E6%AD%A1%E9%80%9B%E6%96%B0%E9%96%8B%E5%B9%95%E7%9A%84%E7%99%BE%E8%B2%A8%E5%85%AC%E5%8F%B8%E4%BA%86%E7%82%BA%E4%BB%80%E9%BA%BC%E5%9B%A0%E7%82%BA%E5%84%AA%E6%83%A0%E6%8A%98%E6%89%A3%E4%B8%80%E5%A4%A7%E5%A0%86%E5%95%8A%E9%81%A0%E6%9D%B1-garden-city-%E8%A9%A6%E7%87%9F%E9%81%8B%E6%98%A8%E5%A4%A9%E9%80%9B%E4%B8%8D%E5%A4%A0%E4%BB%8A%E5%A4%A9%E7%95%B6%E7%84%B6%E8%A6%81%E5%86%8D%E4%BE%86%E9%80%99%E6%AC%A1%E7%9B%B4%E5%A5%94-b2%E4%B8%80%E8%B7%AF%E9%80%9B%E4%B8%8B%E4%BE%86%E5%84%AA%E6%83%A0%E4%B8%80%E5%80%8B%E6%8E%A5%E4%B8%80%E5%80%8B%E8%B2%B7%E5%88%B0%E6%89%8B%E8%BB%9F/",
+      "title": "北部最大百貨公司今天8/22開幕！捷運出站就到「 ...",
+      "url": "https://www.storm.mg/lifestyle/11158083",
       "tag": "優惠"
     },
     {
@@ -149,8 +149,8 @@
       "tag": "優惠"
     },
     {
-      "title": "北部最大百貨公司今天8/22開幕！捷運出站就到「 ...",
-      "url": "https://www.storm.mg/lifestyle/11158083",
+      "title": "我最喜歡逛新開幕的百貨公司了！ 為什麼？因為優惠折扣一 ...",
+      "url": "https://www.threads.com/@tenshain0517/post/DcYtExvASjf/%E6%88%91%E6%9C%80%E5%96%9C%E6%AD%A1%E9%80%9B%E6%96%B0%E9%96%8B%E5%B9%95%E7%9A%84%E7%99%BE%E8%B2%A8%E5%85%AC%E5%8F%B8%E4%BA%86%E7%82%BA%E4%BB%80%E9%BA%BC%E5%9B%A0%E7%82%BA%E5%84%AA%E6%83%A0%E6%8A%98%E6%89%A3%E4%B8%80%E5%A4%A7%E5%A0%86%E5%95%8A%E9%81%A0%E6%9D%B1-garden-city-%E8%A9%A6%E7%87%9F%E9%81%8B%E6%98%A8%E5%A4%A9%E9%80%9B%E4%B8%8D%E5%A4%A0%E4%BB%8A%E5%A4%A9%E7%95%B6%E7%84%B6%E8%A6%81%E5%86%8D%E4%BE%86%E9%80%99%E6%AC%A1%E7%9B%B4%E5%A5%94-b2%E4%B8%80%E8%B7%AF%E9%80%9B%E4%B8%8B%E4%BE%86%E5%84%AA%E6%83%A0%E4%B8%80%E5%80%8B%E6%8E%A5%E4%B8%80%E5%80%8B%E8%B2%B7%E5%88%B0%E6%89%8B%E8%BB%9F/",
       "tag": "優惠"
     },
     {
@@ -165,7 +165,7 @@
     },
     {
       "title": "LocknLock樂扣樂扣「全台首家百貨通路」遠東Garden City ...",
-      "url": "https://www.gtv.com.tw/events.php?seqId=0B99B190-AD68-3E88-153F-74545E16DA45",
+      "url": "https://www.gtv.com.tw/mobile/events.php?seqId=0B99B190-AD68-3E88-153F-74545E16DA45",
       "tag": "優惠"
     },
     {
@@ -194,14 +194,14 @@
       "tag": "情報"
     },
     {
-      "title": "2026年全台捐血贈品",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
+      "title": "摩斯密碼(8/24至8/31)",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787618952.A.B83.html",
       "tag": "情報"
     },
     {
-      "title": "未滿1元集點抽獎資訊集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775756243.A.056.html",
-      "tag": "集中"
+      "title": "foodpanda 超pro日",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787623337.A.782.html",
+      "tag": "情報"
     }
   ]
 }
