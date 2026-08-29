@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-29 03:35",
+  "updated_at": "2026-08-29 23:59",
   "songs": [
     {
       "name": "甲乙丙丁Strangers",
@@ -7,14 +7,14 @@
       "url": "https://music.apple.com/tw/album/%E7%94%B2%E4%B9%99%E4%B8%99%E4%B8%81strangers/6785801843?i=6785801848"
     },
     {
-      "name": "BAD",
-      "artist": "ATEEZ",
-      "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
-    },
-    {
       "name": "FALLEN ANGEL",
       "artist": "JENNIE",
       "url": "https://music.apple.com/tw/album/fallen-angel/6804046952?i=6804046959"
+    },
+    {
+      "name": "BAD",
+      "artist": "ATEEZ",
+      "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
     },
     {
       "name": "BiiiG",
@@ -22,14 +22,9 @@
       "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
     },
     {
-      "name": "Less than a Lover",
+      "name": "HEAVEN",
       "artist": "JENNIE",
-      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
-    },
-    {
-      "name": "hate that i made you love me",
-      "artist": "Ariana Grande",
-      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
+      "url": "https://music.apple.com/tw/album/heaven/6804046952?i=6804046964"
     },
     {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
@@ -37,14 +32,24 @@
       "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     },
     {
+      "name": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
+    },
+    {
+      "name": "Less than a Lover",
+      "artist": "JENNIE",
+      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
+    },
+    {
       "name": "LEMONADE",
       "artist": "aespa",
       "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
     },
     {
-      "name": "HEAVEN",
-      "artist": "JENNIE",
-      "url": "https://music.apple.com/tw/album/heaven/6804046952?i=6804046964"
+      "name": "Pop Off Pop Off",
+      "artist": "KiiiKiii",
+      "url": "https://music.apple.com/tw/album/pop-off-pop-off/6796609538?i=6796609794"
     },
     {
       "name": "All For You (《蜘蛛人:重生日》電影片尾曲)",
@@ -52,9 +57,9 @@
       "url": "https://music.apple.com/tw/album/all-for-you-%E8%9C%98%E8%9B%9B%E4%BA%BA-%E9%87%8D%E7%94%9F%E6%97%A5-%E9%9B%BB%E5%BD%B1%E7%89%87%E5%B0%BE%E6%9B%B2/6788676703?i=6788676704"
     },
     {
-      "name": "Pop Off Pop Off",
-      "artist": "KiiiKiii",
-      "url": "https://music.apple.com/tw/album/pop-off-pop-off/6796609538?i=6796609794"
+      "name": "Less than a Lover",
+      "artist": "JENNIE",
+      "url": "https://music.apple.com/tw/album/less-than-a-lover/6804046952?i=6804046965"
     },
     {
       "name": "REDRED",
@@ -65,11 +70,6 @@
       "name": "It's Me",
       "artist": "ILLIT",
       "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
-    },
-    {
-      "name": "玻璃",
-      "artist": "Gareth.T",
-      "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
     },
     {
       "name": "一樣會愛上你",
@@ -84,11 +84,6 @@
       "tag": "優惠"
     },
     {
-      "title": "2026【本週買一送一懶人包】8月餐廳/飲料優惠一次看！(每日 ...",
-      "url": "https://info.talk.tw/buy-one-get-one/",
-      "tag": "優惠"
-    },
-    {
       "title": "2026 台灣開學季優惠｜Back To School 折扣代碼、必買清單",
       "url": "https://dealy.tw/special-offers/back-to-school-offers",
       "tag": "優惠"
@@ -99,8 +94,8 @@
       "tag": "優惠"
     },
     {
-      "title": "夏末啟程｜華航限時機票優惠・精選全球航線｜中華航空",
-      "url": "https://flights.china-airlines.com/zh-tw/smmer_final_promotion",
+      "title": "2026【本週買一送一懶人包】8月餐廳/飲料優惠一次看！(每日 ...",
+      "url": "https://info.talk.tw/buy-one-get-one/",
       "tag": "優惠"
     },
     {
@@ -109,8 +104,33 @@
       "tag": "優惠"
     },
     {
-      "title": "2026全台百貨週年慶時間懶人包｜雙北、台中",
-      "url": "https://shop.hengstyle.com/Article/Detail/89216?srsltid=AfmBOoq7yqfICv5eCnIBtuGVv1-ZovxxN0BiSB5BgWUt_8pKMzYjJvn0",
+      "title": "【Agoda折扣碼2026(每天更新)】8月最新！獨家Agoda優惠碼",
+      "url": "https://vivianexplore.tw/agoda-promo-code-and-deals/",
+      "tag": "優惠"
+    },
+    {
+      "title": "2026全台百貨週年慶時間懶人包｜雙北、台中、高雄檔期都在 ...",
+      "url": "https://shop.hengstyle.com/Article/Detail/89216?srsltid=AfmBOooVDsLHJ1gYltPH38QstbW3ePWNFvKETGnL5Hif2XfnAkc2Y6B1",
+      "tag": "優惠"
+    },
+    {
+      "title": "遠百板橋-線上DM",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=50",
+      "tag": "優惠"
+    },
+    {
+      "title": "就是這些時候去韓國！購物控先收藏🛍️",
+      "url": "https://www.threads.com/@liketravel_official/post/DcfvLc9oCU_/media",
+      "tag": "優惠"
+    },
+    {
+      "title": "活動訊息| 活動情報| 全館活動",
+      "url": "https://www.qsquare.com.tw/event-list.php?lv01_type=A01",
+      "tag": "優惠"
+    },
+    {
+      "title": "高雄大遠百-線上DM",
+      "url": "https://www.feds.com.tw/tw/51/Edm/List",
       "tag": "優惠"
     },
     {
@@ -129,14 +149,24 @@
       "tag": "優惠"
     },
     {
-      "title": "遠東Garden City有哪些必逛？盤點所有運動和戶外品牌",
-      "url": "https://www.elle.com/tw/fashion/flash/g73506924/garden-city-sports-brands/",
-      "tag": "優惠"
-    },
-    {
       "title": "家庭生活選物新亮點！「知名品牌」新竹SOGO快閃登場會員 ...",
       "url": "https://tw.news.yahoo.com/%E7%9F%A5%E5%90%8D%E5%93%81%E7%89%8C-%E9%96%8B%E5%B9%95-%E4%B8%89%E9%87%8D%E5%84%AA%E6%83%A0%E5%90%B8%E5%BC%95%E5%AE%B6%E5%BA%AD%E5%AE%A2%E7%BE%A4-145944019.html",
       "tag": "優惠"
+    },
+    {
+      "title": "酷澎 國外保健品特價中",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787843608.A.E90.html",
+      "tag": "情報"
+    },
+    {
+      "title": "Pchome24h 簽到",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787877635.A.0B3.html",
+      "tag": "討論"
+    },
+    {
+      "title": "南投九九峰動物園週年慶",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787884176.A.5D4.html",
+      "tag": "情報"
     },
     {
       "title": "pc soundcore liberty 5藍牙耳機$2490",
@@ -162,21 +192,6 @@
       "title": "運動換健康好禮！7-11、全家加碼購物金",
       "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787904084.A.D5E.html",
       "tag": "新聞"
-    },
-    {
-      "title": "全家 金萱27 無糖 買二送二App隨買跨店",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787924910.A.C7F.html",
-      "tag": "情報"
-    },
-    {
-      "title": "AI防詐達人APP免費試用2個月",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787928037.A.E41.html",
-      "tag": "情報"
-    },
-    {
-      "title": "KIOXIA EXCERIA G2 2TB m.2 SSD 6900元",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787936202.A.47C.html",
-      "tag": "情報"
     }
   ]
 }
