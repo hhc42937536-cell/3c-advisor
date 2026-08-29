@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-28 06:01",
+  "updated_at": "2026-08-29 03:35",
   "songs": [
     {
       "name": "甲乙丙丁Strangers",
@@ -12,14 +12,19 @@
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
     },
     {
-      "name": "Less than a Lover",
+      "name": "FALLEN ANGEL",
       "artist": "JENNIE",
-      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
+      "url": "https://music.apple.com/tw/album/fallen-angel/6804046952?i=6804046959"
     },
     {
       "name": "BiiiG",
       "artist": "BIGBANG",
       "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
+    },
+    {
+      "name": "Less than a Lover",
+      "artist": "JENNIE",
+      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
     },
     {
       "name": "hate that i made you love me",
@@ -35,6 +40,11 @@
       "name": "LEMONADE",
       "artist": "aespa",
       "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
+    },
+    {
+      "name": "HEAVEN",
+      "artist": "JENNIE",
+      "url": "https://music.apple.com/tw/album/heaven/6804046952?i=6804046964"
     },
     {
       "name": "All For You (《蜘蛛人:重生日》電影片尾曲)",
@@ -65,16 +75,6 @@
       "name": "一樣會愛上你",
       "artist": "理想混蛋 & 高爾宣",
       "url": "https://music.apple.com/tw/album/%E4%B8%80%E6%A8%A3%E6%9C%83%E6%84%9B%E4%B8%8A%E4%BD%A0/6800323520?i=6800323526"
-    },
-    {
-      "name": "Serenade (KARINA & WINTER)",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/serenade-karina-winter/6797481676?i=6797481677"
-    },
-    {
-      "name": "Heavy Serenade",
-      "artist": "NMIXX",
-      "url": "https://music.apple.com/tw/album/heavy-serenade/1892154305?i=1892154309"
     }
   ],
   "deals": [
@@ -84,13 +84,8 @@
       "tag": "優惠"
     },
     {
-      "title": "限時優惠僅剩數天：InvestingPro夏季特賣，立享55%折扣",
-      "url": "https://hk.finance.yahoo.com/news/%E9%99%90%E6%99%82%E5%84%AA%E6%83%A0%E5%83%85%E5%89%A9%E6%95%B8%E5%A4%A9-investingpro%E5%A4%8F%E5%AD%A3%E7%89%B9%E8%B3%A3-%E7%AB%8B%E4%BA%AB55-%E6%8A%98%E6%89%A3-102526326.html",
-      "tag": "優惠"
-    },
-    {
-      "title": "中華航空- 機票與航班優惠",
-      "url": "https://flights.china-airlines.com/zh-us/flights",
+      "title": "2026【本週買一送一懶人包】8月餐廳/飲料優惠一次看！(每日 ...",
+      "url": "https://info.talk.tw/buy-one-get-one/",
       "tag": "優惠"
     },
     {
@@ -99,33 +94,23 @@
       "tag": "優惠"
     },
     {
+      "title": "限時優惠僅剩數天：InvestingPro夏季特賣，立享55%折扣",
+      "url": "https://hk.finance.yahoo.com/news/%E9%99%90%E6%99%82%E5%84%AA%E6%83%A0%E5%83%85%E5%89%A9%E6%95%B8%E5%A4%A9-investingpro%E5%A4%8F%E5%AD%A3%E7%89%B9%E8%B3%A3-%E7%AB%8B%E4%BA%AB55-%E6%8A%98%E6%89%A3-102526326.html",
+      "tag": "優惠"
+    },
+    {
+      "title": "夏末啟程｜華航限時機票優惠・精選全球航線｜中華航空",
+      "url": "https://flights.china-airlines.com/zh-tw/smmer_final_promotion",
+      "tag": "優惠"
+    },
+    {
       "title": "2026韓國OLIVE YOUNG折扣時間！8大優惠日期請筆記",
       "url": "https://www.funliday.com/posts/2026-oliveyoung-sale/",
       "tag": "優惠"
     },
     {
-      "title": "2026【8月outlet特賣會推薦】鞋子、運動鞋、服飾、行李箱、包包",
-      "url": "https://info.talk.tw/taiwan-sale/",
-      "tag": "優惠"
-    },
-    {
       "title": "2026全台百貨週年慶時間懶人包｜雙北、台中",
-      "url": "https://shop.hengstyle.com/Article/Detail/89216?srsltid",
-      "tag": "優惠"
-    },
-    {
-      "title": "SOGO大巨蛋今起試營運！日本天婦羅半價、滿額送布丁優惠 ...",
-      "url": "https://tw.news.yahoo.com/sogo%E5%A4%A7%E5%B7%A8%E8%9B%8B%E4%BB%8A%E8%B5%B7%E8%A9%A6%E7%87%9F%E9%81%8B-%E6%97%A5%E6%9C%AC%E5%A4%A9%E5%A9%A6%E7%BE%85%E5%8D%8A%E5%83%B9-%E6%BB%BF%E9%A1%8D%E9%80%81%E5%B8%83%E4%B8%81-%E5%84%AA%E6%83%A0-%E6%AC%A1%E7%9C%8B-000000439.html",
-      "tag": "優惠"
-    },
-    {
-      "title": "SOGO大巨蛋8/22試營運！進駐500品牌、開幕優惠",
-      "url": "https://www.nownews.com/news/6867982?srsltid",
-      "tag": "優惠"
-    },
-    {
-      "title": "北部最大百貨公司今天8/22開幕！捷運出站就到「 ...",
-      "url": "https://www.storm.mg/lifestyle/11158083",
+      "url": "https://shop.hengstyle.com/Article/Detail/89216?srsltid=AfmBOoq7yqfICv5eCnIBtuGVv1-ZovxxN0BiSB5BgWUt_8pKMzYjJvn0",
       "tag": "優惠"
     },
     {
@@ -134,18 +119,23 @@
       "tag": "優惠"
     },
     {
+      "title": "【大巨蛋百貨】2026 遠東Garden City 莫內花園樓層介紹/餐廳 ...",
+      "url": "https://www.wendyjourney.com/garden-city-taipei/",
+      "tag": "優惠"
+    },
+    {
       "title": "台北大巨蛋Garden City伴手禮推薦｜福砂屋、神戶風月堂",
       "url": "https://www.fetnet.net/content/cbu/tw/lifecircle/life/2026/08/Garden_Gift.html",
       "tag": "優惠"
     },
     {
-      "title": "LocknLock樂扣樂扣「全台首家百貨通路」遠東Garden City ...",
-      "url": "https://www.gtv.com.tw/events.php?seqId",
+      "title": "遠東Garden City有哪些必逛？盤點所有運動和戶外品牌",
+      "url": "https://www.elle.com/tw/fashion/flash/g73506924/garden-city-sports-brands/",
       "tag": "優惠"
     },
     {
-      "title": "旗艦級「樂天皇朝Signature」進駐遠東GARDEN CITY！神 ...",
-      "url": "https://orstyle.net/article-g0007/",
+      "title": "家庭生活選物新亮點！「知名品牌」新竹SOGO快閃登場會員 ...",
+      "url": "https://tw.news.yahoo.com/%E7%9F%A5%E5%90%8D%E5%93%81%E7%89%8C-%E9%96%8B%E5%B9%95-%E4%B8%89%E9%87%8D%E5%84%AA%E6%83%A0%E5%90%B8%E5%BC%95%E5%AE%B6%E5%BA%AD%E5%AE%A2%E7%BE%A4-145944019.html",
       "tag": "優惠"
     },
     {
@@ -164,19 +154,29 @@
       "tag": "情報"
     },
     {
-      "title": "2026年全台捐血贈品",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
+      "title": "蝦皮VIP首次年訂閱 送500蝦幣",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787902978.A.09C.html",
       "tag": "情報"
     },
     {
-      "title": "未滿1元集點抽獎資訊集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775756243.A.056.html",
-      "tag": "集中"
+      "title": "運動換健康好禮！7-11、全家加碼購物金",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787904084.A.D5E.html",
+      "tag": "新聞"
     },
     {
-      "title": "贈送集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775845713.A.018.html",
-      "tag": "集中"
+      "title": "全家 金萱27 無糖 買二送二App隨買跨店",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787924910.A.C7F.html",
+      "tag": "情報"
+    },
+    {
+      "title": "AI防詐達人APP免費試用2個月",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787928037.A.E41.html",
+      "tag": "情報"
+    },
+    {
+      "title": "KIOXIA EXCERIA G2 2TB m.2 SSD 6900元",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1787936202.A.47C.html",
+      "tag": "情報"
     }
   ]
 }
