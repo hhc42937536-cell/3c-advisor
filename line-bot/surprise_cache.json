@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-29 23:59",
+  "updated_at": "2026-08-31 00:19",
   "songs": [
     {
       "name": "甲乙丙丁Strangers",
@@ -17,24 +17,24 @@
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
     },
     {
-      "name": "BiiiG",
-      "artist": "BIGBANG",
-      "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
-    },
-    {
       "name": "HEAVEN",
       "artist": "JENNIE",
       "url": "https://music.apple.com/tw/album/heaven/6804046952?i=6804046964"
     },
     {
-      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
-      "artist": "宇宙人",
-      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
+      "name": "BiiiG",
+      "artist": "BIGBANG",
+      "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
     },
     {
       "name": "hate that i made you love me",
       "artist": "Ariana Grande",
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
+    },
+    {
+      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
+      "artist": "宇宙人",
+      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     },
     {
       "name": "Less than a Lover",
@@ -47,6 +47,11 @@
       "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
     },
     {
+      "name": "Less than a Lover",
+      "artist": "JENNIE",
+      "url": "https://music.apple.com/tw/album/less-than-a-lover/6804046952?i=6804046965"
+    },
+    {
       "name": "Pop Off Pop Off",
       "artist": "KiiiKiii",
       "url": "https://music.apple.com/tw/album/pop-off-pop-off/6796609538?i=6796609794"
@@ -55,11 +60,6 @@
       "name": "All For You (《蜘蛛人:重生日》電影片尾曲)",
       "artist": "周興哲",
       "url": "https://music.apple.com/tw/album/all-for-you-%E8%9C%98%E8%9B%9B%E4%BA%BA-%E9%87%8D%E7%94%9F%E6%97%A5-%E9%9B%BB%E5%BD%B1%E7%89%87%E5%B0%BE%E6%9B%B2/6788676703?i=6788676704"
-    },
-    {
-      "name": "Less than a Lover",
-      "artist": "JENNIE",
-      "url": "https://music.apple.com/tw/album/less-than-a-lover/6804046952?i=6804046965"
     },
     {
       "name": "REDRED",
@@ -72,50 +72,25 @@
       "url": "https://music.apple.com/tw/album/its-me/1887194024?i=1887194026"
     },
     {
-      "name": "一樣會愛上你",
-      "artist": "理想混蛋 & 高爾宣",
-      "url": "https://music.apple.com/tw/album/%E4%B8%80%E6%A8%A3%E6%9C%83%E6%84%9B%E4%B8%8A%E4%BD%A0/6800323520?i=6800323526"
+      "name": "玻璃",
+      "artist": "Gareth.T",
+      "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
     }
   ],
   "deals": [
     {
-      "title": "一年僅舉辦4次的OLIVE YOUNG Global 代表 ...",
-      "url": "https://www.threads.com/@q10574/post/Dce7n9Rkr8v/video-%E4%B8%80%E5%B9%B4%E5%83%85%E8%88%89%E8%BE%A64%E6%AC%A1%E7%9A%84-olive-young-global-%E4%BB%A3%E8%A1%A8%E7%89%B9%E8%B3%A3%E6%9C%83-oy-sale-%E6%AD%A3%E5%BC%8F%E9%96%8B%E5%A7%8B%E9%80%99%E6%98%AF%E4%BD%A0%E4%BB%A5%E7%89%B9%E5%83%B9%E8%B3%BC%E8%B2%B7%E9%9F%93%E5%9C%8B%E6%9C%80%E7%86%B1%E9%96%80%E9%9F%93%E5%A6%9D%E7%94%A2%E5%93%81%E7%9A%84%E7%B5%95%E4%BD%B3%E6%A9%9F%E6%9C%83%E9%A0%90%E5%94%AE8%E6%9C%8826%E6%97%A5%E8%87%B38%E6%9C%8829/",
+      "title": "SaleEvents 特賣會資訊: 最新最齊全的優惠活動(2026)",
+      "url": "https://tw.discount.wave-base.com/",
       "tag": "優惠"
     },
     {
-      "title": "2026 台灣開學季優惠｜Back To School 折扣代碼、必買清單",
-      "url": "https://dealy.tw/special-offers/back-to-school-offers",
+      "title": "2026全台百貨週年慶時間懶人包｜雙北、台中",
+      "url": "https://shop.hengstyle.com/Article/Detail/89216?srsltid=AfmBOorVluMEQ409oDXZ43rtOrYmjr78mboYiVd76JXob4Z7EiHTWVwT",
       "tag": "優惠"
     },
     {
-      "title": "限時優惠僅剩數天：InvestingPro夏季特賣，立享55%折扣",
-      "url": "https://hk.finance.yahoo.com/news/%E9%99%90%E6%99%82%E5%84%AA%E6%83%A0%E5%83%85%E5%89%A9%E6%95%B8%E5%A4%A9-investingpro%E5%A4%8F%E5%AD%A3%E7%89%B9%E8%B3%A3-%E7%AB%8B%E4%BA%AB55-%E6%8A%98%E6%89%A3-102526326.html",
-      "tag": "優惠"
-    },
-    {
-      "title": "2026【本週買一送一懶人包】8月餐廳/飲料優惠一次看！(每日 ...",
-      "url": "https://info.talk.tw/buy-one-get-one/",
-      "tag": "優惠"
-    },
-    {
-      "title": "2026韓國OLIVE YOUNG折扣時間！8大優惠日期請筆記",
-      "url": "https://www.funliday.com/posts/2026-oliveyoung-sale/",
-      "tag": "優惠"
-    },
-    {
-      "title": "【Agoda折扣碼2026(每天更新)】8月最新！獨家Agoda優惠碼",
-      "url": "https://vivianexplore.tw/agoda-promo-code-and-deals/",
-      "tag": "優惠"
-    },
-    {
-      "title": "2026全台百貨週年慶時間懶人包｜雙北、台中、高雄檔期都在 ...",
-      "url": "https://shop.hengstyle.com/Article/Detail/89216?srsltid=AfmBOooVDsLHJ1gYltPH38QstbW3ePWNFvKETGnL5Hif2XfnAkc2Y6B1",
-      "tag": "優惠"
-    },
-    {
-      "title": "遠百板橋-線上DM",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=50",
+      "title": "遠百竹北-線上DM",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=72",
       "tag": "優惠"
     },
     {
@@ -134,13 +109,18 @@
       "tag": "優惠"
     },
     {
-      "title": "我最喜歡逛新開幕的百貨公司了！ 為什麼？因為優惠折扣一 ...",
-      "url": "https://www.threads.com/@tenshain0517/post/DcYtExvASjf/%E6%88%91%E6%9C%80%E5%96%9C%E6%AD%A1%E9%80%9B%E6%96%B0%E9%96%8B%E5%B9%95%E7%9A%84%E7%99%BE%E8%B2%A8%E5%85%AC%E5%8F%B8%E4%BA%86%E7%82%BA%E4%BB%80%E9%BA%BC%E5%9B%A0%E7%82%BA%E5%84%AA%E6%83%A0%E6%8A%98%E6%89%A3%E4%B8%80%E5%A4%A7%E5%A0%86%E5%95%8A%E9%81%A0%E6%9D%B1-garden-city-%E8%A9%A6%E7%87%9F%E9%81%8B%E6%98%A8%E5%A4%A9%E9%80%9B%E4%B8%8D%E5%A4%A0%E4%BB%8A%E5%A4%A9%E7%95%B6%E7%84%B6%E8%A6%81%E5%86%8D%E4%BE%86%E9%80%99%E6%AC%A1%E7%9B%B4%E5%A5%94-b2%E4%B8%80%E8%B7%AF%E9%80%9B%E4%B8%8B%E4%BE%86%E5%84%AA%E6%83%A0%E4%B8%80%E5%80%8B%E6%8E%A5%E4%B8%80%E5%80%8B%E8%B2%B7%E5%88%B0%E6%89%8B%E8%BB%9F/",
+      "title": "【板橋中山】春夏出清搶優惠！",
+      "url": "https://eventgo.tw/event/a482e33d-d2a2-49a7-8d14-94c12ad307ad",
       "tag": "優惠"
     },
     {
       "title": "【大巨蛋百貨】2026 遠東Garden City 莫內花園樓層介紹/餐廳 ...",
       "url": "https://www.wendyjourney.com/garden-city-taipei/",
+      "tag": "優惠"
+    },
+    {
+      "title": "超殺優惠！新莊好市多開幕了優惠、紀念品大放送",
+      "url": "https://www.setn.com/news/214081",
       "tag": "優惠"
     },
     {
@@ -151,6 +131,11 @@
     {
       "title": "家庭生活選物新亮點！「知名品牌」新竹SOGO快閃登場會員 ...",
       "url": "https://tw.news.yahoo.com/%E7%9F%A5%E5%90%8D%E5%93%81%E7%89%8C-%E9%96%8B%E5%B9%95-%E4%B8%89%E9%87%8D%E5%84%AA%E6%83%A0%E5%90%B8%E5%BC%95%E5%AE%B6%E5%BA%AD%E5%AE%A2%E7%BE%A4-145944019.html",
+      "tag": "優惠"
+    },
+    {
+      "title": "️✈️星宇航空75折‼️",
+      "url": "https://www.threads.com/@oliviacha.tw/post/DcbVcvCD3Jq",
       "tag": "優惠"
     },
     {
