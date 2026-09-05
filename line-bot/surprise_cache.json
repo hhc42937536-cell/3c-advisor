@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-04 23:50",
+  "updated_at": "2026-09-05 23:41",
   "songs": [
     {
       "name": "甲乙丙丁Strangers",
@@ -27,6 +27,11 @@
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
+      "name": "CLICK",
+      "artist": "JISOO",
+      "url": "https://music.apple.com/tw/album/click/6805983708?i=6805983713"
+    },
+    {
       "name": "BiiiG",
       "artist": "BIGBANG",
       "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
@@ -42,14 +47,24 @@
       "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
     },
     {
-      "name": "HEAVEN",
-      "artist": "JENNIE",
-      "url": "https://music.apple.com/tw/album/heaven/6804046952?i=6804046964"
+      "name": "SaWaDiKa",
+      "artist": "LISA",
+      "url": "https://music.apple.com/tw/album/sawadika/6807119565?i=6807119568"
+    },
+    {
+      "name": "刪了一百遍 (汪蘇瀧概念創作集《聯名2》作品)",
+      "artist": "A-Lin",
+      "url": "https://music.apple.com/tw/album/%E5%88%AA%E4%BA%86%E4%B8%80%E7%99%BE%E9%81%8D-%E6%B1%AA%E8%98%87%E7%80%A7%E6%A6%82%E5%BF%B5%E5%89%B5%E4%BD%9C%E9%9B%86-%E8%81%AF%E5%90%8D2-%E4%BD%9C%E5%93%81/6806380217?i=6806380499"
     },
     {
       "name": "Pop Off Pop Off",
       "artist": "KiiiKiii",
       "url": "https://music.apple.com/tw/album/pop-off-pop-off/6796609538?i=6796609794"
+    },
+    {
+      "name": "HEAVEN",
+      "artist": "JENNIE",
+      "url": "https://music.apple.com/tw/album/heaven/6804046952?i=6804046964"
     },
     {
       "name": "All For You (《蜘蛛人:重生日》電影片尾曲)",
@@ -60,21 +75,6 @@
       "name": "SUN KISS",
       "artist": "TUIDE",
       "url": "https://music.apple.com/tw/album/sun-kiss/6795782851?i=6795782855"
-    },
-    {
-      "name": "一樣會愛上你",
-      "artist": "理想混蛋 & 高爾宣",
-      "url": "https://music.apple.com/tw/album/%E4%B8%80%E6%A8%A3%E6%9C%83%E6%84%9B%E4%B8%8A%E4%BD%A0/6800323520?i=6800323526"
-    },
-    {
-      "name": "刪了一百遍 (汪蘇瀧概念創作集《聯名2》作品)",
-      "artist": "A-Lin",
-      "url": "https://music.apple.com/tw/album/%E5%88%AA%E4%BA%86%E4%B8%80%E7%99%BE%E9%81%8D-%E6%B1%AA%E8%98%87%E7%80%A7%E6%A6%82%E5%BF%B5%E5%89%B5%E4%BD%9C%E9%9B%86-%E8%81%AF%E5%90%8D2-%E4%BD%9C%E5%93%81/6806380217?i=6806380499"
-    },
-    {
-      "name": "SaWaDiKa",
-      "artist": "LISA",
-      "url": "https://music.apple.com/tw/album/sawadika/6807119565?i=6807119568"
     }
   ],
   "deals": [
@@ -84,43 +84,8 @@
       "tag": "優惠"
     },
     {
-      "title": "SaleEvents 特賣會資訊: 最新最齊全的優惠活動(2026)",
-      "url": "https://tw.discount.wave-base.com/",
-      "tag": "優惠"
-    },
-    {
-      "title": "Kobo 週年慶- 閱讀器攻略：定價9 折",
-      "url": "https://www.threads.com/@ebook_event/post/Dc3yjpPiTE3",
-      "tag": "優惠"
-    },
-    {
-      "title": "新竹大遠百-線上DM",
-      "url": "https://www.feds.com.tw/tw/42/Edm/List",
-      "tag": "優惠"
-    },
-    {
-      "title": "北部知名百貨公司樓層改裝「出清下殺3折」！男女裝、童裝 ...",
-      "url": "https://www.storm.mg/lifestyle/11161584",
-      "tag": "優惠"
-    },
-    {
-      "title": "9月時尚在線｜焦點動態特輯",
-      "url": "https://www.hanshin.com.tw/%E6%BC%A2%E7%A5%9E%E5%B7%A8%E8%9B%8B/tw/News/%E5%85%A8%E9%A4%A8%E6%B4%BB%E5%8B%95/9%E6%9C%88%E6%99%82%E5%B0%9A%E5%9C%A8%E7%B7%9A%E7%84%A6%E9%BB%9E%E5%8B%95%E6%85%8B%E7%89%B9%E8%BC%AF",
-      "tag": "優惠"
-    },
-    {
-      "title": "線上DM",
-      "url": "https://www.tsrd.com.tw/online-dm/online-dm-page",
-      "tag": "優惠"
-    },
-    {
       "title": "台灣首家3COINS開幕時間確認！台灣限定商品與日本熱銷推薦品一次看",
       "url": "https://udn.com/news/story/7270/9732689",
-      "tag": "優惠"
-    },
-    {
-      "title": "第2杯半價」CoCo/UG/季緣買1送1，9月全台飲料店優惠懶人包| 蔡惠芯",
-      "url": "https://www.storm.mg/lifestyle/11160960",
       "tag": "優惠"
     },
     {
@@ -129,59 +94,54 @@
       "tag": "優惠"
     },
     {
+      "title": "第2杯半價」CoCo/UG/季緣買1送1，9月全台飲料店優惠懶人包| 蔡惠芯",
+      "url": "https://www.storm.mg/lifestyle/11160960",
+      "tag": "優惠"
+    },
+    {
       "title": "最新活動- 大苑子｜台灣鮮果第一品牌",
       "url": "https://www.dayungs.com/category/%E6%9C%80%E6%96%B0%E6%B4%BB%E5%8B%95/",
       "tag": "優惠"
     },
     {
-      "title": "「一〇八抹茶茶廊」信義店開幕買1送1 辻利茶舗限時快閃台中",
-      "url": "https://travel.ettoday.net/article/3227450.htm",
+      "title": "COMEME首間街邊店「永康門市」今開幕蛋塔限量買1送1",
+      "url": "https://travel.ettoday.net/article/3231928.htm",
       "tag": "優惠"
     },
     {
-      "title": "活動快訊 - 頂呱呱-台灣第一家連鎖炸雞品牌",
-      "url": "https://www.tkkinc.com.tw/event.html",
+      "title": "【奧蘭多環球影城優惠】史詩宇宙Epic Universe ... - Calling訂房達人!",
+      "url": "https://www.callingtaiwan.com.tw/universal-studios-orlando-coupons-promo-codes/",
       "tag": "優惠"
     },
     {
-      "title": "茶裏王蝦皮VIP和酷澎特價",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788441968.A.236.html",
+      "title": "肯德基優惠分享",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788593895.A.769.html",
       "tag": "情報"
     },
     {
-      "title": "聲寶605公升三門冰箱$27900 加贈1500點",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788442436.A.EC1.html",
+      "title": "悠遊付 四大超商10元現金券 分眾？",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788616972.A.43F.html",
       "tag": "情報"
     },
     {
-      "title": "Re: [情報] 台中 周記豆花50元折價券",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788445476.A.E43.html",
+      "title": "Re: [情報] 開學季開心卡",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788623686.A.E95.html",
       "tag": "情報"
     },
     {
-      "title": "王品瘋美食送愛奇藝",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788458101.A.423.html",
+      "title": "2026年全台捐血贈品",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
       "tag": "情報"
     },
     {
-      "title": "國泰優惠1點換蝦皮VIP3個月",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788461318.A.510.html",
-      "tag": "情報"
+      "title": "未滿1元集點抽獎資訊集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788194462.A.0A4.html",
+      "tag": "集中"
     },
     {
-      "title": "iPASS MONEY 乘車碼送四大超商優惠券",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788485419.A.CB6.html",
-      "tag": "情報"
-    },
-    {
-      "title": "明天桃園聖興天后宮捐血送全聯券和平安物",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788489577.A.FB5.html",
-      "tag": "情報"
-    },
-    {
-      "title": "icash Pay文具筆筆最高8%回饋",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788491882.A.BC1.html",
-      "tag": "情報"
+      "title": "贈送集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1775845713.A.018.html",
+      "tag": "集中"
     }
   ]
 }
