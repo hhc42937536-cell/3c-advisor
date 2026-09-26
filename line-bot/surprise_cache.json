@@ -1,10 +1,40 @@
 {
-  "updated_at": "2026-09-25 00:22",
+  "updated_at": "2026-09-26 00:27",
   "songs": [
+    {
+      "name": "要去什麼地方",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E8%A6%81%E5%8E%BB%E4%BB%80%E9%BA%BC%E5%9C%B0%E6%96%B9/6812635395?i=6812635397"
+    },
     {
       "name": "甲乙丙丁Strangers",
       "artist": "李佳薇",
       "url": "https://music.apple.com/tw/album/%E7%94%B2%E4%B9%99%E4%B8%99%E4%B8%81strangers/6785801843?i=6785801848"
+    },
+    {
+      "name": "大船",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E5%A4%A7%E8%88%B9/6812635395?i=6812635396"
+    },
+    {
+      "name": "雲",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E9%9B%B2/6812635395?i=6812635398"
+    },
+    {
+      "name": "值得紀念的垃圾",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E5%80%BC%E5%BE%97%E7%B4%80%E5%BF%B5%E7%9A%84%E5%9E%83%E5%9C%BE/6812635395?i=6812635404"
+    },
+    {
+      "name": "乾淨的房間",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E4%B9%BE%E6%B7%A8%E7%9A%84%E6%88%BF%E9%96%93/6812635395?i=6812635400"
+    },
+    {
+      "name": "烏鴉",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E7%83%8F%E9%B4%89/6812635395?i=6812635407"
     },
     {
       "name": "I’m gonna TOESA (feat. Kian84)",
@@ -12,14 +42,19 @@
       "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
     },
     {
-      "name": "new trick",
-      "artist": "ROSÉ",
-      "url": "https://music.apple.com/tw/album/new-trick/6812894902?i=6812894907"
+      "name": "果",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E6%9E%9C/6812635395?i=6812635417"
     },
     {
-      "name": "她 (《早春晴朗》電視劇欒念人物曲&片頭曲)",
-      "artist": "劉宇寧",
-      "url": "https://music.apple.com/tw/album/%E5%A5%B9-%E6%97%A9%E6%98%A5%E6%99%B4%E6%9C%97-%E9%9B%BB%E8%A6%96%E5%8A%87%E6%AC%92%E5%BF%B5%E4%BA%BA%E7%89%A9%E6%9B%B2-%E7%89%87%E9%A0%AD%E6%9B%B2/6807333685?i=6807333688"
+      "name": "蹉跎",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E8%B9%89%E8%B7%8E/6812635395?i=6812635409"
+    },
+    {
+      "name": "靜脈",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E9%9D%9C%E8%84%88/6812635395?i=6812635415"
     },
     {
       "name": "BAD",
@@ -27,75 +62,90 @@
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
     },
     {
+      "name": "坍塌",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E5%9D%8D%E5%A1%8C/6812635395?i=6812635412"
+    },
+    {
+      "name": "new trick",
+      "artist": "ROSÉ",
+      "url": "https://music.apple.com/tw/album/new-trick/6812894902?i=6812894907"
+    },
+    {
       "name": "Less than a Lover",
       "artist": "JENNIE",
       "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
-    },
-    {
-      "name": "FALLEN ANGEL",
-      "artist": "JENNIE",
-      "url": "https://music.apple.com/tw/album/fallen-angel/6804046952?i=6804046959"
-    },
-    {
-      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
-      "artist": "宇宙人",
-      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
-    },
-    {
-      "name": "hate that i made you love me",
-      "artist": "Ariana Grande",
-      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
-    },
-    {
-      "name": "LEMONADE",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
-    },
-    {
-      "name": "在這裡等你",
-      "artist": "告五人",
-      "url": "https://music.apple.com/tw/album/%E5%9C%A8%E9%80%99%E8%A3%A1%E7%AD%89%E4%BD%A0/6807312395?i=6807312396"
-    },
-    {
-      "name": "SUN KISS",
-      "artist": "TUIDE",
-      "url": "https://music.apple.com/tw/album/sun-kiss/6795782851?i=6795782855"
-    },
-    {
-      "name": "SaWaDiKa",
-      "artist": "LISA",
-      "url": "https://music.apple.com/tw/album/sawadika/6804002989?i=6804002992"
-    },
-    {
-      "name": "玻璃",
-      "artist": "Gareth.T",
-      "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
-    },
-    {
-      "name": "Dear my crazy soulmate",
-      "artist": "IU",
-      "url": "https://music.apple.com/tw/album/dear-my-crazy-soulmate/6808583617?i=6808583619"
     }
   ],
   "deals": [
     {
-      "title": "蘭蔻超極限肌因賦活露50ml 小黑瓶PRO 精華液 - Threads",
-      "url": "https://www.threads.com/@nonono_ommmmmm/post/DdmzAkuE_tv",
+      "title": "穿著喜歡的衣服逛特賣會☀️🤍 - 跟大家分享一個超棒的資訊",
+      "url": "https://www.threads.com/@cy____1110/post/Ddiu64hkm9h/%E7%A9%BF%E8%91%97%E5%96%9C%E6%AD%A1%E7%9A%84%E8%A1%A3%E6%9C%8D%E9%80%9B%E7%89%B9%E8%B3%A3%E6%9C%83-%E8%B7%9F%E5%A4%A7%E5%AE%B6%E5%88%86%E4%BA%AB%E4%B8%80%E5%80%8B%E8%B6%85%E6%A3%92%E7%9A%84%E8%B3%87%E8%A8%8Aharper-daf-%E8%81%AF%E5%90%88%E7%89%B9%E8%B3%A3%E6%9C%83%E9%99%90%E6%99%82%E4%B8%83%E5%A4%A9916%E4%B8%89-922%E4%BA%8C-sogo%E7%99%BE%E8%B2%A8%E5%BF%A0%E5%AD%9D%E9%A4%A8-12%E6%A8%93%E9%80%B1%E6%97%A5%E8%87%B3%E9%80%B1%E5%9B%9B-1100213",
       "tag": "優惠"
     },
     {
-      "title": "各位客官～～真的是好久不見啦   這麼久沒親自跟大家介紹好康，這不 ...",
-      "url": "https://www.tiktok.com/@texture1030/video/7687456539371687189",
+      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 08.17(一)",
+      "url": "https://www.daybuy.tw/costco/262939/",
       "tag": "優惠"
     },
     {
-      "title": "荷蘭花生醬De Pindakaaswinkel 9月登台！10款風味、開幕優惠一次看",
-      "url": "https://sunrisesharing.tw/taste-travel/article/3388",
+      "title": "【限時特賣】歐洲.中東南亞非旅遊揪團優惠！兩人折1萬",
+      "url": "https://www.colatour.com.tw/webDM/tour/eu/sale/tour.html",
       "tag": "優惠"
     },
     {
-      "title": "紐約+費城NBA最強開幕戰76人雙球賽7天 - 帕菲克運動",
-      "url": "https://www.rofagency.com/itinerary_20261019n",
+      "title": "2026 台灣開學季優惠｜Back To School 折扣代碼、必買清單",
+      "url": "https://dealy.tw/special-offers/back-to-school-offers",
+      "tag": "優惠"
+    },
+    {
+      "title": "全聯買一送一2026/9最新DM》週三 ...",
+      "url": "https://news.tvbs.com.tw/life/2819201",
+      "tag": "優惠"
+    },
+    {
+      "title": "2026 超商即期品優惠時間，7-11 i珍食、全家友善食光折扣整理",
+      "url": "https://www.money101.com.tw/blog/%E8%B6%85%E5%95%86-%E9%AE%AE%E9%A3%9F-%E7%89%B9%E5%83%B9%E6%99%82%E6%AE%B5",
+      "tag": "優惠"
+    },
+    {
+      "title": "限時優惠專區,EDWIN,品牌旗艦- momo購物網- 好評推薦",
+      "url": "https://www.momoshop.com.tw/categories/2124100001?srsltid=AU7gw4WwRJe3edxda4V2emk4pqAe1JNgAns09MP2vHf17b4B7w0UpWUq",
+      "tag": "優惠"
+    },
+    {
+      "title": "新竹大遠百-線上DM",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=42",
+      "tag": "優惠"
+    },
+    {
+      "title": "高雄福華名品慶30週年滿額送、精品特賣搶先看",
+      "url": "https://news.pchome.com.tw/living/pronews/20260925/index-79030094846306353009.html",
+      "tag": "優惠"
+    },
+    {
+      "title": "莫內花園6F ASOBI X BAN INOOUE 📆快閃時間:即日起~9/28",
+      "url": "https://www.threads.com/@garden_city_tw/post/DdlmWJSjNOf/%E8%8E%AB%E5%85%A7%E8%8A%B1%E5%9C%926f-asobi-x-ban-inooue%E5%BF%AB%E9%96%83%E6%99%82%E9%96%93%E5%8D%B3%E6%97%A5%E8%B5%B7928-%E5%BF%AB%E9%96%83%E5%BA%97%E9%99%90%E6%99%82%E4%B8%89%E9%87%8D%E5%A5%BD%E5%BA%B7%E7%AC%AC%E4%B8%80%E9%87%8D%E5%85%A8%E9%9D%A2-8-%E6%8A%98-%E4%BA%AB%E6%8A%98%E6%89%A3%E7%AC%AC%E4%BA%8C%E9%87%8D%E5%96%AE%E7%AD%86%E6%B6%88%E8%B2%BB%E6%BB%BF-3000%E5%85%83-%E5%86%8D%E4%BA%AB-95-%E6%8A%98/",
+      "tag": "優惠"
+    },
+    {
+      "title": "Timberland信義概念店開幕！10個潮流開店日文一次學",
+      "url": "https://ja.nativecamp.net/zh-tw/blog/20260923_timberland_xinyi_store/",
+      "tag": "優惠"
+    },
+    {
+      "title": "3COINS台灣1號店2026年8月正式開幕！先來看 ...",
+      "url": "https://wow-japan.com/shopping-3coins-2025-top-10/",
+      "tag": "優惠"
+    },
+    {
+      "title": "台中大遠百週年慶聰明玩樂！新櫃優惠＋親子活動中秋連假 ...",
+      "url": "https://greatnews.com.tw/news_pagein.php?iType=1004&n_id=315262",
+      "tag": "優惠"
+    },
+    {
+      "title": "最新活動- 大苑子｜台灣鮮果第一品牌",
+      "url": "https://www.dayungs.com/category/%E6%9C%80%E6%96%B0%E6%B4%BB%E5%8B%95/",
       "tag": "優惠"
     }
   ]
