@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-09-26 00:27",
+  "updated_at": "2026-09-27 00:22",
   "songs": [
-    {
-      "name": "要去什麼地方",
-      "artist": "田馥甄",
-      "url": "https://music.apple.com/tw/album/%E8%A6%81%E5%8E%BB%E4%BB%80%E9%BA%BC%E5%9C%B0%E6%96%B9/6812635395?i=6812635397"
-    },
     {
       "name": "甲乙丙丁Strangers",
       "artist": "李佳薇",
       "url": "https://music.apple.com/tw/album/%E7%94%B2%E4%B9%99%E4%B8%99%E4%B8%81strangers/6785801843?i=6785801848"
+    },
+    {
+      "name": "要去什麼地方",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E8%A6%81%E5%8E%BB%E4%BB%80%E9%BA%BC%E5%9C%B0%E6%96%B9/6812635395?i=6812635397"
     },
     {
       "name": "大船",
@@ -17,14 +17,19 @@
       "url": "https://music.apple.com/tw/album/%E5%A4%A7%E8%88%B9/6812635395?i=6812635396"
     },
     {
+      "name": "值得紀念的垃圾",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E5%80%BC%E5%BE%97%E7%B4%80%E5%BF%B5%E7%9A%84%E5%9E%83%E5%9C%BE/6812635395?i=6812635404"
+    },
+    {
       "name": "雲",
       "artist": "田馥甄",
       "url": "https://music.apple.com/tw/album/%E9%9B%B2/6812635395?i=6812635398"
     },
     {
-      "name": "值得紀念的垃圾",
-      "artist": "田馥甄",
-      "url": "https://music.apple.com/tw/album/%E5%80%BC%E5%BE%97%E7%B4%80%E5%BF%B5%E7%9A%84%E5%9E%83%E5%9C%BE/6812635395?i=6812635404"
+      "name": "I’m gonna TOESA (feat. Kian84)",
+      "artist": "JEON SOYEON",
+      "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
     },
     {
       "name": "乾淨的房間",
@@ -32,14 +37,29 @@
       "url": "https://music.apple.com/tw/album/%E4%B9%BE%E6%B7%A8%E7%9A%84%E6%88%BF%E9%96%93/6812635395?i=6812635400"
     },
     {
+      "name": "BAD",
+      "artist": "ATEEZ",
+      "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
+    },
+    {
+      "name": "Patient Zero",
+      "artist": "Taylor Swift",
+      "url": "https://music.apple.com/tw/album/patient-zero/6814997249?i=6814997425"
+    },
+    {
       "name": "烏鴉",
       "artist": "田馥甄",
       "url": "https://music.apple.com/tw/album/%E7%83%8F%E9%B4%89/6812635395?i=6812635407"
     },
     {
-      "name": "I’m gonna TOESA (feat. Kian84)",
-      "artist": "JEON SOYEON",
-      "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
+      "name": "new trick",
+      "artist": "ROSÉ",
+      "url": "https://music.apple.com/tw/album/new-trick/6812894902?i=6812894907"
+    },
+    {
+      "name": "靜脈",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E9%9D%9C%E8%84%88/6812635395?i=6812635415"
     },
     {
       "name": "果",
@@ -52,40 +72,25 @@
       "url": "https://music.apple.com/tw/album/%E8%B9%89%E8%B7%8E/6812635395?i=6812635409"
     },
     {
-      "name": "靜脈",
-      "artist": "田馥甄",
-      "url": "https://music.apple.com/tw/album/%E9%9D%9C%E8%84%88/6812635395?i=6812635415"
-    },
-    {
-      "name": "BAD",
-      "artist": "ATEEZ",
-      "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
-    },
-    {
       "name": "坍塌",
       "artist": "田馥甄",
       "url": "https://music.apple.com/tw/album/%E5%9D%8D%E5%A1%8C/6812635395?i=6812635412"
-    },
-    {
-      "name": "new trick",
-      "artist": "ROSÉ",
-      "url": "https://music.apple.com/tw/album/new-trick/6812894902?i=6812894907"
-    },
-    {
-      "name": "Less than a Lover",
-      "artist": "JENNIE",
-      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
     }
   ],
   "deals": [
     {
-      "title": "穿著喜歡的衣服逛特賣會☀️🤍 - 跟大家分享一個超棒的資訊",
-      "url": "https://www.threads.com/@cy____1110/post/Ddiu64hkm9h/%E7%A9%BF%E8%91%97%E5%96%9C%E6%AD%A1%E7%9A%84%E8%A1%A3%E6%9C%8D%E9%80%9B%E7%89%B9%E8%B3%A3%E6%9C%83-%E8%B7%9F%E5%A4%A7%E5%AE%B6%E5%88%86%E4%BA%AB%E4%B8%80%E5%80%8B%E8%B6%85%E6%A3%92%E7%9A%84%E8%B3%87%E8%A8%8Aharper-daf-%E8%81%AF%E5%90%88%E7%89%B9%E8%B3%A3%E6%9C%83%E9%99%90%E6%99%82%E4%B8%83%E5%A4%A9916%E4%B8%89-922%E4%BA%8C-sogo%E7%99%BE%E8%B2%A8%E5%BF%A0%E5%AD%9D%E9%A4%A8-12%E6%A8%93%E9%80%B1%E6%97%A5%E8%87%B3%E9%80%B1%E5%9B%9B-1100213",
+      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 08.17(一)",
+      "url": "https://www.daybuy.tw/costco/262939/",
       "tag": "優惠"
     },
     {
-      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 08.17(一)",
-      "url": "https://www.daybuy.tw/costco/262939/",
+      "title": "蝦皮購物/蝦皮商城/蝦皮直送2026最新優惠券/折扣碼/免運 ...",
+      "url": "https://www.callingtaiwan.com.tw/%E8%9D%A6%E7%9A%AE%E6%8A%98%E6%89%A3%E7%A2%BC-shopee/",
+      "tag": "優惠"
+    },
+    {
+      "title": "️ EQL GARAGE SALE｜聖水品牌特賣會✨ 韓國及國際人氣 ...",
+      "url": "https://www.threads.com/@weisinkr/post/DdkrTEmEza-/media",
       "tag": "優惠"
     },
     {
@@ -99,33 +104,33 @@
       "tag": "優惠"
     },
     {
+      "title": "SaleEvents 特賣會資訊: 最新最齊全的優惠活動(2026)",
+      "url": "https://tw.discount.wave-base.com/",
+      "tag": "優惠"
+    },
+    {
       "title": "全聯買一送一2026/9最新DM》週三 ...",
       "url": "https://news.tvbs.com.tw/life/2819201",
       "tag": "優惠"
     },
     {
-      "title": "2026 超商即期品優惠時間，7-11 i珍食、全家友善食光折扣整理",
-      "url": "https://www.money101.com.tw/blog/%E8%B6%85%E5%95%86-%E9%AE%AE%E9%A3%9F-%E7%89%B9%E5%83%B9%E6%99%82%E6%AE%B5",
+      "title": "在〈【2026百貨公司週年慶時間】新光三越/遠百/SOGO ... - CP值",
+      "url": "https://cpok.tw/73041",
       "tag": "優惠"
     },
     {
-      "title": "限時優惠專區,EDWIN,品牌旗艦- momo購物網- 好評推薦",
-      "url": "https://www.momoshop.com.tw/categories/2124100001?srsltid=AU7gw4WwRJe3edxda4V2emk4pqAe1JNgAns09MP2vHf17b4B7w0UpWUq",
+      "title": "桃園百貨業周年慶戰火即將點燃折扣優惠超深、好禮超豐富",
+      "url": "https://www.threads.com/@taoyuan_do/post/DdiQLRrEqyj/%E6%A1%83%E5%9C%92%E7%99%BE%E8%B2%A8%E6%A5%AD%E5%91%A8%E5%B9%B4%E6%85%B6%E6%88%B0%E7%81%AB%E5%8D%B3%E5%B0%87%E9%BB%9E%E7%87%83-%E6%8A%98%E6%89%A3%E5%84%AA%E6%83%A0%E8%B6%85%E6%B7%B1%E5%A5%BD%E7%A6%AE%E8%B6%85%E8%B1%90%E5%AF%8C%E8%BF%8E%E6%8E%A5%E7%A7%8B%E5%AD%A3%E6%B6%88%E8%B2%BB%E6%97%BA%E5%AD%A3%E6%A1%83%E5%9C%92%E5%A4%9A%E5%AE%B6%E7%99%BE%E8%B2%A8%E5%85%AC%E5%8F%B8%E5%91%A8%E5%B9%B4%E6%85%B6%E5%8F%8A%E5%81%87%E6%9C%9F%E9%99%90%E5%AE%9A%E6%B4%BB%E5%8B%95%E9%99%B8%E7%BA%8C%E7%99%BB%E5%A0%B4%E9%99%A4%E4%BA%86%E6%96%B0%E6%AC%BE%E7%A7%8B%E5%86%AC%E6%99%82%E8%A3%9D%E5%8F%8A%E9%85%8D%E4%BB%B6%E6%87%89%E6%99%AF%E7%9A%84%E4%B8%AD%E7%A7%8B%E7%A6%AE%E5%93%81%E4%B9%9F%E4%B8%80%E6%87%89%E4%BF%B1%E5%85%A8%E7%94%9A/",
       "tag": "優惠"
     },
     {
-      "title": "新竹大遠百-線上DM",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=42",
+      "title": "遠百竹北-線上DM",
+      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=72",
       "tag": "優惠"
     },
     {
-      "title": "高雄福華名品慶30週年滿額送、精品特賣搶先看",
-      "url": "https://news.pchome.com.tw/living/pronews/20260925/index-79030094846306353009.html",
-      "tag": "優惠"
-    },
-    {
-      "title": "莫內花園6F ASOBI X BAN INOOUE 📆快閃時間:即日起~9/28",
-      "url": "https://www.threads.com/@garden_city_tw/post/DdlmWJSjNOf/%E8%8E%AB%E5%85%A7%E8%8A%B1%E5%9C%926f-asobi-x-ban-inooue%E5%BF%AB%E9%96%83%E6%99%82%E9%96%93%E5%8D%B3%E6%97%A5%E8%B5%B7928-%E5%BF%AB%E9%96%83%E5%BA%97%E9%99%90%E6%99%82%E4%B8%89%E9%87%8D%E5%A5%BD%E5%BA%B7%E7%AC%AC%E4%B8%80%E9%87%8D%E5%85%A8%E9%9D%A2-8-%E6%8A%98-%E4%BA%AB%E6%8A%98%E6%89%A3%E7%AC%AC%E4%BA%8C%E9%87%8D%E5%96%AE%E7%AD%86%E6%B6%88%E8%B2%BB%E6%BB%BF-3000%E5%85%83-%E5%86%8D%E4%BA%AB-95-%E6%8A%98/",
+      "title": "🇯🇵松本清17%OFF優惠！首圖出示立省💰 日本藥妝店 ...",
+      "url": "https://www.threads.com/@wangbainian/post/DdwQEHwlLzn/%E6%9D%BE%E6%9C%AC%E6%B8%8517off%E5%84%AA%E6%83%A0%E9%A6%96%E5%9C%96%E5%87%BA%E7%A4%BA%E7%AB%8B%E7%9C%81%E6%97%A5%E6%9C%AC%E8%97%A5%E5%A6%9D%E5%BA%97%E6%9D%BE%E6%9C%AC%E6%B8%85%E7%B5%90%E8%B3%AC%E6%99%82%E7%9B%B4%E6%8E%A5%E5%87%BA%E7%A4%BA%E9%A6%96%E5%9C%96%E7%B5%A6%E5%BA%97%E5%93%A1%E7%AB%8B%E9%A6%AC%E4%BA%AB%E5%8F%97-%E5%85%8D%E7%A8%85%E6%BB%BF5000%E6%97%A5%E5%9C%93-%E7%96%8A%E5%8A%A0%E6%8A%98%E6%89%A3%E6%9C%80%E9%AB%987-%E5%AF%A6%E9%9A%9B%E5%88%B0%E6%89%8B%E5%85%8D%E7%A8%8510%E6%8A%98%E6%89%A3717off%E2%9D%B6-%E5%93%AA%E8%A3%A1%E8%83%BD/",
       "tag": "優惠"
     },
     {
@@ -139,13 +144,13 @@
       "tag": "優惠"
     },
     {
-      "title": "台中大遠百週年慶聰明玩樂！新櫃優惠＋親子活動中秋連假 ...",
-      "url": "https://greatnews.com.tw/news_pagein.php?iType=1004&n_id=315262",
+      "title": "最新活動- 大苑子｜台灣鮮果第一品牌",
+      "url": "https://www.dayungs.com/category/%E6%9C%80%E6%96%B0%E6%B4%BB%E5%8B%95/",
       "tag": "優惠"
     },
     {
-      "title": "最新活動- 大苑子｜台灣鮮果第一品牌",
-      "url": "https://www.dayungs.com/category/%E6%9C%80%E6%96%B0%E6%B4%BB%E5%8B%95/",
+      "title": "台中大遠百週年慶聰明玩樂！新櫃優惠＋親子活動中秋連假 ...",
+      "url": "https://greatnews.com.tw/news_pagein.php?iType=1004&n_id=315262",
       "tag": "優惠"
     }
   ]
