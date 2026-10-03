@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-02 01:28",
+  "updated_at": "2026-10-03 01:00",
   "songs": [
     {
       "name": "甲乙丙丁Strangers",
@@ -27,6 +27,11 @@
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
     },
     {
+      "name": "CRASH",
+      "artist": "ALLDAY PROJECT",
+      "url": "https://music.apple.com/tw/album/crash/6812155961?i=6812155967"
+    },
+    {
       "name": "大船",
       "artist": "田馥甄",
       "url": "https://music.apple.com/tw/album/%E5%A4%A7%E8%88%B9/6812635395?i=6812635396"
@@ -42,24 +47,24 @@
       "url": "https://music.apple.com/tw/album/%E5%A5%B9-%E6%97%A9%E6%98%A5%E6%99%B4%E6%9C%97-%E9%9B%BB%E8%A6%96%E5%8A%87%E6%AC%92%E5%BF%B5%E4%BA%BA%E7%89%A9%E6%9B%B2-%E7%89%87%E9%A0%AD%E6%9B%B2/6807333685?i=6807333688"
     },
     {
-      "name": "值得紀念的垃圾",
-      "artist": "田馥甄",
-      "url": "https://music.apple.com/tw/album/%E5%80%BC%E5%BE%97%E7%B4%80%E5%BF%B5%E7%9A%84%E5%9E%83%E5%9C%BE/6812635395?i=6812635404"
-    },
-    {
-      "name": "CRASH",
-      "artist": "ALLDAY PROJECT",
-      "url": "https://music.apple.com/tw/album/crash/6812155961?i=6812155967"
-    },
-    {
       "name": "new trick",
       "artist": "ROSÉ",
       "url": "https://music.apple.com/tw/album/new-trick/6812894902?i=6812894907"
     },
     {
+      "name": "值得紀念的垃圾",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E5%80%BC%E5%BE%97%E7%B4%80%E5%BF%B5%E7%9A%84%E5%9E%83%E5%9C%BE/6812635395?i=6812635404"
+    },
+    {
       "name": "hate that i made you love me",
       "artist": "Ariana Grande",
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
+    },
+    {
+      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
+      "artist": "宇宙人",
+      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     },
     {
       "name": "雲",
@@ -70,22 +75,17 @@
       "name": "乾淨的房間",
       "artist": "田馥甄",
       "url": "https://music.apple.com/tw/album/%E4%B9%BE%E6%B7%A8%E7%9A%84%E6%88%BF%E9%96%93/6812635395?i=6812635400"
-    },
-    {
-      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
-      "artist": "宇宙人",
-      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     }
   ],
   "deals": [
     {
       "title": "會員護照二",
-      "url": "https://www.costco.com.tw/savings?srsltid=AU7gw4Ww8TBnSkQ97NJgu4N5XbIEHq3cnkqptiKky8lgQggjL7Zcx2Rs",
+      "url": "https://www.costco.com.tw/savings?srsltid=AU7gw4VzmfO_YewXGn9v7t51dkSePs4qeuv3GPvp9Ejb1OpNDZypdgen",
       "tag": "優惠"
     },
     {
-      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 08.17(一)",
-      "url": "https://www.daybuy.tw/costco/262939/",
+      "title": "Agoda 優惠碼& 訂房折扣總整理【每月更新】2026 - Tournews",
+      "url": "https://tournews.tw/agoda-promo-code-deals/",
       "tag": "優惠"
     },
     {
@@ -94,38 +94,33 @@
       "tag": "優惠"
     },
     {
-      "title": "小北門這次不講武德，直接祭出超瘋狂的限時折扣組合拳",
-      "url": "https://www.threads.com/@lopiatw.tnnskmlng_official/post/Dd1Frgfkoxx/%E5%B0%8F%E5%8C%97%E9%96%80%E9%80%99%E6%AC%A1%E4%B8%8D%E8%AC%9B%E6%AD%A6%E5%BE%B7%E7%9B%B4%E6%8E%A5%E7%A5%AD%E5%87%BA%E8%B6%85%E7%98%8B%E7%8B%82%E7%9A%84%E9%99%90%E6%99%82%E6%8A%98%E6%89%A3%E7%B5%84%E5%90%88%E6%8B%B3%E5%B0%B1%E6%98%AF%E8%A6%81%E8%AE%93%E4%BD%A0%E7%94%A8%E6%9C%80%E5%88%92%E7%AE%97%E7%9A%84%E5%83%B9%E6%A0%BC%E6%8A%8A%E6%9C%80%E9%A0%82%E7%B4%9A%E7%9A%84%E7%BE%8E%E5%91%B3%E5%B8%B6%E5%9B%9E%E5%AE%B6-%E4%BA%AE%E9%BB%9E%E4%B8%80%E5%A4%9A%E7%94%B0%E5%B7%A5%E5%9D%8A%E9%99%90%E6%99%82%E5%BF%AB%E9%96%83%E5%85%A9%E4%BB%B6%E7%9B%B4%E5%A5%94-89-%E6%8A%98%E6%B4%BB%E5%8B%95%E6%99%82%E9%96%93929%E4%BA%8C-101%E5%9B%9B/",
+      "title": "COSTCO好市多本週限時隱藏優惠懶人包2026 08.17(一)",
+      "url": "https://www.daybuy.tw/costco/262939/",
       "tag": "優惠"
     },
     {
-      "title": "喜利得優惠折扣",
-      "url": "https://www.hilti.com.tw/content/shop/promotions",
+      "title": "線上還有更多的優惠商品會發在VIP社群裡✨🫶",
+      "url": "https://www.threads.com/@pei.ru0721/post/Dd5euyzkr-X/video-%E7%B7%9A%E4%B8%8A%E9%82%84%E6%9C%89%E6%9B%B4%E5%A4%9A%E7%9A%84%E5%84%AA%E6%83%A0%E5%95%86%E5%93%81%E6%9C%83%E7%99%BC%E5%9C%A8vip%E7%A4%BE%E7%BE%A4%E8%A3%A1/",
       "tag": "優惠"
     },
     {
-      "title": "最後機會：InvestingPro限時優惠55%折扣，僅剩數小時",
-      "url": "https://hk.finance.yahoo.com/news/%E6%9C%80%E5%BE%8C%E6%A9%9F%E6%9C%83-investingpro%E9%99%90%E6%99%82%E5%84%AA%E6%83%A055-%E6%8A%98%E6%89%A3-%E5%83%85%E5%89%A9%E6%95%B8%E5%B0%8F%E6%99%82-091148962.html",
+      "title": "Costco好市多(新品/優惠)最速報",
+      "url": "https://t.me/s/daybuy?before=18306",
       "tag": "優惠"
     },
     {
-      "title": "Roots百貨週年慶陸續開打🎉 🔻百貨周慶限定優惠",
-      "url": "https://www.threads.com/@rootstaiwan/post/Dd8F2Srj4nO/roots%E7%99%BE%E8%B2%A8%E9%80%B1%E5%B9%B4%E6%85%B6%E9%99%B8%E7%BA%8C%E9%96%8B%E6%89%93%E7%99%BE%E8%B2%A8%E5%91%A8%E6%85%B6%E9%99%90%E5%AE%9A%E5%84%AA%E6%83%A0-%E5%95%86%E5%93%81%E5%85%A8%E9%9D%A2-8%E6%8A%98%E5%90%AB%E7%9A%AE%E4%BB%B6%E5%AF%A2%E5%85%B7-%E9%A0%90%E8%B3%BC%E9%A6%96%E5%9B%9B%E4%BA%94%E9%99%90%E5%AE%9A%E6%9C%83%E5%93%A1%E5%90%AB%E6%96%B0%E5%8A%A0%E5%85%A5%E4%BA%AB-2%E4%BB%B6%E6%9C%8D%E9%A3%BE%E5%8E%9F%E5%83%B96%E6%8A%98%E4%B9%99%E6%AC%A1-%E5%96%AE%E7%AD%86%E7%B5%90%E5%B8%B3%E6%BB%BF-6000-%E7%8F%BE%E6%8A%B5600%E5%8F%AF%E7%B4%AF/",
+      "title": "新光三越台南中山店最後週年慶活動‼️ 全館1折起一件 ...",
+      "url": "https://www.threads.com/@tainanxian_food/post/Dd_U09-GrfE/%E6%96%B0%E5%85%89%E4%B8%89%E8%B6%8A%E5%8F%B0%E5%8D%97%E4%B8%AD%E5%B1%B1%E5%BA%97%E6%9C%80%E5%BE%8C%E9%80%B1%E5%B9%B4%E6%85%B6%E6%B4%BB%E5%8B%95%E5%85%A8%E9%A4%A81%E6%8A%98%E8%B5%B7-%E4%B8%80%E4%BB%B6%E4%B8%8D%E7%95%99-%E9%A4%A8%E5%85%A7%E8%90%AC%E4%BB%B6%E6%9C%8D%E9%A3%BE%E5%A5%B3%E9%9E%8B%E5%A4%A7%E5%87%BA%E6%B8%85%E4%B8%AD%E5%B1%B1%E5%BA%97%E7%87%9F%E6%A5%AD%E5%88%B01031%E9%96%89%E5%BA%97%E5%A4%A7%E7%89%B9%E5%83%B9-%E6%9C%80%E5%BE%8C%E7%9A%84%E5%A5%BD%E5%BA%B7%E5%84%AA%E6%83%A0%E5%BE%9E%E8%A1%A3%E6%9C%8D%E9%9E%8B%E5%AD%90%E5%8C%85%E5%8C%85%E5%AE%B6%E9%9B%BB%E4%BF%9D%E9%A4%8A%E5%93%81%E5%BA%8A%E5%8C%85%E7%B5%84%E9%9B%B6%E9%A3%9F%E5%BE%9E%E4%B8%80/",
       "tag": "優惠"
     },
     {
-      "title": "週年慶- 迷誠品",
-      "url": "https://meet.eslite.com/tw/tc/memberday",
+      "title": "遠百信義A13-線上DM",
+      "url": "https://www.feds.com.tw/tw/55/Edm/List",
       "tag": "優惠"
     },
     {
-      "title": "遠百嘉義-線上DM",
-      "url": "https://www.feds.com.tw/tw/Edm/List?EdmMallId=37",
-      "tag": "優惠"
-    },
-    {
-      "title": "麗王模型新官網慶開幕",
-      "url": "https://www.threads.com/@standfor6666/post/Dd6QHblH_vj/%E9%BA%97%E7%8E%8B%E6%A8%A1%E5%9E%8B%E6%96%B0%E5%AE%98%E7%B6%B2%E6%85%B6%E9%96%8B%E5%B9%95%E6%96%B0%E5%AE%98%E7%B6%B2%E9%96%80%E5%B8%82-%E7%8F%BE%E8%B2%A8%E5%95%86%E5%93%81%E6%B6%88%E8%B2%BB%E6%BB%BF500%E5%85%83%E9%80%81%E4%B8%80%E5%8C%85%E5%A0%85%E6%9E%9C%E8%A9%A6%E5%90%83%E5%8C%85%E6%B4%BB%E5%8B%95%E6%99%82%E9%96%939%E6%9C%8830%E6%97%A5-2000-10%E6%9C%8811%E6%97%A5-2359-%E9%80%81%E5%AE%8C%E7%82%BA%E6%AD%A2%E5%A0%85%E6%9E%9C%E8%A9%A6%E5%90%83%E5%8C%85%E5%85%A7%E9%99%84%E9%AD%9A%E8%BA%8D%E8%8F%93%E8%88%96%E6%8A%98%E6%89%A3%E7%A2%BC/",
+      "title": "🇯🇵松本清17%OFF優惠！首圖出示立省💰 日本藥妝店 ...",
+      "url": "https://www.threads.com/@wangbainian/post/DdwQEHwlLzn/%E6%9D%BE%E6%9C%AC%E6%B8%8517off%E5%84%AA%E6%83%A0%E9%A6%96%E5%9C%96%E5%87%BA%E7%A4%BA%E7%AB%8B%E7%9C%81%E6%97%A5%E6%9C%AC%E8%97%A5%E5%A6%9D%E5%BA%97%E6%9D%BE%E6%9C%AC%E6%B8%85%E7%B5%90%E8%B3%AC%E6%99%82%E7%9B%B4%E6%8E%A5%E5%87%BA%E7%A4%BA%E9%A6%96%E5%9C%96%E7%B5%A6%E5%BA%97%E5%93%A1%E7%AB%8B%E9%A6%AC%E4%BA%AB%E5%8F%97-%E5%85%8D%E7%A8%85%E6%BB%BF5000%E6%97%A5%E5%9C%93-%E7%96%8A%E5%8A%A0%E6%8A%98%E6%89%A3%E6%9C%80%E9%AB%987-%E5%AF%A6%E9%9A%9B%E5%88%B0%E6%89%8B%E5%85%8D%E7%A8%8510%E6%8A%98%E6%89%A3717off%E2%9D%B6-%E5%93%AA%E8%A3%A1%E8%83%BD/",
       "tag": "優惠"
     },
     {
@@ -134,13 +129,18 @@
       "tag": "優惠"
     },
     {
-      "title": "NEW STEP官方購物網站- 台灣專櫃女鞋品牌集團Dolce Group",
-      "url": "https://www.magy.com.tw/page/ORIN_26AW?srsltid=AU7gw4Wz8Zg3U-xnwBd9QjR26DOlTSDrxHi71pRksQWqex6NNlLG8wBf",
+      "title": "頂呱呱-台灣第一家連鎖炸雞品牌",
+      "url": "https://www.tkkinc.com.tw/event.html",
       "tag": "優惠"
     },
     {
-      "title": "頂呱呱-台灣第一家連鎖炸雞品牌",
-      "url": "https://www.tkkinc.com.tw/event.html",
+      "title": "NEW STEP官方購物網站- 台灣專櫃女鞋品牌集團Dolce Group",
+      "url": "https://www.magy.com.tw/page/ORIN_26AW?srsltid=AU7gw4W6D6IJXQlOAtUZMgDAmU9Mk9ph3IL5qcSHmK2ScsvND4ILvDkf",
+      "tag": "優惠"
+    },
+    {
+      "title": "最新消息- 大苑子｜台灣鮮果第一品牌",
+      "url": "https://www.dayungs.com/hotnews-html/",
       "tag": "優惠"
     }
   ]
