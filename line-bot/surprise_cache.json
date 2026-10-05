@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-04 00:25",
+  "updated_at": "2026-10-05 00:36",
   "songs": [
     {
       "name": "甲乙丙丁Strangers",
@@ -52,11 +52,6 @@
       "url": "https://music.apple.com/tw/album/%E5%A5%B9-%E6%97%A9%E6%98%A5%E6%99%B4%E6%9C%97-%E9%9B%BB%E8%A6%96%E5%8A%87%E6%AC%92%E5%BF%B5%E4%BA%BA%E7%89%A9%E6%9B%B2-%E7%89%87%E9%A0%AD%E6%9B%B2/6807333685?i=6807333688"
     },
     {
-      "name": "new trick",
-      "artist": "ROSÉ",
-      "url": "https://music.apple.com/tw/album/new-trick/6812894902?i=6812894907"
-    },
-    {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
       "artist": "宇宙人",
       "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
@@ -67,14 +62,19 @@
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
+      "name": "new trick",
+      "artist": "ROSÉ",
+      "url": "https://music.apple.com/tw/album/new-trick/6812894902?i=6812894907"
+    },
+    {
       "name": "雲",
       "artist": "田馥甄",
       "url": "https://music.apple.com/tw/album/%E9%9B%B2/6812635395?i=6812635398"
     },
     {
-      "name": "乾淨的房間",
-      "artist": "田馥甄",
-      "url": "https://music.apple.com/tw/album/%E4%B9%BE%E6%B7%A8%E7%9A%84%E6%88%BF%E9%96%93/6812635395?i=6812635400"
+      "name": "SUN KISS",
+      "artist": "TUIDE",
+      "url": "https://music.apple.com/tw/album/sun-kiss/6795782851?i=6795782855"
     }
   ],
   "deals": []
