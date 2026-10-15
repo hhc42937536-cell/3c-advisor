@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-14 01:01",
+  "updated_at": "2026-10-15 00:22",
   "songs": [
     {
       "name": "甲乙丙丁Strangers",
@@ -15,6 +15,11 @@
       "name": "I’m gonna TOESA (feat. Kian84)",
       "artist": "JEON SOYEON",
       "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
+    },
+    {
+      "name": "NEON",
+      "artist": "A2O & A2O LITE",
+      "url": "https://music.apple.com/tw/album/neon/6820428726?i=6820428730"
     },
     {
       "name": "CRASH",
@@ -37,19 +42,9 @@
       "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
     },
     {
-      "name": "Patient Zero",
-      "artist": "Taylor Swift",
-      "url": "https://music.apple.com/tw/album/patient-zero/6814997249?i=6814997425"
-    },
-    {
       "name": "Nicole Kidman",
       "artist": "ADÉLA",
       "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
-    },
-    {
-      "name": "Less than a Lover",
-      "artist": "JENNIE",
-      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
     },
     {
       "name": "Star Trace",
@@ -57,24 +52,29 @@
       "url": "https://music.apple.com/tw/album/star-trace/6818034174?i=6818034178"
     },
     {
+      "name": "Patient Zero",
+      "artist": "Taylor Swift",
+      "url": "https://music.apple.com/tw/album/patient-zero/6814997249?i=6814997425"
+    },
+    {
+      "name": "Less than a Lover",
+      "artist": "JENNIE",
+      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
+    },
+    {
       "name": "她 (《早春晴朗》電視劇欒念人物曲&片頭曲)",
       "artist": "劉宇寧",
       "url": "https://music.apple.com/tw/album/%E5%A5%B9-%E6%97%A9%E6%98%A5%E6%99%B4%E6%9C%97-%E9%9B%BB%E8%A6%96%E5%8A%87%E6%AC%92%E5%BF%B5%E4%BA%BA%E7%89%A9%E6%9B%B2-%E7%89%87%E9%A0%AD%E6%9B%B2/6807333685?i=6807333688"
     },
     {
-      "name": "hate that i made you love me",
-      "artist": "Ariana Grande",
-      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
-    },
-    {
-      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
-      "artist": "宇宙人",
-      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
-    },
-    {
       "name": "GGUN",
       "artist": "PLAVE",
       "url": "https://music.apple.com/tw/album/ggun/6818034174?i=6818034175"
+    },
+    {
+      "name": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     }
   ],
   "deals": []
