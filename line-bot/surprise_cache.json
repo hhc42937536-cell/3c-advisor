@@ -1,10 +1,15 @@
 {
-  "updated_at": "2026-10-15 00:22",
+  "updated_at": "2026-10-16 00:10",
   "songs": [
     {
       "name": "甲乙丙丁Strangers",
       "artist": "李佳薇",
       "url": "https://music.apple.com/tw/album/%E7%94%B2%E4%B9%99%E4%B8%99%E4%B8%81strangers/6785801843?i=6785801848"
+    },
+    {
+      "name": "NEON",
+      "artist": "A2O & A2O LITE",
+      "url": "https://music.apple.com/tw/album/neon/6820428726?i=6820428730"
     },
     {
       "name": "要去什麼地方",
@@ -15,11 +20,6 @@
       "name": "I’m gonna TOESA (feat. Kian84)",
       "artist": "JEON SOYEON",
       "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
-    },
-    {
-      "name": "NEON",
-      "artist": "A2O & A2O LITE",
-      "url": "https://music.apple.com/tw/album/neon/6820428726?i=6820428730"
     },
     {
       "name": "CRASH",
@@ -37,6 +37,11 @@
       "url": "https://music.apple.com/tw/album/%E8%87%AA%E7%94%B1%E7%9A%84%E4%BD%A0/6815092481?i=6815092483"
     },
     {
+      "name": "Star Trace",
+      "artist": "PLAVE",
+      "url": "https://music.apple.com/tw/album/star-trace/6818034174?i=6818034178"
+    },
+    {
       "name": "BiiiG",
       "artist": "BIGBANG",
       "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
@@ -45,11 +50,6 @@
       "name": "Nicole Kidman",
       "artist": "ADÉLA",
       "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
-    },
-    {
-      "name": "Star Trace",
-      "artist": "PLAVE",
-      "url": "https://music.apple.com/tw/album/star-trace/6818034174?i=6818034178"
     },
     {
       "name": "Patient Zero",
@@ -62,19 +62,19 @@
       "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
     },
     {
-      "name": "她 (《早春晴朗》電視劇欒念人物曲&片頭曲)",
-      "artist": "劉宇寧",
-      "url": "https://music.apple.com/tw/album/%E5%A5%B9-%E6%97%A9%E6%98%A5%E6%99%B4%E6%9C%97-%E9%9B%BB%E8%A6%96%E5%8A%87%E6%AC%92%E5%BF%B5%E4%BA%BA%E7%89%A9%E6%9B%B2-%E7%89%87%E9%A0%AD%E6%9B%B2/6807333685?i=6807333688"
-    },
-    {
       "name": "GGUN",
       "artist": "PLAVE",
       "url": "https://music.apple.com/tw/album/ggun/6818034174?i=6818034175"
     },
     {
-      "name": "hate that i made you love me",
-      "artist": "Ariana Grande",
-      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
+      "name": "Sweet Rain",
+      "artist": "PLAVE",
+      "url": "https://music.apple.com/tw/album/sweet-rain/6818034174?i=6818034176"
+    },
+    {
+      "name": "她 (《早春晴朗》電視劇欒念人物曲&片頭曲)",
+      "artist": "劉宇寧",
+      "url": "https://music.apple.com/tw/album/%E5%A5%B9-%E6%97%A9%E6%98%A5%E6%99%B4%E6%9C%97-%E9%9B%BB%E8%A6%96%E5%8A%87%E6%AC%92%E5%BF%B5%E4%BA%BA%E7%89%A9%E6%9B%B2-%E7%89%87%E9%A0%AD%E6%9B%B2/6807333685?i=6807333688"
     }
   ],
   "deals": []
