@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-17 23:53",
+  "updated_at": "2026-10-19 00:02",
   "songs": [
     {
       "name": "NEON",
@@ -47,9 +47,9 @@
       "url": "https://music.apple.com/tw/album/nicole-kidman/6807192580?i=6807192825"
     },
     {
-      "name": "BiiiG",
-      "artist": "BIGBANG",
-      "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
+      "name": "Housewife",
+      "artist": "Tate McRae",
+      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
     },
     {
       "name": "Less than a Lover",
@@ -57,24 +57,24 @@
       "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
     },
     {
-      "name": "Patient Zero",
-      "artist": "Taylor Swift",
-      "url": "https://music.apple.com/tw/album/patient-zero/6814997249?i=6814997425"
-    },
-    {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
       "artist": "宇宙人",
       "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     },
     {
+      "name": "BiiiG",
+      "artist": "BIGBANG",
+      "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
+    },
+    {
+      "name": "Patient Zero",
+      "artist": "Taylor Swift",
+      "url": "https://music.apple.com/tw/album/patient-zero/6814997249?i=6814997425"
+    },
+    {
       "name": "LEMONADE",
       "artist": "aespa",
       "url": "https://music.apple.com/tw/album/lemonade/6772115182?i=6772115189"
-    },
-    {
-      "name": "Housewife",
-      "artist": "Tate McRae",
-      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
     }
   ],
   "deals": []
