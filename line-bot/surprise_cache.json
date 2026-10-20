@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-19 00:02",
+  "updated_at": "2026-10-20 00:58",
   "songs": [
     {
       "name": "NEON",
@@ -32,14 +32,9 @@
       "url": "https://music.apple.com/tw/album/crash/6812155961?i=6812155967"
     },
     {
-      "name": "自由的你",
-      "artist": "鄧紫棋",
-      "url": "https://music.apple.com/tw/album/%E8%87%AA%E7%94%B1%E7%9A%84%E4%BD%A0/6815092481?i=6815092483"
-    },
-    {
-      "name": "Star Trace",
-      "artist": "PLAVE",
-      "url": "https://music.apple.com/tw/album/star-trace/6818034174?i=6818034178"
+      "name": "Housewife",
+      "artist": "Tate McRae",
+      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
     },
     {
       "name": "Nicole Kidman",
@@ -47,14 +42,24 @@
       "url": "https://music.apple.com/tw/album/nicole-kidman/6807192580?i=6807192825"
     },
     {
-      "name": "Housewife",
-      "artist": "Tate McRae",
-      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
+      "name": "Star Trace",
+      "artist": "PLAVE",
+      "url": "https://music.apple.com/tw/album/star-trace/6818034174?i=6818034178"
+    },
+    {
+      "name": "自由的你",
+      "artist": "鄧紫棋",
+      "url": "https://music.apple.com/tw/album/%E8%87%AA%E7%94%B1%E7%9A%84%E4%BD%A0/6815092481?i=6815092483"
     },
     {
       "name": "Less than a Lover",
       "artist": "JENNIE",
       "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
+    },
+    {
+      "name": "Patient Zero",
+      "artist": "Taylor Swift",
+      "url": "https://music.apple.com/tw/album/patient-zero/6814997249?i=6814997425"
     },
     {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
@@ -65,11 +70,6 @@
       "name": "BiiiG",
       "artist": "BIGBANG",
       "url": "https://music.apple.com/tw/album/biiig/6801365249?i=6801365250"
-    },
-    {
-      "name": "Patient Zero",
-      "artist": "Taylor Swift",
-      "url": "https://music.apple.com/tw/album/patient-zero/6814997249?i=6814997425"
     },
     {
       "name": "LEMONADE",
