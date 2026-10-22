@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-21 00:27",
+  "updated_at": "2026-10-22 00:31",
   "songs": [
     {
       "name": "NEON",
@@ -22,24 +22,24 @@
       "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
     },
     {
-      "name": "要去什麼地方",
-      "artist": "田馥甄",
-      "url": "https://music.apple.com/tw/album/%E8%A6%81%E5%8E%BB%E4%BB%80%E9%BA%BC%E5%9C%B0%E6%96%B9/6812635395?i=6812635397"
-    },
-    {
       "name": "Looks Can Kill",
       "artist": "IVE",
       "url": "https://music.apple.com/tw/album/looks-can-kill/6822369065?i=6822369089"
     },
     {
-      "name": "BAD",
-      "artist": "ATEEZ",
-      "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
+      "name": "要去什麼地方",
+      "artist": "田馥甄",
+      "url": "https://music.apple.com/tw/album/%E8%A6%81%E5%8E%BB%E4%BB%80%E9%BA%BC%E5%9C%B0%E6%96%B9/6812635395?i=6812635397"
     },
     {
       "name": "Housewife",
       "artist": "Tate McRae",
       "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
+    },
+    {
+      "name": "BAD",
+      "artist": "ATEEZ",
+      "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
     },
     {
       "name": "CRASH",
@@ -72,9 +72,9 @@
       "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     },
     {
-      "name": "Patient Zero",
-      "artist": "Taylor Swift",
-      "url": "https://music.apple.com/tw/album/patient-zero/6814997249?i=6814997425"
+      "name": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/6782894401?i=6782894402"
     }
   ],
   "deals": []
