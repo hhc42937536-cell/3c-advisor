@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-22 00:31",
+  "updated_at": "2026-10-23 00:28",
   "songs": [
     {
       "name": "NEON",
@@ -17,14 +17,14 @@
       "url": "https://music.apple.com/tw/album/birthday-wish/6812956002?i=6812956004"
     },
     {
-      "name": "I’m gonna TOESA (feat. Kian84)",
-      "artist": "JEON SOYEON",
-      "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
-    },
-    {
       "name": "Looks Can Kill",
       "artist": "IVE",
       "url": "https://music.apple.com/tw/album/looks-can-kill/6822369065?i=6822369089"
+    },
+    {
+      "name": "I’m gonna TOESA (feat. Kian84)",
+      "artist": "JEON SOYEON",
+      "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
     },
     {
       "name": "要去什麼地方",
@@ -57,11 +57,6 @@
       "url": "https://music.apple.com/tw/album/%E8%87%AA%E7%94%B1%E7%9A%84%E4%BD%A0/6815092481?i=6815092483"
     },
     {
-      "name": "Star Trace",
-      "artist": "PLAVE",
-      "url": "https://music.apple.com/tw/album/star-trace/6818034174?i=6818034178"
-    },
-    {
       "name": "Less than a Lover",
       "artist": "JENNIE",
       "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
@@ -75,6 +70,11 @@
       "name": "hate that i made you love me",
       "artist": "Ariana Grande",
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/6782894401?i=6782894402"
+    },
+    {
+      "name": "LEMONADE",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/lemonade/6772115182?i=6772115189"
     }
   ],
   "deals": []
