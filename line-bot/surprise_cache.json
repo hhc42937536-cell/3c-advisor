@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27 01:19",
+  "updated_at": "2026-10-28 01:02",
   "songs": [
     {
       "name": "NEON",
@@ -52,9 +52,9 @@
       "url": "https://music.apple.com/tw/album/crash/6812155961?i=6812155967"
     },
     {
-      "name": "MISS ME",
-      "artist": "Keshi",
-      "url": "https://music.apple.com/tw/album/miss-me/6822513723?i=6822513726"
+      "name": "Drip",
+      "artist": "ATEEZ",
+      "url": "https://music.apple.com/tw/album/drip/6819587309?i=6819587772"
     },
     {
       "name": "要去什麼地方",
@@ -62,20 +62,61 @@
       "url": "https://music.apple.com/tw/album/%E8%A6%81%E5%8E%BB%E4%BB%80%E9%BA%BC%E5%9C%B0%E6%96%B9/6812635395?i=6812635397"
     },
     {
-      "name": "Drip",
-      "artist": "ATEEZ",
-      "url": "https://music.apple.com/tw/album/drip/6819587309?i=6819587772"
+      "name": "MISS ME",
+      "artist": "Keshi",
+      "url": "https://music.apple.com/tw/album/miss-me/6822513723?i=6822513726"
     },
     {
-      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
-      "artist": "宇宙人",
-      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
+      "name": "You’re Under Arrest",
+      "artist": "ILLIT",
+      "url": "https://music.apple.com/tw/album/youre-under-arrest/6818511623?i=6818511627"
     },
     {
-      "name": "Less than a Lover",
-      "artist": "JENNIE",
-      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
+      "name": "Insomnia",
+      "artist": "RIIZE",
+      "url": "https://music.apple.com/tw/album/insomnia/6823459103?i=6823459104"
     }
   ],
-  "deals": []
+  "deals": [
+    {
+      "title": "必勝客9吋披薩+8塊BBQ烤雞（4支雞翅）19",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793033633.A.857.html",
+      "tag": "情報"
+    },
+    {
+      "title": "康是美網購eShop萬聖狂歡10/27~30",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793034654.A.E6F.html",
+      "tag": "情報"
+    },
+    {
+      "title": "line 蝦皮3點",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793070684.A.B59.html",
+      "tag": "情報"
+    },
+    {
+      "title": "line禮物 小七 中熱美 五折 領券 9元",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793073050.A.D58.html",
+      "tag": "情報"
+    },
+    {
+      "title": "網家雙11活動早鳥優惠",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793095649.A.9AB.html",
+      "tag": "情報"
+    },
+    {
+      "title": "全台免費送烤雞！共1900隻",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793100301.A.01A.html",
+      "tag": "情報"
+    },
+    {
+      "title": "Re: [情報] UE 十月50%優惠碼（貌似變分眾",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793117025.A.2C7.html",
+      "tag": "情報"
+    },
+    {
+      "title": "2026年全台捐血贈品",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
+      "tag": "情報"
+    }
+  ]
 }
