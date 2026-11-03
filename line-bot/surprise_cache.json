@@ -1,46 +1,117 @@
 {
-  "updated_at": "2026-11-02 01:23",
-  "songs": [],
+  "updated_at": "2026-11-03 03:22",
+  "songs": [
+    {
+      "name": "NEON",
+      "artist": "A2O & A2O LITE",
+      "url": "https://music.apple.com/tw/album/neon/6820428726?i=6820428730"
+    },
+    {
+      "name": "甲乙丙丁Strangers",
+      "artist": "李佳薇",
+      "url": "https://music.apple.com/tw/album/%E7%94%B2%E4%B9%99%E4%B8%99%E4%B8%81strangers/6785801843?i=6785801848"
+    },
+    {
+      "name": "Hong Kong (feat. 王菲季候風)",
+      "artist": "The Weeknd",
+      "url": "https://music.apple.com/tw/album/hong-kong-feat-%E7%8E%8B%E8%8F%B2%E5%AD%A3%E5%80%99%E9%A2%A8/6829122413?i=6829122414"
+    },
+    {
+      "name": "You’re Under Arrest",
+      "artist": "ILLIT",
+      "url": "https://music.apple.com/tw/album/youre-under-arrest/6818511623?i=6818511627"
+    },
+    {
+      "name": "DESERVE",
+      "artist": "BABYMONSTER",
+      "url": "https://music.apple.com/tw/album/deserve/6823611519?i=6823611520"
+    },
+    {
+      "name": "BAD",
+      "artist": "ATEEZ",
+      "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
+    },
+    {
+      "name": "Housewife",
+      "artist": "Tate McRae",
+      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
+    },
+    {
+      "name": "I’m gonna TOESA (feat. Kian84)",
+      "artist": "SOYEON",
+      "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
+    },
+    {
+      "name": "Birthday Wish",
+      "artist": "NMIXX",
+      "url": "https://music.apple.com/tw/album/birthday-wish/6812956002?i=6812956004"
+    },
+    {
+      "name": "Looks Can Kill",
+      "artist": "IVE",
+      "url": "https://music.apple.com/tw/album/looks-can-kill/6822369065?i=6822369089"
+    },
+    {
+      "name": "Insomnia",
+      "artist": "RIIZE",
+      "url": "https://music.apple.com/tw/album/insomnia/6823459103?i=6823459104"
+    },
+    {
+      "name": "Nicole Kidman",
+      "artist": "ADÉLA",
+      "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
+    },
+    {
+      "name": "Drip",
+      "artist": "ATEEZ",
+      "url": "https://music.apple.com/tw/album/drip/6819587309?i=6819587772"
+    },
+    {
+      "name": "CRASH",
+      "artist": "ALLDAY PROJECT",
+      "url": "https://music.apple.com/tw/album/crash/6812155961?i=6812155967"
+    },
+    {
+      "name": "Less than a Lover",
+      "artist": "JENNIE",
+      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
+    }
+  ],
   "deals": [
     {
-      "title": "好韌真衛生紙11/1優惠比較",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793506999.A.6F7.html",
+      "title": "momo 大成/卜蜂 清雞胸肉 2.7kg 911元",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793664020.A.242.html",
       "tag": "情報"
     },
     {
-      "title": "Uber Eats 11月週三自取五折",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793509155.A.B6D.html",
+      "title": "小米A Pro 2026 75型 $16252",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793667291.A.85F.html",
       "tag": "情報"
     },
     {
-      "title": "熊貓pro專屬 必勝客個人套餐免費招待",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793509580.A.D47.html",
+      "title": "高雄 建工路加油站 洗車特價100元",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793669468.A.1E4.html",
       "tag": "情報"
     },
     {
-      "title": "蝦皮 技嘉rx9060xt 顯示卡",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793514157.A.FD5.html",
+      "title": "Acer 宏碁 Aspire Lite 14吋筆電 $7111",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793672611.A.E71.html",
       "tag": "情報"
     },
     {
-      "title": "請版主協助刪文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793514867.A.0AF.html",
+      "title": "2026年全台捐血贈品",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
       "tag": "情報"
     },
     {
-      "title": "Re: [情報] Hami Video 2026 雙11方案出爐",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793526571.A.A3F.html",
-      "tag": "情報"
+      "title": "贈送集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1790784012.A.E9A.html",
+      "tag": "集中"
     },
     {
-      "title": "蝦皮全家大熱美每人限 特價1杯",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793538724.A.652.html",
-      "tag": "情報"
-    },
-    {
-      "title": "COCO都可：奶茶三兄弟45元(11/1~11/30)",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793541267.A.EE7.html",
-      "tag": "情報"
+      "title": "未滿1元集點抽獎資訊集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788194462.A.0A4.html",
+      "tag": "集中"
     }
   ]
 }
