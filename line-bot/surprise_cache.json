@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-03 03:22",
+  "updated_at": "2026-11-04 02:01",
   "songs": [
     {
       "name": "NEON",
@@ -12,19 +12,19 @@
       "url": "https://music.apple.com/tw/album/%E7%94%B2%E4%B9%99%E4%B8%99%E4%B8%81strangers/6785801843?i=6785801848"
     },
     {
-      "name": "Hong Kong (feat. 王菲季候風)",
-      "artist": "The Weeknd",
-      "url": "https://music.apple.com/tw/album/hong-kong-feat-%E7%8E%8B%E8%8F%B2%E5%AD%A3%E5%80%99%E9%A2%A8/6829122413?i=6829122414"
-    },
-    {
       "name": "You’re Under Arrest",
       "artist": "ILLIT",
       "url": "https://music.apple.com/tw/album/youre-under-arrest/6818511623?i=6818511627"
     },
     {
-      "name": "DESERVE",
-      "artist": "BABYMONSTER",
-      "url": "https://music.apple.com/tw/album/deserve/6823611519?i=6823611520"
+      "name": "Hong Kong (feat. 王菲季候風)",
+      "artist": "The Weeknd",
+      "url": "https://music.apple.com/tw/album/hong-kong-feat-%E7%8E%8B%E8%8F%B2%E5%AD%A3%E5%80%99%E9%A2%A8/6829122413?i=6829122414"
+    },
+    {
+      "name": "Nicole Kidman",
+      "artist": "ADÉLA",
+      "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
     },
     {
       "name": "BAD",
@@ -32,14 +32,19 @@
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
     },
     {
-      "name": "Housewife",
-      "artist": "Tate McRae",
-      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
-    },
-    {
       "name": "I’m gonna TOESA (feat. Kian84)",
       "artist": "SOYEON",
       "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
+    },
+    {
+      "name": "DESERVE",
+      "artist": "BABYMONSTER",
+      "url": "https://music.apple.com/tw/album/deserve/6823611519?i=6823611520"
+    },
+    {
+      "name": "Housewife",
+      "artist": "Tate McRae",
+      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
     },
     {
       "name": "Birthday Wish",
@@ -57,24 +62,19 @@
       "url": "https://music.apple.com/tw/album/insomnia/6823459103?i=6823459104"
     },
     {
-      "name": "Nicole Kidman",
-      "artist": "ADÉLA",
-      "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
+      "name": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
+    },
+    {
+      "name": "自由的你",
+      "artist": "鄧紫棋",
+      "url": "https://music.apple.com/tw/album/%E8%87%AA%E7%94%B1%E7%9A%84%E4%BD%A0/6815092481?i=6815092483"
     },
     {
       "name": "Drip",
       "artist": "ATEEZ",
       "url": "https://music.apple.com/tw/album/drip/6819587309?i=6819587772"
-    },
-    {
-      "name": "CRASH",
-      "artist": "ALLDAY PROJECT",
-      "url": "https://music.apple.com/tw/album/crash/6812155961?i=6812155967"
-    },
-    {
-      "name": "Less than a Lover",
-      "artist": "JENNIE",
-      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
     }
   ],
   "deals": [
@@ -99,19 +99,24 @@
       "tag": "情報"
     },
     {
-      "title": "2026年全台捐血贈品",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
+      "title": "三星 Odyssey OLED G7 32吋4K 特價14990",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793686826.A.717.html",
       "tag": "情報"
     },
     {
-      "title": "贈送集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1790784012.A.E9A.html",
-      "tag": "集中"
+      "title": "台北捷運Go-線在，把好事串起來",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793692015.A.C51.html",
+      "tag": "情報"
     },
     {
-      "title": "未滿1元集點抽獎資訊集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788194462.A.0A4.html",
-      "tag": "集中"
+      "title": "momo Airwaves 62g10入611",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793693424.A.EE9.html",
+      "tag": "情報"
+    },
+    {
+      "title": "蝦皮 3200ml洗碗精特價79元",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793711326.A.6AE.html",
+      "tag": "情報"
     }
   ]
 }
