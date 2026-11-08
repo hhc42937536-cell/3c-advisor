@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-07 01:43",
+  "updated_at": "2026-11-08 01:12",
   "songs": [
     {
       "name": "NEON",
@@ -17,14 +17,14 @@
       "url": "https://music.apple.com/tw/album/youre-under-arrest/6818511623?i=6818511627"
     },
     {
-      "name": "With",
-      "artist": "RESCENE",
-      "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
-    },
-    {
       "name": "BAD",
       "artist": "ATEEZ",
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
+    },
+    {
+      "name": "With",
+      "artist": "RESCENE",
+      "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
     },
     {
       "name": "Looks Can Kill",
@@ -35,6 +35,11 @@
       "name": "Nicole Kidman",
       "artist": "ADÉLA",
       "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
+    },
+    {
+      "name": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
       "name": "Hong Kong (feat. 王菲季候風)",
@@ -52,11 +57,6 @@
       "url": "https://music.apple.com/tw/album/%E8%87%AA%E7%94%B1%E7%9A%84%E4%BD%A0/6815092481?i=6815092483"
     },
     {
-      "name": "玻璃",
-      "artist": "Gareth.T",
-      "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
-    },
-    {
       "name": "DESERVE",
       "artist": "BABYMONSTER",
       "url": "https://music.apple.com/tw/album/deserve/6823611519?i=6823611520"
@@ -67,55 +67,55 @@
       "url": "https://music.apple.com/tw/album/%E8%A6%81%E5%8E%BB%E4%BB%80%E9%BA%BC%E5%9C%B0%E6%96%B9/6812635395?i=6812635397"
     },
     {
-      "name": "Insomnia",
-      "artist": "RIIZE",
-      "url": "https://music.apple.com/tw/album/insomnia/6823459103?i=6823459104"
-    },
-    {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
       "artist": "宇宙人",
       "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
+    },
+    {
+      "name": "Housewife",
+      "artist": "Tate McRae",
+      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
     }
   ],
   "deals": [
     {
-      "title": "Re: [情報] LINE更新功能「逛逛」 9元 7-11中熱美",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793935302.A.12D.html",
+      "title": "Re: [情報] MOMO 小米15T 特價11111",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793975689.A.994.html",
       "tag": "情報"
     },
     {
-      "title": "台股崩跌 高雄炸雞店送100支炸雞腿",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793936608.A.414.html",
+      "title": "IQOO 15R 512GB 賣17999元",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793976390.A.55B.html",
       "tag": "情報"
     },
     {
-      "title": "PCHOME街口滿千折百折扣碼+TWP滿千送百P",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793940029.A.B52.html",
+      "title": "分眾 PChome 雙11狂購-指定會員100 p",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794011110.A.8A1.html",
       "tag": "情報"
     },
     {
-      "title": "11/7-11/11 統一雲端開心卡 1200元贈80點",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793942455.A.121.html",
+      "title": "innervibe魚油特價（即期品）",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794016750.A.FED.html",
       "tag": "情報"
     },
     {
-      "title": "9元熱美式又來了.沒喝到請把握Re: line禮物 小七 中熱美",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793942565.A.7CF.html",
+      "title": "xpark買一送一",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794022294.A.502.html",
       "tag": "情報"
     },
     {
-      "title": "海信65型4K電視 $13111",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793953017.A.C64.html",
+      "title": "2027年行天宮平安手曆 11/8開放索取",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794025966.A.694.html",
       "tag": "情報"
     },
     {
-      "title": "CASETiFY,BURGA,犀牛盾雙11資訊",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793954246.A.9DB.html",
+      "title": "酷澎SR三倍強度魚油180粒971元",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794028966.A.23A.html",
       "tag": "情報"
     },
     {
-      "title": "PCHome 雙11 技嘉 27吋2k螢幕 3505元",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793960134.A.1D2.html",
+      "title": "P家BRITA水芯10入 $1938",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794034008.A.5B3.html",
       "tag": "情報"
     }
   ]
