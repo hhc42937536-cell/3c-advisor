@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-08 01:12",
+  "updated_at": "2026-11-09 01:31",
   "songs": [
     {
       "name": "NEON",
@@ -27,6 +27,11 @@
       "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
     },
     {
+      "name": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
+    },
+    {
       "name": "Looks Can Kill",
       "artist": "IVE",
       "url": "https://music.apple.com/tw/album/looks-can-kill/6822369065?i=6822369089"
@@ -35,11 +40,6 @@
       "name": "Nicole Kidman",
       "artist": "ADÉLA",
       "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
-    },
-    {
-      "name": "hate that i made you love me",
-      "artist": "Ariana Grande",
-      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
       "name": "Hong Kong (feat. 王菲季候風)",
@@ -52,14 +52,19 @@
       "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
     },
     {
+      "name": "DESERVE",
+      "artist": "BABYMONSTER",
+      "url": "https://music.apple.com/tw/album/deserve/6823611519?i=6823611520"
+    },
+    {
       "name": "自由的你",
       "artist": "鄧紫棋",
       "url": "https://music.apple.com/tw/album/%E8%87%AA%E7%94%B1%E7%9A%84%E4%BD%A0/6815092481?i=6815092483"
     },
     {
-      "name": "DESERVE",
-      "artist": "BABYMONSTER",
-      "url": "https://music.apple.com/tw/album/deserve/6823611519?i=6823611520"
+      "name": "Housewife",
+      "artist": "Tate McRae",
+      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
     },
     {
       "name": "要去什麼地方",
@@ -70,11 +75,6 @@
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
       "artist": "宇宙人",
       "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
-    },
-    {
-      "name": "Housewife",
-      "artist": "Tate McRae",
-      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
     }
   ],
   "deals": [
@@ -84,7 +84,7 @@
       "tag": "情報"
     },
     {
-      "title": "IQOO 15R 512GB 賣17999元",
+      "title": "IQOO 15R 512GB 賣17999元PCHOME",
       "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1793976390.A.55B.html",
       "tag": "情報"
     },
@@ -94,12 +94,12 @@
       "tag": "情報"
     },
     {
-      "title": "innervibe魚油特價（即期品）",
+      "title": "innervibe魚油特價（即期品）PCHOME",
       "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794016750.A.FED.html",
       "tag": "情報"
     },
     {
-      "title": "xpark買一送一",
+      "title": "xpark買一送一 klook",
       "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794022294.A.502.html",
       "tag": "情報"
     },
