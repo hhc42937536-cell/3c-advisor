@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-11 01:46",
+  "updated_at": "2026-11-12 02:46",
   "songs": [
     {
       "name": "NEON",
@@ -22,14 +22,19 @@
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
+      "name": "Nicole Kidman",
+      "artist": "ADÉLA",
+      "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
+    },
+    {
       "name": "With",
       "artist": "RESCENE",
       "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
     },
     {
-      "name": "Nicole Kidman",
-      "artist": "ADÉLA",
-      "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
+      "name": "So Easy (To Fall In Love)",
+      "artist": "Olivia Dean",
+      "url": "https://music.apple.com/tw/album/so-easy-to-fall-in-love/1817609404?i=1817609507"
     },
     {
       "name": "Looks Can Kill",
@@ -42,19 +47,9 @@
       "url": "https://music.apple.com/tw/album/hong-kong-feat-%E7%8E%8B%E8%8F%B2%E5%AD%A3%E5%80%99%E9%A2%A8/6829122413?i=6829122414"
     },
     {
-      "name": "So Easy (To Fall In Love)",
-      "artist": "Olivia Dean",
-      "url": "https://music.apple.com/tw/album/so-easy-to-fall-in-love/1817609404?i=1817609507"
-    },
-    {
       "name": "I’m gonna TOESA (feat. Kian84)",
       "artist": "SOYEON",
       "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
-    },
-    {
-      "name": "Housewife",
-      "artist": "Tate McRae",
-      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
     },
     {
       "name": "You’re Under Arrest",
@@ -62,14 +57,19 @@
       "url": "https://music.apple.com/tw/album/youre-under-arrest/6818511623?i=6818511627"
     },
     {
+      "name": "Housewife",
+      "artist": "Tate McRae",
+      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
+    },
+    {
+      "name": "Less than a Lover",
+      "artist": "JENNIE",
+      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
+    },
+    {
       "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
       "artist": "宇宙人",
       "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
-    },
-    {
-      "name": "玻璃",
-      "artist": "Gareth.T",
-      "url": "https://music.apple.com/tw/album/%E7%8E%BB%E7%92%83/6769327003?i=6769327013"
     },
     {
       "name": "Insomnia",
@@ -79,18 +79,28 @@
   ],
   "deals": [
     {
-      "title": "1111【郭易英文軍團】公益優惠今天有效!",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794348395.A.708.html",
+      "title": "PChome 雙11 ASUS筆電日 回饋試算",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794397976.A.9F7.html",
       "tag": "情報"
     },
     {
-      "title": "momo 蘇菲 褲型衛生棉箱購",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794351275.A.EFE.html",
+      "title": "酷彭 雪碧檸檬茶 一箱359元",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794402157.A.3A1.html",
       "tag": "情報"
     },
     {
-      "title": "小米75型4K $16111送聲霸+3000P 只有今天限定",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794357232.A.BE5.html",
+      "title": "Re: [情報] 小米75型4K $16111送聲霸+3000P 只有今天限定",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794406552.A.D13.html",
+      "tag": "情報"
+    },
+    {
+      "title": "Re: [情報] 1111【郭易英文軍團】公益優惠今天有效!",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794407342.A.21F.html",
+      "tag": "情報"
+    },
+    {
+      "title": "全家發熱衣-3件399，4件799",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794413181.A.13F.html",
       "tag": "情報"
     },
     {
