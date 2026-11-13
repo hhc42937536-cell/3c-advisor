@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12 02:46",
+  "updated_at": "2026-11-13 02:28",
   "songs": [
     {
       "name": "NEON",
@@ -27,16 +27,6 @@
       "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
     },
     {
-      "name": "With",
-      "artist": "RESCENE",
-      "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
-    },
-    {
-      "name": "So Easy (To Fall In Love)",
-      "artist": "Olivia Dean",
-      "url": "https://music.apple.com/tw/album/so-easy-to-fall-in-love/1817609404?i=1817609507"
-    },
-    {
       "name": "Looks Can Kill",
       "artist": "IVE",
       "url": "https://music.apple.com/tw/album/looks-can-kill/6822369065?i=6822369089"
@@ -47,14 +37,24 @@
       "url": "https://music.apple.com/tw/album/hong-kong-feat-%E7%8E%8B%E8%8F%B2%E5%AD%A3%E5%80%99%E9%A2%A8/6829122413?i=6829122414"
     },
     {
-      "name": "I’m gonna TOESA (feat. Kian84)",
-      "artist": "SOYEON",
-      "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
+      "name": "With",
+      "artist": "RESCENE",
+      "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
+    },
+    {
+      "name": "So Easy (To Fall In Love)",
+      "artist": "Olivia Dean",
+      "url": "https://music.apple.com/tw/album/so-easy-to-fall-in-love/1817609404?i=1817609507"
     },
     {
       "name": "You’re Under Arrest",
       "artist": "ILLIT",
       "url": "https://music.apple.com/tw/album/youre-under-arrest/6818511623?i=6818511627"
+    },
+    {
+      "name": "I’m gonna TOESA (feat. Kian84)",
+      "artist": "SOYEON",
+      "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
     },
     {
       "name": "Housewife",
@@ -67,14 +67,14 @@
       "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
     },
     {
-      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
-      "artist": "宇宙人",
-      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
-    },
-    {
       "name": "Insomnia",
       "artist": "RIIZE",
       "url": "https://music.apple.com/tw/album/insomnia/6823459103?i=6823459104"
+    },
+    {
+      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
+      "artist": "宇宙人",
+      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     }
   ],
   "deals": [
@@ -104,19 +104,19 @@
       "tag": "情報"
     },
     {
-      "title": "2026年全台捐血贈品",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
+      "title": "萊爾富限時/7-11 超值/全家康康 11/11~17",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794460986.A.42F.html",
       "tag": "情報"
     },
     {
-      "title": "贈送集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1790784012.A.E9A.html",
-      "tag": "集中"
+      "title": "名字有「榮、耀」，遠傳Honor 600現折一萬",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794474831.A.D44.html",
+      "tag": "情報"
     },
     {
-      "title": "未滿1元集點抽獎資訊集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788194462.A.0A4.html",
-      "tag": "集中"
+      "title": "Re: [情報] 拿坡里 月月慶 6塊雞$209 大披薩$199",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794491987.A.586.html",
+      "tag": "情報"
     }
   ]
 }
