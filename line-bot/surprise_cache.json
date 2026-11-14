@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-13 02:28",
+  "updated_at": "2026-11-14 02:06",
   "songs": [
     {
       "name": "NEON",
@@ -12,6 +12,16 @@
       "url": "https://music.apple.com/tw/album/%E7%94%B2%E4%B9%99%E4%B8%99%E4%B8%81strangers/6785801843?i=6785801848"
     },
     {
+      "name": "Hong Kong (feat. 王菲季候風)",
+      "artist": "The Weeknd",
+      "url": "https://music.apple.com/tw/album/hong-kong-feat-%E7%8E%8B%E8%8F%B2%E5%AD%A3%E5%80%99%E9%A2%A8/6829122413?i=6829122414"
+    },
+    {
+      "name": "You’re Under Arrest",
+      "artist": "ILLIT",
+      "url": "https://music.apple.com/tw/album/youre-under-arrest/6818511623?i=6818511627"
+    },
+    {
       "name": "BAD",
       "artist": "ATEEZ",
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
@@ -20,6 +30,11 @@
       "name": "hate that i made you love me",
       "artist": "Ariana Grande",
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
+    },
+    {
+      "name": "With",
+      "artist": "RESCENE",
+      "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
     },
     {
       "name": "Nicole Kidman",
@@ -32,26 +47,6 @@
       "url": "https://music.apple.com/tw/album/looks-can-kill/6822369065?i=6822369089"
     },
     {
-      "name": "Hong Kong (feat. 王菲季候風)",
-      "artist": "The Weeknd",
-      "url": "https://music.apple.com/tw/album/hong-kong-feat-%E7%8E%8B%E8%8F%B2%E5%AD%A3%E5%80%99%E9%A2%A8/6829122413?i=6829122414"
-    },
-    {
-      "name": "With",
-      "artist": "RESCENE",
-      "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
-    },
-    {
-      "name": "So Easy (To Fall In Love)",
-      "artist": "Olivia Dean",
-      "url": "https://music.apple.com/tw/album/so-easy-to-fall-in-love/1817609404?i=1817609507"
-    },
-    {
-      "name": "You’re Under Arrest",
-      "artist": "ILLIT",
-      "url": "https://music.apple.com/tw/album/youre-under-arrest/6818511623?i=6818511627"
-    },
-    {
       "name": "I’m gonna TOESA (feat. Kian84)",
       "artist": "SOYEON",
       "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
@@ -62,19 +57,24 @@
       "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
     },
     {
+      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
+      "artist": "宇宙人",
+      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
+    },
+    {
+      "name": "So Easy (To Fall In Love)",
+      "artist": "Olivia Dean",
+      "url": "https://music.apple.com/tw/album/so-easy-to-fall-in-love/1817609404?i=1817609507"
+    },
+    {
       "name": "Less than a Lover",
       "artist": "JENNIE",
       "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
     },
     {
-      "name": "Insomnia",
-      "artist": "RIIZE",
-      "url": "https://music.apple.com/tw/album/insomnia/6823459103?i=6823459104"
-    },
-    {
-      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
-      "artist": "宇宙人",
-      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
+      "name": "Drip",
+      "artist": "ATEEZ",
+      "url": "https://music.apple.com/tw/album/drip/6819587309?i=6819587772"
     }
   ],
   "deals": [
