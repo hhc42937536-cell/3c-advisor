@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-14 02:06",
+  "updated_at": "2026-11-15 01:37",
   "songs": [
     {
       "name": "NEON",
@@ -32,24 +32,24 @@
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     },
     {
-      "name": "With",
-      "artist": "RESCENE",
-      "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
-    },
-    {
       "name": "Nicole Kidman",
       "artist": "ADÉLA",
       "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
     },
     {
-      "name": "Looks Can Kill",
-      "artist": "IVE",
-      "url": "https://music.apple.com/tw/album/looks-can-kill/6822369065?i=6822369089"
+      "name": "With",
+      "artist": "RESCENE",
+      "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
     },
     {
       "name": "I’m gonna TOESA (feat. Kian84)",
       "artist": "SOYEON",
       "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
+    },
+    {
+      "name": "Looks Can Kill",
+      "artist": "IVE",
+      "url": "https://music.apple.com/tw/album/looks-can-kill/6822369065?i=6822369089"
     },
     {
       "name": "Housewife",
@@ -67,17 +67,22 @@
       "url": "https://music.apple.com/tw/album/so-easy-to-fall-in-love/1817609404?i=1817609507"
     },
     {
-      "name": "Less than a Lover",
-      "artist": "JENNIE",
-      "url": "https://music.apple.com/tw/album/less-than-a-lover/6793277024?i=6793277028"
+      "name": "DESERVE",
+      "artist": "BABYMONSTER",
+      "url": "https://music.apple.com/tw/album/deserve/6823611519?i=6823611520"
     },
     {
-      "name": "Drip",
-      "artist": "ATEEZ",
-      "url": "https://music.apple.com/tw/album/drip/6819587309?i=6819587772"
+      "name": "LEMONADE",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
     }
   ],
   "deals": [
+    {
+      "title": "數碼寶貝 時空異客 NS $428",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794397282.A.403.html",
+      "tag": "情報"
+    },
     {
       "title": "PChome 雙11 ASUS筆電日 回饋試算",
       "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794397976.A.9F7.html",
@@ -111,11 +116,6 @@
     {
       "title": "名字有「榮、耀」，遠傳Honor 600現折一萬",
       "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794474831.A.D44.html",
-      "tag": "情報"
-    },
-    {
-      "title": "Re: [情報] 拿坡里 月月慶 6塊雞$209 大披薩$199",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794491987.A.586.html",
       "tag": "情報"
     }
   ]
