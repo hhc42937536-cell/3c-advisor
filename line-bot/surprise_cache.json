@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-17 04:22",
+  "updated_at": "2026-11-18 03:29",
   "songs": [
     {
       "name": "NEON",
@@ -32,6 +32,11 @@
       "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
     },
     {
+      "name": "Looks Can Kill",
+      "artist": "IVE",
+      "url": "https://music.apple.com/tw/album/looks-can-kill/6822369065?i=6822369089"
+    },
+    {
       "name": "hate that i made you love me",
       "artist": "Ariana Grande",
       "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
@@ -40,11 +45,6 @@
       "name": "Nicole Kidman",
       "artist": "ADÉLA",
       "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
-    },
-    {
-      "name": "Looks Can Kill",
-      "artist": "IVE",
-      "url": "https://music.apple.com/tw/album/looks-can-kill/6822369065?i=6822369089"
     },
     {
       "name": "I’m gonna TOESA (feat. Kian84)",
@@ -57,11 +57,6 @@
       "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
     },
     {
-      "name": "Drip",
-      "artist": "ATEEZ",
-      "url": "https://music.apple.com/tw/album/drip/6819587309?i=6819587772"
-    },
-    {
       "name": "LEMONADE",
       "artist": "aespa",
       "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
@@ -72,9 +67,14 @@
       "url": "https://music.apple.com/tw/album/deserve/6823611519?i=6823611520"
     },
     {
-      "name": "So Easy (To Fall In Love)",
-      "artist": "Olivia Dean",
-      "url": "https://music.apple.com/tw/album/so-easy-to-fall-in-love/1817609404?i=1817609507"
+      "name": "Drip",
+      "artist": "ATEEZ",
+      "url": "https://music.apple.com/tw/album/drip/6819587309?i=6819587772"
+    },
+    {
+      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
+      "artist": "宇宙人",
+      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     }
   ],
   "deals": [
@@ -114,7 +114,7 @@
       "tag": "廣宣"
     },
     {
-      "title": "11/16-12/31 北捷捷運點轉全家Fa點活動 每週名額有限",
+      "title": "11/16-12/31 北捷捷運點轉全家Fa點活動",
       "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794845749.A.F8A.html",
       "tag": "情報"
     }
