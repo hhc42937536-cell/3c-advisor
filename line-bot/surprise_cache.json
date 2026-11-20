@@ -1,46 +1,92 @@
 {
-  "updated_at": "2026-11-19 03:01",
-  "songs": [],
+  "updated_at": "2026-11-20 02:54",
+  "songs": [
+    {
+      "name": "NEON",
+      "artist": "A2O & A2O LITE",
+      "url": "https://music.apple.com/tw/album/neon/6820428726?i=6820428730"
+    },
+    {
+      "name": "甲乙丙丁Strangers",
+      "artist": "李佳薇",
+      "url": "https://music.apple.com/tw/album/%E7%94%B2%E4%B9%99%E4%B8%99%E4%B8%81strangers/6785801843?i=6785801848"
+    },
+    {
+      "name": "Hong Kong (feat. 王菲季候風)",
+      "artist": "The Weeknd",
+      "url": "https://music.apple.com/tw/album/hong-kong-feat-%E7%8E%8B%E8%8F%B2%E5%AD%A3%E5%80%99%E9%A2%A8/6829122413?i=6829122414"
+    },
+    {
+      "name": "You’re Under Arrest",
+      "artist": "ILLIT",
+      "url": "https://music.apple.com/tw/album/youre-under-arrest/6818511623?i=6818511627"
+    },
+    {
+      "name": "BAD",
+      "artist": "ATEEZ",
+      "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
+    },
+    {
+      "name": "With",
+      "artist": "RESCENE",
+      "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
+    },
+    {
+      "name": "Looks Can Kill",
+      "artist": "IVE",
+      "url": "https://music.apple.com/tw/album/looks-can-kill/6822369065?i=6822369089"
+    },
+    {
+      "name": "Housewife",
+      "artist": "Tate McRae",
+      "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
+    },
+    {
+      "name": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
+    },
+    {
+      "name": "Nicole Kidman",
+      "artist": "ADÉLA",
+      "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
+    },
+    {
+      "name": "I’m gonna TOESA (feat. Kian84)",
+      "artist": "SOYEON",
+      "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
+    },
+    {
+      "name": "LEMONADE",
+      "artist": "aespa",
+      "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
+    }
+  ],
   "deals": [
     {
-      "title": "Re: [討論] 眼鏡自備框券",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794987443.A.9ED.html",
-      "tag": "討論"
-    },
-    {
-      "title": "［情報］ 11/27 公平會免費講座（附餐盒）",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794989946.A.DE4.html",
-      "tag": ""
-    },
-    {
-      "title": "11/27 公平會免費講座（附餐盒）",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794990230.A.86F.html",
+      "title": "台北市診所限定，送全家400商品券",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795133663.A.356.html",
       "tag": "情報"
     },
     {
-      "title": "7-11 亨氏番茄醬熱狗 買一送一 24號",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1794997904.A.A1F.html",
+      "title": "Meta Quest 黑五優惠，Q3S 85折",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795134353.A.075.html",
       "tag": "情報"
     },
     {
-      "title": "麥當勞APP領券十塊雞塊買一送一",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795002403.A.E15.html",
+      "title": "2026年全台捐血贈品",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
       "tag": "情報"
     },
     {
-      "title": "Line購物 省錢高手35點：限訂單金額滿35元",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795003590.A.066.html",
-      "tag": ""
+      "title": "贈送集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1790784012.A.E9A.html",
+      "tag": "集中"
     },
     {
-      "title": "Re: [情報] 2026 雙11檔期 OTT 優惠",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795019564.A.84F.html",
-      "tag": "情報"
-    },
-    {
-      "title": "LINE禮物哈根達斯迷你杯16入組 $699+5%",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795020119.A.D57.html",
-      "tag": "情報"
+      "title": "未滿1元集點抽獎資訊集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788194462.A.0A4.html",
+      "tag": "集中"
     }
   ]
 }
