@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-20 02:54",
+  "updated_at": "2026-11-21 03:01",
   "songs": [
     {
       "name": "NEON",
@@ -42,9 +42,9 @@
       "url": "https://music.apple.com/tw/album/housewife/6822497770?i=6822497774"
     },
     {
-      "name": "hate that i made you love me",
-      "artist": "Ariana Grande",
-      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
+      "name": "I’m gonna TOESA (feat. Kian84)",
+      "artist": "SOYEON",
+      "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
     },
     {
       "name": "Nicole Kidman",
@@ -52,14 +52,14 @@
       "url": "https://music.apple.com/tw/album/nicole-kidman/6792883860?i=6792884088"
     },
     {
-      "name": "I’m gonna TOESA (feat. Kian84)",
-      "artist": "SOYEON",
-      "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
+      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
+      "artist": "宇宙人",
+      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     },
     {
-      "name": "LEMONADE",
-      "artist": "aespa",
-      "url": "https://music.apple.com/tw/album/lemonade/1893599771?i=1893599773"
+      "name": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "url": "https://music.apple.com/tw/album/hate-that-i-made-you-love-me/1895420989?i=6763656876"
     }
   ],
   "deals": [
@@ -74,19 +74,34 @@
       "tag": "情報"
     },
     {
-      "title": "2026年全台捐血贈品",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
+      "title": "安卓 Line+4p",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795144774.A.CFB.html",
       "tag": "情報"
     },
     {
-      "title": "贈送集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1790784012.A.E9A.html",
-      "tag": "集中"
+      "title": "momo 哈根打滋",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795145097.A.954.html",
+      "tag": "情報"
     },
     {
-      "title": "未滿1元集點抽獎資訊集中文",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1788194462.A.0A4.html",
-      "tag": "集中"
+      "title": "全家隨買跨店取咖啡優惠",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795148332.A.A64.html",
+      "tag": "情報"
+    },
+    {
+      "title": "line 「逛逛」領券7-11熱美式9元",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795148379.A.C95.html",
+      "tag": "情報"
+    },
+    {
+      "title": "三商炸雞黃金戰斧2隻99",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795151818.A.565.html",
+      "tag": "情報"
+    },
+    {
+      "title": "台北捷運Go 看片拿點-搭捷運挺臺北戰神",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795158846.A.477.html",
+      "tag": "情報"
     }
   ]
 }
