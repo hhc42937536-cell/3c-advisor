@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23 02:24",
+  "updated_at": "2026-11-24 05:48",
   "songs": [
     {
       "name": "NEON",
@@ -17,6 +17,11 @@
       "url": "https://music.apple.com/tw/album/youre-under-arrest/6818511623?i=6818511627"
     },
     {
+      "name": "GiiiRIP",
+      "artist": "BIGBANG",
+      "url": "https://music.apple.com/tw/album/giiirip/6834436962?i=6834436963"
+    },
+    {
       "name": "Hong Kong (feat. 王菲季候風)",
       "artist": "The Weeknd",
       "url": "https://music.apple.com/tw/album/hong-kong-feat-%E7%8E%8B%E8%8F%B2%E5%AD%A3%E5%80%99%E9%A2%A8/6829122413?i=6829122414"
@@ -27,19 +32,9 @@
       "url": "https://music.apple.com/tw/album/bad/6770401924?i=6770401926"
     },
     {
-      "name": "GiiiRIP",
-      "artist": "BIGBANG",
-      "url": "https://music.apple.com/tw/album/giiirip/6834436962?i=6834436963"
-    },
-    {
       "name": "With",
       "artist": "RESCENE",
       "url": "https://music.apple.com/tw/album/with/6828335122?i=6828335406"
-    },
-    {
-      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
-      "artist": "宇宙人",
-      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     },
     {
       "name": "Looks Can Kill",
@@ -47,9 +42,9 @@
       "url": "https://music.apple.com/tw/album/looks-can-kill/6822369065?i=6822369089"
     },
     {
-      "name": "I’m gonna TOESA (feat. Kian84)",
-      "artist": "SOYEON",
-      "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
+      "name": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
+      "artist": "宇宙人",
+      "url": "https://music.apple.com/tw/album/%E6%B2%92%E6%9C%89%E4%BA%BA%E5%83%8F%E6%88%91%E4%B8%80%E6%A8%A3-%E5%BD%B1%E9%9B%86-%E6%AC%A0%E5%A6%B3%E7%9A%84%E9%82%A3%E5%A0%B4%E5%A9%9A%E7%A6%AE-%E4%B8%BB%E9%A1%8C%E6%9B%B2/6780772532?i=6780772534"
     },
     {
       "name": "自由的你",
@@ -57,51 +52,51 @@
       "url": "https://music.apple.com/tw/album/%E8%87%AA%E7%94%B1%E7%9A%84%E4%BD%A0/6815092481?i=6815092483"
     },
     {
-      "name": "DESERVE",
-      "artist": "BABYMONSTER",
-      "url": "https://music.apple.com/tw/album/deserve/6823611519?i=6823611520"
+      "name": "I’m gonna TOESA (feat. Kian84)",
+      "artist": "SOYEON",
+      "url": "https://music.apple.com/tw/album/im-gonna-toesa-feat-kian84/6804744597?i=6804744599"
     }
   ],
   "deals": [
     {
-      "title": "台北捷運Go 看片拿點-搭捷運挺臺北戰神",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795158846.A.477.html",
+      "title": "美亞黑五De’Longhi Mag Duo Auto",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795442244.A.EFF.html",
       "tag": "情報"
     },
     {
-      "title": "必勝客番茄肉醬起司麵 $69",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795161063.A.E70.html",
+      "title": "美亞AirPods Pro 3 149史低",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795446603.A.2FC.html",
       "tag": "情報"
     },
     {
-      "title": "南投 圖書館借電子書送711商品卡",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795168469.A.C95.html",
+      "title": "台北捷運Go看影片得兩點",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795451080.A.46B.html",
       "tag": "情報"
     },
     {
-      "title": "屈臣氏 點數到期-11/30",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795169476.A.5FC.html",
+      "title": "PO錯版 麻煩版主協助刪文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795465833.A.4F0.html",
+      "tag": ""
+    },
+    {
+      "title": "Line逛逛領卷買美式咖啡$9",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795493188.A.586.html",
+      "tag": ""
+    },
+    {
+      "title": "好市多線上購物attack zero 洗衣凝露",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795497812.A.72C.html",
       "tag": "情報"
     },
     {
-      "title": "Go Share 25元騎乘金",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795192297.A.435.html",
+      "title": "2026年全台捐血贈品",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1767366026.A.B74.html",
       "tag": "情報"
     },
     {
-      "title": "日本零食展-高雄萬家福愛河店",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795196326.A.BF2.html",
-      "tag": "情報"
-    },
-    {
-      "title": "Fw: [情報] 美亞 AZ80特價",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795197571.A.16E.html",
-      "tag": "情報"
-    },
-    {
-      "title": "全聯：可樂果燒番麥、蒜味香腸買一送一",
-      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1795226254.A.8FC.html",
-      "tag": "情報"
+      "title": "贈送集中文",
+      "url": "https://www.ptt.cc/bbs/Lifeismoney/M.1790784012.A.E9A.html",
+      "tag": "集中"
     }
   ]
 }
